@@ -9,7 +9,7 @@
 	    <property name="beginningDelimiter" value="`"/>
 	    <property name="endingDelimiter" value="`"/>
         <!-- 采用插件 -->
-        <plugin type="com.software.common.mybatis.MybatisGeneratorPlugin">
+        <plugin type="chinaPress.common.mybatis.MybatisGeneratorPlugin">
             <property name="hasLombok" value="true"/>
         </plugin>
         <!-- 关闭注释 -->
@@ -17,21 +17,21 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!-- 数据源 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://39.97.232.237:3306/software?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://39.97.232.237:3306/press?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
                         userId="zryuxiang" password="mlmMysqldb123!@#">
             <property name="useInformationSchema" value="true"></property>
             <!-- 可以防止不同数据库中相同表名时，生成的代码不对 -->
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-        <javaModelGenerator targetPackage="" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="chinaPress.apply.model" targetProject="src/main/java"/>
         <!-- mapper -->
-        <sqlMapGenerator targetPackage="" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="chinaPress.apply.mapper" targetProject="src/main/java"/>
         <!-- dao -->
-        <javaClientGenerator targetPackage="" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="chinaPress.apply.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="" domainObjectName="" enableCountByExample="false"
+        <table tableName="fc_apply" domainObjectName="FcApply" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->
