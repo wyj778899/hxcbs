@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="mssqlGenerator" targetRuntime="MyBatis3">
+    	<!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表； 一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
+    	<property name="autoDelimitKeywords" value="true" />
+    	<!-- 指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+	    <property name="beginningDelimiter" value="`"/>
+	    <property name="endingDelimiter" value="`"/>
+        <!-- 采用插件 -->
+        <plugin type="com.software.common.mybatis.MybatisGeneratorPlugin">
+            <property name="hasLombok" value="true"/>
+        </plugin>
+        <!-- 关闭注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!-- 数据源 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://39.97.232.237:3306/software?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        userId="root" password="mlmMysqldb123!@#">
+            <property name="useInformationSchema" value="true"></property>
+            <!-- 可以防止不同数据库中相同表名时，生成的代码不对 -->
+            <property name="nullCatalogMeansCurrent" value="true"></property>
+        </jdbcConnection>
+        <!-- model -->
+        <javaModelGenerator targetPackage="com.software.live.model" targetProject="src/main/java"/>
+        <!-- mapper -->
+        <sqlMapGenerator targetPackage="com.software.live.mapper" targetProject="src/main/java"/>
+        <!-- dao -->
+        <javaClientGenerator targetPackage="com.software.live.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <!-- table<->model -->
+        <table tableName="live_sign_up" domainObjectName="LiveSignUp" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--解决长文本生成带WithBLOBs问题-->
+            <columnOverride column="request_data" jdbcType="VARCHAR"/>
+            <columnOverride column="response_data" jdbcType="VARCHAR"/>
+        </table>
+    </context>
+</generatorConfiguration>
