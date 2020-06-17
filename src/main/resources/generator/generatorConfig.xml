@@ -19,19 +19,19 @@
         <!-- 数据源 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://39.97.232.237:3306/software?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
-                        userId="root" password="mlmMysqldb123!@#">
+                        userId="zryuxiang" password="mlmMysqldb123!@#">
             <property name="useInformationSchema" value="true"></property>
             <!-- 可以防止不同数据库中相同表名时，生成的代码不对 -->
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-        <javaModelGenerator targetPackage="com.software.live.model" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="" targetProject="src/main/java"/>
         <!-- mapper -->
-        <sqlMapGenerator targetPackage="com.software.live.mapper" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="" targetProject="src/main/java"/>
         <!-- dao -->
-        <javaClientGenerator targetPackage="com.software.live.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="live_sign_up" domainObjectName="LiveSignUp" enableCountByExample="false"
+        <table tableName="" domainObjectName="" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->
