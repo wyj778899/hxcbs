@@ -20,7 +20,50 @@
     id, pId, `name`, code, remarks, is_last, is_level, is_delete, `state`, create_id, 
     create_time, update_id, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <!-- 查询分类 -->
+  <select id="selectCourseCategoryAll" resultType="chinaPress.common.tree.model.TreeNode"
+  parameterType="chinaPress.fc.course_category.vo.CourseCategoryParam">
+  	select
+	id, pId AS pid, name, code
+	from fc_course_category
+	<where>
+		<if test="notId != null">and id != #{notId}</if>
+		<if test="pid != null">and pId = #{pid}</if>
+		<if test="code != null">AND code like CONCAT(#{code},'%')</if>
+		<if test="name != null and name != ''">and `name` like CONCAT('%', #{name},'%')</if>
+		<if test="codeList != null and codeList.size() > 0">
+			and
+			<foreach collection="codeList" item="item" open="(" close=")"
+				separator="or">
+				code like CONCAT(#{item},'%')
+			</foreach>
+		</if>
+	</where>
+  </select>
+  <!-- 查询分类名称是否存在 -->
+  <select id="selectCourseCategoryByName" resultType="java.lang.Integer">
+  	select
+  	count(*)
+  	from fc_course_category
+  	where name = #{name}
+  </select>
+  <!-- 根据名称模糊查 -->
+  <select id="selectCourseCategoryByNames" resultType="java.lang.String"
+  parameterType="java.lang.String">
+  	select
+  	`code`
+  	from fc_course_category
+  	where `name` like CONCAT('%',#{name},'%')
+  </select>
+  <!-- 根据父级id查询 -->
+  <select id="selectByPid" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_course_category
+    where pId = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id查询 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from fc_course_category

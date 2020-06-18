@@ -8,6 +8,7 @@ public class ChinaPressApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ChinaPressApplication.class, args);
+		System.out.println("启动成功");
 	}
 
 }
