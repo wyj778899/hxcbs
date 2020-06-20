@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="chinaPress.fc.coupon.dao.FcDiscountCouponMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.coupon.model.FcDiscountCoupon">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="start_time" jdbcType="TIMESTAMP"
+			property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+		<result column="enough_money" jdbcType="DECIMAL"
+			property="enoughMoney" />
+		<result column="discount_money" jdbcType="DECIMAL"
+			property="discountMoney" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, `name`, code, `count`, `type`, start_time, end_time, enough_money,
+		discount_money,
+		create_id, create_time, update_id, update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_discount_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_discount_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.fc.coupon.model.FcDiscountCoupon">
+		insert into fc_discount_coupon (id, `name`, code,
+		`count`, `type`, start_time,
+		end_time, enough_money, discount_money,
+		create_id, create_time, update_id,
+		update_time)
+		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{count,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}, #{enoughMoney,jdbcType=DECIMAL},
+		#{discountMoney,jdbcType=DECIMAL},
+		#{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.coupon.model.FcDiscountCoupon"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_discount_coupon
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="count != null">
+				`count`,
+			</if>
+			<if test="type != null">
+				`type`,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="enoughMoney != null">
+				enough_money,
+			</if>
+			<if test="discountMoney != null">
+				discount_money,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enoughMoney != null">
+				#{enoughMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="discountMoney != null">
+				#{discountMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.coupon.model.FcDiscountCoupon">
+		update fc_discount_coupon
+		<set>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				`count` = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				`type` = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enoughMoney != null">
+				enough_money = #{enoughMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="discountMoney != null">
+				discount_money = #{discountMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.fc.coupon.model.FcDiscountCoupon">
+		update fc_discount_coupon
+		set `name` = #{name,jdbcType=VARCHAR},
+		code = #{code,jdbcType=VARCHAR},
+		`count` = #{count,jdbcType=INTEGER},
+		`type` = #{type,jdbcType=INTEGER},
+		start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time = #{endTime,jdbcType=TIMESTAMP},
+		enough_money = #{enoughMoney,jdbcType=DECIMAL},
+		discount_money = #{discountMoney,jdbcType=DECIMAL},
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_id = #{updateId,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 优惠券个数 -->
+	<select id="selectFcDiscountCouponCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_discount_coupon a
+		inner join fc_discount_coupon_course b on a.id = b.coupon_id
+		inner join fc_course_archives c on c.id = b.course_id
+		where
+			1 = 1
+			<if test="name != null">
+				and a.name like concat('%', #{name}, '%')
+			</if>
+			<if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+				and a.start_time <![CDATA[>=]]> #{startTime}
+				and a.end_time <![CDATA[<]]> date_add(#{endTime}, interval 1 day)
+			</if>
+	</select>
+	
+	<!-- 优惠券列表 -->
+	<select id="selectFcDiscountCouponList" resultType="chinaPress.fc.coupon.vo.FcDiscountCouponListVo">
+		select
+			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime,
+			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName,
+			c.name courseName, a.count
+		from
+			fc_discount_coupon a
+		inner join fc_discount_coupon_course b on a.id = b.coupon_id
+		inner join fc_course_archives c on c.id = b.course_id
+		where
+			1 = 1
+			<if test="name != null">
+				and a.name like concat('%', #{name}, '%')
+			</if>
+			<if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+				and a.start_time <![CDATA[>=]]> #{startTime}
+				and a.end_time <![CDATA[<]]> date_add(#{endTime}, interval 1 day)
+			</if>
+		order by
+			a.create_time desc
+		limit
+			#{offset}, #{rows}
+	</select>
+	
+	<resultMap type="chinaPress.fc.coupon.vo.FcDiscountCouponDetailVo" id="fcDiscountCouponDetailResultMap">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="typeName" jdbcType="VARCHAR" property="typeName" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="validTime" jdbcType="VARCHAR" property="validTime" />
+		<result column="money" jdbcType="VARCHAR" property="money" />
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="grantCount" jdbcType="INTEGER" property="grantCount" />
+		<result column="useCount" jdbcType="INTEGER" property="useCount" />
+		<result column="courseName" property="courseName" />
+		<collection property="couponRecordList" ofType="chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo">
+			<id column="id" property="id" />
+			<result column="code" property="code" />
+			<result column="grantRoleName" property="grantRoleName" />
+			<result column="grantRoleTypeName" property="grantRoleTypeName" />
+			<result column="grantTime" property="grantTime" />
+			<result column="grantRolePhone" property="grantRolePhone" />
+			<result column="statusName" property="statusName" />
+			<result column="useTime" property="useTime" />
+		</collection>
+	</resultMap>
+	
+	<!-- 优惠券明细 -->
+	<select id="selectFcDiscountCouponDetail" resultMap="fcDiscountCouponDetailResultMap">
+		select
+			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime,
+			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName,
+			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '员'), '') money,
+			a.count, c.name courseName, count(d.status = 1) grantCount, count(d.status = 3) useCount,
+			d.id, d.code, IFNULL(e.name, '-') grantRoleName,
+			case d.grant_role_type when 1 then '员工' when 2 then '机构' when 3 then '家长' when 4 then '从业者'
+			when 5 then '注册用户' else '-' end grantRoleTypeName, IFNULL(date_format(d.grant_time, '%Y/%m/%d %T'), '-') grantTime,
+			IFNULL(e.tell_phone, '-') grantRolePhone, case d.status when 1 then '未发放' when 2 then '已领取' when 3 then '已核销'
+			else '-' end statusName, IFNULL(date_format(d.use_time, '%Y/%m/%d %T'), '-') useTime
+		from
+			fc_discount_coupon a
+		inner join fc_discount_coupon_course b on a.id = b.coupon_id
+		inner join fc_course_archives c on c.id = b.course_id
+		inner join fc_discount_coupon_record d on a.id = d.coupon_id
+		left join role_staff_archives e on d.grant_role_id = e.role_id and d.grant_role_type = e.role_type
+		where
+			a.id = #{id}
+	</select>
+	
+	<!-- 优惠券编码 -->
+	<select id="selectIsExistsSameCode" resultType="int">
+		select
+			count(*)
+		from
+			fc_discount_coupon
+		where
+			code = #{code}
+	</select>
+</mapper>
