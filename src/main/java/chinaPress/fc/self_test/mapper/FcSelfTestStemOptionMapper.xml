@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.self_test.dao.FcSelfTestStemOptionMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.fc.self_test.model.FcSelfTestStemOption">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="test_stem_id" jdbcType="INTEGER" property="testStemId" />
+    <result column="option_id" jdbcType="INTEGER" property="optionId" />
+    <result column="is_select" jdbcType="INTEGER" property="isSelect" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, test_stem_id, option_id, is_select, `state`, create_id, create_time, update_id, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_self_test_stem_option
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fc_self_test_stem_option
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 批量新增 -->
+  <insert id="batchInsert">
+    insert into fc_self_test_stem_option (test_stem_id, option_id, is_select) values 
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+    	(#{testStemId}, #{item.optionId,jdbcType=INTEGER}, #{item.isSelect,jdbcType=INTEGER}} )
+    </foreach>
+  </insert>
+  
+  <insert id="insertSelective" parameterType="chinaPress.fc.self_test.model.FcSelfTestStemOption">
+    insert into fc_self_test_stem_option
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="testStemId != null">
+        test_stem_id,
+      </if>
+      <if test="optionId != null">
+        option_id,
+      </if>
+      <if test="isSelect != null">
+        is_select,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="testStemId != null">
+        #{testStemId,jdbcType=INTEGER},
+      </if>
+      <if test="optionId != null">
+        #{optionId,jdbcType=INTEGER},
+      </if>
+      <if test="isSelect != null">
+        #{isSelect,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.self_test.model.FcSelfTestStemOption">
+    update fc_self_test_stem_option
+    <set>
+      <if test="testStemId != null">
+        test_stem_id = #{testStemId,jdbcType=INTEGER},
+      </if>
+      <if test="optionId != null">
+        option_id = #{optionId,jdbcType=INTEGER},
+      </if>
+      <if test="isSelect != null">
+        is_select = #{isSelect,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chinaPress.fc.self_test.model.FcSelfTestStemOption">
+    update fc_self_test_stem_option
+    set test_stem_id = #{testStemId,jdbcType=INTEGER},
+      option_id = #{optionId,jdbcType=INTEGER},
+      is_select = #{isSelect,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
