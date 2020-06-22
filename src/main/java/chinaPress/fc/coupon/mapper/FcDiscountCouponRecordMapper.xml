@@ -222,4 +222,67 @@
 		limit
 			#{offset}, #{rows}
 	</select>
+	
+	<!-- 查询优惠券各个状态的发放数量 -->
+	<select id="selectCouponCountByStatus" resultType="int">
+		select
+			count(*)
+		from
+			fc_discount_coupon_record
+		where
+			coupon_id = #{couponId}
+			and status = #{status}
+	</select>
+	
+	<!-- 查询优惠券明细 -->
+	<select id="selectCouponRecordDetailCount" resultType="int">
+		select
+			count(*)
+		from
+			inner join fc_discount_coupon_record a
+		left join role_staff_archives b on a.grant_role_id = b.role_id and a.grant_role_type = b.role_type
+		where
+			a.coupon_id = #{couponId}
+			<if test="code != null and code != ''">
+				and a.code like concat('%', #{code}, '%')
+			</if>
+			<if test="grantRoleName != null and grantRoleName != ''">
+				and b.name like concat('%', #{grantRoleName}, '%')
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+			<if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+				and a.use_time <![CDATA[>=]]> #{startTime}
+				and a.use_time <![CDATA[<]]> date_add(#{endTime}, interval 1 day)
+			</if>
+	</select>
+	
+	<!-- 查询优惠券明细 -->
+	<select id="selectCouponRecordDetailList" resultType="chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo">
+		select
+			a.id, a.code, IFNULL(b.name, '-') grantRoleName,
+			case a.grant_role_type when 1 then '员工' when 2 then '机构' when 3 then '家长' when 4 then '从业者'
+			when 5 then '注册用户' else '-' end grantRoleTypeName, IFNULL(date_format(a.grant_time, '%Y/%m/%d %T'), '-') grantTime,
+			IFNULL(b.tell_phone, '-') grantRolePhone, case a.status when 1 then '未发放' when 2 then '已领取' when 3 then '已核销'
+			else '-' end statusName, IFNULL(date_format(a.use_time, '%Y/%m/%d %T'), '-') useTime
+		from
+			inner join fc_discount_coupon_record a
+		left join role_staff_archives b on a.grant_role_id = b.role_id and a.grant_role_type = b.role_type
+		where
+			a.coupon_id = #{couponId}
+			<if test="code != null and code != ''">
+				and a.code like concat('%', #{code}, '%')
+			</if>
+			<if test="grantRoleName != null and grantRoleName != ''">
+				and b.name like concat('%', #{grantRoleName}, '%')
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+			<if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+				and a.use_time <![CDATA[>=]]> #{startTime}
+				and a.use_time <![CDATA[<]]> date_add(#{endTime}, interval 1 day)
+			</if>
+	</select>
 </mapper>

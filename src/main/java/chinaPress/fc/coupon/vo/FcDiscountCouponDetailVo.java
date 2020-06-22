@@ -15,10 +15,10 @@ public class FcDiscountCouponDetailVo extends FcDiscountCouponListVo {
 	 * 核销数量
 	 */
 	private Integer useCount;
-	/**
-	 * 优惠券记录
-	 */
-	private List<FcDiscountCouponRecordVo> couponRecordList;
+//	/**
+//	 * 优惠券记录
+//	 */
+//	private List<FcDiscountCouponRecordVo> couponRecordList;
 
 	/**
 	 * 获取：money
@@ -62,17 +62,17 @@ public class FcDiscountCouponDetailVo extends FcDiscountCouponListVo {
 		this.useCount = useCount;
 	}
 
-	/**
-	 * 获取：couponRecordList
-	 */
-	public List<FcDiscountCouponRecordVo> getCouponRecordList() {
-		return couponRecordList;
-	}
-
-	/**
-	 * 设置：couponRecordList
-	 */
-	public void setCouponRecordList(List<FcDiscountCouponRecordVo> couponRecordList) {
-		this.couponRecordList = couponRecordList;
-	}
+//	/**
+//	 * 获取：couponRecordList
+//	 */
+//	public List<FcDiscountCouponRecordVo> getCouponRecordList() {
+//		return couponRecordList;
+//	}
+//
+//	/**
+//	 * 设置：couponRecordList
+//	 */
+//	public void setCouponRecordList(List<FcDiscountCouponRecordVo> couponRecordList) {
+//		this.couponRecordList = couponRecordList;
+//	}
 }

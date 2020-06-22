@@ -138,14 +138,24 @@ public class FcDiscountCouponService {
 		return fcDiscountCouponMapper.selectFcDiscountCouponList(name, startTime, endTime,
 				pageNumber * pageSize - pageSize, pageSize);
 	}
-	
+
 	/**
 	 * 查询优惠券详情+明细
+	 * 
 	 * @author maguoliang
 	 * @param id
 	 * @return
 	 */
 	public FcDiscountCouponDetailVo selectFcDiscountCouponDetail(Integer id) {
-		return fcDiscountCouponMapper.selectFcDiscountCouponDetail(id);
+		FcDiscountCouponDetailVo fcDiscountCouponDetailVo = fcDiscountCouponMapper.selectFcDiscountCouponDetail(id);
+		if (fcDiscountCouponDetailVo != null) {
+			// 查询发放数量和核销数量
+			int grantCount = fcDiscountCouponRecordMapper.selectCouponCountByStatus(id, 2);
+			int useCount = fcDiscountCouponRecordMapper.selectCouponCountByStatus(id, 3);
+			fcDiscountCouponDetailVo.setGrantCount(grantCount);
+			fcDiscountCouponDetailVo.setUseCount(useCount);
+			
+		}
+		return fcDiscountCouponDetailVo;
 	}
 }
