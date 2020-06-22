@@ -287,4 +287,71 @@
 		limit
 			#{offset}, #{rows}
 	</select>
+	
+	
+	<!-- 查询我的优惠券 -->
+	<select id="selectMyCouponRecordCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_discount_coupon_record a
+		inner join fc_discount_coupon b on a.coupon_id = b.id
+		inner join fc_discount_coupon_course c on b.id = c.coupon_id
+		inner join fc_course_archives d on c.course_id = d.id
+		where
+			a.grant_role_id = #{grantRoleId}
+			and a.grant_role_type = #{grantRoleType}
+			and b.type = #{type}
+			<!-- 优惠券名称  -->
+			<if test="name != null and name != ''">
+				and b.name like concat('%', #{name} ,'%')
+			</if>
+			<!-- 优惠券编码 -->
+			<if test="code != null and code != ''">
+				and a.code like concat('%', #{code} ,'%')		
+			</if>			
+			<!-- 未使用 -->
+			<if test="status == 1">
+				and b.status = 2 
+			</if>
+			<!-- 已过期 -->
+			<if test="status == 2">
+				and now() <![CDATA[>]]> b.end_time
+			</if>
+	</select>
+	
+	<!-- 查询我的优惠券 -->
+	<select id="selectMyCouponRecordList" resultType="chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo">
+		select
+			a.id, b.name, date_format(b.start_time, '%Y/%m/%d %T') startTime,
+			date_format(b.end_time, '%Y/%m/%d %T') endTime, a.code,
+			d.name courseName
+		from
+			fc_discount_coupon_record a
+		inner join fc_discount_coupon b on a.coupon_id = b.id
+		inner join fc_discount_coupon_course c on b.id = c.coupon_id
+		inner join fc_course_archives d on c.course_id = d.id
+		where
+			a.grant_role_id = #{grantRoleId}
+			and a.grant_role_type = #{grantRoleType}
+			and b.type = #{type}
+			<!-- 优惠券名称  -->
+			<if test="name != null and name != ''">
+				and b.name like concat('%', #{name} ,'%')
+			</if>
+			<!-- 优惠券编码 -->
+			<if test="code != null and code != ''">
+				and a.code like concat('%', #{code} ,'%')		
+			</if>			
+			<!-- 未使用 -->
+			<if test="status == 1">
+				and b.status = 2 
+			</if>
+			<!-- 已过期 -->
+			<if test="status == 2">
+				and now() <![CDATA[>]]> b.end_time
+			</if>
+		limit
+			#{offset}, #{rows}
+	</select>
 </mapper>

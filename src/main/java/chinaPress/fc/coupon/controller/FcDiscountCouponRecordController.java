@@ -10,6 +10,7 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.coupon.service.FcDiscountCouponRecordService;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
+import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
 
 @RestController
@@ -83,6 +84,48 @@ public class FcDiscountCouponRecordController {
 			String startTime, String endTime, Integer pageNumber, Integer pageSize) {
 		List<FcDiscountCouponRecordVo> list = fcDiscountCouponRecordService.selectCouponRecordDetailList(couponId, code,
 				grantRoleName, status, startTime, endTime, pageNumber, pageSize);
+		return ResultUtil.ok(list);
+	}
+
+	/**
+	 * 查询我的优惠券个数
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   领取人角色id
+	 * @param grantRoleType 领取人角色类型
+	 * @param type          优惠券类型1.满减券2.观看券
+	 * @param name          优惠券名称
+	 * @param code          优惠券编码
+	 * @param status        优惠券使用状态1.未使用2.已过期
+	 * @return
+	 */
+	@RequestMapping("index/myDetailCount")
+	public Result selectMyCouponRecordCount(Integer grantRoleId, Integer grantRoleType, Integer type, String name,
+			String code, Integer status) {
+		int index = fcDiscountCouponRecordService.selectMyCouponRecordCount(grantRoleId, grantRoleType, type, name,
+				code, status);
+		return ResultUtil.ok(index);
+	}
+
+	/**
+	 * 查询我的优惠券列表
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   领取人角色id
+	 * @param grantRoleType 领取人角色类型
+	 * @param type          优惠券类型1.满减券2.观看券
+	 * @param name          优惠券名称
+	 * @param code          优惠券编码
+	 * @param status        优惠券使用状态1.未使用2.已过期
+	 * @param pageNumber    第几页
+	 * @param pageSize      每页查询多少条
+	 * @return
+	 */
+	@RequestMapping("index/myDetailList")
+	public Result selectMyCouponRecordList(Integer grantRoleId, Integer grantRoleType, Integer type, String name,
+			String code, Integer status, Integer pageNumber, Integer pageSize) {
+		List<FcDiscountMyCouponRecordListVo> list = fcDiscountCouponRecordService.selectMyCouponRecordList(grantRoleId,
+				grantRoleType, type, name, code, status, pageNumber, pageSize);
 		return ResultUtil.ok(list);
 	}
 }
