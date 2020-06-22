@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.role.member.dao.MemberInfoMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.role.member.model.MemberInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="certificate_type" jdbcType="INTEGER" property="certificateType" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="role_type" jdbcType="INTEGER" property="roleType" />
+  </resultMap>
+  
+  <!-- 员工对应证书信息封装 -->
+  <resultMap id="memberAndCerMap" type="chinaPress.role.member.vo.MemberAndCer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="certificate_type" jdbcType="INTEGER" property="certificateType" />
+    <result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, `name`, photo, tell_phone, email, sex, provice, city, area, address, is_start, 
+    `state`, create_id, create_time, update_id, update_time, role_id, role_type, user_name, 
+    `password`
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="chinaPress.role.member.model.MemberInfo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role_staff_archives
+    where 1=1
+	    <if test="id != null and id!=''">
+	    	and id = #{id,jdbcType=INTEGER}
+	    </if>
+	    <if test="userName !=null and userName !='' ">
+	    	and user_name = #{userName,jdbcType=VARCHAR}
+	    </if>
+  </select>
+  
+   <select id="queryCerCount" parameterType="chinaPress.role.member.model.MemberInfo" resultType="java.lang.Integer">
+	select count(*) 
+	from role_staff_archives a, fc_certificate_archives b 
+	where     a.id = b.role_id and b.state = 1 
+		  <if test="name !=null and name!=''">
+				and a.name like CONCAT('%',CONCAT(#{name},'%')) 
+		  </if>
+		  <if test="tellPhone !=null and tellPhone!=''">
+				and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+		  </if>
+		  <if test="auditStatus !=null and auditStatus!=''">
+				and b.audit_status = #{auditStatus}
+		  </if>
+		  <if test="certificateType !=null and certificateType!=''">
+				and b.certificate_type = #{certificateType}
+		  </if>
+  </select>
+  
+  <select id="selectMemberAndCertificate" parameterType="chinaPress.role.member.model.MemberInfo" resultMap="memberAndCerMap">
+	select
+		a.name,
+		a.tell_phone,
+		a.sex,
+		a.user_name,
+		b.id,
+		b.certificate_type,
+		b.photo,
+		b.audit_status
+	from (select id,name,tell_phone,sex,user_name
+		  from role_staff_archives
+		  where 1=1
+			<if test="name !=null and name!=''">
+				and name like CONCAT('%',CONCAT(#{name},'%'))
+			</if>
+			<if test="tellPhone !=null and tellPhone!=''">
+				and tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+			</if>
+		)a , fc_certificate_archives b
+	where a.id = b.role_id and b.state = 1
+		<if test="auditStatus != null">
+			and b.audit_status = #{auditStatus}
+		</if>
+		<if test="certificateType != null">
+			and b.certificate_type = #{certificateType}
+		</if>
+	order by b.create_time desc
+	limit #{page},#{limit}
+  </select>
+  
+  <select id="selectByCerId" parameterType="java.lang.Integer" resultMap="memberAndCerMap">
+    select a.id,a.certificate_type,a.audit_status,a.photo, b.name,b.sex,b.tell_phone,b.user_name
+    from fc_certificate_archives a,role_staff_archives b
+    where a.role_id = b.id
+    	  and a.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from role_staff_archives
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="chinaPress.role.member.model.MemberInfo">
+    insert into role_staff_archives
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="tellPhone != null">
+        tell_phone,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="provice != null">
+        provice,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="isStart != null">
+        is_start,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="roleType != null">
+        role_type,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="tellPhone != null">
+        #{tellPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="provice != null">
+        #{provice,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isStart != null">
+        #{isStart,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null">
+        #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.member.model.MemberInfo">
+    update role_staff_archives
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="tellPhone != null">
+        tell_phone = #{tellPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="provice != null">
+        provice = #{provice,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isStart != null">
+        is_start = #{isStart,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null">
+        role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
