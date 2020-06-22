@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.util.JacksonUtil;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
@@ -112,5 +113,19 @@ public class FcDiscountCouponRecordService {
 			Integer type, String name, String code, Integer status, Integer pageNumber, Integer pageSize) {
 		return fcDiscountCouponRecordMapper.selectMyCouponRecordList(grantRoleId, grantRoleType, type, name, code,
 				status, pageNumber * pageSize - pageSize, pageSize);
+	}
+
+	/**
+	 * 发放优惠券
+	 * 
+	 * @author maguoliang
+	 * @param roleId          发放角色id
+	 * @param roleType        发放角色类型
+	 * @param couponRecordIds 发放优惠券id集合
+	 * @return
+	 */
+	public int grantCoupon(Integer roleId, Integer roleType, String couponRecordIds) {
+		List<String> couponRecordIdList = JacksonUtil.fromJSONList(couponRecordIds, String.class);
+		return fcDiscountCouponRecordMapper.grantCoupon(roleId, roleType, couponRecordIdList);
 	}
 }

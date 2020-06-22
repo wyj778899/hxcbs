@@ -123,4 +123,16 @@ public interface FcDiscountCouponRecordMapper {
 			@Param("grantRoleType") Integer grantRoleType, @Param("type") Integer type, @Param("name") String name,
 			@Param("code") String code, @Param("status") Integer status, @Param("offset") Integer offset,
 			@Param("rows") Integer rows);
+
+	/**
+	 * 发放优惠券
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId
+	 * @param grantRoleType
+	 * @param couponRecordIdList
+	 * @return
+	 */
+	int grantCoupon(@Param("grantRoleId") Integer grantRoleId, @Param("grantRoleType") Integer grantRoleType,
+			@Param("couponRecordIdList") List<String> couponRecordIdList);
 }

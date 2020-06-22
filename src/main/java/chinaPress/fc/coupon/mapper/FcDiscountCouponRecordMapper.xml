@@ -354,4 +354,21 @@
 		limit
 			#{offset}, #{rows}
 	</select>
+	
+	<!-- 发放优惠券 -->
+	<update id="grantCoupon">
+		update
+			fc_discount_coupon_record
+		set
+			grant_role_id = #{grantRoleId},
+			grant_role_type = #{grantRoleType},
+			status = 2,
+			grant_time = now(),
+			update_time = now()
+		where
+			id in
+			<foreach collection="couponRecordIdList" open="(" close=")" item="couponRecordId" separator=",">
+				#{couponRecordId}
+			</foreach>
+	</update>
 </mapper>

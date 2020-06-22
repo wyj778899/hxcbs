@@ -128,4 +128,24 @@ public class FcDiscountCouponRecordController {
 				grantRoleType, type, name, code, status, pageNumber, pageSize);
 		return ResultUtil.ok(list);
 	}
+
+	/**
+	 * 发放优惠券
+	 * 
+	 * @author maguoliang
+	 * @param roleId          发放角色id
+	 * @param roleType        发放角色类型
+	 * @param couponRecordIds 发放优惠券id集合
+	 * @return
+	 */
+	@RequestMapping("manage/grantCoupon")
+	public Result grantCoupon(Integer roleId, Integer roleType, String couponRecordIds) {
+		try {
+			int index = fcDiscountCouponRecordService.grantCoupon(roleId, roleType, couponRecordIds);
+			return ResultUtil.custom(1, "发放成功", index);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultUtil.custom(0, "发放失败", 0);
+		}
+	}
 }
