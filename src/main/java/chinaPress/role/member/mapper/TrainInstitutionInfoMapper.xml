@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.role.member.dao.TrainInstitutionInfoMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.role.member.model.TrainInstitutionInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="register_name" jdbcType="VARCHAR" property="registerName" />
+    <result column="register_tell" jdbcType="VARCHAR" property="registerTell" />
+    <result column="register_certificate" jdbcType="VARCHAR" property="registerCertificate" />
+    <result column="register_provice" jdbcType="VARCHAR" property="registerProvice" />
+    <result column="register_city" jdbcType="VARCHAR" property="registerCity" />
+    <result column="register_area" jdbcType="VARCHAR" property="registerArea" />
+    <result column="register_address" jdbcType="VARCHAR" property="registerAddress" />
+    <result column="business_provice" jdbcType="VARCHAR" property="businessProvice" />
+    <result column="business_city" jdbcType="VARCHAR" property="businessCity" />
+    <result column="business_area" jdbcType="VARCHAR" property="businessArea" />
+    <result column="business_address" jdbcType="VARCHAR" property="businessAddress" />
+    <result column="business_photo" jdbcType="VARCHAR" property="businessPhoto" />
+    <result column="practitioner_photo" jdbcType="VARCHAR" property="practitionerPhoto" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
+    register_certificate, register_provice, register_city, register_area, register_address, 
+    business_provice, business_city, business_area, business_address, business_photo, 
+    practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
+    update_id, update_time, enterprise_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role_institution_archives
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   
+   <select id="selectTrainInstitutionAll" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role_institution_archives
+    where state = 1
+	    <if test="name!=null and name!=''">
+	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    </if>
+	    <if test="code!=null and code!=''">
+	    	and code like CONCAT('%',CONCAT(#{code},'%'))
+	    </if>
+	    <if test="legalPerson!=null and legalPerson!=''">
+	    	and legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    </if>
+	    <if test="registerTell!=null and registerTell!=''">
+	    	and register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    </if>
+	order by create_time desc
+	limit #{page} , #{limit}
+  </select>
+  
+  <select id="selectCount" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultType="java.lang.Integer">
+    select count(*)
+    from role_institution_archives
+    where state = 1
+	    <if test="name!=null and name!=''">
+	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    </if>
+	    <if test="code!=null and code!=''">
+	    	and code like CONCAT('%',CONCAT(#{code},'%'))
+	    </if>
+	    <if test="legalPerson!=null and legalPerson!=''">
+	    	and legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    </if>
+	    <if test="registerTell!=null and registerTell!=''">
+	    	and register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from role_institution_archives
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="chinaPress.role.member.model.TrainInstitutionInfo">
+    insert into role_institution_archives
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="legalPerson != null">
+        legal_person,
+      </if>
+      <if test="certificateNumber != null">
+        certificate_number,
+      </if>
+      <if test="registerName != null">
+        register_name,
+      </if>
+      <if test="registerTell != null">
+        register_tell,
+      </if>
+      <if test="registerCertificate != null">
+        register_certificate,
+      </if>
+      <if test="registerProvice != null">
+        register_provice,
+      </if>
+      <if test="registerCity != null">
+        register_city,
+      </if>
+      <if test="registerArea != null">
+        register_area,
+      </if>
+      <if test="registerAddress != null">
+        register_address,
+      </if>
+      <if test="businessProvice != null">
+        business_provice,
+      </if>
+      <if test="businessCity != null">
+        business_city,
+      </if>
+      <if test="businessArea != null">
+        business_area,
+      </if>
+      <if test="businessAddress != null">
+        business_address,
+      </if>
+      <if test="businessPhoto != null">
+        business_photo,
+      </if>
+      <if test="practitionerPhoto != null">
+        practitioner_photo,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="auditStatus != null">
+        audit_status,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="enterpriseCode != null">
+        enterprise_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateNumber != null">
+        #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registerName != null">
+        #{registerName,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTell != null">
+        #{registerTell,jdbcType=VARCHAR},
+      </if>
+      <if test="registerCertificate != null">
+        #{registerCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="registerProvice != null">
+        #{registerProvice,jdbcType=VARCHAR},
+      </if>
+      <if test="registerCity != null">
+        #{registerCity,jdbcType=VARCHAR},
+      </if>
+      <if test="registerArea != null">
+        #{registerArea,jdbcType=VARCHAR},
+      </if>
+      <if test="registerAddress != null">
+        #{registerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessProvice != null">
+        #{businessProvice,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCity != null">
+        #{businessCity,jdbcType=VARCHAR},
+      </if>
+      <if test="businessArea != null">
+        #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null">
+        #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessPhoto != null">
+        #{businessPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="practitionerPhoto != null">
+        #{practitionerPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null">
+        #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseCode != null">
+        #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id">
+          SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.member.model.TrainInstitutionInfo">
+    update role_institution_archives
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateNumber != null">
+        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registerName != null">
+        register_name = #{registerName,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTell != null">
+        register_tell = #{registerTell,jdbcType=VARCHAR},
+      </if>
+      <if test="registerCertificate != null">
+        register_certificate = #{registerCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="registerProvice != null">
+        register_provice = #{registerProvice,jdbcType=VARCHAR},
+      </if>
+      <if test="registerCity != null">
+        register_city = #{registerCity,jdbcType=VARCHAR},
+      </if>
+      <if test="registerArea != null">
+        register_area = #{registerArea,jdbcType=VARCHAR},
+      </if>
+      <if test="registerAddress != null">
+        register_address = #{registerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessProvice != null">
+        business_provice = #{businessProvice,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCity != null">
+        business_city = #{businessCity,jdbcType=VARCHAR},
+      </if>
+      <if test="businessArea != null">
+        business_area = #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null">
+        business_address = #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessPhoto != null">
+        business_photo = #{businessPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="practitionerPhoto != null">
+        practitioner_photo = #{practitionerPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null">
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseCode != null">
+        enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
