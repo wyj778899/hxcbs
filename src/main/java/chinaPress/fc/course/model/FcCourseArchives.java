@@ -84,7 +84,18 @@ public class FcCourseArchives {
      */
     private Date updateTime;
 
-    /**
+    private Integer isDelete;
+    
+    
+    public Integer getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Integer isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	/**
      * 课程档案
      * @return id
      */
