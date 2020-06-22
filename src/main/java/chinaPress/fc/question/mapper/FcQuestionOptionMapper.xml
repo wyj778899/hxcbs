@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.question.dao.FcQuestionOptionMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.fc.question.model.FcQuestionOption">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="stem_id" jdbcType="INTEGER" property="stemId" />
+    <result column="option_type" jdbcType="INTEGER" property="optionType" />
+    <result column="option_name" jdbcType="VARCHAR" property="optionName" />
+    <result column="is_correct" jdbcType="INTEGER" property="isCorrect" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, stem_id, option_type, option_name, is_correct, is_delete, `state`, create_id, 
+    create_time, update_id, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_question_option
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fc_question_option
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="chinaPress.fc.question.model.FcQuestionOption">
+    insert into fc_question_option (id, stem_id, option_type, 
+      option_name, is_correct, is_delete, 
+      `state`, create_id, create_time, 
+      update_id, update_time)
+    values (#{id,jdbcType=INTEGER}, #{stemId,jdbcType=INTEGER}, #{optionType,jdbcType=INTEGER}, 
+      #{optionName,jdbcType=VARCHAR}, #{isCorrect,jdbcType=INTEGER}, #{isDelete,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER}, #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="chinaPress.fc.question.model.FcQuestionOption">
+    insert into fc_question_option
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="stemId != null">
+        stem_id,
+      </if>
+      <if test="optionType != null">
+        option_type,
+      </if>
+      <if test="optionName != null">
+        option_name,
+      </if>
+      <if test="isCorrect != null">
+        is_correct,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stemId != null">
+        #{stemId,jdbcType=INTEGER},
+      </if>
+      <if test="optionType != null">
+        #{optionType,jdbcType=INTEGER},
+      </if>
+      <if test="optionName != null">
+        #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isCorrect != null">
+        #{isCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.question.model.FcQuestionOption">
+    update fc_question_option
+    <set>
+      <if test="stemId != null">
+        stem_id = #{stemId,jdbcType=INTEGER},
+      </if>
+      <if test="optionType != null">
+        option_type = #{optionType,jdbcType=INTEGER},
+      </if>
+      <if test="optionName != null">
+        option_name = #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isCorrect != null">
+        is_correct = #{isCorrect,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chinaPress.fc.question.model.FcQuestionOption">
+    update fc_question_option
+    set stem_id = #{stemId,jdbcType=INTEGER},
+      option_type = #{optionType,jdbcType=INTEGER},
+      option_name = #{optionName,jdbcType=VARCHAR},
+      is_correct = #{isCorrect,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
