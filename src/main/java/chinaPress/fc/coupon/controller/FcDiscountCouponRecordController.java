@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.coupon.service.FcDiscountCouponRecordService;
+import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
 
 @RestController
@@ -40,6 +41,48 @@ public class FcDiscountCouponRecordController {
 	@RequestMapping("manage/list")
 	public Result selectValidCouponList(Integer pageNumber, Integer pageSize) {
 		List<FcDiscountValidCouponVo> list = fcDiscountCouponRecordService.selectValidCouponList(pageNumber, pageSize);
+		return ResultUtil.ok(list);
+	}
+
+	/**
+	 * 查询优惠券明细
+	 * 
+	 * @author maguoliang
+	 * @param couponId      优惠券id
+	 * @param code          优惠券编码
+	 * @param grantRoleName 领取人名称
+	 * @param status        使用状态
+	 * @param startTime     开始时间
+	 * @param endTime       结束时间
+	 * @return
+	 */
+	@RequestMapping("manage/detailCount")
+	public Result selectCouponRecordCount(Integer couponId, String code, String grantRoleName, Integer status,
+			String startTime, String endTime) {
+		int index = fcDiscountCouponRecordService.selectCouponRecordCount(couponId, code, grantRoleName, status,
+				startTime, endTime);
+		return ResultUtil.ok(index);
+	}
+
+	/**
+	 * 查询优惠券明细
+	 * 
+	 * @author maguoliang
+	 * @param couponId      优惠券id
+	 * @param code          优惠券编码
+	 * @param grantRoleName 领取人名称
+	 * @param status        使用状态
+	 * @param startTime     开始时间
+	 * @param endTime       结束时间
+	 * @param pageNumber    第几页
+	 * @param pageSize      每页查询查询多少条数据
+	 * @return
+	 */
+	@RequestMapping("manage/detailList")
+	public Result selectCouponRecordList(Integer couponId, String code, String grantRoleName, Integer status,
+			String startTime, String endTime, Integer pageNumber, Integer pageSize) {
+		List<FcDiscountCouponRecordVo> list = fcDiscountCouponRecordService.selectCouponRecordList(couponId, code,
+				grantRoleName, status, startTime, endTime, pageNumber, pageSize);
 		return ResultUtil.ok(list);
 	}
 }

@@ -250,46 +250,59 @@
 			#{offset}, #{rows}
 	</select>
 	
-	<resultMap type="chinaPress.fc.coupon.vo.FcDiscountCouponDetailVo" id="fcDiscountCouponDetailResultMap">
-		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="typeName" jdbcType="VARCHAR" property="typeName" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="validTime" jdbcType="VARCHAR" property="validTime" />
-		<result column="money" jdbcType="VARCHAR" property="money" />
-		<result column="count" jdbcType="INTEGER" property="count" />
-		<result column="grantCount" jdbcType="INTEGER" property="grantCount" />
-		<result column="useCount" jdbcType="INTEGER" property="useCount" />
-		<result column="courseName" property="courseName" />
-		<collection property="couponRecordList" ofType="chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo">
-			<id column="id" property="id" />
-			<result column="code" property="code" />
-			<result column="grantRoleName" property="grantRoleName" />
-			<result column="grantRoleTypeName" property="grantRoleTypeName" />
-			<result column="grantTime" property="grantTime" />
-			<result column="grantRolePhone" property="grantRolePhone" />
-			<result column="statusName" property="statusName" />
-			<result column="useTime" property="useTime" />
-		</collection>
-	</resultMap>
+<!-- 	<resultMap type="chinaPress.fc.coupon.vo.FcDiscountCouponDetailVo" id="fcDiscountCouponDetailResultMap"> -->
+<!-- 		<id column="id" jdbcType="INTEGER" property="id" /> -->
+<!-- 		<result column="typeName" jdbcType="VARCHAR" property="typeName" /> -->
+<!-- 		<result column="name" jdbcType="VARCHAR" property="name" /> -->
+<!-- 		<result column="validTime" jdbcType="VARCHAR" property="validTime" /> -->
+<!-- 		<result column="money" jdbcType="VARCHAR" property="money" /> -->
+<!-- 		<result column="count" jdbcType="INTEGER" property="count" /> -->
+<!-- 		<result column="grantCount" jdbcType="INTEGER" property="grantCount" /> -->
+<!-- 		<result column="useCount" jdbcType="INTEGER" property="useCount" /> -->
+<!-- 		<result column="courseName" property="courseName" /> -->
+<!-- 		<collection property="couponRecordList" ofType="chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo"> -->
+<!-- 			<id column="id" property="id" /> -->
+<!-- 			<result column="code" property="code" /> -->
+<!-- 			<result column="grantRoleName" property="grantRoleName" /> -->
+<!-- 			<result column="grantRoleTypeName" property="grantRoleTypeName" /> -->
+<!-- 			<result column="grantTime" property="grantTime" /> -->
+<!-- 			<result column="grantRolePhone" property="grantRolePhone" /> -->
+<!-- 			<result column="statusName" property="statusName" /> -->
+<!-- 			<result column="useTime" property="useTime" /> -->
+<!-- 		</collection> -->
+<!-- 	</resultMap> -->
 	
 	<!-- 优惠券明细 -->
-	<select id="selectFcDiscountCouponDetail" resultMap="fcDiscountCouponDetailResultMap">
+<!-- 	<select id="selectFcDiscountCouponDetail" resultMap="fcDiscountCouponDetailResultMap"> -->
+<!-- 		select -->
+<!-- 			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime, -->
+<!-- 			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName, -->
+<!-- 			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '员'), '') money, -->
+<!-- 			a.count, c.name courseName, count(d.status = 1) grantCount, count(d.status = 3) useCount, -->
+<!-- 			d.id, d.code, IFNULL(e.name, '-') grantRoleName, -->
+<!-- 			case d.grant_role_type when 1 then '员工' when 2 then '机构' when 3 then '家长' when 4 then '从业者' -->
+<!-- 			when 5 then '注册用户' else '-' end grantRoleTypeName, IFNULL(date_format(d.grant_time, '%Y/%m/%d %T'), '-') grantTime, -->
+<!-- 			IFNULL(e.tell_phone, '-') grantRolePhone, case d.status when 1 then '未发放' when 2 then '已领取' when 3 then '已核销' -->
+<!-- 			else '-' end statusName, IFNULL(date_format(d.use_time, '%Y/%m/%d %T'), '-') useTime -->
+<!-- 		from -->
+<!-- 			fc_discount_coupon a -->
+<!-- 		inner join fc_discount_coupon_course b on a.id = b.coupon_id -->
+<!-- 		inner join fc_course_archives c on c.id = b.course_id -->
+<!-- 		inner join fc_discount_coupon_record d on a.id = d.coupon_id -->
+<!-- 		left join role_staff_archives e on d.grant_role_id = e.role_id and d.grant_role_type = e.role_type -->
+<!-- 		where -->
+<!-- 			a.id = #{id} -->
+<!-- 	</select> -->
+	<select id="selectFcDiscountCouponDetail" resultType="chinaPress.fc.coupon.vo.FcDiscountCouponDetailVo">
 		select
 			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime,
 			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName,
 			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '员'), '') money,
-			a.count, c.name courseName, count(d.status = 1) grantCount, count(d.status = 3) useCount,
-			d.id, d.code, IFNULL(e.name, '-') grantRoleName,
-			case d.grant_role_type when 1 then '员工' when 2 then '机构' when 3 then '家长' when 4 then '从业者'
-			when 5 then '注册用户' else '-' end grantRoleTypeName, IFNULL(date_format(d.grant_time, '%Y/%m/%d %T'), '-') grantTime,
-			IFNULL(e.tell_phone, '-') grantRolePhone, case d.status when 1 then '未发放' when 2 then '已领取' when 3 then '已核销'
-			else '-' end statusName, IFNULL(date_format(d.use_time, '%Y/%m/%d %T'), '-') useTime
+			a.count, c.name courseName
 		from
 			fc_discount_coupon a
 		inner join fc_discount_coupon_course b on a.id = b.coupon_id
 		inner join fc_course_archives c on c.id = b.course_id
-		inner join fc_discount_coupon_record d on a.id = d.coupon_id
-		left join role_staff_archives e on d.grant_role_id = e.role_id and d.grant_role_type = e.role_type
 		where
 			a.id = #{id}
 	</select>

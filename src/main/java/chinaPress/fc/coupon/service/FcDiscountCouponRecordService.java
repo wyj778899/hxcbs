@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
+import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
 
 @Service
@@ -33,5 +34,43 @@ public class FcDiscountCouponRecordService {
 	 */
 	public List<FcDiscountValidCouponVo> selectValidCouponList(Integer pageNumber, Integer pageSize) {
 		return fcDiscountCouponRecordMapper.selectValidCouponList(pageNumber * pageSize - pageSize, pageSize);
+	}
+
+	/**
+	 * 查询优惠券明细
+	 * 
+	 * @author maguoliang
+	 * @param couponId      优惠券id
+	 * @param code          优惠券编码
+	 * @param grantRoleName 领取人名称
+	 * @param status        使用状态
+	 * @param startTime     开始时间
+	 * @param endTime       结束时间
+	 * @return
+	 */
+	public int selectCouponRecordCount(Integer couponId, String code, String grantRoleName, Integer status,
+			String startTime, String endTime) {
+		return fcDiscountCouponRecordMapper.selectCouponRecordCount(couponId, code, grantRoleName, status, startTime,
+				endTime);
+	}
+
+	/**
+	 * 查询优惠券明细
+	 * 
+	 * @author maguoliang
+	 * @param couponId      优惠券id
+	 * @param code          优惠券编码
+	 * @param grantRoleName 领取人名称
+	 * @param status        使用状态
+	 * @param startTime     开始时间
+	 * @param endTime       结束时间
+	 * @param pageNumber    第几页
+	 * @param pageSize      每页查询查询多少条数据
+	 * @return
+	 */
+	public List<FcDiscountCouponRecordVo> selectCouponRecordList(Integer couponId, String code, String grantRoleName,
+			Integer status, String startTime, String endTime, Integer pageNumber, Integer pageSize) {
+		return fcDiscountCouponRecordMapper.selectCouponRecordList(couponId, code, grantRoleName, status, startTime,
+				endTime, pageNumber * pageSize - pageSize, pageSize);
 	}
 }
