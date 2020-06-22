@@ -57,9 +57,9 @@ public class FcDiscountCouponRecordController {
 	 * @return
 	 */
 	@RequestMapping("manage/detailCount")
-	public Result selectCouponRecordCount(Integer couponId, String code, String grantRoleName, Integer status,
+	public Result selectCouponRecordDetailCount(Integer couponId, String code, String grantRoleName, Integer status,
 			String startTime, String endTime) {
-		int index = fcDiscountCouponRecordService.selectCouponRecordCount(couponId, code, grantRoleName, status,
+		int index = fcDiscountCouponRecordService.selectCouponRecordDetailCount(couponId, code, grantRoleName, status,
 				startTime, endTime);
 		return ResultUtil.ok(index);
 	}
@@ -79,9 +79,9 @@ public class FcDiscountCouponRecordController {
 	 * @return
 	 */
 	@RequestMapping("manage/detailList")
-	public Result selectCouponRecordList(Integer couponId, String code, String grantRoleName, Integer status,
+	public Result selectCouponRecordDetailList(Integer couponId, String code, String grantRoleName, Integer status,
 			String startTime, String endTime, Integer pageNumber, Integer pageSize) {
-		List<FcDiscountCouponRecordVo> list = fcDiscountCouponRecordService.selectCouponRecordList(couponId, code,
+		List<FcDiscountCouponRecordVo> list = fcDiscountCouponRecordService.selectCouponRecordDetailList(couponId, code,
 				grantRoleName, status, startTime, endTime, pageNumber, pageSize);
 		return ResultUtil.ok(list);
 	}

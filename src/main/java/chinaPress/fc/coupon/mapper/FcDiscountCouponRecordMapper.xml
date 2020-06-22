@@ -239,7 +239,7 @@
 		select
 			count(*)
 		from
-			inner join fc_discount_coupon_record a
+			fc_discount_coupon_record a
 		left join role_staff_archives b on a.grant_role_id = b.role_id and a.grant_role_type = b.role_type
 		where
 			a.coupon_id = #{couponId}
@@ -267,7 +267,7 @@
 			IFNULL(b.tell_phone, '-') grantRolePhone, case a.status when 1 then '未发放' when 2 then '已领取' when 3 then '已核销'
 			else '-' end statusName, IFNULL(date_format(a.use_time, '%Y/%m/%d %T'), '-') useTime
 		from
-			inner join fc_discount_coupon_record a
+			fc_discount_coupon_record a
 		left join role_staff_archives b on a.grant_role_id = b.role_id and a.grant_role_type = b.role_type
 		where
 			a.coupon_id = #{couponId}
@@ -284,5 +284,7 @@
 				and a.use_time <![CDATA[>=]]> #{startTime}
 				and a.use_time <![CDATA[<]]> date_add(#{endTime}, interval 1 day)
 			</if>
+		limit
+			#{offset}, #{rows}
 	</select>
 </mapper>

@@ -65,7 +65,7 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param endTime       结束时间
 	 * @return
 	 */
-	int selectCouponRecordCount(@Param("couponId") Integer couponId, @Param("code") String code,
+	int selectCouponRecordDetailCount(@Param("couponId") Integer couponId, @Param("code") String code,
 			@Param("grantRoleName") String grantRoleName, @Param("status") Integer status,
 			@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -83,7 +83,7 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param rows          查询多少条数据
 	 * @return
 	 */
-	List<FcDiscountCouponRecordVo> selectCouponRecordList(@Param("couponId") Integer couponId,
+	List<FcDiscountCouponRecordVo> selectCouponRecordDetailList(@Param("couponId") Integer couponId,
 			@Param("code") String code, @Param("grantRoleName") String grantRoleName, @Param("status") Integer status,
 			@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("offset") Integer offset,
 			@Param("rows") Integer rows);

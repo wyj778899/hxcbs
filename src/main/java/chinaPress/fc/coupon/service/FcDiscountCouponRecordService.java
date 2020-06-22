@@ -48,9 +48,9 @@ public class FcDiscountCouponRecordService {
 	 * @param endTime       结束时间
 	 * @return
 	 */
-	public int selectCouponRecordCount(Integer couponId, String code, String grantRoleName, Integer status,
+	public int selectCouponRecordDetailCount(Integer couponId, String code, String grantRoleName, Integer status,
 			String startTime, String endTime) {
-		return fcDiscountCouponRecordMapper.selectCouponRecordCount(couponId, code, grantRoleName, status, startTime,
+		return fcDiscountCouponRecordMapper.selectCouponRecordDetailCount(couponId, code, grantRoleName, status, startTime,
 				endTime);
 	}
 
@@ -68,9 +68,9 @@ public class FcDiscountCouponRecordService {
 	 * @param pageSize      每页查询查询多少条数据
 	 * @return
 	 */
-	public List<FcDiscountCouponRecordVo> selectCouponRecordList(Integer couponId, String code, String grantRoleName,
+	public List<FcDiscountCouponRecordVo> selectCouponRecordDetailList(Integer couponId, String code, String grantRoleName,
 			Integer status, String startTime, String endTime, Integer pageNumber, Integer pageSize) {
-		return fcDiscountCouponRecordMapper.selectCouponRecordList(couponId, code, grantRoleName, status, startTime,
+		return fcDiscountCouponRecordMapper.selectCouponRecordDetailList(couponId, code, grantRoleName, status, startTime,
 				endTime, pageNumber * pageSize - pageSize, pageSize);
 	}
 }
