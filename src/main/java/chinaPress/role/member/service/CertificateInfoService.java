@@ -1,8 +1,6 @@
 package chinaPress.role.member.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,18 +97,28 @@ public class CertificateInfoService {
 	 */
 	 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) 
 	 public Result findCertificates(MemberInfo memberInfo) { 
-		 Map<String,Object> map = new HashMap<String,Object>();
 		 List<MemberAndCer> list = memberInfoMapper.selectMemberAndCertificate(memberInfo);
-		 map.put("data", list);
-		 int count = memberInfoMapper.queryCerCount(memberInfo);
-		 map.put("count", count);
 		 if (list.size()>0) { 
-			 return new Result(0, "查询成功", map); 
+			 return new Result(0, "查询成功", list); 
 		 } else { 
 			 return new Result(-1, "数据库错误", ""); 
 		 } 
 	}
 	 
 
+	 /**
+	  * 根据用户名，手机号，证书类型，审核状态，条件查询证书信息   根据条件展示个数  用于分页展示
+	  * @param memberInfo
+	  * @return
+	  */
+	 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true) 
+	 public Result findCertificateCount(MemberInfo memberInfo) {
+		 int count = memberInfoMapper.queryCerCount(memberInfo);
+		 if(count>0) {
+			 return new Result(0, "查询成功", count); 
+		 }else {
+			 return new Result(-1, "查询失败", 0); 
+		 }
+	 }
 	 
 }

@@ -18,12 +18,12 @@ public class MemberInfoVo {
 	private String photo;
 	
 	/**
-	 * 编号
+	 * 角色id
 	 */
-	private Integer id;
+	private Integer roleId;
 	
 	/**
-	 * 类型
+	 * 角色类型
 	 */
 	private Integer roleType;
 
@@ -43,12 +43,12 @@ public class MemberInfoVo {
 		this.photo = photo;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getRoleId() {
+		return roleId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
 
 	public Integer getRoleType() {
@@ -58,6 +58,9 @@ public class MemberInfoVo {
 	public void setRoleType(Integer roleType) {
 		this.roleType = roleType;
 	}
+
+	
+	
 	
 	
 }
