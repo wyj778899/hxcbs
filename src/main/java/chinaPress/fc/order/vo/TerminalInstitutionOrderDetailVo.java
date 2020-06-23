@@ -13,6 +13,11 @@ public class TerminalInstitutionOrderDetailVo {
 	private Integer id;
 
 	/**
+	 * 课程id
+	 */
+	private Integer courseId;
+
+	/**
 	 * 订单编码
 	 */
 	private String code;
@@ -40,9 +45,9 @@ public class TerminalInstitutionOrderDetailVo {
 	private String courseName;
 
 	/**
-	 * 人员集合
+	 * 视频数量
 	 */
-	private List<TerminalInstitutionOrderPersonVo> personList;
+	private Integer videoNumber;
 
 	public Integer getId() {
 		return id;
@@ -90,5 +95,21 @@ public class TerminalInstitutionOrderDetailVo {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public Integer getVideoNumber() {
+		return videoNumber;
+	}
+
+	public void setVideoNumber(Integer videoNumber) {
+		this.videoNumber = videoNumber;
 	}
 }

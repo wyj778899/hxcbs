@@ -2,6 +2,8 @@ package chinaPress.fc.apply.vo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TerminalApplyListVo {
 
 	/**
@@ -12,6 +14,7 @@ public class TerminalApplyListVo {
 	/**
 	 * 申请时间
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date applyTime;
 
 	/**

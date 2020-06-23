@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
@@ -15,6 +16,9 @@ public class FcOrderService {
 
 	@Autowired
 	private FcOrderMapper fcOrderMapper;
+
+	@Autowired
+	private FcCourseHourMapper fcCourseHourMapper;
 
 	/**
 	 * 终端 我的订单数据数量
@@ -43,6 +47,10 @@ public class FcOrderService {
 	 * @return
 	 */
 	public TerminalInstitutionOrderDetailVo findTerminalInstitutionOrderDetail(Integer id) {
-		return fcOrderMapper.findTerminalInstitutionOrderDetail(id);
+		TerminalInstitutionOrderDetailVo detail = fcOrderMapper.findTerminalInstitutionOrderDetail(id);
+		if (detail != null) {
+			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+		}
+		return detail;
 	}
 }

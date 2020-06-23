@@ -137,4 +137,40 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 终端 查询订单人员数据数量 -->
+  <select id="findTerminalCount" resultType="int"
+  	parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
+  	SELECT
+		count(*)
+	FROM
+		fc_order_person a
+	LEFT JOIN role_staff_archives b ON b.role_id = a.role_id 
+	AND b.role_type = a.role_type
+	<where>
+		<if test="orderId != null">AND a.order_id = #{orderId}</if>
+		<if test="name != null">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+	</where>
+  </select>
+  
+  <!-- 终端 查询订单人员数据集合 -->
+  <select id="findTerminalList" resultType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo"
+  	parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
+  	SELECT
+		a.id,
+		b.`name`,
+		b.sex,
+		b.tell_phone AS tellPhone,
+		a.total_count AS totalCount,
+		a.have_count AS haveCount 
+	FROM
+		fc_order_person a
+	LEFT JOIN role_staff_archives b ON b.role_id = a.role_id 
+	AND b.role_type = a.role_type
+	<where>
+		<if test="orderId != null">AND a.order_id = #{orderId}</if>
+		<if test="name != null">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+	</where>
+	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+  </select>
 </mapper>

@@ -3,6 +3,8 @@ package chinaPress.fc.order.vo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TerminalOrderListVo {
 
 	/**
@@ -13,6 +15,7 @@ public class TerminalOrderListVo {
 	/**
 	 * 订单日期
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date date;
 
 	/**
