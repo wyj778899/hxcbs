@@ -19,6 +19,11 @@ public class TerminalPractitionerOrderCourseListParam extends PageParam {
 	 */
 	private Integer courseName;
 
+	/**
+	 * 状态：1.学习中，2.已完成
+	 */
+	private Integer status;
+
 	public Integer getRoleType() {
 		return roleType;
 	}
@@ -41,5 +46,13 @@ public class TerminalPractitionerOrderCourseListParam extends PageParam {
 
 	public void setCourseName(Integer courseName) {
 		this.courseName = courseName;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

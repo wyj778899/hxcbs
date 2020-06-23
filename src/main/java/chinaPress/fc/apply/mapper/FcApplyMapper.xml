@@ -189,6 +189,7 @@
 		b.`name` AS courseName,
 		b.course_price AS coursePrice,
 		a.audit_status AS auditStatus,
+		b.course_number AS courseNumber,
 		( SELECT count(*) FROM fc_apply_person WHERE apply_id = a.id ) AS studentsNumber 
 	FROM
 		fc_apply a

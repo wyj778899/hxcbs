@@ -33,6 +33,11 @@ public class TerminalApplyListVo {
 	private Integer studentsNumber;
 
 	/**
+	 * 课程使用天数
+	 */
+	private Integer courseNumber;
+
+	/**
 	 * 审核状态（1.待审核2.已审核3.已驳回）
 	 */
 	private Integer auditStatus;
@@ -83,5 +88,13 @@ public class TerminalApplyListVo {
 
 	public void setAuditStatus(Integer auditStatus) {
 		this.auditStatus = auditStatus;
+	}
+
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 }
