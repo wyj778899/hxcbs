@@ -26,6 +26,7 @@ import chinaPress.role.member.model.PractitionerInfo;
 import chinaPress.role.member.model.TrainInstitutionInfo;
 import chinaPress.role.member.model.UserInfo;
 import chinaPress.role.member.vo.MemberCouponInfo;
+import chinaPress.role.member.vo.MemberInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 import redis.clients.jedis.Jedis;
@@ -429,6 +430,7 @@ public class MemberInfoService {
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findNameAndPassword(String userName,String password) {
+		MemberInfoVo memberInfo = new MemberInfoVo();
 		MemberInfo m = new MemberInfo();
 		m.setUserName(userName);
 		m = memberInfoMapper.selectByPrimaryKey(m);
@@ -439,7 +441,11 @@ public class MemberInfoService {
 			}
 			try {
 				if(Md5Util.validPassword(password,m.getPassword())) {
-					return new Result(0, "密码正确", "");
+					memberInfo.setId(m.getId());
+					memberInfo.setName(m.getName());
+					memberInfo.setPhoto(m.getPhoto());
+					memberInfo.setRoleType(m.getRoleType());
+					return new Result(0, "密码正确", memberInfo);
 				}else {
 					return new Result(-3, "密码错误", "");
 				}
