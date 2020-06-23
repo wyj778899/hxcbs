@@ -250,6 +250,7 @@
 		a.`code`,
 		b.`name` AS courseName,
 		b.course_price AS coursePrice,
+		b.course_number AS courseNumber,
 		a.pay_status AS payStatus 
 	FROM
 		fc_order a
@@ -259,47 +260,86 @@
 		<if test="roleType != null">AND a.role_type = #{roleType} </if>
 		<if test="courseName != null and courseName != ''">AND b.`name` LIKE CONCAT('%', #{courseName}, '%')</if>
 	</where>
+	ORDER BY a.date DESC
 	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
   </select>
   
   <resultMap type="chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo" id="InstitutionOrderDetailResultMap">
   	<id column="a_id" jdbcType="INTEGER" property="id" />
     <result column="a_code" jdbcType="VARCHAR" property="code" />
+    <result column="a_course_id" jdbcType="INTEGER" property="courseId" />
     <result column="a_pay_status" jdbcType="INTEGER" property="payStatus" />
     <result column="a_start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="a_end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="c_name" jdbcType="VARCHAR" property="courseName" />
-  	<collection property="personList" ofType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo">
-  		<id column="b_id" jdbcType="INTEGER" property="id" />
-	    <result column="d_name" jdbcType="VARCHAR" property="name" />
-	    <result column="d_sex" jdbcType="INTEGER" property="sex" />
-	    <result column="d_tell_phone" jdbcType="VARCHAR" property="tellPhone" />
-	    <result column="b_total_count" jdbcType="INTEGER" property="endTime" />
-	    <result column="b_have_count" jdbcType="INTEGER" property="courseName" />
-  	</collection>
   </resultMap>
   
   <!-- 终端 机构我的订单详情 -->
   <select id="findTerminalInstitutionOrderDetail" resultMap="InstitutionOrderDetailResultMap">
   	SELECT
 		a.id AS a_id,
+		a.course_id AS a_course_id,
 		a.`code` AS a_code,
 		a.pay_status AS a_pay_status,
 		a.start_time AS a_start_time,
 		a.end_time AS a_end_time,
-		c.`name` AS c_name,
-		b.id AS b_id,
-		d.`name` AS d_name,
-		d.sex AS d_sex,
-		d.tell_phone AS d_tell_phone,
-		b.total_count AS b_total_count,
-		b.have_count AS b_have_count 
+		c.`name` AS c_name
 	FROM
 		fc_order a
-		LEFT JOIN fc_order_person b ON b.order_id = a.id
 		LEFT JOIN fc_course_archives c ON c.id = a.course_id
-		LEFT JOIN role_staff_archives d ON d.role_id = b.role_id 
-		AND d.role_type = b.role_type
 	WHERE a.id = #{id}
+  </select>
+  
+  <!-- 终端家长 课程数据数量 -->
+  <select id="findTerminalPractitionerCourseCount" resultType="int"
+  	parameterType="chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam">
+  	SELECT COUNT(*) FROM (
+  		SELECT
+			c.id,
+			c.`name`,
+			a.start_time AS startTime,
+			a.end_time AS endTime,
+			c.course_price AS coursePrice,
+			b.total_count AS totalCount,
+			b.have_count haveCount,
+			IF( b.total_count = b.have_count, 1, 2 ) AS `status` 
+		FROM
+			fc_order a
+			INNER JOIN fc_order_person b ON b.order_id = a.id
+			INNER JOIN fc_course_archives c ON c.id = a.course_id 
+		WHERE
+			b.is_individual = 1 
+			<if test="roleId != null">AND b.role_id = #{roleId} </if>
+			<if test="roleType != null">AND b.role_type = #{roleType} </if>
+			<if test="courseName != null and courseName != ''">AND c.`name` LIKE CONCAT('%', #{courseName}, '%')</if>
+  	) AS parent_table
+  	<where>
+  		<if test="status != null">AND parent_table.`status` = #{status}</if>
+  	</where>
+  </select>
+  
+  <!-- 终端家长 课程数据集合 -->
+  <select id="findTerminalPractitionerCourseList" resultType="chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo"
+  	parameterType="chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam">
+  	SELECT
+		c.id,
+		c.`name`,
+		a.start_time AS startTime,
+		a.end_time AS endTime,
+		c.course_price AS coursePrice,
+		b.total_count AS totalCount,
+		b.have_count haveCount,
+		IF( b.total_count = b.have_count, 1, 2 ) AS `status` 
+	FROM
+		fc_order a
+		INNER JOIN fc_order_person b ON b.order_id = a.id
+		INNER JOIN fc_course_archives c ON c.id = a.course_id 
+	WHERE
+		b.is_individual = 1 
+		<if test="roleId != null">AND b.role_id = #{roleId} </if>
+		<if test="roleType != null">AND b.role_type = #{roleType} </if>
+		<if test="courseName != null and courseName != ''">AND c.`name` LIKE CONCAT('%', #{courseName}, '%')</if>
+	<if test="status != null">HAVING `status` = #{status}</if>
+	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
   </select>
 </mapper>

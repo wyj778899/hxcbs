@@ -114,4 +114,34 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 终端 数据数量 -->
+  <select id="findTerminalCount" resultType="chinaPress.fc.apply.vo.TerminalApplyPersonListVo"
+  	parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
+  	SELECT
+		count(*)
+	FROM
+		fc_apply_person a
+	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
+	WHERE a.id = #{applyId}
+	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+  </select>
+  
+  <!-- 终端 数据集合 -->
+  <select id="findTerminalList" resultType="chinaPress.fc.apply.vo.TerminalApplyPersonListVo"
+  	parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
+  	SELECT
+		a.id,
+		b.`name`,
+		b.tell_phone AS tellPhone,
+		b.sex AS sex,
+		b.certificate_number AS certificateNumber,
+		b.address AS address 
+	FROM
+		fc_apply_person a
+	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
+	WHERE a.id = #{applyId}
+	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+  </select>
 </mapper>

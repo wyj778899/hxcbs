@@ -15,10 +15,11 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="reason_message" jdbcType="VARCHAR" property="reasonMessage" />
   </resultMap>
   <sql id="Base_Column_List">
     id, apply_id, apply_type, course_id, apply_count, apply_time, apply_schedule, audit_status, 
-    `state`, create_id, create_time, update_id, update_time
+    `state`, create_id, create_time, update_id, update_time, reason_message
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -69,6 +70,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="reasonMessage != null">
+      	reason_message,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -109,6 +113,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reasonMessage != null">
+      	#{reasonMessage},
       </if>
     </trim>
   </insert>
@@ -151,7 +158,86 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="reasonMessage != null">
+      	reason_message = #{reasonMessage},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 终端 报名申请数据数量 -->
+  <select id="findTerminalApplyCount" resultType="int"
+  	parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
+  	SELECT
+		count(*)
+	FROM
+		fc_apply a
+	INNER JOIN fc_course_archives b ON b.id = a.course_id
+	<where>
+		<if test="roleId != null">AND a.apply_id = #{roleId} </if>
+		<if test="roleType != null">AND a.apply_type = #{roleType} </if>
+		<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
+	</where>
+  </select>
+  
+  <!-- 终端 报名申请数据集合 -->
+  <select id="findTerminalApplyList" resultType="chinaPress.fc.apply.vo.TerminalApplyListVo"
+  	parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
+  	SELECT
+		a.id,
+		a.apply_time AS applyTime,
+		b.`name` AS courseName,
+		b.course_price AS coursePrice,
+		a.audit_status AS auditStatus,
+		( SELECT count(*) FROM fc_apply_person WHERE apply_id = a.id ) AS studentsNumber 
+	FROM
+		fc_apply a
+	INNER JOIN fc_course_archives b ON b.id = a.course_id
+	<where>
+		<if test="roleId != null">AND a.apply_id = #{roleId} </if>
+		<if test="roleType != null">AND a.apply_type = #{roleType} </if>
+		<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
+	</where>
+	ORDER BY a.apply_time DESC
+	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+  </select>
+  
+  <!-- 终端机构 详情 -->
+  <select id="findTerminalInstitutionDetail" resultType="chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo">
+  	SELECT
+		a.id,
+		a.apply_time AS applyTime,
+		b.id AS courseId,
+		b.`name` AS courseName,
+		a.apply_count AS applyCount,
+		b.course_price AS coursePrice,
+		a.audit_status AS auditStatus,
+		a.reason_message AS reasonMessage,
+		b.course_number AS courseNumber 
+	FROM
+		fc_apply a
+		LEFT JOIN fc_course_archives b ON b.id = a.course_id
+	WHERE a.id = #{id}
+  </select>
+  
+  <!-- 终端家长 详情 -->
+  <select id="findTerminalPractitionerDetail" resultType="chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo">
+  	SELECT
+		a.id,
+		a.apply_time AS applyTime,
+		c.course_number AS courseNumber,
+		c.`name` AS courseName,
+		c.course_price AS coursePrice,
+		b.`name`,
+		b.sex,
+		b.tell_phone AS tellPhone,
+		b.certificate_number AS certificateNumber,
+		a.audit_status AS auditStatus,
+		a.reason_message AS reasonMessage 
+	FROM
+		fc_apply a
+		LEFT JOIN role_practitioner_archives b ON b.id = a.apply_id
+		LEFT JOIN fc_course_archives c ON c.id = a.course_id
+	WHERE a.id = #{id}
+  </select>
 </mapper>
