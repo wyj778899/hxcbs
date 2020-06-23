@@ -20,6 +20,14 @@
     id, pId, `name`, code, remarks, is_last, is_level, is_delete, `state`, create_id, 
     create_time, update_id, update_time
   </sql>
+  <!-- 查询首页点击更多分类 -->
+  <select id="selectPageIndexCategory" resultType="chinaPress.fc.course_category.vo.PageIndexCategoryVo">
+  	select
+	a.category_id as categoryId,b.`name` categoryName,count(*) as count
+	from fc_course_archives a
+	left join fc_course_category b on a.category_id = b.id
+	GROUP BY a.category_id
+  </select>
   <!-- 查询分类 -->
   <select id="selectCourseCategoryAll" resultType="chinaPress.common.tree.model.TreeNode"
   parameterType="chinaPress.fc.course_category.vo.CourseCategoryParam">

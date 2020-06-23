@@ -20,16 +20,24 @@
     id, course_id, hour_id, question_type, `task difficulty`, question_stem, is_delete, 
     `state`, create_id, create_time, update_id, update_time,grade
   </sql>
-  
-<!--   <select id="selectQuestionStemList" > -->
-<!--   	select -->
-<!--   	id, -->
-<!--   	question_type questionType, -->
-<!--   	task difficulty taskDifficulty, -->
-  	
-<!--   	from fc_question_stem -->
-  	
-<!--   </select> -->
+  <!-- 根据课程和课时查询关联的试题 -->
+  <select id="selectQuestionStemList" resultType="chinaPress.fc.question.vo.FcQuestionStemListVo">
+  	select
+  	id `id`,
+  	question_type questionType,
+  	task difficulty taskDifficulty,
+  	question_stem questionStem,
+  	grade grade
+  	from fc_question_stem
+  	<where>
+  		<if test="courseId != null">
+  			course_id = #{courseId}
+  		</if>
+  		<if test="hourId != null">
+  			hour_id = #{hourId}
+  		</if>
+  	</where>	
+  </select>
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

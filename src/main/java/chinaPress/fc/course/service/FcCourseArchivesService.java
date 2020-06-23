@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import chinaPress.common.tree.model.TreeNode;
 import chinaPress.common.util.JacksonUtil;
+import chinaPress.common.util.TreeUtil;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
+import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
+import chinaPress.fc.course.vo.PageIndexCourseVo;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
@@ -32,6 +36,31 @@ public class FcCourseArchivesService {
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
+	
+	/**
+	 * 查询课程详情
+	 * @param id
+	 * @return
+	 */
+	public CourseArchivesNewVo selectCourseArchivesById(Integer id) {
+		CourseArchivesNewVo data = fcCourseArchivesMapper.selectCourseArchivesById(id);
+		if(data!=null) {
+			List<TreeNode> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
+			if(list.size()>0) {
+				data.setSectionList(TreeUtil.buildByRecursive(list));
+			}
+		}
+		return data;
+	}
+	
+	/**
+	 * 查询首页随机5条课程
+	 * @return
+	 */
+	public List<PageIndexCourseVo> selectPageIndexCourse(){
+		return fcCourseArchivesMapper.selectPageIndexCourse();
+	}
+	
 	/**
 	 * 查询课程列表
 	 * @param record

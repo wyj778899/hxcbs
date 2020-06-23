@@ -21,6 +21,15 @@
     id, course_id, pId, `name`, code, remarks, is_last, is_level, is_delete, `state`, 
     create_id, create_time, update_id, update_time
   </sql>
+  <!-- 根据课程查看关联章节 -->
+  <select id="selectCourseSectionList" resultType="chinaPress.common.tree.model.TreeNode" parameterType="java.lang.Integer">
+  	select
+  	id, pId AS pid, name, code
+  	from fc_course_section
+  	where 
+  	is_delete = 0
+  	and  course_id = #{courseId}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

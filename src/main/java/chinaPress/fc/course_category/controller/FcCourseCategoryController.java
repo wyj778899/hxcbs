@@ -12,6 +12,7 @@ import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course_category.model.FcCourseCategory;
 import chinaPress.fc.course_category.service.FcCourseCategoryService;
 import chinaPress.fc.course_category.vo.CourseCategoryParam;
+import chinaPress.fc.course_category.vo.PageIndexCategoryVo;
 
 @RestController
 
@@ -19,6 +20,19 @@ public class FcCourseCategoryController {
 
 	@Autowired
 	private FcCourseCategoryService fcCourseCategoryService;
+	
+	/**
+	 *   查询首页点击更多分类
+	 * @return
+	 */
+	@RequestMapping("selectPageIndexCategory")
+	public Result selectPageIndexCategory(){
+		List<PageIndexCategoryVo> data = fcCourseCategoryService.selectPageIndexCategory();
+		if(data.size()>0) {
+			return ResultUtil.custom(1, "查询成功", data);
+		}
+		return ResultUtil.custom(-1, "查询失败", data);
+	}
 	
 	/**
 	 * 查询服务分类树

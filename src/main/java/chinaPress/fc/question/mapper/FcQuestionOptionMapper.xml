@@ -18,11 +18,14 @@
     id, stem_id, option_type, option_name, is_correct, is_delete, `state`, create_id, 
     create_time, update_id, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByStemId" parameterType="java.lang.Integer" resultType="chinaPress.fc.question.vo.FcQuestionOptionVo">
     select 
-    <include refid="Base_Column_List" />
+    id,
+    stem_id as stemId,
+    option_type as optionType,
+    option_name as optionName,
     from fc_question_option
-    where id = #{id,jdbcType=INTEGER}
+    where stem_id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from fc_question_option

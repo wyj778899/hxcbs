@@ -23,6 +23,38 @@
     id, `name`, `type`, category_id, course_price, course_number, renew_price, remarks, 
     photo, is_putaway, `state`, create_id, create_time, update_id, update_time,is_delete
   </sql>
+  <!-- 查询课程详情 -->
+  <select id="selectCourseArchivesById" resultType="chinaPress.fc.course.vo.CourseArchivesNewVo" parameterType="java.lang.Integer">
+  	select
+	a.id as `id`,
+	a.name as courseName,
+	a.type as courseType,
+	b.`name` as categoryName,
+	a.course_price as coursePrice,
+	a.course_number as courseNumber,
+	a.renew_price as renewPrice,
+	a.remarks as remarks,
+	a.photo as photo,
+	a.update_time as updateTime
+	from fc_course_archives a
+	left join fc_course_category b on a.category_id = b.id
+	where id = #{id}
+  </select>
+  <!-- 查询首页随机5条课程 -->
+  <select id="selectPageIndexCourse" resultType="chinaPress.fc.course.vo.PageIndexCourseVo">
+  	select
+  	a.id,
+  	a.name as courseName,
+  	a.type as courseType,
+  	a.course_price as coursePrice,
+  	a.remarks as remarks,
+  	a.photo as photo,
+  	b.name as categoryName
+  	from fc_course_archives a
+  	left join fc_course_category b on a.category_id = b.id
+  	where a.is_putaway = 1 and a.state = 1 and is_delete = 0
+  	order by rand() limit 5
+  </select>
   <!-- 课程列表 -->
   <select id="selectCOurseArchivesList" resultType="chinaPress.fc.course.vo.CourseArchivesVo"
   	parameterType="chinaPress.fc.course.vo.CourseArchivesParam">

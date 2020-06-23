@@ -7,6 +7,14 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface FcCourseHourMapper {
+	
+	/**
+	 * 根据课程id查询视频数量
+	 * @param courseId
+	 * @return
+	 */
+	int selectCourseHourCountByCOurseId(Integer courseId);
+	
     int deleteByPrimaryKey(Integer id);
 
     int insertSelective(FcCourseHour record);

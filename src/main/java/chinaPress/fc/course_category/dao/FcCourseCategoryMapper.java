@@ -1,17 +1,24 @@
 package chinaPress.fc.course_category.dao;
 
-import chinaPress.common.tree.model.TreeNode;
-import chinaPress.fc.course_category.model.FcCourseCategory;
-import chinaPress.fc.course_category.vo.CourseCategoryParam;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import chinaPress.common.tree.model.TreeNode;
+import chinaPress.fc.course_category.model.FcCourseCategory;
+import chinaPress.fc.course_category.vo.CourseCategoryParam;
+import chinaPress.fc.course_category.vo.PageIndexCategoryVo;
+
 @Mapper
 @Repository
 public interface FcCourseCategoryMapper {
+	
+	/**
+	 *  查询首页点击更多分类
+	 * @return
+	 */
+	List<PageIndexCategoryVo> selectPageIndexCategory();
 	
 	/**
 	 * 根据名称模糊查

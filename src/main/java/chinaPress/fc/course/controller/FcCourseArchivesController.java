@@ -10,14 +10,38 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course.service.FcCourseArchivesService;
+import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
+import chinaPress.fc.course.vo.PageIndexCourseVo;
 
 @RestController
 public class FcCourseArchivesController {
 	@Autowired
 	private FcCourseArchivesService fcCourseArchivesService;
 	
+	/**
+	 * 查询课程详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("selectCourseArchivesById")
+	public Result selectCourseArchivesById(Integer id) {
+		CourseArchivesNewVo data = fcCourseArchivesService.selectCourseArchivesById(id);
+		if(data!=null) {
+			return ResultUtil.custom(1, "查询成功", data);
+		}
+		return ResultUtil.custom(-1, "查询失败", data);
+	}
+	
+	/**
+	 * 查询首页随机5条课程
+	 * @return
+	 */
+	@RequestMapping("selectPageIndexCourse")
+	public List<PageIndexCourseVo> selectPageIndexCourse(){
+		return fcCourseArchivesService.selectPageIndexCourse();
+	}
 	/**
 	 * 查询课程列表
 	 * @param record

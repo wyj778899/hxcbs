@@ -1,21 +1,21 @@
 package chinaPress.fc.question.dao;
 
-import chinaPress.fc.question.model.FcQuestionOption;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import chinaPress.fc.question.model.FcQuestionOption;
+import chinaPress.fc.question.vo.FcQuestionOptionVo;
 
 @Mapper
 @Repository
 public interface FcQuestionOptionMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FcQuestionOption record);
-
     int insertSelective(FcQuestionOption record);
 
-    FcQuestionOption selectByPrimaryKey(Integer id);
+    List<FcQuestionOptionVo> selectByStemId(Integer id);
 
     int updateByPrimaryKeySelective(FcQuestionOption record);
-
-    int updateByPrimaryKey(FcQuestionOption record);
 }

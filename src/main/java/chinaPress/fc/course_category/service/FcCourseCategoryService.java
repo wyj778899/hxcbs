@@ -11,11 +11,20 @@ import chinaPress.common.util.TreeUtil;
 import chinaPress.fc.course_category.dao.FcCourseCategoryMapper;
 import chinaPress.fc.course_category.model.FcCourseCategory;
 import chinaPress.fc.course_category.vo.CourseCategoryParam;
+import chinaPress.fc.course_category.vo.PageIndexCategoryVo;
 
 @Service
 public class FcCourseCategoryService {
 	@Autowired
 	private FcCourseCategoryMapper fcCourseCategoryMapper;
+	
+	/**
+	 *   查询首页点击更多分类
+	 * @return
+	 */
+	public List<PageIndexCategoryVo> selectPageIndexCategory(){
+		return fcCourseCategoryMapper.selectPageIndexCategory();
+	}
 	
 	/**
 	 * 查询服务分类树

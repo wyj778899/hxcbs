@@ -20,6 +20,14 @@
     id, `name`, address, url, format, is_look, is_delete, `state`, create_id, create_time, 
     update_id, update_time,section_id
   </sql>
+  <!-- 根据课程id查询视频数量 -->
+  <select id="selectCourseHourCountByCOurseId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+  	select
+	count(*)
+	fc_course_hour a
+	left join fc_course_section b on a.section_id = b.id
+	where b.course_id = #{courseId}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
