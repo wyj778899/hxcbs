@@ -36,42 +36,75 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   
-  <select id="selectPractitionerAll" parameterType="chinaPress.role.member.model.PractitionerInfo" resultMap="BaseResultMap">
+  <select id="selectPractitionerParents" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerParent">
     select 
-    <include refid="Base_Column_List" />
-    from role_practitioner_archives
-    where state = 1 
+     	b.id as id,
+     	a.name as name,
+     	a.tell_phone as tellPhone,
+     	a.email as email,
+     	a.certificate_number as certificateNumber,
+     	a.sex as sex
+    from role_practitioner_archives a,
+         role_staff_archives b
+    where a.state = 1 and 				<!-- 家长/从业者状态 -->
+          a.type = 1 and  				<!-- 1代表家长，2代表从业者 -->
+          a.id = b.role_id 				<!-- 连接条件 --> 
 	     <if test="name !=null and name !=''">
-	        and name like CONCAT('%',CONCAT(#{name},'%'))
+	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
-        	and certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
+        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
       	 </if>
       	 <if test="tellPhone !=null and tellPhone !=''">
-        	and tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
       	 </if>
-      	 <if test="type !=null and type !=''">
-        	and type = #{type}
+     order by b.create_time desc
+     limit #{page} , #{limit}
+  </select>
+  
+  <select id="selectPractitionerEmps" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerEmps">
+    select 
+     	b.id as id,
+     	a.name as name,
+     	a.tell_phone as tellPhone,
+     	a.email as email,
+     	a.certificate_number as certificateNumber,
+     	a.address as address
+    from role_practitioner_archives a,
+         role_staff_archives b
+    where a.state = 1 and 				<!-- 家长/从业者状态 -->
+          a.type = 2 and  				<!-- 1代表家长，2代表从业者 -->
+          a.id = b.role_id 				<!-- 连接条件 --> 
+	     <if test="name !=null and name !=''">
+	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	     </if>
+      	 <if test="certificateNumber !=null and certificateNumber !=''">
+        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
       	 </if>
-     order by create_time desc
+      	 <if test="tellPhone !=null and tellPhone !=''">
+        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+      	 </if>
+     order by b.create_time desc
      limit #{page} , #{limit}
   </select>
   
   <select id="selectCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
     select count(*)
-    from role_practitioner_archives
-    where state = 1 
+    from role_practitioner_archives a,
+    	 role_staff_archives b
+    where a.state = 1 and
+          a.id = b.role_id
     	 <if test="name !=null and name !=''">
-	        and name = #{name}
+	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
-        	and certificate_number = #{certificateNumber}
+        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
       	 </if>
       	 <if test="tellPhone !=null and tellPhone !=''">
-        	and tell_phone = #{tellPhone}
+        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
       	 </if>
       	 <if test="type !=null and type !=''">
-        	and type = #{type}
+        	and a.type = #{type}
       	 </if>
   </select>
   
@@ -80,7 +113,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   
-  <insert id="insertSelective" parameterType="chinaPress.role.member.model.PractitionerInfo">
+  <insert id="insertSelective" parameterType="chinaPress.role.member.model.PractitionerInfo"
+  	useGeneratedKeys="true" keyProperty="id">
     insert into role_practitioner_archives
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

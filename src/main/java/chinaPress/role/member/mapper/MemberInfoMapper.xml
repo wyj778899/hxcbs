@@ -2,17 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chinaPress.role.member.dao.MemberInfoMapper">
   <resultMap id="BaseResultMap" type="chinaPress.role.member.model.MemberInfo">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="certificate_type" jdbcType="INTEGER" property="certificateType" />
+     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="photo" jdbcType="VARCHAR" property="photo" />
-    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="provice" jdbcType="VARCHAR" property="provice" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="is_start" jdbcType="INTEGER" property="isStart" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="create_id" jdbcType="INTEGER" property="createId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="role_type" jdbcType="INTEGER" property="roleType" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   
   <!-- 员工对应证书信息封装 -->
@@ -44,6 +53,34 @@
 	    </if>
 	    <if test="userName !=null and userName !='' ">
 	    	and user_name = #{userName,jdbcType=VARCHAR}
+	    </if>
+	    <if test="tellPhone != null and tellPhone != ''">
+	    	and tell_phone = #{tellPhone}
+	    </if>
+  </select>
+  
+   <select id="selectNameAndTell" parameterType="chinaPress.role.member.model.MemberInfo" resultType="chinaPress.role.member.vo.MemberCouponInfo">
+    select 
+        id as id,
+    	name as name,
+    	tell_phone as tellPhone,
+    	role_type as roleType
+    from role_staff_archives
+    where 1=1
+	    <if test="name !=null and name !='' ">
+	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    	or tell_phone like CONCAT('%',CONCAT(#{name},'%'))
+	    </if>
+	 limit #{page} , #{limit}
+  </select>
+  
+  <select id="selectNameAndTellCount" parameterType="chinaPress.role.member.model.MemberInfo" resultType="java.lang.Integer">
+    select count(*)
+    from role_staff_archives
+    where 1=1
+	    <if test="name !=null and name !='' ">
+	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    	or tell_phone like CONCAT('%',CONCAT(#{name},'%'))
 	    </if>
   </select>
   

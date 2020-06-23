@@ -228,7 +228,8 @@
 	<!-- 优惠券列表 -->
 	<select id="selectFcDiscountCouponList" resultType="chinaPress.fc.coupon.vo.FcDiscountCouponListVo">
 		select
-			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime,
+			a.id, a.name, date_format(a.start_time, '%Y/%m/%d %T') startTime,
+			date_format(a.end_time, '%Y/%m/%d %T') endTime,
 			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName,
 			c.name courseName, a.count
 		from
@@ -254,7 +255,8 @@
 <!-- 		<id column="id" jdbcType="INTEGER" property="id" /> -->
 <!-- 		<result column="typeName" jdbcType="VARCHAR" property="typeName" /> -->
 <!-- 		<result column="name" jdbcType="VARCHAR" property="name" /> -->
-<!-- 		<result column="validTime" jdbcType="VARCHAR" property="validTime" /> -->
+<!-- 		<result column="startTime" jdbcType="VARCHAR" property="startTime" /> -->
+<!-- 		<result column="endTime" jdbcType="VARCHAR" property="endTime" /> -->
 <!-- 		<result column="money" jdbcType="VARCHAR" property="money" /> -->
 <!-- 		<result column="count" jdbcType="INTEGER" property="count" /> -->
 <!-- 		<result column="grantCount" jdbcType="INTEGER" property="grantCount" /> -->
@@ -275,7 +277,8 @@
 	<!-- 优惠券明细 -->
 <!-- 	<select id="selectFcDiscountCouponDetail" resultMap="fcDiscountCouponDetailResultMap"> -->
 <!-- 		select -->
-<!-- 			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime, -->
+<!-- 			a.id, a.name, date_format(a.start_time, '%Y/%m/%d %T') startTime, -->
+<!-- 			date_format(a.end_time, '%Y/%m/%d %T') endTime, -->
 <!-- 			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName, -->
 <!-- 			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '员'), '') money, -->
 <!-- 			a.count, c.name courseName, count(d.status = 1) grantCount, count(d.status = 3) useCount, -->

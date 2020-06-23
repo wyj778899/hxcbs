@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
+import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -65,7 +66,7 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param endTime       结束时间
 	 * @return
 	 */
-	int selectCouponRecordCount(@Param("couponId") Integer couponId, @Param("code") String code,
+	int selectCouponRecordDetailCount(@Param("couponId") Integer couponId, @Param("code") String code,
 			@Param("grantRoleName") String grantRoleName, @Param("status") Integer status,
 			@Param("startTime") String startTime, @Param("endTime") String endTime);
 
@@ -83,8 +84,57 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param rows          查询多少条数据
 	 * @return
 	 */
-	List<FcDiscountCouponRecordVo> selectCouponRecordList(@Param("couponId") Integer couponId,
+	List<FcDiscountCouponRecordVo> selectCouponRecordDetailList(@Param("couponId") Integer couponId,
 			@Param("code") String code, @Param("grantRoleName") String grantRoleName, @Param("status") Integer status,
 			@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("offset") Integer offset,
 			@Param("rows") Integer rows);
+
+	/**
+	 * 查询我的优惠券个数
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   领取人角色id
+	 * @param grantRoleType 领取人角色类型
+	 * @param type          优惠券类型1.满减券2.观看券
+	 * @param name          优惠券名称
+	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
+	 * @param status        优惠券使用状态1.未使用2.已过期
+	 * @return
+	 */
+	int selectMyCouponRecordCount(@Param("grantRoleId") Integer grantRoleId,
+			@Param("grantRoleType") Integer grantRoleType, @Param("type") Integer type, @Param("name") String name,
+			@Param("code") String code, @Param("courseName") String courseName, @Param("status") Integer status);
+
+	/**
+	 * 查询我的优惠券列表
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   领取人角色id
+	 * @param grantRoleType 领取人角色类型
+	 * @param type          优惠券类型1.满减券2.观看券
+	 * @param name          优惠券名称
+	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
+	 * @param status        优惠券使用状态1.未使用2.已过期
+	 * @param offset        从第几条数据开始查询
+	 * @param rows          查询多少条数据
+	 * @return
+	 */
+	List<FcDiscountMyCouponRecordListVo> selectMyCouponRecordList(@Param("grantRoleId") Integer grantRoleId,
+			@Param("grantRoleType") Integer grantRoleType, @Param("type") Integer type, @Param("name") String name,
+			@Param("code") String code, @Param("courseName") String courseName, @Param("status") Integer status,
+			@Param("offset") Integer offset, @Param("rows") Integer rows);
+
+	/**
+	 * 发放优惠券
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId
+	 * @param grantRoleType
+	 * @param couponRecordIdList
+	 * @return
+	 */
+	int grantCoupon(@Param("grantRoleId") Integer grantRoleId, @Param("grantRoleType") Integer grantRoleType,
+			@Param("couponRecordIdList") List<String> couponRecordIdList);
 }
