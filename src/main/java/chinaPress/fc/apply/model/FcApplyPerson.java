@@ -108,7 +108,7 @@ public class FcApplyPerson {
      * 角色类型（1.家长2.从业者）
      * @param roleType
      */
-    public void setRoleType(Integer roleType) {
+	public void setRoleType(Integer roleType) {
         this.roleType = roleType;
     }
 

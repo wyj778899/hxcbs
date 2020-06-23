@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chinaPress.fc.apply.dao.FcApplyPersonMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.apply.model.FcApplyPerson">
+<mapper namespace="chinaPress.fc.order.dao.FcOrderPersonMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.fc.order.model.FcOrderPerson">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="role_type" jdbcType="INTEGER" property="roleType" />
+    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
+    <result column="section_count" jdbcType="INTEGER" property="sectionCount" />
+    <result column="have_count" jdbcType="INTEGER" property="haveCount" />
     <result column="create_id" jdbcType="INTEGER" property="createId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, apply_id, role_id, role_type, create_id, create_time, update_id, update_time
+    id, order_id, role_id, role_type, total_count, section_count, have_count, create_id, 
+    create_time, update_id, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from fc_apply_person
+    from fc_order_person
     where id = #{id,jdbcType=INTEGER}
   </select>
-  
-  <select id="findByApplyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_apply_person
-    where apply_id = #{applyId,jdbcType=INTEGER}
-  </select>
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_apply_person
+    delete from fc_order_person
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.apply.model.FcApplyPerson">
-    insert into fc_apply_person
+  <insert id="insertSelective" parameterType="chinaPress.fc.order.model.FcOrderPerson">
+    insert into fc_order_person
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="applyId != null">
-        apply_id,
+      <if test="orderId != null">
+        order_id,
       </if>
       <if test="roleId != null">
         role_id,
       </if>
       <if test="roleType != null">
         role_type,
+      </if>
+      <if test="totalCount != null">
+        total_count,
+      </if>
+      <if test="sectionCount != null">
+        section_count,
+      </if>
+      <if test="haveCount != null">
+        have_count,
       </if>
       <if test="createId != null">
         create_id,
@@ -64,14 +69,23 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="applyId != null">
-        #{applyId,jdbcType=INTEGER},
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
       </if>
       <if test="roleId != null">
         #{roleId,jdbcType=INTEGER},
       </if>
       <if test="roleType != null">
         #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="totalCount != null">
+        #{totalCount,jdbcType=INTEGER},
+      </if>
+      <if test="sectionCount != null">
+        #{sectionCount,jdbcType=INTEGER},
+      </if>
+      <if test="haveCount != null">
+        #{haveCount,jdbcType=INTEGER},
       </if>
       <if test="createId != null">
         #{createId,jdbcType=INTEGER},
@@ -87,17 +101,26 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.apply.model.FcApplyPerson">
-    update fc_apply_person
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.order.model.FcOrderPerson">
+    update fc_order_person
     <set>
-      <if test="applyId != null">
-        apply_id = #{applyId,jdbcType=INTEGER},
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
       </if>
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=INTEGER},
       </if>
       <if test="roleType != null">
         role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="totalCount != null">
+        total_count = #{totalCount,jdbcType=INTEGER},
+      </if>
+      <if test="sectionCount != null">
+        section_count = #{sectionCount,jdbcType=INTEGER},
+      </if>
+      <if test="haveCount != null">
+        have_count = #{haveCount,jdbcType=INTEGER},
       </if>
       <if test="createId != null">
         create_id = #{createId,jdbcType=INTEGER},

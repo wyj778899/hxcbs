@@ -54,6 +54,9 @@
 	    <if test="userName !=null and userName !='' ">
 	    	and user_name = #{userName,jdbcType=VARCHAR}
 	    </if>
+	    <if test="tellPhone != null and tellPhone != ''">
+	    	and tell_phone = #{tellPhone}
+	    </if>
   </select>
   
    <select id="selectNameAndTell" parameterType="chinaPress.role.member.model.MemberInfo" resultType="chinaPress.role.member.vo.MemberCouponInfo">
