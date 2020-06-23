@@ -80,31 +80,31 @@ public class FcDiscountCouponService {
 	public String checkData(FcDiscountCoupon fcDiscountCoupon, String course) {
 		// 优惠券类型
 		if (fcDiscountCoupon.getType() == null) {
-			return "请选择优惠券类型";
+			return "优惠券类型不能为空";
 		} else if (fcDiscountCoupon.getType().intValue() != 1 && fcDiscountCoupon.getType().intValue() != 2) {
-			return "请选择正确的优惠券类型";
+			return "错误的优惠券类型";
 		}
 		// 优惠券名称
 		if (StringUtils.isBlank(fcDiscountCoupon.getName())) {
-			return "请填写优惠券名称";
+			return "优惠券名称不能为空";
 		} else if (fcDiscountCoupon.getName().length() > 10) {
 			return "优惠券名称最多支持10个字符";
 		}
 		// 优惠券数量
 		if (fcDiscountCoupon.getCount() == null) {
-			return "请填写优惠券数量";
+			return "优惠券数量不能为空";
 		} else if (fcDiscountCoupon.getCount().intValue() > 100) {
 			return "优惠券数量最多100个";
 		}
 		// 优惠券编码
 		if (StringUtils.isBlank(fcDiscountCoupon.getCode())) {
-			return "请填写优惠券编码前缀";
+			return "优惠券编码前缀不能为空";
 		} else if (fcDiscountCoupon.getCode().length() > 5) {
 			return "优惠券编码前缀最多支持5个字符，且为英文";
 		}
 		int count = fcDiscountCouponMapper.selectIsExistsSameCode(fcDiscountCoupon.getCode());
 		if (count > 0) {
-			return "优惠券编码前缀重复，请更换前缀";
+			return "优惠券编码前缀重复";
 		}
 		return "";
 	}
