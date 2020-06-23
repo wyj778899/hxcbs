@@ -44,42 +44,50 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
    
-   <select id="selectTrainInstitutionAll" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultMap="BaseResultMap">
+   <select id="selectTrainInstitutionAll" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultType="chinaPress.role.member.vo.InstitutionVo">
     select 
-    <include refid="Base_Column_List" />
-    from role_institution_archives
-    where state = 1
+        b.id as id,
+    	a.name as name,
+    	a.code as code,
+    	a.legal_person as legalPerson,
+    	a.certificate_number as certificateNumber,
+    	a.register_name as registerName,
+    	a.register_tell as registerTell,
+    	a.audit_status as auditStatus
+    from role_institution_archives a,
+         role_staff_archives b
+    where a.state = 1 and b.role_type = 2 and a.id = b.role_id
 	    <if test="name!=null and name!=''">
-	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    	and a.name like CONCAT('%',CONCAT(#{name},'%'))
 	    </if>
 	    <if test="code!=null and code!=''">
-	    	and code like CONCAT('%',CONCAT(#{code},'%'))
+	    	and a.code like CONCAT('%',CONCAT(#{code},'%'))
 	    </if>
 	    <if test="legalPerson!=null and legalPerson!=''">
-	    	and legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    	and a.legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
 	    </if>
 	    <if test="registerTell!=null and registerTell!=''">
-	    	and register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    	and a.register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
 	    </if>
-	order by create_time desc
+	order by b.create_time desc
 	limit #{page} , #{limit}
   </select>
   
   <select id="selectCount" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultType="java.lang.Integer">
     select count(*)
-    from role_institution_archives
-    where state = 1
+    from role_institution_archives a,role_staff_archives b
+    where a.state = 1 and b.role_type = 2 and a.id = b.role_id
 	    <if test="name!=null and name!=''">
-	    	and name like CONCAT('%',CONCAT(#{name},'%'))
+	    	and a.name like CONCAT('%',CONCAT(#{name},'%'))
 	    </if>
 	    <if test="code!=null and code!=''">
-	    	and code like CONCAT('%',CONCAT(#{code},'%'))
+	    	and a.code like CONCAT('%',CONCAT(#{code},'%'))
 	    </if>
 	    <if test="legalPerson!=null and legalPerson!=''">
-	    	and legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    	and a.legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
 	    </if>
 	    <if test="registerTell!=null and registerTell!=''">
-	    	and register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    	and a.register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
 	    </if>
   </select>
   

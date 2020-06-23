@@ -2,8 +2,6 @@ package chinaPress.role.member.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -173,7 +171,7 @@ public class MemberInfoController {
 	 * @param name
 	 * @param certificateNumber
 	 * @param tellPhone
-	 * @param type
+	 * @param type 1家长/2从业者
 	 * @param page
 	 * @param limit
 	 * @return
@@ -241,5 +239,22 @@ public class MemberInfoController {
 			e.printStackTrace();
 			return new Result(-1, "上传失败", "");
 		}
+	}
+	
+	
+	/**
+	 * 通过用户名/手机号和姓名查询员工信息，用于发放优惠券
+	 * @param name       用户名/手机号
+	 * @param page   	   页数
+	 * @param name       每页显示的条数
+	 * @return
+	 */
+	@RequestMapping("/queryMembers")
+	public Result queryMembers(String name,Integer page,Integer limit) {
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setName(name);
+		memberInfo.setPage((page-1)*limit);
+		memberInfo.setLimit(limit);
+		return memberInfoService.findMemberNameAndTell(memberInfo);
 	}
 }
