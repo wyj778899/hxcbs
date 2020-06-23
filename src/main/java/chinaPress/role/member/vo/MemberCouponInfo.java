@@ -27,6 +27,20 @@ public class MemberCouponInfo {
 	 */
 	private Integer roleType;
 	
+	/**
+	 * 角色名称
+	 */
+	private String RoleName;
+	
+	
+
+	public String getRoleName() {
+		return RoleName;
+	}
+
+	public void setRoleName(String roleName) {
+		RoleName = roleName;
+	}
 
 	public String getName() {
 		return name;
