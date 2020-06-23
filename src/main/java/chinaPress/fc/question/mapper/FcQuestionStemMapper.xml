@@ -14,7 +14,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="grade" jdbcType="STRING" property="grade" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
   </resultMap>
   <sql id="Base_Column_List">
     id, course_id, hour_id, question_type, `task difficulty`, question_stem, is_delete, 
