@@ -80,7 +80,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   
-  <insert id="insertSelective" parameterType="chinaPress.role.member.model.PractitionerInfo">
+  <insert id="insertSelective" parameterType="chinaPress.role.member.model.PractitionerInfo"
+  	useGeneratedKeys="true" keyProperty="id">
     insert into role_practitioner_archives
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
