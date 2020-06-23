@@ -86,13 +86,14 @@ public class FcDiscountCouponRecordService {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @return
 	 */
 	public int selectMyCouponRecordCount(Integer grantRoleId, Integer grantRoleType, Integer type, String name,
-			String code, Integer status) {
+			String code, String courseName, Integer status) {
 		return fcDiscountCouponRecordMapper.selectMyCouponRecordCount(grantRoleId, grantRoleType, type, name, code,
-				status);
+				courseName, status);
 	}
 
 	/**
@@ -104,15 +105,17 @@ public class FcDiscountCouponRecordService {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @param pageNumber    第几页
 	 * @param pageSize      每页查询多少条
 	 * @return
 	 */
 	public List<FcDiscountMyCouponRecordListVo> selectMyCouponRecordList(Integer grantRoleId, Integer grantRoleType,
-			Integer type, String name, String code, Integer status, Integer pageNumber, Integer pageSize) {
+			Integer type, String name, String code, String courseName, Integer status, Integer pageNumber,
+			Integer pageSize) {
 		return fcDiscountCouponRecordMapper.selectMyCouponRecordList(grantRoleId, grantRoleType, type, name, code,
-				status, pageNumber * pageSize - pageSize, pageSize);
+				courseName, status, pageNumber * pageSize - pageSize, pageSize);
 	}
 
 	/**

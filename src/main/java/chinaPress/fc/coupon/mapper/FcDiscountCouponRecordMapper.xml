@@ -308,11 +308,15 @@
 			</if>
 			<!-- 优惠券编码 -->
 			<if test="code != null and code != ''">
-				and a.code like concat('%', #{code} ,'%')		
-			</if>			
+				and a.code like concat('%', #{code} ,'%')
+			</if>
+			<!-- 优惠券课程名称 -->	
+			<if test="courseName != null and courseName != ''">
+				and d.name like concat('%', #{courseName} ,'%')
+			</if>
 			<!-- 未使用 -->
 			<if test="status == 1">
-				and b.status = 2 
+				and a.status = 2 
 			</if>
 			<!-- 已过期 -->
 			<if test="status == 2">
@@ -342,10 +346,14 @@
 			<!-- 优惠券编码 -->
 			<if test="code != null and code != ''">
 				and a.code like concat('%', #{code} ,'%')		
-			</if>			
+			</if>		
+			<!-- 优惠券课程名称 -->	
+			<if test="courseName != null and courseName != ''">
+				and d.name like concat('%', #{courseName} ,'%')
+			</if>	
 			<!-- 未使用 -->
 			<if test="status == 1">
-				and b.status = 2 
+				and a.status = 2 
 			</if>
 			<!-- 已过期 -->
 			<if test="status == 2">

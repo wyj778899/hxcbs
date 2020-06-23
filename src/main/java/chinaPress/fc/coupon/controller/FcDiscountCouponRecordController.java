@@ -96,14 +96,15 @@ public class FcDiscountCouponRecordController {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @return
 	 */
 	@RequestMapping("index/myDetailCount")
 	public Result selectMyCouponRecordCount(Integer grantRoleId, Integer grantRoleType, Integer type, String name,
-			String code, Integer status) {
+			String code, String courseName, Integer status) {
 		int index = fcDiscountCouponRecordService.selectMyCouponRecordCount(grantRoleId, grantRoleType, type, name,
-				code, status);
+				code, courseName, status);
 		return ResultUtil.ok(index);
 	}
 
@@ -116,6 +117,7 @@ public class FcDiscountCouponRecordController {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @param pageNumber    第几页
 	 * @param pageSize      每页查询多少条
@@ -123,9 +125,9 @@ public class FcDiscountCouponRecordController {
 	 */
 	@RequestMapping("index/myDetailList")
 	public Result selectMyCouponRecordList(Integer grantRoleId, Integer grantRoleType, Integer type, String name,
-			String code, Integer status, Integer pageNumber, Integer pageSize) {
+			String code, String courseName, Integer status, Integer pageNumber, Integer pageSize) {
 		List<FcDiscountMyCouponRecordListVo> list = fcDiscountCouponRecordService.selectMyCouponRecordList(grantRoleId,
-				grantRoleType, type, name, code, status, pageNumber, pageSize);
+				grantRoleType, type, name, code, courseName, status, pageNumber, pageSize);
 		return ResultUtil.ok(list);
 	}
 

@@ -98,12 +98,13 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @return
 	 */
 	int selectMyCouponRecordCount(@Param("grantRoleId") Integer grantRoleId,
 			@Param("grantRoleType") Integer grantRoleType, @Param("type") Integer type, @Param("name") String name,
-			@Param("code") String code, @Param("status") Integer status);
+			@Param("code") String code, @Param("courseName") String courseName, @Param("status") Integer status);
 
 	/**
 	 * 查询我的优惠券列表
@@ -114,6 +115,7 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param type          优惠券类型1.满减券2.观看券
 	 * @param name          优惠券名称
 	 * @param code          优惠券编码
+	 * @param courseName    优惠券课程名称
 	 * @param status        优惠券使用状态1.未使用2.已过期
 	 * @param offset        从第几条数据开始查询
 	 * @param rows          查询多少条数据
@@ -121,8 +123,8 @@ public interface FcDiscountCouponRecordMapper {
 	 */
 	List<FcDiscountMyCouponRecordListVo> selectMyCouponRecordList(@Param("grantRoleId") Integer grantRoleId,
 			@Param("grantRoleType") Integer grantRoleType, @Param("type") Integer type, @Param("name") String name,
-			@Param("code") String code, @Param("status") Integer status, @Param("offset") Integer offset,
-			@Param("rows") Integer rows);
+			@Param("code") String code, @Param("courseName") String courseName, @Param("status") Integer status,
+			@Param("offset") Integer offset, @Param("rows") Integer rows);
 
 	/**
 	 * 发放优惠券
