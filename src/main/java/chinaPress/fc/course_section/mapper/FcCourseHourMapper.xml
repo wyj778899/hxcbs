@@ -20,6 +20,17 @@
     id, `name`, address, url, format, is_look, is_delete, `state`, create_id, create_time, 
     update_id, update_time,section_id
   </sql>
+  <select id="selectCourseHourListBySectionId" resultType="chinaPress.fc.course_section.vo.FcCourseHourVo">
+  	select
+	a.id as `id`,
+	a.`name`,
+	a.address,
+	a.url,
+	a.format,
+	a.is_look as isLook
+	from fc_course_hour a
+	where b.section_id = #{sectionId} 
+  </select>
   <!-- 根据课程id查询视频数量 -->
   <select id="selectCourseHourCountByCOurseId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
   	select
