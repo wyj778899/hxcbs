@@ -15,6 +15,7 @@ import chinaPress.fc.apply.service.FcApplyService;
 import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
+import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
 
 @RequestMapping("fc_apply")
 @RestController
@@ -71,6 +72,22 @@ public class FcApplyController {
 	@GetMapping("findTerminalInstitutionDetail")
 	public Result findTerminalInstitutionDetail(Integer id) {
 		TerminalInstitutionApplyDetailVo detail = fcApplyService.findTerminalInstitutionDetail(id);
+		if (detail != null) {
+			return ResultUtil.ok(detail);
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 终端家长 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("findTerminalPractitionerDetail")
+	public Result findTerminalPractitionerDetail(Integer id) {
+		TerminalPractitionerApplyDetailVo detail = fcApplyService.findTerminalPractitionerDetail(id);
 		if (detail != null) {
 			return ResultUtil.ok(detail);
 		} else {

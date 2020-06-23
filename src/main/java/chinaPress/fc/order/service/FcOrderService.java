@@ -10,6 +10,8 @@ import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
 @Service
 public class FcOrderService {
@@ -52,5 +54,26 @@ public class FcOrderService {
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;
+	}
+
+	/**
+	 * 终端家长 课程数据数量
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public int findTerminalPractitionerCourseCount(TerminalPractitionerOrderCourseListParam param) {
+		return fcOrderMapper.findTerminalPractitionerCourseCount(param);
+	}
+
+	/**
+	 * 终端家长 课程数据集合
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public List<TerminalPractitionerOrderCourseListVo> findTerminalPractitionerCourseList(
+			TerminalPractitionerOrderCourseListParam param) {
+		return fcOrderMapper.findTerminalPractitionerCourseList(param);
 	}
 }

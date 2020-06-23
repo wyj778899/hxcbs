@@ -9,6 +9,7 @@ import chinaPress.fc.apply.model.FcApply;
 import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
+import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
 
 @Mapper
 @Repository
@@ -36,9 +37,18 @@ public interface FcApplyMapper {
 
 	/**
 	 * 终端机构 详情
+	 * 
 	 * @param id
 	 * @return
 	 */
 	TerminalInstitutionApplyDetailVo findTerminalInstitutionDetail(Integer id);
-	
+
+	/**
+	 * 终端家长 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	TerminalPractitionerApplyDetailVo findTerminalPractitionerDetail(Integer id);
+
 }

@@ -219,4 +219,25 @@
 		LEFT JOIN fc_course_archives b ON b.id = a.course_id
 	WHERE a.id = #{id}
   </select>
+  
+  <!-- 终端家长 详情 -->
+  <select id="findTerminalPractitionerDetail" resultType="chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo">
+  	SELECT
+		a.id,
+		a.apply_time AS applyTime,
+		c.course_number AS courseNumber,
+		c.`name` AS courseName,
+		c.course_price AS coursePrice,
+		b.`name`,
+		b.sex,
+		b.tell_phone AS tellPhone,
+		b.certificate_number AS certificateNumber,
+		a.audit_status AS auditStatus,
+		a.reason_message AS reasonMessage 
+	FROM
+		fc_apply a
+		LEFT JOIN role_practitioner_archives b ON b.id = a.apply_id
+		LEFT JOIN fc_course_archives c ON c.id = a.course_id
+	WHERE a.id = #{id}
+  </select>
 </mapper>

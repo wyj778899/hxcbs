@@ -13,6 +13,8 @@ import chinaPress.fc.order.service.FcOrderService;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
 @RequestMapping("fc_order")
 @RestController
@@ -60,5 +62,29 @@ public class FcOrderController {
 			return ResultUtil.error();
 		}
 
+	}
+
+	/**
+	 * 终端家长 课程数据数量
+	 * 
+	 * @param param
+	 * @return
+	 */
+	@GetMapping("findTerminalPractitionerCourseCount")
+	public Result findTerminalPractitionerCourseCount(TerminalPractitionerOrderCourseListParam param) {
+		int count = fcOrderService.findTerminalPractitionerCourseCount(param);
+		return ResultUtil.ok(count);
+	}
+
+	/**
+	 * 终端家长 课程数据集合
+	 * 
+	 * @param param
+	 * @return
+	 */
+	@GetMapping("findTerminalPractitionerCourseList")
+	public Result findTerminalPractitionerCourseList(TerminalPractitionerOrderCourseListParam param) {
+		List<TerminalPractitionerOrderCourseListVo> data = fcOrderService.findTerminalPractitionerCourseList(param);
+		return ResultUtil.ok(data);
 	}
 }

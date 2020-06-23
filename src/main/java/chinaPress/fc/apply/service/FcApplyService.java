@@ -15,6 +15,7 @@ import chinaPress.fc.apply.vo.FcApplyPersonParam;
 import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
+import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
@@ -195,5 +196,15 @@ public class FcApplyService {
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;
+	}
+
+	/**
+	 * 终端家长 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public TerminalPractitionerApplyDetailVo findTerminalPractitionerDetail(Integer id) {
+		return fcApplyMapper.findTerminalPractitionerDetail(id);
 	}
 }
