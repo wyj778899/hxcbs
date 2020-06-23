@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chinaPress.common.sms.conf.SMSConfig;
+import chinaPress.common.util.ValidateUtil;
+import chinaPress.role.member.dao.MemberInfoMapper;
+import chinaPress.role.member.model.MemberInfo;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 @Service
@@ -25,6 +28,9 @@ public class SMSService {
 //	@Autowired
 //	private RoleStaffMapper roleStaffMapper;
 	
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
+	
 	/**
 	 * 发送短信
 	 * @param phone 手机号
@@ -32,25 +38,26 @@ public class SMSService {
 	 */
 	public Map<String,Object> sendSMS(String phone,Integer type){
 		Map<String,Object> map = new HashMap<String,Object>();
-//		if(!ValidateUtil.isMobileNO(phone)){
-//			map.put("code", 0);
-//			map.put("messag", "请输入正确的手机号");
-//			return map;
-//		}
-//		// 判断是否注册过
-//		RoleStaff staff = roleStaffMapper.selectUserNameExists(phone);
-//		if(staff != null) {
-//			if(staff.getIsEnabled() == 1 || staff.getIsEnabled() == 2) {
-//				map.put("code", -1);
-//				map.put("message", "该注册手机号已存在");
-//				return map;
-//			}else if(staff.getIsEnabled() == 3) {
-//				map.put("code", -2);
-//				map.put("message", "该注册手机号正在审核中，请耐心等待。");
-//				return map;
-//			}
-//		}
-		map = ihuyiSendSMS(phone,1);
+		if(!ValidateUtil.isMobileNO(phone)){
+			map.put("code", 0);
+			map.put("messag", "请输入正确的手机号");
+			return map;
+		}
+		MemberInfo param = new MemberInfo(); 
+		param.setUserName(phone);
+		MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
+			if(m != null) {
+				if(m.getIsStart() == 1) {
+					map.put("code", -1);
+					map.put("message", "该注册手机号已存在");
+					return map;
+				}else if(m.getState() == 1) {
+					map.put("code", -2);
+					map.put("message", "该注册手机号正在审核中，请耐心等待。");
+					return map;
+				}
+			}
+		map = ihuyiSendSMS(phone,type);
 		return map;
 	}
 
@@ -61,18 +68,20 @@ public class SMSService {
 	 */
 	public Map<String,Object> forgetPassword(String phone){
 		Map<String,Object> map = new HashMap<String,Object>();
-//		if(!ValidateUtil.isMobileNO(phone)){
-//			map.put("code", 0);
-//			map.put("messag", "请输入正确的手机号");
-//		}else{
-//			RoleStaff staffs = roleStaffMapper.selectUserNameExists(phone);
-//			if(staffs==null){
-//				map.put("code", -2);
-//				map.put("messahe", "该手机号尚未注册");
-//			}else{
-//				map = ihuyiSendSMS(phone,2);
-//			}
-//		}
+		if(!ValidateUtil.isMobileNO(phone)){
+			map.put("code", 0);
+			map.put("messag", "请输入正确的手机号");
+		}else{
+			MemberInfo param = new MemberInfo(); 
+			param.setUserName(phone);
+			MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
+			if(m==null){
+				map.put("code", -2);
+				map.put("messahe", "该手机号尚未注册");
+			}else{
+				map = ihuyiSendSMS(phone,2);
+			}
+		}
 		return map;
 	}
 

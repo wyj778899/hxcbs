@@ -124,6 +124,29 @@ public class PractitionerInfo {
     private Integer limit;
     
     /**
+     * 验证码   用于添加注册
+     */
+    private String verificationCode;
+    
+    
+    /**
+     * 验证码
+     * @return verificationCode
+     */
+    public String getVerificationCode() {
+		return verificationCode;
+	}
+
+    /**
+     * 验证码
+     * @param verificationCode
+     */
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+	
+	
+    /**
      * 当前页数
      * @return page
      */

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.vo.MemberAndCer;
+import chinaPress.role.member.vo.MemberCouponInfo;
 
 @Mapper
 @Repository
@@ -40,4 +41,18 @@ public interface MemberInfoMapper {
      * @return
      */
     MemberAndCer selectByCerId(Integer id);
+    
+    /**
+     * 通过手机号和用户名模糊查询员工信息
+     * @param memberInfo
+     * @return
+     */
+    List<MemberCouponInfo> selectNameAndTell(MemberInfo memberInfo);
+    
+    /**
+     * 通过手机号和用户名模糊查询员工信息的个数，用于分页展示
+     * @param memberInfo
+     * @return
+     */
+    int selectNameAndTellCount(MemberInfo memberInfo);
 }
