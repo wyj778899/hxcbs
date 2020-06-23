@@ -250,6 +250,7 @@
 		a.`code`,
 		b.`name` AS courseName,
 		b.course_price AS coursePrice,
+		b.course_number AS courseNumber,
 		a.pay_status AS payStatus 
 	FROM
 		fc_order a

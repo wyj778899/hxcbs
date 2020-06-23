@@ -34,6 +34,11 @@ public class TerminalOrderListVo {
 	private BigDecimal coursePrice;
 
 	/**
+	 * 课程使用天数
+	 */
+	private Integer courseNumber;
+
+	/**
 	 * 支付状态（1.未支付2.已支付）
 	 */
 	private Integer payStatus;
@@ -84,5 +89,13 @@ public class TerminalOrderListVo {
 
 	public void setPayStatus(Integer payStatus) {
 		this.payStatus = payStatus;
+	}
+
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 }
