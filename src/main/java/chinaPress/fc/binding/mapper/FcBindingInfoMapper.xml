@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.binding.dao.FcBindingInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.binding.model.FcBindingInfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="institution_id" jdbcType="INTEGER"
+			property="institutionId" />
+		<result column="binding_role_id" jdbcType="INTEGER"
+			property="bindingRoleId" />
+		<result column="binding_role_type" jdbcType="INTEGER"
+			property="bindingRoleType" />
+		<result column="binding_status" jdbcType="INTEGER"
+			property="bindingStatus" />
+		<result column="reply_status" jdbcType="INTEGER"
+			property="replyStatus" />
+		<result column="binding_time" jdbcType="TIMESTAMP"
+			property="bindingTime" />
+		<result column="cancel_binding_time" jdbcType="TIMESTAMP"
+			property="cancelBindingTime" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, institution_id, binding_role_id, binding_role_type, binding_status,
+		reply_status,
+		binding_time, cancel_binding_time, create_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_binding_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_binding_info
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.fc.binding.model.FcBindingInfo">
+		insert into fc_binding_info (id, institution_id, binding_role_id,
+		binding_role_type, binding_status, reply_status,
+		binding_time, cancel_binding_time, create_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{institutionId,jdbcType=INTEGER},
+		#{bindingRoleId,jdbcType=INTEGER},
+		#{bindingRoleType,jdbcType=INTEGER},
+		#{bindingStatus,jdbcType=INTEGER}, #{replyStatus,jdbcType=INTEGER},
+		#{bindingTime,jdbcType=TIMESTAMP},
+		#{cancelBindingTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.binding.model.FcBindingInfo">
+		insert into fc_binding_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="institutionId != null">
+				institution_id,
+			</if>
+			<if test="bindingRoleId != null">
+				binding_role_id,
+			</if>
+			<if test="bindingRoleType != null">
+				binding_role_type,
+			</if>
+			<if test="bindingStatus != null">
+				binding_status,
+			</if>
+			<if test="replyStatus != null">
+				reply_status,
+			</if>
+			<if test="bindingTime != null">
+				binding_time,
+			</if>
+			<if test="cancelBindingTime != null">
+				cancel_binding_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="institutionId != null">
+				#{institutionId,jdbcType=INTEGER},
+			</if>
+			<if test="bindingRoleId != null">
+				#{bindingRoleId,jdbcType=INTEGER},
+			</if>
+			<if test="bindingRoleType != null">
+				#{bindingRoleType,jdbcType=INTEGER},
+			</if>
+			<if test="bindingStatus != null">
+				#{bindingStatus,jdbcType=INTEGER},
+			</if>
+			<if test="replyStatus != null">
+				#{replyStatus,jdbcType=INTEGER},
+			</if>
+			<if test="bindingTime != null">
+				#{bindingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cancelBindingTime != null">
+				#{cancelBindingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.binding.model.FcBindingInfo">
+		update fc_binding_info
+		<set>
+			<if test="institutionId != null">
+				institution_id = #{institutionId,jdbcType=INTEGER},
+			</if>
+			<if test="bindingRoleId != null">
+				binding_role_id = #{bindingRoleId,jdbcType=INTEGER},
+			</if>
+			<if test="bindingRoleType != null">
+				binding_role_type = #{bindingRoleType,jdbcType=INTEGER},
+			</if>
+			<if test="bindingStatus != null">
+				binding_status = #{bindingStatus,jdbcType=INTEGER},
+			</if>
+			<if test="replyStatus != null">
+				reply_status = #{replyStatus,jdbcType=INTEGER},
+			</if>
+			<if test="bindingTime != null">
+				binding_time = #{bindingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cancelBindingTime != null">
+				cancel_binding_time = #{cancelBindingTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.fc.binding.model.FcBindingInfo">
+		update fc_binding_info
+		set institution_id = #{institutionId,jdbcType=INTEGER},
+		binding_role_id = #{bindingRoleId,jdbcType=INTEGER},
+		binding_role_type = #{bindingRoleType,jdbcType=INTEGER},
+		binding_status = #{bindingStatus,jdbcType=INTEGER},
+		reply_status = #{replyStatus,jdbcType=INTEGER},
+		binding_time = #{bindingTime,jdbcType=TIMESTAMP},
+		cancel_binding_time = #{cancelBindingTime,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询绑定信息 -->
+	<select id="selectBindingInfoCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_binding_info a
+		inner join role_staff_archives b on a.binding_role_id = b.role_id and a.binding_role_type = b.role_type
+		where
+			a.institution_id = #{institutionId}
+			and a.binding_role_type = #{bindingRoleType}
+			and a.reply_status in (1, 2, 3)
+			<if test="name != null">
+				and b.name like concat('%', #{name} ,'%')
+			</if>
+	</select>
+	
+	<!-- 查询绑定信息 -->
+	<select id="selectBindingInfoList" resultType="chinaPress.fc.binding.vo.FcBindingInfoVo">
+		select
+			a.id, b.photo, b.name, case b.sex when 1 then '男' when 2 then '女' end sexName, b.tell_phone phone,
+			case a.reply_status when 1 then '等待中' when 2 then '已绑定' when 3 then '已拒绝' end statusName,
+			a.reply_status status
+		from
+			fc_binding_info a
+		inner join role_staff_archives b on a.binding_role_id = b.role_id and a.binding_role_type = b.role_type
+		where
+			a.institution_id = #{institutionId}
+			and a.binding_role_type = #{bindingRoleType}
+			and a.reply_status in (1, 2, 3)
+			<if test="name != null">
+				and b.name like concat('%', #{name} ,'%')
+			</if>
+		limit
+			#{offset}, #{rows}
+	</select>
+</mapper>
