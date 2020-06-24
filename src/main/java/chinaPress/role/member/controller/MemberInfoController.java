@@ -189,6 +189,24 @@ public class MemberInfoController {
 	}
 	
 	/**
+	 * 通过用户名，手机号，证件号展示家长/从业人员信息  查询总个数，用户分页
+	 * @param name
+	 * @param certificateNumber
+	 * @param tellPhone
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/queryPractitionerCount")
+	public Result queryPractitionerCount(String name,String certificateNumber,String tellPhone,Integer type) {
+		PractitionerInfo practitionerInfo = new PractitionerInfo();
+		practitionerInfo.setName(name);
+		practitionerInfo.setCertificateNumber(certificateNumber);
+		practitionerInfo.setTellPhone(tellPhone);
+		practitionerInfo.setType(type);
+		return memberInfoService.findPractitionerCount(practitionerInfo);
+	}
+	
+	/**
 	 * 通过公司名称，企业编码，企业法人，注册人手机号，开始页数，每页显示的条数显示培训机构信息
 	 * @param name
 	 * @param code
@@ -208,6 +226,24 @@ public class MemberInfoController {
 		return memberInfoService.findTrainInstitutionAll(trainInstitutionInfo);
 	}
 	
+	
+	/**
+	 * 通过公司名称，企业编码，企业法人，注册人手机号，开始页数，每页显示的条数显示培训机构信息   用于分页展示条件查询数据个数
+	 * @param name
+	 * @param code
+	 * @param legalPerson
+	 * @param registerTell
+	 * @return
+	 */
+	@RequestMapping("/queryInstitutionCount")
+	public Result queryInstitutionCount(String name,String code,String legalPerson,String registerTell) {
+		TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
+		trainInstitutionInfo.setName(name);
+		trainInstitutionInfo.setCode(code);
+		trainInstitutionInfo.setLegalPerson(legalPerson);
+		trainInstitutionInfo.setRegisterTell(registerTell);
+		return memberInfoService.findTrainInstitutionCount(trainInstitutionInfo);
+	}
 	
 	/**
 	 * 
@@ -256,5 +292,18 @@ public class MemberInfoController {
 		memberInfo.setPage((page-1)*limit);
 		memberInfo.setLimit(limit);
 		return memberInfoService.findMemberNameAndTell(memberInfo);
+	}
+	
+	
+	/**
+	 * 通过用户名/手机号和姓名查询员工信息，用于发放优惠券    返回查询数据的个数
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping("/queryMemberCount")
+	public Result queryMemberCount(String name) {
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setName(name);
+		return memberInfoService.findMemberCount(memberInfo);
 	}
 }

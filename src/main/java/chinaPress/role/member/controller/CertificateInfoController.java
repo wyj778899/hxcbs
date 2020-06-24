@@ -91,4 +91,22 @@ public class CertificateInfoController {
 		return certificateInfoService.findCertificates(memberInfo);
 	}
 	
+	
+	/**
+	 * 通过用户名，手机号，证书类型，审批状态查询员工的证书信息   条件查询返回总个数    用于分页展示
+	 * @param name
+	 * @param tellPhone
+	 * @param certificateType
+	 * @param auditStatus
+	 * @return
+	 */
+	@RequestMapping("/queryMemberAndCertificateCount")
+	public Result queryMemberAndCertificateCount(String name,String tellPhone,Integer certificateType,Integer auditStatus) {
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setName(name);
+		memberInfo.setTellPhone(tellPhone);
+		memberInfo.setAuditStatus(auditStatus);
+		memberInfo.setCertificateType(certificateType);
+		return certificateInfoService.findCertificateCount(memberInfo);
+	}
 }

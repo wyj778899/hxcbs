@@ -12,6 +12,11 @@ import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
 import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
+import chinaPress.fc.apply.vo.TerminalApplyListParam;
+import chinaPress.fc.apply.vo.TerminalApplyListVo;
+import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
+import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
+import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrder;
@@ -41,6 +46,9 @@ public class FcApplyService {
 
 	@Autowired
 	private FcOrderPersonMapper fcOrderPersonMapper;
+
+	@Autowired
+	private FcCourseHourMapper fcCourseHourMapper;
 
 	/**
 	 * 新增
@@ -156,5 +164,47 @@ public class FcApplyService {
 			}
 		}
 		return index;
+	}
+
+	/**
+	 * 终端 报名申请数据数量
+	 * 
+	 * @return
+	 */
+	public int findTerminalApplyCount(TerminalApplyListParam param) {
+		return fcApplyMapper.findTerminalApplyCount(param);
+	}
+
+	/**
+	 * 终端 报名申请数据集合
+	 * 
+	 * @return
+	 */
+	public List<TerminalApplyListVo> findTerminalApplyList(TerminalApplyListParam param) {
+		return fcApplyMapper.findTerminalApplyList(param);
+	}
+
+	/**
+	 * 终端机构 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public TerminalInstitutionApplyDetailVo findTerminalInstitutionDetail(Integer id) {
+		TerminalInstitutionApplyDetailVo detail = fcApplyMapper.findTerminalInstitutionDetail(id);
+		if (detail != null) {
+			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+		}
+		return detail;
+	}
+
+	/**
+	 * 终端家长 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public TerminalPractitionerApplyDetailVo findTerminalPractitionerDetail(Integer id) {
+		return fcApplyMapper.findTerminalPractitionerDetail(id);
 	}
 }

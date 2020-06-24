@@ -5,16 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
+import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
 @Service
 public class FcOrderService {
 
 	@Autowired
 	private FcOrderMapper fcOrderMapper;
+
+	@Autowired
+	private FcCourseHourMapper fcCourseHourMapper;
 
 	/**
 	 * 终端 我的订单数据数量
@@ -43,6 +49,31 @@ public class FcOrderService {
 	 * @return
 	 */
 	public TerminalInstitutionOrderDetailVo findTerminalInstitutionOrderDetail(Integer id) {
-		return fcOrderMapper.findTerminalInstitutionOrderDetail(id);
+		TerminalInstitutionOrderDetailVo detail = fcOrderMapper.findTerminalInstitutionOrderDetail(id);
+		if (detail != null) {
+			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+		}
+		return detail;
+	}
+
+	/**
+	 * 终端家长 课程数据数量
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public int findTerminalPractitionerCourseCount(TerminalPractitionerOrderCourseListParam param) {
+		return fcOrderMapper.findTerminalPractitionerCourseCount(param);
+	}
+
+	/**
+	 * 终端家长 课程数据集合
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public List<TerminalPractitionerOrderCourseListVo> findTerminalPractitionerCourseList(
+			TerminalPractitionerOrderCourseListParam param) {
+		return fcOrderMapper.findTerminalPractitionerCourseList(param);
 	}
 }

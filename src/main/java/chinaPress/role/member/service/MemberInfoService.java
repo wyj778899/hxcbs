@@ -1,9 +1,7 @@
 package chinaPress.role.member.service;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -441,7 +439,7 @@ public class MemberInfoService {
 			}
 			try {
 				if(Md5Util.validPassword(password,m.getPassword())) {
-					memberInfo.setId(m.getId());
+					memberInfo.setRoleId(m.getRoleId());
 					memberInfo.setName(m.getName());
 					memberInfo.setPhoto(m.getPhoto());
 					memberInfo.setRoleType(m.getRoleType());
@@ -549,28 +547,35 @@ public class MemberInfoService {
 	public Result findPractitionerAll(PractitionerInfo practitioner) {
 		if(1==practitioner.getType()) {
 			List<PractitionerParent> list = practitionerInfoMapper.selectPractitionerParents(practitioner);
-			int count = practitionerInfoMapper.selectCount(practitioner);
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("count", count);
-			map.put("data", list);
 			if(list!=null) {
-				return new Result(0, "查询成功", map);
+				return new Result(0, "查询成功", list);
 			}else {
 				return new Result(-1, "查询失败", "");
 			}
 		}else if(2==practitioner.getType()){
 			List<PractitionerEmps> list = practitionerInfoMapper.selectPractitionerEmps(practitioner);
-			int count = practitionerInfoMapper.selectCount(practitioner);
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("count", count);
-			map.put("data", list);
 			if(list!=null) {
-				return new Result(0, "查询成功", map);
+				return new Result(0, "查询成功", list);
 			}else {
 				return new Result(-1, "查询失败", "");
 			}
 		}
 		return new Result(-1, "请选择家长或者从业者", "");
+	}
+	
+	/**
+	 * 
+	 * 查看家长/从业者信息   分页展示查询总个数
+	 * @param practitioner
+	 * @return
+	 */
+	public Result findPractitionerCount(PractitionerInfo practitioner) {
+		int count = practitionerInfoMapper.selectCount(practitioner);
+		if(count>0) {
+			return new Result(0, "查询成功", count);
+		}else {
+			return new Result(-1, "查询失败", "");
+		}
 	}
 	
 	/**
@@ -580,17 +585,27 @@ public class MemberInfoService {
 	 */
 	public Result findTrainInstitutionAll(TrainInstitutionInfo trainInstitutionInfo) {
 		List<TrainInstitutionInfo> list = trainInstitutionInfoMapper.selectTrainInstitutionAll(trainInstitutionInfo);
-		int count = trainInstitutionInfoMapper.selectCount(trainInstitutionInfo);
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("count", count);
-		map.put("data", list);
 		if(list!=null) {
-			return new Result(0, "查询成功", map);
+			return new Result(0, "查询成功", list);
 		}else {
 			return new Result(-1, "查询失败", "");
 		}
 	}
 
+	/**
+	 * 通过公司名称，企业编码，企业法人，注册人手机号，开始页数，每页显示的条数显示培训机构信息   显示条件查询的个数
+	 * @param trainInstitutionInfo
+	 * @return
+	 */
+	public Result findTrainInstitutionCount(TrainInstitutionInfo trainInstitutionInfo) {
+		int count = trainInstitutionInfoMapper.selectCount(trainInstitutionInfo);
+		if(count>0) {
+			return new Result(0, "查询成功", count);
+		}else {
+			return new Result(-1, "查询失败", 0);
+		}
+	}
+	
 	/**
 	 * 培训机构和家长/从业者数据导入
 	 * @param workbook
@@ -972,17 +987,33 @@ public class MemberInfoService {
 		}
 	}
 	
+	/**
+	 * 查询用户信息，用户名，手机号，状态
+	 * @param memberInfo
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findMemberNameAndTell(MemberInfo memberInfo) {
-		Map<String,Object> map = new HashMap<String,Object>();
 		List<MemberCouponInfo> list = memberInfoMapper.selectNameAndTell(memberInfo);
-		int count = memberInfoMapper.selectNameAndTellCount(memberInfo);
 		if(list.size()>0) {
-			map.put("data", list);
-			map.put("count", count);
-			return new Result(0,"查询成功",map);
+			return new Result(0,"查询成功",list);
 		}else {
-			return new Result(0,"查询成功","");
+			return new Result(-1,"查询失败","");
+		}
+	}
+	
+	/**
+	 * 查询用户信息  返回总个数
+	 * @param memberInfo
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findMemberCount(MemberInfo memberInfo) {
+		int count = memberInfoMapper.selectNameAndTellCount(memberInfo);
+		if(count>0) {
+			return new Result(0,"查询成功",count);
+		}else {
+			return new Result(-1,"查询失败",0);
 		}
 	}
 }

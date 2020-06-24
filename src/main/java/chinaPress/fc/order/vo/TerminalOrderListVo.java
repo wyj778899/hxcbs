@@ -3,6 +3,8 @@ package chinaPress.fc.order.vo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TerminalOrderListVo {
 
 	/**
@@ -13,6 +15,7 @@ public class TerminalOrderListVo {
 	/**
 	 * 订单日期
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date date;
 
 	/**
@@ -29,6 +32,11 @@ public class TerminalOrderListVo {
 	 * 课程价格
 	 */
 	private BigDecimal coursePrice;
+
+	/**
+	 * 课程使用天数
+	 */
+	private Integer courseNumber;
 
 	/**
 	 * 支付状态（1.未支付2.已支付）
@@ -81,5 +89,13 @@ public class TerminalOrderListVo {
 
 	public void setPayStatus(Integer payStatus) {
 		this.payStatus = payStatus;
+	}
+
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 }
