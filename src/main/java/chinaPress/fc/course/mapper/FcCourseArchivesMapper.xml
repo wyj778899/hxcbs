@@ -23,6 +23,29 @@
     id, `name`, `type`, category_id, course_price, course_number, renew_price, remarks, 
     photo, is_putaway, `state`, create_id, create_time, update_id, update_time,is_delete
   </sql>
+  <!-- 根据分类id查询关联课程 -->
+  <select id="selectCourseByCategoryId" resultType="chinaPress.fc.course.vo.CourseArchivesNewVo" parameterType="java.lang.Integer">
+  	select
+  	a.id,
+  	a.name courseName,
+  	a.name as courseName,
+	a.type as courseType,
+	b.`name` as categoryName,
+	a.course_price as coursePrice,
+	a.course_number as courseNumber,
+	a.renew_price as renewPrice,
+	a.remarks as remarks,
+	a.photo as photo,
+	a.update_time as updateTime
+  	from fc_course_archives a
+  	left join fc_course_category b on a.category_id = b.id
+  	<where>
+  		a.is_putaway = 1
+  		<if test="categoryId != null">
+			and a.category_id = #{categoryId}
+  		</if>
+  	</where>
+  </select>
   <!-- 查询课程详情 -->
   <select id="selectCourseArchivesById" resultType="chinaPress.fc.course.vo.CourseArchivesNewVo" parameterType="java.lang.Integer">
   	select
@@ -52,7 +75,7 @@
   	b.name as categoryName
   	from fc_course_archives a
   	left join fc_course_category b on a.category_id = b.id
-  	where a.is_putaway = 1 and a.state = 1 and is_delete = 0
+  	where a.is_putaway = 1 and a.state = 1 and a.is_delete = 0
   	order by rand() limit 5
   </select>
   <!-- 课程列表 -->
