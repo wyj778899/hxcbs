@@ -195,7 +195,8 @@
   	SELECT
 		a.id,
 		b.`name` AS courseName,
-		a.score AS score 
+		a.score AS score,
+		b.course_number AS courseNumber
 	FROM
 		fc_self_test a
 	INNER JOIN fc_course_archives b ON b.id = a.course_id 

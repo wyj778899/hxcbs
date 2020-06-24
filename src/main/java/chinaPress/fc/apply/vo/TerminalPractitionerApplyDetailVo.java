@@ -3,6 +3,8 @@ package chinaPress.fc.apply.vo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TerminalPractitionerApplyDetailVo {
 
 	/**
@@ -13,6 +15,7 @@ public class TerminalPractitionerApplyDetailVo {
 	/**
 	 * 申请时间
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
 	private Date applyTime;
 
 	/**
