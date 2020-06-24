@@ -88,14 +88,15 @@
 		case when role_type=3 then '家长' when role_type=4 then '从业者' else '' end as
 		roleName
 		from role_staff_archives
-		where role_type = 3 or role_type = 4
-		<if test="name !=null and name !='' ">
-			and (
-				name like CONCAT('%',#{name},'%')
-				or 
-				tell_phone like CONCAT('%',#{name},'%')
-			)
-		</if>
+		where
+			role_type in (3, 4)
+			<if test="name !=null and name !='' ">
+				and (
+					name like CONCAT('%',#{name},'%')
+					or 
+					tell_phone like CONCAT('%',#{name},'%')
+				)
+			</if>
 		limit #{page} , #{limit}
 	</select>
 
@@ -104,14 +105,15 @@
 		resultType="java.lang.Integer">
 		select count(*)
 		from role_staff_archives
-		where role_type = 3 or role_type = 4
-		<if test="name !=null and name !='' ">
-			and (
-				name like CONCAT('%',#{name},'%')
-				or 
-				tell_phone like CONCAT('%',#{name},'%')
-			)
-		</if>
+		where
+			role_type in (3, 4)
+			<if test="name !=null and name !='' ">
+				and (
+					name like CONCAT('%',#{name},'%')
+					or 
+					tell_phone like CONCAT('%',#{name},'%')
+				)
+			</if>
 	</select>
 
 	<select id="queryCerCount"
