@@ -314,6 +314,13 @@
 			<if test="courseName != null and courseName != ''">
 				and d.name like concat('%', #{courseName} ,'%')
 			</if>
+			<if test="searchTxt != null and searchTxt != ''">
+				and (
+					b.name like concat('%', #{searchTxt} ,'%')
+					or a.code like concat('%', #{searchTxt} ,'%')
+					or d.name like concat('%', #{searchTxt} ,'%')
+				)
+			</if>
 			<!-- 未使用 -->
 			<if test="status == 1">
 				and a.status = 2 
@@ -351,6 +358,13 @@
 			<if test="courseName != null and courseName != ''">
 				and d.name like concat('%', #{courseName} ,'%')
 			</if>	
+			<if test="searchTxt != null and searchTxt != ''">
+				and (
+					b.name like concat('%', #{searchTxt} ,'%')
+					or a.code like concat('%', #{searchTxt} ,'%')
+					or d.name like concat('%', #{searchTxt} ,'%')
+				)
+			</if>
 			<!-- 未使用 -->
 			<if test="status == 1">
 				and a.status = 2 
