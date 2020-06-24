@@ -17,6 +17,13 @@ import chinaPress.fc.course.vo.PageIndexCourseVo;
 public interface FcCourseArchivesMapper {
 	
 	/**
+	 * 根据分类id查询关联课程
+	 * @param categoryId
+	 * @return
+	 */
+	List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId);
+	
+	/**
 	 *  查询课程详情
 	 * @param id
 	 * @return
