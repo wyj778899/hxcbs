@@ -154,6 +154,32 @@ public class ExcelUtil {
 			return cell.toString();
 		}
 	}
+	
+	/**
+	 * 处理单元格格式 数字类型
+	 * @param cell
+	 * @return
+	 */
+	public static String formatCell6(XSSFCell cell) {
+		if (cell == null) {
+			return "";
+		}
+		DecimalFormat df = new DecimalFormat("0");// 格式化 number String
+		// 字符
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 格式化日期字符串
+		switch (cell.getCellType()) {
+		case XSSFCell.CELL_TYPE_STRING:
+			return cell.getStringCellValue();
+		case XSSFCell.CELL_TYPE_NUMERIC:
+			return df.format(cell.getNumericCellValue());
+		case XSSFCell.CELL_TYPE_BOOLEAN:
+			return cell.getBooleanCellValue() + "";
+		case XSSFCell.CELL_TYPE_BLANK:
+			return "";
+		default:
+			return cell.toString();
+		}
+	}
 
 	public static String formatCell5(XSSFCell cell) {
 		if (cell == null) {
