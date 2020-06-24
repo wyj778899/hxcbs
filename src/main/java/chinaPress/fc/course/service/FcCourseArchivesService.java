@@ -15,6 +15,7 @@ import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
+import chinaPress.fc.course_category.dao.FcCourseCategoryMapper;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
@@ -36,6 +37,26 @@ public class FcCourseArchivesService {
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
+	
+	/**
+	 * 根据分类id查询关联课程
+	 * @param categoryId
+	 * @return
+	 */
+	public List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId){
+		List<CourseArchivesNewVo> data = fcCourseArchivesMapper.selectCourseByCategoryId(categoryId);
+		if(data.size()>0) {
+			for (CourseArchivesNewVo item : data) {
+				int count = fcCourseHourMapper.selectCourseHourCountByCOurseId(item.getId());
+				if(count>0) {
+					item.setCourseCount(count);
+				}else {
+					item.setCourseCount(0);
+				}
+			}
+		}
+		return data;
+	}
 	
 	/**
 	 * 查询课程详情

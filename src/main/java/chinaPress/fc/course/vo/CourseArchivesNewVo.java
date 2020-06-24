@@ -20,7 +20,14 @@ public class CourseArchivesNewVo {
 	private String photo;//封面
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date updateTime;//更新时间
+	private Integer courseCount;//视频数量
 	private List<TreeNode> sectionList;
+	public Integer getCourseCount() {
+		return courseCount;
+	}
+	public void setCourseCount(Integer courseCount) {
+		this.courseCount = courseCount;
+	}
 	public List<TreeNode> getSectionList() {
 		return sectionList;
 	}

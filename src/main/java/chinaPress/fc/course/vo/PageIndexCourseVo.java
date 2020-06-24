@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 
 public class PageIndexCourseVo {
 	private Integer id;
-	private String courseName;
-	private Integer courseType;
-	private BigDecimal coursePrice;
-	private String remarks;
-	private String photo;
-	private String categoryName;
+	private String courseName;//课程名称
+	private Integer courseType;//课程类型
+	private BigDecimal coursePrice;//课程价格
+	private String remarks;//课程描述
+	private String photo;//课程图
+	private String categoryName;//分类名称
 	public Integer getId() {
 		return id;
 	}

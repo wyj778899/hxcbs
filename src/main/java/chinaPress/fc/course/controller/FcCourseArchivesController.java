@@ -21,6 +21,20 @@ public class FcCourseArchivesController {
 	private FcCourseArchivesService fcCourseArchivesService;
 	
 	/**
+	 * 根据分类id查询关联课程
+	 * @param categoryId
+	 * @return
+	 */
+	@RequestMapping("selectCourseByCategoryId")
+	public Result selectCourseByCategoryId(Integer categoryId) {
+		List<CourseArchivesNewVo> data = fcCourseArchivesService.selectCourseByCategoryId(categoryId);
+		if(data.size()>0) {
+			return ResultUtil.custom(1, "查询成功", data);
+		}
+		return ResultUtil.custom(-1, "查询失败", data);
+	}
+	
+	/**
 	 * 查询课程详情
 	 * @param id
 	 * @return
