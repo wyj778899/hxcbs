@@ -19,6 +19,11 @@ public class TerminalOrderListParam extends PageParam {
 	 */
 	private Integer courseName;
 
+	/**
+	 * 支付状态（1.未支付2.已支付）
+	 */
+	private Integer payStatus;
+
 	public Integer getRoleType() {
 		return roleType;
 	}
@@ -41,5 +46,13 @@ public class TerminalOrderListParam extends PageParam {
 
 	public void setCourseName(Integer courseName) {
 		this.courseName = courseName;
+	}
+
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
 	}
 }

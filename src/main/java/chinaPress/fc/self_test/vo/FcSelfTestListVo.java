@@ -19,6 +19,11 @@ public class FcSelfTestListVo {
 	 */
 	private BigDecimal score;
 
+	/**
+	 * 课程使用天数
+	 */
+	private Integer courseNumber;
+
 	public Integer getId() {
 		return id;
 	}
@@ -41,6 +46,14 @@ public class FcSelfTestListVo {
 
 	public void setScore(BigDecimal score) {
 		this.score = score;
+	}
+
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 
 }

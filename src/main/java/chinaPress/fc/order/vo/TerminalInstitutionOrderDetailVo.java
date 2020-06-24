@@ -1,7 +1,7 @@
 package chinaPress.fc.order.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -48,6 +48,16 @@ public class TerminalInstitutionOrderDetailVo {
 	 * 视频数量
 	 */
 	private Integer videoNumber;
+
+	/**
+	 * 课程价格
+	 */
+	private BigDecimal coursePrice;
+
+	/**
+	 * 课程使用天数
+	 */
+	private Integer courseNumber;
 
 	public Integer getId() {
 		return id;
@@ -111,5 +121,21 @@ public class TerminalInstitutionOrderDetailVo {
 
 	public void setVideoNumber(Integer videoNumber) {
 		this.videoNumber = videoNumber;
+	}
+
+	public BigDecimal getCoursePrice() {
+		return coursePrice;
+	}
+
+	public void setCoursePrice(BigDecimal coursePrice) {
+		this.coursePrice = coursePrice;
+	}
+
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 }

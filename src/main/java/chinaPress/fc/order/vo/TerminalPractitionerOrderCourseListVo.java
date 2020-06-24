@@ -3,12 +3,19 @@ package chinaPress.fc.order.vo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class TerminalPractitionerOrderCourseListVo {
 
 	/**
 	 * 课程id
 	 */
 	private Integer id;
+
+	/**
+	 * 课程封面
+	 */
+	private String photo;
 
 	/**
 	 * 课程名称
@@ -18,11 +25,13 @@ public class TerminalPractitionerOrderCourseListVo {
 	/**
 	 * 开始时间
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date startTime;
 
 	/**
 	 * 结束时间
 	 */
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date endTime;
 
 	/**
@@ -107,5 +116,13 @@ public class TerminalPractitionerOrderCourseListVo {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 }
