@@ -128,8 +128,49 @@ public class PractitionerInfo {
      */
     private String verificationCode;
     
+    /**
+     * 真实姓名
+     */
+    private String realName;
     
     /**
+     * 公司姓名
+     */
+    private String institutionName;
+    
+    
+    /**
+     * 孩子生日
+     */
+    private Date birthdayTime;
+    
+    
+    
+    public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getInstitutionName() {
+		return institutionName;
+	}
+
+	public void setInstitutionName(String institutionName) {
+		this.institutionName = institutionName;
+	}
+
+	public Date getBirthdayTime() {
+		return birthdayTime;
+	}
+
+	public void setBirthdayTime(Date birthdayTime) {
+		this.birthdayTime = birthdayTime;
+	}
+
+	/**
      * 验证码
      * @return verificationCode
      */

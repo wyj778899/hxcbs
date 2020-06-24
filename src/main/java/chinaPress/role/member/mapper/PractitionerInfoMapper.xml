@@ -23,11 +23,14 @@
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
+    <result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+     <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code
+    update_id, update_time, enterprise_code,institution_name,real_name,birthday_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -50,13 +53,13 @@
           a.type = 1 and  				<!-- 1代表家长，2代表从业者 -->
           a.id = b.role_id 				<!-- 连接条件 --> 
 	     <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
-        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
+        	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
       	 </if>
       	 <if test="tellPhone !=null and tellPhone !=''">
-        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+        	and a.tell_phone like CONCAT('%',#{tellPhone},'%')
       	 </if>
      order by b.create_time desc
      limit #{page} , #{limit}
@@ -76,13 +79,13 @@
           a.type = 2 and  				<!-- 1代表家长，2代表从业者 -->
           a.id = b.role_id 				<!-- 连接条件 --> 
 	     <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
-        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
+        	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
       	 </if>
       	 <if test="tellPhone !=null and tellPhone !=''">
-        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+        	and a.tell_phone like CONCAT('%',#{tellPhone},'%')
       	 </if>
      order by b.create_time desc
      limit #{page} , #{limit}
@@ -95,13 +98,13 @@
     where a.state = 1 and
           a.id = b.role_id
     	 <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
-        	and a.certificate_number like CONCAT('%',CONCAT(#{certificateNumber},'%'))
+        	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
       	 </if>
       	 <if test="tellPhone !=null and tellPhone !=''">
-        	and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+        	and a.tell_phone like CONCAT('%',#{tellPhone},'%')
       	 </if>
       	 <if test="type !=null and type !=''">
         	and a.type = #{type}
@@ -180,6 +183,15 @@
       <if test="enterpriseCode != null">
         enterprise_code,
       </if>
+      <if test="birthdayTime != null">
+        birthday_time,
+      </if>
+      <if test="institutionName != null">
+        institution_name,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -244,6 +256,15 @@
       </if>
       <if test="enterpriseCode != null">
         #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdayTime != null">
+        #{birthdayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="institutionName != null">
+        #{institutionName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -313,6 +334,15 @@
       </if>
       <if test="enterpriseCode != null">
         enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+       <if test="birthdayTime != null">
+        birthday_time = #{birthdayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="institutionName != null">
+        institution_name = #{institutionName,jdbcType=VARCHAR},
+      </if>
+       <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

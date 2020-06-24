@@ -306,4 +306,26 @@ public class MemberInfoController {
 		memberInfo.setName(name);
 		return memberInfoService.findMemberCount(memberInfo);
 	}
+	
+	/**
+	 * 用过角色id和角色类型查询用户证书信息
+	 * @param roleTd
+	 * @param roleType
+	 * @return
+	 */
+	@RequestMapping("/queryUserAndCers")
+	public Result queryUserAndCers(Integer roleId,Integer roleType) {
+		return memberInfoService.findUserAndCers(roleId, roleType);
+	}
+	
+	/**
+	 * 用过角色id和角色类型查询用户证书信息个数
+	 * @param roleTd
+	 * @param roleType
+	 * @return
+	 */
+	@RequestMapping("/queryUserAndCerCounts")
+	public Result queryUserAndCerCounts(Integer roleId,Integer roleType) {
+		return memberInfoService.findUserAndCerCounts(roleId, roleType);
+	}
 }

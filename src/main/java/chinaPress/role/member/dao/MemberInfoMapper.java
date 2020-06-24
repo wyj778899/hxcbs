@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.vo.MemberAndCer;
 import chinaPress.role.member.vo.MemberCouponInfo;
+import chinaPress.role.member.vo.UserAndCerVo;
 
 @Mapper
 @Repository
@@ -55,4 +56,21 @@ public interface MemberInfoMapper {
      * @return
      */
     int selectNameAndTellCount(MemberInfo memberInfo);
+    
+    /**
+     * 通过角色类型和角色id 查询用户证书信息
+     * @param roleId
+     * @param roleType
+     * @return
+     */
+    List<UserAndCerVo> selectUserAndCers(Integer roleId,Integer roleType);
+    
+    
+    /**
+     * 通过角色类型和角色id 查询用户证书信息个数
+     * @param roleId
+     * @param roleType
+     * @return
+     */
+    int selectUserAndCerCounts(Integer roleId,Integer roleType);
 }

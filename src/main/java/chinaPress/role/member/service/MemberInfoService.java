@@ -27,6 +27,7 @@ import chinaPress.role.member.vo.MemberCouponInfo;
 import chinaPress.role.member.vo.MemberInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
+import chinaPress.role.member.vo.UserAndCerVo;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -151,7 +152,7 @@ public class MemberInfoService {
 		TrainInstitutionInfo t= trainInstitutionInfoMapper.selectByPrimaryKey(trainInstitutionInfo.getId());
 		String password = t.getPassword();
 		//是否修改密码
-		if(!password.equals(trainInstitutionInfo.getPassword())) {
+		if(trainInstitutionInfo.getPassword()!=null&&trainInstitutionInfo.getPassword()!=""&&!password.equals(trainInstitutionInfo.getPassword())) {
 			try {
 				Jedis jedis = jedisPool.getResource();
 				String value = jedis.get("forget_password_".concat(trainInstitutionInfo.getUserName()));
@@ -259,7 +260,7 @@ public class MemberInfoService {
 	public Result setUserInfo(UserInfo userInfo) {
 		UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getId());
 		//原始密码是否修改,修改后重复赋值
-		if(!u.getPassword().equals(userInfo.getPassword())) {
+		if(userInfo.getPassword()!=null&&userInfo.getPassword()!=""&&!u.getPassword().equals(userInfo.getPassword())) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(userInfo.getUserName()));
 			if(value.equals(userInfo.getVerificationCode())) {
@@ -371,7 +372,7 @@ public class MemberInfoService {
 	public Result setpractitionerInfo(PractitionerInfo practitionerInfo) {
 		String password = practitionerInfoMapper.selectByPrimaryKey(practitionerInfo.getId()).getPassword();
 		//校验密码
-		if(!password.equals(practitionerInfo.getPassword())) {
+		if(practitionerInfo.getPassword()!=null&&practitionerInfo.getPassword()!=""&&!password.equals(practitionerInfo.getPassword())) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(practitionerInfo.getUserName()));
 			if(value.equals(practitionerInfo.getVerificationCode())) {
@@ -443,15 +444,15 @@ public class MemberInfoService {
 					memberInfo.setName(m.getName());
 					memberInfo.setPhoto(m.getPhoto());
 					memberInfo.setRoleType(m.getRoleType());
-					return new Result(0, "密码正确", memberInfo);
+					return new Result(0, "登陆成功", memberInfo);
 				}else {
 					return new Result(-3, "密码错误", "");
 				}
 			} catch (Exception e) {
-				return new Result(-2, "密码输入不合法", "");
+				return new Result(-2, "用户或密码错误", "");
 			} 
 		}else {
-			return new Result(-1, "用户不存在", "");
+			return new Result(-1, "用户或密码错误", "");
 		}
 	}
 
@@ -465,7 +466,7 @@ public class MemberInfoService {
 		MemberInfo param = new MemberInfo();
 		param.setId(memberInfo.getId());
 		String password = memberInfoMapper.selectByPrimaryKey(param).getPassword();
-		if(!password.equals(memberInfo.getPassword())) {
+		if(memberInfo.getPassword()!=null&&memberInfo.getPassword()!=""&&!password.equals(memberInfo.getPassword())) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(memberInfo.getUserName()));
 			if(value.equals(memberInfo.getVerificationCode())) {
@@ -544,6 +545,7 @@ public class MemberInfoService {
 	 * @param practitioner
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findPractitionerAll(PractitionerInfo practitioner) {
 		if(1==practitioner.getType()) {
 			List<PractitionerParent> list = practitionerInfoMapper.selectPractitionerParents(practitioner);
@@ -569,6 +571,7 @@ public class MemberInfoService {
 	 * @param practitioner
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findPractitionerCount(PractitionerInfo practitioner) {
 		int count = practitionerInfoMapper.selectCount(practitioner);
 		if(count>0) {
@@ -583,6 +586,7 @@ public class MemberInfoService {
 	 * @param trainInstitutionInfo
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findTrainInstitutionAll(TrainInstitutionInfo trainInstitutionInfo) {
 		List<TrainInstitutionInfo> list = trainInstitutionInfoMapper.selectTrainInstitutionAll(trainInstitutionInfo);
 		if(list!=null) {
@@ -597,6 +601,7 @@ public class MemberInfoService {
 	 * @param trainInstitutionInfo
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findTrainInstitutionCount(TrainInstitutionInfo trainInstitutionInfo) {
 		int count = trainInstitutionInfoMapper.selectCount(trainInstitutionInfo);
 		if(count>0) {
@@ -1010,6 +1015,34 @@ public class MemberInfoService {
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findMemberCount(MemberInfo memberInfo) {
 		int count = memberInfoMapper.selectNameAndTellCount(memberInfo);
+		if(count>0) {
+			return new Result(0,"查询成功",count);
+		}else {
+			return new Result(-1,"查询失败",0);
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param roleId
+	 * @param roleId
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findUserAndCers(Integer roleId,Integer roleType) {
+		List<UserAndCerVo> list = memberInfoMapper.selectUserAndCers(roleId, roleType);
+		if(list.size()>0) {
+			return new Result(0,"查询成功",list);
+		}else {
+			return new Result(-1,"查询失败",0);
+		}
+	}
+	
+	
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findUserAndCerCounts(Integer roleId,Integer roleType) {
+		int count  = memberInfoMapper.selectUserAndCerCounts(roleId, roleType);
 		if(count>0) {
 			return new Result(0,"查询成功",count);
 		}else {

@@ -184,6 +184,35 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 
+	<select id="selectUserAndCers"
+		resultType="chinaPress.role.member.vo.UserAndCerVo">
+		select b.id as id,
+		case when b.certificate_type=1 then '教师资格证'
+		when b.certificate_type=2 then '学历证书'
+		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as certificateType,
+		b.create_time as createTime,
+		case when b.state=1 then '待审核'
+		when b.state=2 then '已审核'
+		when b.state=3 then '已驳回' else '' end as state
+		from role_staff_archives a,
+		fc_certificate_archives b
+		where a.id = b.role_id
+		and a.role_id = #{roleId,jdbcType=INTEGER}
+		and a.role_type = #{roleType,jdbcType=INTEGER}
+		order by b.create_time desc
+	</select>
+	
+	<select id="selectUserAndCerCounts"
+		resultType="java.lang.Integer">
+		select count(*)
+		from role_staff_archives a,
+		fc_certificate_archives b
+		where a.id = b.role_id
+		and a.role_id = #{roleId,jdbcType=INTEGER}
+		and a.role_type = #{roleType,jdbcType=INTEGER}
+	</select>
+
+
 	<insert id="insertSelective"
 		parameterType="chinaPress.role.member.model.MemberInfo">
 		insert into role_staff_archives
