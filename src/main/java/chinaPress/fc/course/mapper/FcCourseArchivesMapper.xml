@@ -61,7 +61,7 @@
 	a.update_time as updateTime
 	from fc_course_archives a
 	left join fc_course_category b on a.category_id = b.id
-	where id = #{id}
+	where a.id = #{id}
   </select>
   <!-- 查询首页随机5条课程 -->
   <select id="selectPageIndexCourse" resultType="chinaPress.fc.course.vo.PageIndexCourseVo">
