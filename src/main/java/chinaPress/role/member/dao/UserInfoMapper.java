@@ -8,11 +8,6 @@ import chinaPress.role.member.model.UserInfo;
 @Mapper
 @Repository
 public interface UserInfoMapper {
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
     int deleteByPrimaryKey(Integer id);
 
     int insertSelective(UserInfo record);
