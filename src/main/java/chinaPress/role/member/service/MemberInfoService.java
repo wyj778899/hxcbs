@@ -178,7 +178,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = trainInstitutionInfo.getRegisterTell();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}
@@ -323,7 +323,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = userInfo.getTellPhone();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}
@@ -396,6 +396,7 @@ public class MemberInfoService {
 			memberInfo.setCity(practitionerInfo.getCity());
 			memberInfo.setArea(practitionerInfo.getArea());
 			memberInfo.setAddress(practitionerInfo.getAddress());
+			memberInfo.setEmail(practitionerInfo.getEmail());
 			memberInfo.setIsStart(1);
 			memberInfo.setState(2);
 			memberInfo.setRoleId(practitionerInfo.getId());
@@ -465,7 +466,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = practitionerInfo.getTellPhone();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}
