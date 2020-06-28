@@ -29,7 +29,7 @@
 	a.format,
 	a.is_look as isLook
 	from fc_course_hour a
-	where b.section_id = #{sectionId} 
+	where a.section_id = #{sectionId} 
   </select>
   <!-- 根据课程id查询视频数量 -->
   <select id="selectCourseHourCountByCOurseId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
