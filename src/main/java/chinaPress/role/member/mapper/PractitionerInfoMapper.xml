@@ -25,12 +25,13 @@
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
     <result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
-     <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
+    <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
+    <result column="institution_address" jdbcType="VARCHAR" property="institutionAddress" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code,institution_name,real_name,birthday_time
+    update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,institution_address
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -192,6 +193,9 @@
       <if test="realName != null">
         real_name,
       </if>
+      <if test="institutionAddress != null">
+        institution_address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -265,6 +269,9 @@
       </if>
       <if test="realName != null">
         #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="institutionAddress != null">
+        #{institutionAddress,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -343,6 +350,9 @@
       </if>
        <if test="realName != null">
         real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="institutionAddress != null">
+        institution_address = #{institutionAddress,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
