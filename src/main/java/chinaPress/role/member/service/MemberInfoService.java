@@ -77,52 +77,58 @@ public class MemberInfoService {
 	 * @return Result  code状态码     mes提示信息       data数据信息
 	 */
 	public Result addInstitution(TrainInstitutionInfo trainInstitutionInfo) {
-		MemberInfo param = new MemberInfo(); 
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
 		String userName = trainInstitutionInfo.getUserName();
-		param.setUserName(userName);
-		//判断手机号
-		MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
-		if(m!=null) {
-			return new Result(-1,"手机号已注册","");
-		}else {
-			Jedis jedis = jedisPool.getResource();
-			String value = jedis.get("register_".concat(userName));
-			//校验验证码是否正确
-			if(value.equals(trainInstitutionInfo.getVerificationCode())) {
-				//状态默认为有效
-				trainInstitutionInfo.setState(1);
-				//审核状态默认为未审核
-				trainInstitutionInfo.setAuditStatus(1);
-				try {
-					trainInstitutionInfo.setPassword(Md5Util.getEncryptedPwd(trainInstitutionInfo.getPassword()));
-				} catch (Exception e) {
-					return new Result(-2,"密码不合法","");
-				} 
-				int count = trainInstitutionInfoMapper.insertSelective(trainInstitutionInfo);
-				MemberInfo memberInfo = new MemberInfo();
-				memberInfo.setPassword(trainInstitutionInfo.getPassword());
-				memberInfo.setName(trainInstitutionInfo.getName());
-				memberInfo.setTellPhone(trainInstitutionInfo.getRegisterTell());
-				memberInfo.setProvice(trainInstitutionInfo.getBusinessProvice());
-				memberInfo.setCity(trainInstitutionInfo.getBusinessCity());
-				memberInfo.setArea(trainInstitutionInfo.getBusinessArea());
-				memberInfo.setAddress(trainInstitutionInfo.getBusinessAddress());
-				memberInfo.setUserName(trainInstitutionInfo.getUserName());
-				memberInfo.setState(1);
-				memberInfo.setIsStart(1);
-				memberInfo.setRoleId(trainInstitutionInfo.getId());
-				memberInfo.setRoleType(2);
-				count += memberInfoMapper.insertSelective(memberInfo);
-				if(count>1) {
-					smsService.sendFinishSMS(userName,"恭喜您注册华夏云课堂！！！");
-					return new Result(0,"添加成功","");
-				}else {
-					return new Result(-3,"数据库错误","");
-				}
-			}else {
-				return new Result(-4,"验证码错误","");
-			}
+		nameParam.setUserName(userName);
+		if(memberInfoMapper.selectByPrimaryKey(nameParam)!=null) {
+			return new Result(-1,"用户名已注册","");
 		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = trainInstitutionInfo.getRegisterTell();
+		tellParam.setTellPhone(tellPhone);
+		if(memberInfoMapper.selectByPrimaryKey(tellParam)!=null) {
+			return new Result(-1,"手机号已注册","");
+		}
+		Jedis jedis = jedisPool.getResource();
+		String value = jedis.get("register_".concat(tellPhone));
+		//校验验证码是否正确
+		if(value.equals(trainInstitutionInfo.getVerificationCode())) {
+			//状态默认为有效
+			trainInstitutionInfo.setState(1);
+			//审核状态默认为未审核
+			trainInstitutionInfo.setAuditStatus(1);
+			try {
+				trainInstitutionInfo.setPassword(Md5Util.getEncryptedPwd(trainInstitutionInfo.getPassword()));
+			} catch (Exception e) {
+				return new Result(-2,"密码不合法","");
+			} 
+			int count = trainInstitutionInfoMapper.insertSelective(trainInstitutionInfo);
+			MemberInfo memberInfo = new MemberInfo();
+			memberInfo.setPassword(trainInstitutionInfo.getPassword());
+			memberInfo.setName(trainInstitutionInfo.getName());
+			memberInfo.setTellPhone(trainInstitutionInfo.getRegisterTell());
+			memberInfo.setProvice(trainInstitutionInfo.getBusinessProvice());
+			memberInfo.setCity(trainInstitutionInfo.getBusinessCity());
+			memberInfo.setArea(trainInstitutionInfo.getBusinessArea());
+			memberInfo.setAddress(trainInstitutionInfo.getBusinessAddress());
+			memberInfo.setUserName(trainInstitutionInfo.getUserName());
+			memberInfo.setState(1);
+			memberInfo.setIsStart(1);
+			memberInfo.setRoleId(trainInstitutionInfo.getId());
+			memberInfo.setRoleType(2);
+			count += memberInfoMapper.insertSelective(memberInfo);
+			if(count>1) {
+				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+				return new Result(0,"添加成功","");
+			}else {
+				return new Result(-3,"数据库错误","");
+			}
+		}else {
+			return new Result(-4,"验证码错误","");
+		}
+		
 	}
 
 	/**
@@ -146,6 +152,36 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setInstitution(TrainInstitutionInfo trainInstitutionInfo) {
+		//通过用户名和密码到员工表查询用户信息     获取员工id更新员工操作
+		MemberInfo param = new MemberInfo();
+		param.setUserName(trainInstitutionInfo.getUserName());
+		MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
+		if(m==null) {
+			MemberInfo param1 = new MemberInfo();
+			param1.setTellPhone(trainInstitutionInfo.getRegisterTell());
+			m= memberInfoMapper.selectByPrimaryKey(param1);
+		}
+		if(m==null) {
+			return new Result(-5,"用户信息不存在","");
+		}
+		//先判断用户名和手机号不符合之间返回
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = trainInstitutionInfo.getUserName();
+		Integer id = m.getId();
+		nameParam.setUserName(userName);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(nameParam)>0) {
+			return new Result(-1,"用户名已注册","");
+		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = trainInstitutionInfo.getRegisterTell();
+		tellParam.setTellPhone(tellPhone);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
+			return new Result(-1,"手机号已注册","");
+		}
 		//创建员工对象
 		MemberInfo memberInfo = new MemberInfo();
 		//获取用户的原始密码
@@ -177,10 +213,6 @@ public class MemberInfoService {
 		memberInfo.setArea(trainInstitutionInfo.getBusinessArea());
 		memberInfo.setAddress(trainInstitutionInfo.getBusinessAddress());
 		memberInfo.setUserName(trainInstitutionInfo.getUserName());
-		//判断用户是否存在员工表中
-		MemberInfo param = new MemberInfo();
-		param.setUserName(trainInstitutionInfo.getUserName());
-		MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
 		//更新培训机构信息
 		int i = trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
 		//更新员工信息
@@ -199,40 +231,46 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result addUserInfo(UserInfo userInfo) {
-		MemberInfo param = new MemberInfo(); 
-		param.setUserName(userInfo.getUserName());
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = userInfo.getUserName();
+		nameParam.setUserName(userName);
+		if(memberInfoMapper.selectByPrimaryKey(nameParam)!=null) {
+			return new Result(-1,"用户名已注册","");
+		}
 		//判断手机号
-		MemberInfo m= memberInfoMapper.selectByPrimaryKey(param);
-		if(m!=null) {
-			return new Result(-1, "手机号已注册", "");
-		}else {
-			Jedis jedis = jedisPool.getResource();
-			String value = jedis.get("register_".concat(userInfo.getUserName()));
-			if(value.equals(userInfo.getVerificationCode())) {
-				MemberInfo memberInfo = new MemberInfo();
-				memberInfo.setUserName(userInfo.getUserName());
-				try {
-					memberInfo.setPassword(Md5Util.getEncryptedPwd(userInfo.getPassword()));
-					userInfo.setPassword(Md5Util.getEncryptedPwd(userInfo.getPassword()));
-				} catch (Exception e) {
-					return new Result(-2, "密码不合法", "");
-				}
-				userInfo.setState(1);
-				int i = userInfoMapper.insertSelective(userInfo);
-				memberInfo.setIsStart(1);
-				memberInfo.setState(2);
-				memberInfo.setRoleId(userInfo.getId());
-				memberInfo.setRoleType(5);
-				i+= memberInfoMapper.insertSelective(memberInfo);
-				if(i>1) {
-					smsService.sendFinishSMS(userInfo.getUserName(),"恭喜您注册华夏云课堂！！！");
-					return new Result(0, "添加成功", "");
-				}else {
-					return new Result(-3, "数据库错误", "");
-				}
-			}else {
-				return new Result(-4, "验证码错误", "");
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = userInfo.getTellPhone();
+		tellParam.setTellPhone(tellPhone);
+		if(memberInfoMapper.selectByPrimaryKey(tellParam)!=null) {
+			return new Result(-1,"手机号已注册","");
+		}
+		Jedis jedis = jedisPool.getResource();
+		String value = jedis.get("register_".concat(tellPhone));
+		if(value.equals(userInfo.getVerificationCode())) {
+			MemberInfo memberInfo = new MemberInfo();
+			memberInfo.setUserName(userName);
+			memberInfo.setTellPhone(tellPhone);
+			try {
+				memberInfo.setPassword(Md5Util.getEncryptedPwd(userInfo.getPassword()));
+				userInfo.setPassword(Md5Util.getEncryptedPwd(userInfo.getPassword()));
+			} catch (Exception e) {
+				return new Result(-2, "密码不合法", "");
 			}
+			userInfo.setState(1);
+			int i = userInfoMapper.insertSelective(userInfo);
+			memberInfo.setIsStart(1);
+			memberInfo.setState(2);
+			memberInfo.setRoleId(userInfo.getId());
+			memberInfo.setRoleType(5);
+			i+= memberInfoMapper.insertSelective(memberInfo);
+			if(i>1) {
+				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+				return new Result(0, "添加成功", "");
+			}else {
+				return new Result(-3, "数据库错误", "");
+			}
+		}else {
+			return new Result(-4, "验证码错误", "");
 		}
 	}
 
@@ -258,6 +296,37 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setUserInfo(UserInfo userInfo) {
+		//通过用户名和手机号查询用户信息
+		MemberInfo param = new MemberInfo();
+		param.setUserName(userInfo.getUserName());
+		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+		//用户名不存在查询手机号
+		if(m==null) {
+			MemberInfo param1 = new MemberInfo();
+			param1.setTellPhone(userInfo.getTellPhone());
+			m = memberInfoMapper.selectByPrimaryKey(param1);
+		}
+		//手机号还不存在直接返回
+		if(m==null) {
+			return new Result(-5,"用户信息不存在","");
+		}
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = userInfo.getUserName();
+		Integer id = m.getId();
+		nameParam.setUserName(userName);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(nameParam)>0) {
+			return new Result(-1,"用户名已注册","");
+		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = userInfo.getTellPhone();
+		tellParam.setTellPhone(tellPhone);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
+			return new Result(-1,"手机号已注册","");
+		}
 		UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getId());
 		//原始密码是否修改,修改后重复赋值
 		if(userInfo.getPassword()!=null&&userInfo.getPassword()!=""&&!u.getPassword().equals(userInfo.getPassword())) {
@@ -275,20 +344,13 @@ public class MemberInfoService {
 			}
 		}
 		int i = userInfoMapper.updateByPrimaryKeySelective(userInfo);
-		MemberInfo param = new MemberInfo();
-		param.setUserName(userInfo.getUserName());
-		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
-		if(m!=null) {
-			m.setUserName(userInfo.getUserName());
-			m.setPassword(userInfo.getPassword());
-			i+= memberInfoMapper.updateByPrimaryKeySelective(m);
-			if(i>1) {
-				return new Result(0, "修改成功", "");
-			}else {
-				return new Result(-3, "数据库错误", "");
-			}
+		m.setUserName(userInfo.getUserName());
+		m.setPassword(userInfo.getPassword());
+		i+= memberInfoMapper.updateByPrimaryKeySelective(m);
+		if(i>1) {
+			return new Result(0, "修改成功", "");
 		}else {
-			return new Result(-5, "用户不存在", "");
+			return new Result(-3, "数据库错误", "");
 		}
 	}
 
@@ -298,13 +360,22 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result addPractitionerInfo(PractitionerInfo practitionerInfo) {
-		MemberInfo param = new MemberInfo();
-		param.setUserName(practitionerInfo.getUserName());
-		if(memberInfoMapper.selectByPrimaryKey(param)!=null) {
-			return new Result(-1,"手机号已存在","");
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = practitionerInfo.getUserName();
+		nameParam.setUserName(userName);
+		if(memberInfoMapper.selectByPrimaryKey(nameParam)!=null) {
+			return new Result(-1,"用户名已注册","");
+		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = practitionerInfo.getTellPhone();
+		tellParam.setTellPhone(tellPhone);
+		if(memberInfoMapper.selectByPrimaryKey(tellParam)!=null) {
+			return new Result(-1,"手机号已注册","");
 		}
 		Jedis jedis = jedisPool.getResource();
-		String value = jedis.get("register_".concat(practitionerInfo.getUserName()));
+		String value = jedis.get("register_".concat(tellPhone));
 		if(value.equals(practitionerInfo.getVerificationCode())) {
 			try {
 				practitionerInfo.setPassword(Md5Util.getEncryptedPwd(practitionerInfo.getPassword()));
@@ -337,7 +408,7 @@ public class MemberInfoService {
 			}
 			i+=memberInfoMapper.insertSelective(memberInfo);
 			if(i>1) {
-				smsService.sendFinishSMS(practitionerInfo.getUserName(),"恭喜您注册华夏云课堂！！！");
+				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0, "添加成功", "");
 			}else {
 				return new Result(-3, "数据库错误", "");
@@ -370,6 +441,34 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setpractitionerInfo(PractitionerInfo practitionerInfo) {
+		MemberInfo param = new MemberInfo();
+		param.setUserName(practitionerInfo.getUserName());
+		MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(param);
+		if(memberInfo==null) {
+			MemberInfo param1 = new MemberInfo();
+			param1.setTellPhone(practitionerInfo.getTellPhone());
+			memberInfo = memberInfoMapper.selectByPrimaryKey(param1);
+		}
+		if(memberInfo==null) {
+			return new Result(-5, "用户不存在", "");
+		}
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = practitionerInfo.getUserName();
+		Integer id = memberInfo.getId();
+		nameParam.setUserName(userName);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(nameParam)>0) {
+			return new Result(-1,"用户名已注册","");
+		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = practitionerInfo.getTellPhone();
+		tellParam.setTellPhone(tellPhone);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
+			return new Result(-1,"手机号已注册","");
+		}
 		String password = practitionerInfoMapper.selectByPrimaryKey(practitionerInfo.getId()).getPassword();
 		//校验密码
 		if(practitionerInfo.getPassword()!=null&&practitionerInfo.getPassword()!=""&&!password.equals(practitionerInfo.getPassword())) {
@@ -387,36 +486,29 @@ public class MemberInfoService {
 			}
 		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
-		MemberInfo param = new MemberInfo();
-		param.setUserName(practitionerInfo.getUserName());
-		MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(param);
-		if(memberInfo!=null) {
-			memberInfo.setUserName(practitionerInfo.getUserName());
-			memberInfo.setPassword(practitionerInfo.getPassword());
-			memberInfo.setName(practitionerInfo.getName());
-			memberInfo.setAddress(practitionerInfo.getAddress());
-			memberInfo.setTellPhone(practitionerInfo.getTellPhone());
-			memberInfo.setSex(practitionerInfo.getSex());
-			memberInfo.setProvice(practitionerInfo.getProvice());
-			memberInfo.setCity(practitionerInfo.getCity());
-			memberInfo.setArea(practitionerInfo.getArea());
-			memberInfo.setAddress(practitionerInfo.getAddress());
-			memberInfo.setRoleId(practitionerInfo.getId());
-			//状态有值进行操作
-			if(1==practitionerInfo.getType()) {
-				memberInfo.setRoleType(3);
-			}
-			if(2==practitionerInfo.getType()) {
-				memberInfo.setRoleType(4);
-			}
-			i+=memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
-			if(i>1) {
-				return new Result(0, "修改成功", "");
-			}else {
-				return new Result(-3, "数据库错误", "");
-			}
+		memberInfo.setUserName(practitionerInfo.getUserName());
+		memberInfo.setPassword(practitionerInfo.getPassword());
+		memberInfo.setName(practitionerInfo.getName());
+		memberInfo.setAddress(practitionerInfo.getAddress());
+		memberInfo.setTellPhone(practitionerInfo.getTellPhone());
+		memberInfo.setSex(practitionerInfo.getSex());
+		memberInfo.setProvice(practitionerInfo.getProvice());
+		memberInfo.setCity(practitionerInfo.getCity());
+		memberInfo.setArea(practitionerInfo.getArea());
+		memberInfo.setAddress(practitionerInfo.getAddress());
+		memberInfo.setRoleId(practitionerInfo.getId());
+		//状态有值进行操作
+		if(1==practitionerInfo.getType()) {
+			memberInfo.setRoleType(3);
+		}
+		if(2==practitionerInfo.getType()) {
+			memberInfo.setRoleType(4);
+		}
+		i+=memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+		if(i>1) {
+			return new Result(0, "修改成功", "");
 		}else {
-			return new Result(-5, "用户不存在", "");
+			return new Result(-3, "数据库错误", "");
 		}
 	}
 
@@ -430,30 +522,37 @@ public class MemberInfoService {
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
 	public Result findNameAndPassword(String userName,String password) {
 		MemberInfoVo memberInfo = new MemberInfoVo();
-		MemberInfo m = new MemberInfo();
-		m.setUserName(userName);
-		m = memberInfoMapper.selectByPrimaryKey(m);
-		if(m!=null) {
-			//员工类型为从业者并且状态没有审核
-			if(m.getRoleType()==2 && m.getState()!=2) {
-				return new Result(-4, "该用户没有权限", "");
-			}
-			try {
-				if(Md5Util.validPassword(password,m.getPassword())) {
-					memberInfo.setRoleId(m.getRoleId());
-					memberInfo.setName(m.getName());
-					memberInfo.setPhoto(m.getPhoto());
-					memberInfo.setRoleType(m.getRoleType());
-					return new Result(0, "登陆成功", memberInfo);
-				}else {
-					return new Result(-3, "密码错误", "");
-				}
-			} catch (Exception e) {
-				return new Result(-2, "用户或密码错误", "");
-			} 
-		}else {
-			return new Result(-1, "用户或密码错误", "");
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		nameParam.setUserName(userName);
+		MemberInfo m = memberInfoMapper.selectByPrimaryKey(nameParam);
+		//如果用户名没有查询到再查看手机号信息
+		if(m==null) {
+			MemberInfo tellParam = new MemberInfo(); 
+			tellParam.setTellPhone(userName);
+			m = memberInfoMapper.selectByPrimaryKey(tellParam);
 		}
+		//如果m还等于null则返回
+		if(m==null) {
+			return new Result(-2, "用户或密码错误", "");
+		}
+		//员工类型为从业者并且状态没有审核
+		if(m.getRoleType()==2 && m.getState()!=2) {
+			return new Result(-4, "该用户没有权限", "");
+		}
+		try {
+			if(Md5Util.validPassword(password,m.getPassword())) {
+				memberInfo.setRoleId(m.getRoleId());
+				memberInfo.setName(m.getName());
+				memberInfo.setPhoto(m.getPhoto());
+				memberInfo.setRoleType(m.getRoleType());
+				return new Result(0, "登陆成功", memberInfo);
+			}else {
+				return new Result(-3, "密码错误", "");
+			}
+		} catch (Exception e) {
+			return new Result(-2, "用户或密码错误", "");
+		} 
 	}
 
 	
@@ -463,6 +562,23 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setMemberInfo(MemberInfo memberInfo) {
+		//判断用户名
+		MemberInfo nameParam = new MemberInfo(); 
+		String userName = memberInfo.getUserName();
+		Integer id = memberInfo.getId();
+		nameParam.setUserName(userName);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(nameParam)>0) {
+			return new Result(-1,"用户名已注册","");
+		}
+		//判断手机号
+		MemberInfo tellParam = new MemberInfo();
+		String tellPhone = memberInfo.getTellPhone();
+		tellParam.setTellPhone(tellPhone);
+		nameParam.setId(id);
+		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
+			return new Result(-1,"手机号已注册","");
+		}
 		MemberInfo param = new MemberInfo();
 		param.setId(memberInfo.getId());
 		String password = memberInfoMapper.selectByPrimaryKey(param).getPassword();
