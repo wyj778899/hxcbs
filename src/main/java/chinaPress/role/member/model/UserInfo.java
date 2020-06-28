@@ -52,9 +52,24 @@ public class UserInfo {
      * 企业编码
      */
     private String enterpriseCode;
-
     
     /**
+     * 手机号
+     */
+    private String tellPhone;
+
+    
+    
+    
+    public String getTellPhone() {
+		return tellPhone;
+	}
+
+	public void setTellPhone(String tellPhone) {
+		this.tellPhone = tellPhone;
+	}
+
+	/**
      * 验证码   用于添加注册
      */
     private String verificationCode;

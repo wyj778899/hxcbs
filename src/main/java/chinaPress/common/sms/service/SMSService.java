@@ -40,7 +40,7 @@ public class SMSService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		if(!ValidateUtil.isMobileNO(phone)){
 			map.put("code", 0);
-			map.put("messag", "请输入正确的手机号");
+			map.put("message", "请输入正确的手机号");
 			return map;
 		}
 		MemberInfo param = new MemberInfo(); 
