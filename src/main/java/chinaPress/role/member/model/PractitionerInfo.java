@@ -37,11 +37,6 @@ public class PractitionerInfo {
      * 邮箱
      */
     private String email;
-    
-    /**
-     * 证件类型：1.身份证号
-     */
-    private Integer certificateType;
 
     /**
      * 证件号码
@@ -52,32 +47,11 @@ public class PractitionerInfo {
      * 性别（1.男2.女）
      */
     private Integer sex;
-    
-    /**
-     * 年龄
-     */
-    private Integer age;
-    
 
     /**
      * 省
      */
     private String provice;
-    
-    /**
-     * 岗位
-     */
-    private String post;
-    
-    /**
-     * 工作年限
-     */
-    private Integer workYear;
-    
-    /**
-     * 户籍地址
-     */
-    private String censusAddress;
 
     /**
      * 市
@@ -170,15 +144,35 @@ public class PractitionerInfo {
      */
     private Date birthdayTime;
     
+    
     /**
-     * 单位地址
+     * 公司地址
      */
     private String institutionAddress;
     
     /**
-     * 学历
+     * 用户头像
      */
-    private String education;
+    private String userHead;
+    
+    
+    
+    
+    public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		this.userHead = userHead;
+	}
+
+	public String getInstitutionAddress() {
+		return institutionAddress;
+	}
+
+	public void setInstitutionAddress(String institutionAddress) {
+		this.institutionAddress = institutionAddress;
+	}
 
 	public String getRealName() {
 		return realName;
@@ -588,61 +582,4 @@ public class PractitionerInfo {
     public void setEnterpriseCode(String enterpriseCode) {
         this.enterpriseCode = enterpriseCode;
     }
-
-	public Integer getCertificateType() {
-		return certificateType;
-	}
-
-	public void setCertificateType(Integer certificateType) {
-		this.certificateType = certificateType;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public String getPost() {
-		return post;
-	}
-
-	public void setPost(String post) {
-		this.post = post;
-	}
-
-	public Integer getWorkYear() {
-		return workYear;
-	}
-
-	public void setWorkYear(Integer workYear) {
-		this.workYear = workYear;
-	}
-
-	public String getCensusAddress() {
-		return censusAddress;
-	}
-
-	public void setCensusAddress(String censusAddress) {
-		this.censusAddress = censusAddress;
-	}
-
-	public String getInstitutionAddress() {
-		return institutionAddress;
-	}
-
-	public void setInstitutionAddress(String institutionAddress) {
-		this.institutionAddress = institutionAddress;
-	}
-
-	public String getEducation() {
-		return education;
-	}
-
-	public void setEducation(String education) {
-		this.education = education;
-	}
-	
 }
