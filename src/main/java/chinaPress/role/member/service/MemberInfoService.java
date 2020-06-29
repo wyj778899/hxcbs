@@ -216,6 +216,7 @@ public class MemberInfoService {
 		}else {
 			memberInfo.setPassword(trainInstitutionInfo.getPassword());
 		}
+		memberInfo.setPhoto(trainInstitutionInfo.getUserHead());
 		memberInfo.setName(trainInstitutionInfo.getName());
 		memberInfo.setTellPhone(trainInstitutionInfo.getRegisterTell());
 		memberInfo.setProvice(trainInstitutionInfo.getBusinessProvice());
@@ -354,6 +355,7 @@ public class MemberInfoService {
 			}
 		}
 		int i = userInfoMapper.updateByPrimaryKeySelective(userInfo);
+		m.setPhoto(userInfo.getUserHead());
 		m.setUserName(userInfo.getUserName());
 		m.setPassword(userInfo.getPassword());
 		i+= memberInfoMapper.updateByPrimaryKeySelective(m);
@@ -506,6 +508,7 @@ public class MemberInfoService {
 			}
 		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+		memberInfo.setPhoto(practitionerInfo.getUserHead());
 		memberInfo.setUserName(practitionerInfo.getUserName());
 		memberInfo.setPassword(practitionerInfo.getPassword());
 		memberInfo.setName(practitionerInfo.getName());

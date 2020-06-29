@@ -14,6 +14,11 @@ public class UserInfo {
     private Integer id;
 
     /**
+     * 用户头像
+     */
+    private String userHead;
+    
+    /**
      * 用户名
      */
     private String userName;
@@ -68,6 +73,20 @@ public class UserInfo {
 	public void setTellPhone(String tellPhone) {
 		this.tellPhone = tellPhone;
 	}
+	
+	
+	
+
+	public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		this.userHead = userHead;
+	}
+
+
+
 
 	/**
      * 验证码   用于添加注册

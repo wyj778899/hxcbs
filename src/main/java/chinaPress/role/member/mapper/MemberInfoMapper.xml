@@ -229,11 +229,17 @@
 		case when b.state=1 then '待审核'
 		when b.state=2 then '已审核'
 		when b.state=3 then '已驳回' else '' end as state
-		from role_staff_archives a,
+		from 
+		<!-- 2.机构3.家长4.从业者 -->
+		<if test="roleType ==2">
+			role_institution_archives a,
+		</if>
+		<if test="roleType ==3 or roleType ==4">
+			role_practitioner_archives a,
+		</if>
 		fc_certificate_archives b
 		where a.id = b.role_id
-		and a.role_id = #{roleId,jdbcType=INTEGER}
-		and a.role_type = #{roleType,jdbcType=INTEGER}
+		and a.id = #{roleId,jdbcType=INTEGER}
 		order by b.create_time desc
 	</select>
 	
