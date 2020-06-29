@@ -34,4 +34,9 @@ public interface FcOrderPersonMapper {
      */
     List<TerminalInstitutionOrderPersonVo> findTerminalList(TerminalInstitutionOrderPersonParam param);
     
+    /**
+     * 修改数据为个人
+     * @return
+     */
+    int updateIndividualByOrderId(Integer orderId);
 }

@@ -29,11 +29,11 @@ import chinaPress.common.qr.service.QrCodeService;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayUtil;
+import chinaPress.fc.order.service.FcOrderService;
 
 @RestController
 public class QrCodeController {
-//	@Autowired
-//	private RoleCostService roleCostService;
+	
 	@Autowired
 	private QrCodeService qrCodeService;
 
@@ -72,20 +72,10 @@ public class QrCodeController {
 	 * 
 	 * @author maguoliang
 	 * @param response
-	 * @param roleId          角色id
-	 * @param roleType        角色类型(1.厂商.2.代理商.3.客户.4.顾问.5.后台)
-	 * @param buyProductType  购买产品类型: 如果购买产品种类为会员，那么1.厂商2.代理商3.客户4.顾问
-	 *                        如果购买产品种类为订单，那么此字段为哪种订单1.需求2.产品3.商机
-	 * @param buyProductId    支付的"产品"类型的id
-	 * @param buyProductKind  支付种类1.会员2.订单
-	 * @param payMethod       支付方式1.微信2.支付宝3.网银
-	 * @param nonceTime       随机时间
-	 * @param buyProductPrice 价格
 	 * @throws Exception
 	 */
 	@GetMapping("qrcode")
-	public void getBarCodeImage(HttpServletResponse response, String roleId, String roleType, String buyProductType,
-			String buyProductId, String buyProductKind, Integer payMethod, String nonceTime, String buyProductPrice)
+	public void getBarCodeImage(HttpServletResponse response, String orderId)
 			throws Exception {
 		// 设置页面不缓存
 		assert response != null;
@@ -101,15 +91,11 @@ public class QrCodeController {
 		data.put("mch_id", config.getMchID());
 		data.put("time_stamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
 		data.put("nonce_str", WXPayUtil.generateNonceStr());
-		
-		String buyData = roleId.concat("-").concat(roleType).concat("-").concat(buyProductType).concat("-")
-				.concat(buyProductId).concat("-").concat(buyProductKind).concat("-").concat(nonceTime)
-				.concat("-").concat(buyProductPrice);
-		data.put("product_id", buyData);
+		data.put("product_id", orderId);
 		// 生成签名
 		String sign = WXPayUtil.generateSignature(data, config.getKey());
 		String text = "weixin://wxpay/bizpayurl?sign=" + sign + "&appid=" + config.getAppID() + "&mch_id="
-				+ config.getMchID() + "&product_id=" + buyData + "&time_stamp=" + data.get("time_stamp") + "&nonce_str="
+				+ config.getMchID() + "&product_id=" + orderId + "&time_stamp=" + data.get("time_stamp") + "&nonce_str="
 				+ data.get("nonce_str");
 
 		BufferedImage bufferedImage = QREncode(text);

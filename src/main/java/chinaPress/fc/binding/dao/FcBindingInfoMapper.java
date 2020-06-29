@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.binding.model.FcBindingInfo;
 import chinaPress.fc.binding.vo.FcBindingInfoVo;
+import chinaPress.role.member.vo.MemberCouponInfo;
 import io.lettuce.core.dynamic.annotation.Param;
 
 @Mapper
@@ -48,6 +49,58 @@ public interface FcBindingInfoMapper {
 	 * @return
 	 */
 	List<FcBindingInfoVo> selectBindingInfoList(@Param("institutionId") Integer institutionId,
+			@Param("bindingRoleType") Integer bindingRoleType, @Param("name") String name,
+			@Param("offset") Integer offset, @Param("rows") Integer rows);
+
+	/**
+	 * 查询当前机构可绑定人员个数
+	 * 
+	 * @author maguoliang
+	 * @param namePhone     用户名或手机号
+	 * @param institutionId 机构id
+	 * @return
+	 */
+	int selectBindingInfoMemberCount(@Param("namePhone") String namePhone,
+			@Param("institutionId") Integer institutionId);
+
+	/**
+	 * 查询当前机构可绑定人员列表
+	 * 
+	 * @author maguoliang
+	 * @param namePhone     用户名或手机号
+	 * @param institutionId 机构id
+	 * @param offset        从哪一条数据开始查询
+	 * @param rows          查询多少条数据
+	 * @return
+	 */
+	List<MemberCouponInfo> selectBindingInfoMemberList(@Param("namePhone") String namePhone,
+			@Param("institutionId") Integer institutionId, @Param("offset") Integer offset,
+			@Param("rows") Integer rows);
+
+	/**
+	 * 查询当前家长和从业者绑定的机构个数
+	 * 
+	 * @author maguoliang
+	 * @param bindingRoleId   绑定角色id
+	 * @param bindingRoleType 绑定角色类型3.家长4.从业者
+	 * @param name            用户名
+	 * @return
+	 */
+	int selectBindingInfoInstitutionCount(@Param("bindingRoleId") Integer bindingRoleId,
+			@Param("bindingRoleType") Integer bindingRoleType, @Param("name") String name);
+
+	/**
+	 * 查询当前家长和从业者绑定的机构个数
+	 * 
+	 * @author maguoliang
+	 * @param bindingRoleId   绑定角色id
+	 * @param bindingRoleType 绑定角色类型3.家长4.从业者
+	 * @param name            用户名
+	 * @param offset          从哪一条数据开始查询
+	 * @param rows            查询多少条数据
+	 * @return
+	 */
+	List<FcBindingInfoVo> selectBindingInfoInstitutionList(@Param("bindingRoleId") Integer bindingRoleId,
 			@Param("bindingRoleType") Integer bindingRoleType, @Param("name") String name,
 			@Param("offset") Integer offset, @Param("rows") Integer rows);
 }

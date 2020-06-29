@@ -22,17 +22,25 @@
     <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
     <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
     <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `date`, code, role_type, role_id, course_id, start_time, end_time, is_coupon, 
     coupon_id, pay_status, `state`, create_id, create_time, update_id, update_time, is_individual,
-    order_amount, discount_amount, pay_amount
+    order_amount, discount_amount, pay_amount, apply_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from fc_order
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_order
+    where code = #{code,jdbcType=INTEGER}
   </select>
   <insert id="insertSelective" parameterType="chinaPress.fc.order.model.FcOrder"
   	useGeneratedKeys="true" keyProperty="id">
@@ -98,6 +106,9 @@
       <if test="payAmount != null">
       	pay_amount,
       </if>
+      <if test="applyId != null">
+      	apply_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -160,6 +171,9 @@
       <if test="payAmount != null">
       	#{payAmount},
       </if>
+      <if test="applyId != null">
+      	#{applyId},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.order.model.FcOrder">
@@ -221,6 +235,9 @@
       </if>
       <if test="payAmount != null">
       	pay_amount = #{payAmount},
+      </if>
+      <if test="applyId != null">
+      	#{applyId},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

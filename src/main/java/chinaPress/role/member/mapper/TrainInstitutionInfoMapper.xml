@@ -29,13 +29,14 @@
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
+    <result column="user_head" jdbcType="VARCHAR" property="userHead" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
     register_certificate, register_provice, register_city, register_area, register_address, 
     business_provice, business_city, business_area, business_address, business_photo, 
     practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code
+    update_id, update_time, enterprise_code,user_head
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -104,6 +105,9 @@
       </if>
       <if test="name != null">
         `name`,
+      </if>
+      <if test="userHead != null">
+        user_head,
       </if>
       <if test="code != null">
         code,
@@ -187,6 +191,9 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userHead != null">
+        #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="code != null">
         #{code,jdbcType=VARCHAR},
@@ -276,6 +283,9 @@
       </if>
       <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
+      </if>
+       <if test="userHead != null">
+        user_head = #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="legalPerson != null">
         legal_person = #{legalPerson,jdbcType=VARCHAR},

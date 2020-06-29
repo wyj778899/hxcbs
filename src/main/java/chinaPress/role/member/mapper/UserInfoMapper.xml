@@ -12,10 +12,11 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
     <result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
+    <result column="user_head" jdbcType="VARCHAR" property="userHead" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, `password`, `state`, create_id, create_time, update_id, update_time, 
-    enterprise_code,tell_phone
+    enterprise_code,tell_phone,user_head
   </sql>
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -37,6 +38,9 @@
       </if>
       <if test="userName != null">
         user_name,
+      </if>
+      <if test="userHead != null">
+        user_head,
       </if>
       <if test="password != null">
         `password`,
@@ -69,6 +73,9 @@
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userHead != null">
+        #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -104,6 +111,9 @@
     <set>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+       <if test="userHead != null">
+        user_head = #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         `password` = #{password,jdbcType=VARCHAR},

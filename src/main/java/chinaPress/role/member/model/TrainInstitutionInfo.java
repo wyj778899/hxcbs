@@ -158,8 +158,22 @@ public class TrainInstitutionInfo {
      */
     private String verificationCode;
     
-    
     /**
+     * 用户头像
+     */
+    private String userHead;
+    
+    
+    
+    public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		this.userHead = userHead;
+	}
+
+	/**
      * 验证码
      * @return verificationCode
      */

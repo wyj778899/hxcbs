@@ -25,13 +25,29 @@
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
+<<<<<<< HEAD
         <javaModelGenerator targetPackage="chinaPress.role.teacher.model" targetProject="src/main/java"/>
+=======
+        <javaModelGenerator targetPackage="chinaPress.fc.binding.model" targetProject="src/main/java"/>
+>>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
         <!-- mapper -->
+<<<<<<< HEAD
         <sqlMapGenerator targetPackage="chinaPress.role.teacher.mapper" targetProject="src/main/java"/>
+=======
+        <sqlMapGenerator targetPackage="chinaPress.fc.binding.mapper" targetProject="src/main/java"/>
+>>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
         <!-- dao -->
+<<<<<<< HEAD
         <javaClientGenerator targetPackage="chinaPress.role.teacher.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+=======
+        <javaClientGenerator targetPackage="chinaPress.fc.binding.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+>>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
         <!-- table<->model -->
+<<<<<<< HEAD
         <table tableName="role_teacher_archives" domainObjectName="RoleTeacherArchives" enableCountByExample="false"
+=======
+        <table tableName="fc_binding_info" domainObjectName="FcBindingInfo" enableCountByExample="false"
+>>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->

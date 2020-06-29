@@ -121,7 +121,7 @@ public class MemberInfoService {
 			memberInfo.setRoleType(2);
 			count += memberInfoMapper.insertSelective(memberInfo);
 			if(count>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0,"添加成功","");
 			}else {
 				return new Result(-3,"数据库错误","");
@@ -216,6 +216,7 @@ public class MemberInfoService {
 		}else {
 			memberInfo.setPassword(trainInstitutionInfo.getPassword());
 		}
+		memberInfo.setPhoto(trainInstitutionInfo.getUserHead());
 		memberInfo.setName(trainInstitutionInfo.getName());
 		memberInfo.setTellPhone(trainInstitutionInfo.getRegisterTell());
 		memberInfo.setProvice(trainInstitutionInfo.getBusinessProvice());
@@ -274,7 +275,7 @@ public class MemberInfoService {
 			memberInfo.setRoleType(5);
 			i+= memberInfoMapper.insertSelective(memberInfo);
 			if(i>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0, "添加成功", "");
 			}else {
 				return new Result(-3, "数据库错误", "");
@@ -354,6 +355,7 @@ public class MemberInfoService {
 			}
 		}
 		int i = userInfoMapper.updateByPrimaryKeySelective(userInfo);
+		m.setPhoto(userInfo.getUserHead());
 		m.setUserName(userInfo.getUserName());
 		m.setPassword(userInfo.getPassword());
 		i+= memberInfoMapper.updateByPrimaryKeySelective(m);
@@ -419,7 +421,7 @@ public class MemberInfoService {
 			}
 			i+=memberInfoMapper.insertSelective(memberInfo);
 			if(i>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0, "添加成功", "");
 			}else {
 				return new Result(-3, "数据库错误", "");
@@ -506,6 +508,7 @@ public class MemberInfoService {
 			}
 		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+		memberInfo.setPhoto(practitionerInfo.getUserHead());
 		memberInfo.setUserName(practitionerInfo.getUserName());
 		memberInfo.setPassword(practitionerInfo.getPassword());
 		memberInfo.setName(practitionerInfo.getName());
@@ -558,12 +561,12 @@ public class MemberInfoService {
 		}
 		//员工类型为从业者并且状态没有审核
 		if(m.getRoleType()==2 && m.getState()!=2) {
-			return new Result(-4, "该用户没有权限", "");
+			return new Result(-4, "该账号正在审核中...", "");
 		}
 		try {
 			if(Md5Util.validPassword(password,m.getPassword())) {
 				memberInfo.setRoleId(m.getRoleId());
-				memberInfo.setName(m.getName());
+				memberInfo.setName(m.getUserName());
 				memberInfo.setPhoto(m.getPhoto());
 				memberInfo.setRoleType(m.getRoleType());
 				return new Result(0, "登陆成功", memberInfo);
