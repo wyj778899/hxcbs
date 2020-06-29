@@ -23,11 +23,32 @@ public class TerminalApplyPersonListVo {
 	 * 证件号码
 	 */
 	private String certificateNumber;
-
+	
 	/**
-	 * 详细地址
-	 */
-	private String address;
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 工作年限
+     */
+    private Integer workYear;
+    
+    /**
+     * 户籍地址
+     */
+    private String censusAddress;
+    
+    /**
+     * 岗位
+     */
+    private String post;
+    
+    /**
+     * 学历
+     */
+    private String education;
+
 
 	public Integer getId() {
 		return id;
@@ -69,11 +90,43 @@ public class TerminalApplyPersonListVo {
 		this.certificateNumber = certificateNumber;
 	}
 
-	public String getAddress() {
-		return address;
+	public Integer getAge() {
+		return age;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Integer getWorkYear() {
+		return workYear;
+	}
+
+	public void setWorkYear(Integer workYear) {
+		this.workYear = workYear;
+	}
+
+	public String getCensusAddress() {
+		return censusAddress;
+	}
+
+	public void setCensusAddress(String censusAddress) {
+		this.censusAddress = censusAddress;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
 	}
 }

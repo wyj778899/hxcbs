@@ -25,6 +25,7 @@ import chinaPress.role.member.model.TrainInstitutionInfo;
 import chinaPress.role.member.model.UserInfo;
 import chinaPress.role.member.vo.MemberCouponInfo;
 import chinaPress.role.member.vo.MemberInfoVo;
+import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 import chinaPress.role.member.vo.UserAndCerVo;
@@ -130,6 +131,15 @@ public class MemberInfoService {
 		}
 		
 	}
+	
+	/**
+     * 根据手机号查询从业者
+     * @param tellPhone
+     * @return
+     */
+    public int findPractitionerByTellPhone(String tellPhone) {
+    	return memberInfoMapper.findPractitionerByTellPhone(tellPhone);
+    }
 
 	/**
 	 * 通过id查询培训机构信息 
@@ -178,7 +188,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = trainInstitutionInfo.getRegisterTell();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}
@@ -323,7 +333,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = userInfo.getTellPhone();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}
@@ -396,6 +406,7 @@ public class MemberInfoService {
 			memberInfo.setCity(practitionerInfo.getCity());
 			memberInfo.setArea(practitionerInfo.getArea());
 			memberInfo.setAddress(practitionerInfo.getAddress());
+			memberInfo.setEmail(practitionerInfo.getEmail());
 			memberInfo.setIsStart(1);
 			memberInfo.setState(2);
 			memberInfo.setRoleId(practitionerInfo.getId());
@@ -434,6 +445,15 @@ public class MemberInfoService {
 		}
 
 	}
+	
+	/**
+	 * 通过id查询家长/从业者报名信息
+	 * @param id
+	 * @return
+	 */
+	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id) {
+		return practitionerInfoMapper.findApplyInfo(id);
+	}
 
 	/**
 	 * 家长/从业者修改信息
@@ -465,7 +485,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = practitionerInfo.getTellPhone();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if(memberInfoMapper.selectUserAndTellPhone(tellParam)>0) {
 			return new Result(-1,"手机号已注册","");
 		}

@@ -83,7 +83,7 @@
 		select count(*)
 		from role_staff_archives
 		where 1=1
-		<if test="id != null and id!=''">
+		<if test="id != null">
 			and id != #{id,jdbcType=INTEGER}
 		</if>
 		<if test="userName !=null and userName !='' ">
@@ -92,6 +92,17 @@
 		<if test="tellPhone !=null and tellPhone !='' ">
 			and tell_phone = #{tellPhone,jdbcType=VARCHAR}
 		</if>
+	</select>
+	
+	<!-- 根据手机号查询从业者 -->
+	<select id="findPractitionerByTellPhone" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			role_staff_archives a 
+		WHERE
+			a.role_type = 4 
+			AND a.tell_phone = #{tellPhone}
 	</select>
 
 	<select id="selectNameAndTell"

@@ -320,4 +320,8 @@ public class FcApply {
 	public void setReasonMessage(String reasonMessage) {
 		this.reasonMessage = reasonMessage;
 	}
+	
+	public static void main(String[] args) {
+		System.out.println(new Date().getTime());
+	}
 }

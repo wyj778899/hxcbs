@@ -21,6 +21,12 @@ public interface MemberInfoMapper {
     
     int updateByPrimaryKeySelective(MemberInfo memberInfo);
     
+    /**
+     * 根据手机号查询从业者
+     * @param tellPhone
+     * @return
+     */
+    int findPractitionerByTellPhone(String tellPhone);
     
     /**
      * 根据员工用户名，手机号，证书类型，审核状态查询用户的证书信息
