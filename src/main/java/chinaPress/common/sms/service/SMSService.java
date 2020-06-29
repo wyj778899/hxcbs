@@ -135,11 +135,11 @@ public class SMSService {
 				Jedis jedis = jedisPool.getResource();
 				// 企业注册
 				if (type == 1) {
-					jedis.setex("register_".concat(phone), 1 * 60 * 5, String.valueOf(mobile_code));
+					jedis.setex("register_".concat(phone), 1 * 60 * 10, String.valueOf(mobile_code));
 				}
 				// 企业忘记密码
 				else if (type == 2) {
-					jedis.setex("forget_password_".concat(phone), 1 * 60 * 5, String.valueOf(mobile_code));
+					jedis.setex("forget_password_".concat(phone), 1 * 60 * 10, String.valueOf(mobile_code));
 				} else if (type == 3) {
 					jedis.setex("register_".concat(phone), 1 * 60 * 5, String.valueOf(mobile_code));
 					map.put("verif", mobile_code);
