@@ -1176,7 +1176,7 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 
+	 * 用户证书信息
 	 * @param roleId
 	 * @param roleId
 	 * @return
@@ -1190,7 +1190,13 @@ public class MemberInfoService {
 			return new Result(-1, "查询失败", 0);
 		}
 	}
-
+	
+	/**
+	 * 用户证书信息个数
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Result findUserAndCerCounts(Integer roleId, Integer roleType) {
 		int count = memberInfoMapper.selectUserAndCerCounts(roleId, roleType);
@@ -1201,4 +1207,121 @@ public class MemberInfoService {
 		}
 	}
 
+	/**
+	 * 修改密码 
+	 * @param memberInfo
+	 * @return
+	 */
+	public Result updatePassword(MemberInfo memberInfo) {
+		MemberInfo param = new MemberInfo();
+		param.setTellPhone(memberInfo.getTellPhone());
+		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+		//加密后的password
+		String password = "";
+		if(m!=null) {
+			Jedis jedis = jedisPool.getResource();
+			String value = jedis.get("forget_password_".concat(memberInfo.getTellPhone()));
+			if(value==null || value=="") {
+				return new Result(-1, "用户不存在", "");
+			}
+			if(!value.equals(memberInfo.getVerificationCode())) {
+				return new Result(-4,"验证码错误","");
+			}
+			try {
+				password=Md5Util.getEncryptedPwd(memberInfo.getPassword());
+				memberInfo.setPassword(password);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new Result(-2,"密码不合法","");
+			}
+			memberInfo.setId(m.getId());
+			//修改员工信息
+			memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+			//1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
+			int type = m.getRoleType();
+			int id = m.getRoleId();
+			if(2==type) {
+				//创建培训机构对象更新密码   只赋值主键和密码的值
+				TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
+				trainInstitutionInfo.setId(id);
+				trainInstitutionInfo.setPassword(password);
+				trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
+			}
+			if(3==type || 4==type) {
+				PractitionerInfo practitionerInfo = new PractitionerInfo();
+				practitionerInfo.setId(id);
+				practitionerInfo.setPassword(password);
+				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+			}
+			if(5==type) {
+				UserInfo userInfo = new UserInfo();
+				userInfo.setId(id);
+				userInfo.setPassword(password);
+				userInfoMapper.updateByPrimaryKeySelective(userInfo);
+			}
+			return new Result(0, "修改成功", "");
+		}else {
+			return new Result(-2, "系统错误", "");
+		}
+	}
+	
+	/**
+	 * 不发送验证码修改密码
+	 * @param tellPhone   手机号
+	 * @param passwordOld 原始密码
+	 * @param passwordNew 修改的新密码
+	 * @param password    输入的原始密码
+	 * @return
+	 */
+	public Result updateUserPwd(String tellPhone,String passwordOld,String passwordNew,String password) {
+		try {
+			if(!Md5Util.validPassword(password, passwordOld)) {
+				return new Result(-1,"原始密码不正确","");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		MemberInfo memberInfo = new MemberInfo();
+		MemberInfo param = new MemberInfo();
+		param.setTellPhone(tellPhone);
+		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+		String pwd = "";
+		if(m!=null) {
+			try {
+				pwd=Md5Util.getEncryptedPwd(passwordNew);
+				memberInfo.setPassword(pwd);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new Result(-2,"密码不合法","");
+			}
+			memberInfo.setId(m.getId());
+			//修改员工信息
+			memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+			//1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
+			int type = m.getRoleType();
+			int id = m.getRoleId();
+			if(2==type) {
+				//创建培训机构对象更新密码   只赋值主键和密码的值
+				TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
+				trainInstitutionInfo.setId(id);
+				trainInstitutionInfo.setPassword(pwd);
+				trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
+			}
+			if(3==type || 4==type) {
+				PractitionerInfo practitionerInfo = new PractitionerInfo();
+				practitionerInfo.setId(id);
+				practitionerInfo.setPassword(pwd);
+				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+			}
+			if(5==type) {
+				UserInfo userInfo = new UserInfo();
+				userInfo.setId(id);
+				userInfo.setPassword(pwd);
+				userInfoMapper.updateByPrimaryKeySelective(userInfo);
+			}
+			return new Result(0, "修改成功", "");
+		}else {
+			return new Result(-2, "系统错误", "");
+		}
+	}
 }

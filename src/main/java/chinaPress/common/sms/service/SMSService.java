@@ -73,14 +73,14 @@ public class SMSService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (!ValidateUtil.isMobileNO(phone)) {
 			map.put("code", 0);
-			map.put("messag", "请输入正确的手机号");
+			map.put("message", "请输入正确的手机号");
 		} else {
 			MemberInfo param = new MemberInfo();
 			param.setTellPhone(phone);
 			MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
 			if (m == null) {
 				map.put("code", -2);
-				map.put("messahe", "该手机号尚未注册");
+				map.put("message", "该手机号尚未注册");
 			} else {
 				map = ihuyiSendSMS(phone, 2);
 			}
