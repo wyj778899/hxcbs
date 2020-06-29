@@ -25,27 +25,13 @@
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-        <javaModelGenerator targetPackage="chinaPress.fc.coupon.model" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="chinaPress.fc.binding.model" targetProject="src/main/java"/>
         <!-- mapper -->
-        <sqlMapGenerator targetPackage="chinaPress.fc.coupon.mapper" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="chinaPress.fc.binding.mapper" targetProject="src/main/java"/>
         <!-- dao -->
-        <javaClientGenerator targetPackage="chinaPress.fc.coupon.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="chinaPress.fc.binding.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="fc_discount_coupon" domainObjectName="FcDiscountCoupon" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-            <!--解决长文本生成带WithBLOBs问题-->
-            <columnOverride column="request_data" jdbcType="VARCHAR"/>
-            <columnOverride column="response_data" jdbcType="VARCHAR"/>
-        </table>
-        <table tableName="fc_discount_coupon_course" domainObjectName="FcDiscountCouponCourse" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-            <!--解决长文本生成带WithBLOBs问题-->
-            <columnOverride column="request_data" jdbcType="VARCHAR"/>
-            <columnOverride column="response_data" jdbcType="VARCHAR"/>
-        </table>
-        <table tableName="fc_discount_coupon_record" domainObjectName="FcDiscountCouponRecord" enableCountByExample="false"
+        <table tableName="fc_binding_info" domainObjectName="FcBindingInfo" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->
