@@ -346,4 +346,32 @@ public class MemberInfoController {
 		return memberInfoService.findUserAndCerCounts(roleId, roleType);
 	}
 	
+	/**
+	 * 通过员工手机号修改员工密码   员工表和所属类型的员工的密码都会修改        比如家长表和员工表会同时修改
+	 * @param userName   用户名
+	 * @param password   新密码
+	 * @param verificationCode   验证码
+	 * @return
+	 */
+	@RequestMapping("/registerPassword")
+	public Result registerPassword(String tellPhone,String password,String verificationCode) {
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setTellPhone(tellPhone);
+		memberInfo.setPassword(password);
+		memberInfo.setVerificationCode(verificationCode);
+		return memberInfoService.updatePassword(memberInfo);
+	}
+	
+	/**
+	 * 登录状态下修改密码不需要验证码
+	 * @param tellPhone   手机号
+	 * @param passwordOld 原始密码
+	 * @param passwordNew 修改的新密码
+	 * @param password    输入的原始密码
+	 * @return
+	 */
+	@RequestMapping("/registerUserPwd")
+	public Result registerUserPwd(String tellPhone,String passwordOld,String passwordNew,String password) {
+		return memberInfoService.updateUserPwd(tellPhone,passwordOld,passwordNew,password);
+	}
 }

@@ -1,7 +1,6 @@
 package chinaPress.role.member.model;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * role_staff_archives
@@ -135,8 +134,8 @@ public class MemberInfo {
      */
     private String verificationCode;
     
-    
-    /**
+
+	/**
      * 验证码
      * @return verificationCode
      */
