@@ -72,8 +72,25 @@
 		<if test="userName !=null and userName !='' ">
 			and user_name = #{userName,jdbcType=VARCHAR}
 		</if>
-		<if test="tellPhone != null and tellPhone != ''">
-			and tell_phone = #{tellPhone}
+		<if test="tellPhone !=null and tellPhone !='' ">
+			and tell_phone = #{tellPhone,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectUserAndTellPhone"
+		parameterType="chinaPress.role.member.model.MemberInfo"
+		resultType="java.lang.Integer">
+		select count(*)
+		from role_staff_archives
+		where 1=1
+		<if test="id != null">
+			and id != #{id,jdbcType=INTEGER}
+		</if>
+		<if test="userName !=null and userName !='' ">
+			and user_name = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="tellPhone !=null and tellPhone !='' ">
+			and tell_phone = #{tellPhone,jdbcType=VARCHAR}
 		</if>
 	</select>
 	
@@ -96,6 +113,7 @@
 		name as name,
 		tell_phone as tellPhone,
 		role_type as roleType,
+		role_id as roleId,
 		case when role_type=3 then '家长' when role_type=4 then '从业者' else '' end as
 		roleName
 		from role_staff_archives
@@ -134,10 +152,10 @@
 		from role_staff_archives a, fc_certificate_archives b
 		where a.id = b.role_id and b.state = 1
 		<if test="name !=null and name!=''">
-			and a.name like CONCAT('%',CONCAT(#{name},'%'))
+			and a.name like CONCAT('%',#{name},'%')
 		</if>
 		<if test="tellPhone !=null and tellPhone!=''">
-			and a.tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+			and a.tell_phone like CONCAT('%',#{tellPhone},'%')
 		</if>
 		<if test="auditStatus !=null and auditStatus!=''">
 			and b.audit_status = #{auditStatus}
@@ -163,10 +181,10 @@
 		from role_staff_archives
 		where 1=1
 		<if test="name !=null and name!=''">
-			and name like CONCAT('%',CONCAT(#{name},'%'))
+			and name like CONCAT('%',#{name},'%')
 		</if>
 		<if test="tellPhone !=null and tellPhone!=''">
-			and tell_phone like CONCAT('%',CONCAT(#{tellPhone},'%'))
+			and tell_phone like CONCAT('%',#{tellPhone},'%')
 		</if>
 		)a , fc_certificate_archives b
 		where a.id = b.role_id and b.state = 1

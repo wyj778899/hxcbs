@@ -181,8 +181,25 @@ public class PractitionerInfo {
     private String education;
     
     
+    /**
+     * 公司地址
+     */
+    private String institutionAddress;
     
-    public String getRealName() {
+    
+    
+    
+    
+    
+    public String getInstitutionAddress() {
+		return institutionAddress;
+	}
+
+	public void setInstitutionAddress(String institutionAddress) {
+		this.institutionAddress = institutionAddress;
+	}
+
+	public String getRealName() {
 		return realName;
 	}
 

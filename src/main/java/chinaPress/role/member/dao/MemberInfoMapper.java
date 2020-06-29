@@ -79,4 +79,12 @@ public interface MemberInfoMapper {
      * @return
      */
     int selectUserAndCerCounts(Integer roleId,Integer roleType);
+    
+    
+    /**
+     * 通过用户名和手机号查询用户信息排除当前条     返回个数
+     * @param memberInfo
+     * @return
+     */
+    int selectUserAndTellPhone(MemberInfo memberInfo);
 }
