@@ -150,12 +150,23 @@ public class PractitionerInfo {
      */
     private String institutionAddress;
     
+    /**
+     * 用户头像
+     */
+    private String userHead;
     
     
     
     
-    
-    public String getInstitutionAddress() {
+    public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		this.userHead = userHead;
+	}
+
+	public String getInstitutionAddress() {
 		return institutionAddress;
 	}
 

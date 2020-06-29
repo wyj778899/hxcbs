@@ -27,11 +27,12 @@
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
     <result column="institution_address" jdbcType="VARCHAR" property="institutionAddress" />
+    <result column="user_head" jdbcType="VARCHAR" property="userHead" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,institution_address
+    update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,institution_address,user_head
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -127,6 +128,9 @@
       <if test="userName != null">
         user_name,
       </if>
+      <if test="userHead != null">
+        user_head,
+      </if>
       <if test="password != null">
         `password`,
       </if>
@@ -203,6 +207,9 @@
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userHead != null">
+        #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -284,6 +291,9 @@
     <set>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+       <if test="userHead != null">
+        user_head = #{userHead,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         `password` = #{password,jdbcType=VARCHAR},
