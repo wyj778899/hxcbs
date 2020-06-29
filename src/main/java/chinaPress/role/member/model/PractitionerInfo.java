@@ -4,175 +4,185 @@ import java.util.Date;
 
 /**
  * role_practitioner_archives
+ * 
  * @author Administrator
  * @date 2020-06-17 13:13:47
  */
 public class PractitionerInfo {
-    /**
-     * 家长/从业者
-     */
-    private Integer id;
+	/**
+	 * 家长/从业者
+	 */
+	private Integer id;
 
-    /**
-     * 用户名
-     */
-    private String userName;
+	/**
+	 * 用户名
+	 */
+	private String userName;
 
-    /**
-     * 密码
-     */
-    private String password;
+	/**
+	 * 密码
+	 */
+	private String password;
 
-    /**
-     * 姓名
-     */
-    private String name;
+	/**
+	 * 姓名
+	 */
+	private String name;
 
-    /**
-     * 手机号
-     */
-    private String tellPhone;
+	/**
+	 * 手机号
+	 */
+	private String tellPhone;
 
-    /**
-     * 邮箱
-     */
-    private String email;
+	/**
+	 * 邮箱
+	 */
+	private String email;
 
-    /**
-     * 证件号码
-     */
-    private String certificateNumber;
+	/**
+	 * 证件类型：1.身份证号
+	 */
+	private Integer certificateType;
 
-    /**
-     * 性别（1.男2.女）
-     */
-    private Integer sex;
+	/**
+	 * 证件号码
+	 */
+	private String certificateNumber;
 
-    /**
-     * 省
-     */
-    private String provice;
+	/**
+	 * 性别（1.男2.女）
+	 */
+	private Integer sex;
 
-    /**
-     * 市
-     */
-    private String city;
+	/**
+	 * 年龄
+	 */
+	private Integer age;
 
-    /**
-     * 区
-     */
-    private String area;
+	/**
+	 * 省
+	 */
+	private String provice;
 
-    /**
-     * 详细地址
-     */
-    private String address;
+	/**
+	 * 岗位
+	 */
+	private String post;
 
-    /**
-     * 1.家长2.从业者
-     */
-    private Integer type;
+	/**
+	 * 工作年限
+	 */
+	private Integer workYear;
 
-    /**
-     * 是否是个人（0.否1.是）
-     */
-    private Integer isIndividual;
+	/**
+	 * 户籍地址
+	 */
+	private String censusAddress;
 
-    /**
-     * 所属单位
-     */
-    private Integer institutionId;
+	/**
+	 * 市
+	 */
+	private String city;
 
-    /**
-     * 状态（0.无效1.有效）
-     */
-    private Integer state;
+	/**
+	 * 区
+	 */
+	private String area;
 
-    /**
-     * 创建人
-     */
-    private Integer createId;
+	/**
+	 * 详细地址
+	 */
+	private String address;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+	/**
+	 * 1.家长2.从业者
+	 */
+	private Integer type;
 
-    /**
-     * 更新人
-     */
-    private Integer updateId;
+	/**
+	 * 是否是个人（0.否1.是）
+	 */
+	private Integer isIndividual;
 
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
+	/**
+	 * 所属单位
+	 */
+	private Integer institutionId;
 
-    /**
-     * 企业编码
-     */
-    private String enterpriseCode;
+	/**
+	 * 状态（0.无效1.有效）
+	 */
+	private Integer state;
 
-    /**
-     * 当前页数
-     */
-    private Integer page;
-    
-    /**
-     * 每页条数
-     */
-    private Integer limit;
-    
-    /**
-     * 验证码   用于添加注册
-     */
-    private String verificationCode;
-    
-    /**
-     * 真实姓名
-     */
-    private String realName;
-    
-    /**
-     * 公司姓名
-     */
-    private String institutionName;
-    
-    
-    /**
-     * 孩子生日
-     */
-    private Date birthdayTime;
-    
-    
-    /**
-     * 公司地址
-     */
-    private String institutionAddress;
-    
-    /**
-     * 用户头像
-     */
-    private String userHead;
-    
-    
-    
-    
-    public String getUserHead() {
-		return userHead;
-	}
+	/**
+	 * 创建人
+	 */
+	private Integer createId;
 
-	public void setUserHead(String userHead) {
-		this.userHead = userHead;
-	}
+	/**
+	 * 创建时间
+	 */
+	private Date createTime;
 
-	public String getInstitutionAddress() {
-		return institutionAddress;
-	}
+	/**
+	 * 更新人
+	 */
+	private Integer updateId;
 
-	public void setInstitutionAddress(String institutionAddress) {
-		this.institutionAddress = institutionAddress;
-	}
+	/**
+	 * 更新时间
+	 */
+	private Date updateTime;
+
+	/**
+	 * 企业编码
+	 */
+	private String enterpriseCode;
+
+	/**
+	 * 当前页数
+	 */
+	private Integer page;
+
+	/**
+	 * 每页条数
+	 */
+	private Integer limit;
+
+	/**
+	 * 验证码 用于添加注册
+	 */
+	private String verificationCode;
+
+	/**
+	 * 真实姓名
+	 */
+	private String realName;
+
+	/**
+	 * 公司姓名
+	 */
+	private String institutionName;
+
+	/**
+	 * 孩子生日
+	 */
+	private Date birthdayTime;
+
+	/**
+	 * 单位地址
+	 */
+	private String institutionAddress;
+
+	/**
+	 * 学历
+	 */
+	private String education;
+
+	/**
+	 * 用户头像
+	 */
+	private String userHead;
 
 	public String getRealName() {
 		return realName;
@@ -199,387 +209,499 @@ public class PractitionerInfo {
 	}
 
 	/**
-     * 验证码
-     * @return verificationCode
-     */
-    public String getVerificationCode() {
+	 * 验证码
+	 * 
+	 * @return verificationCode
+	 */
+	public String getVerificationCode() {
 		return verificationCode;
 	}
 
-    /**
-     * 验证码
-     * @param verificationCode
-     */
+	/**
+	 * 验证码
+	 * 
+	 * @param verificationCode
+	 */
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
 	}
-	
-	
-    /**
-     * 当前页数
-     * @return page
-     */
-    public Integer getPage() {
+
+	/**
+	 * 当前页数
+	 * 
+	 * @return page
+	 */
+	public Integer getPage() {
 		return page;
 	}
 
-    /**
-     * 当前页数
-     * @param page
-     */
+	/**
+	 * 当前页数
+	 * 
+	 * @param page
+	 */
 	public void setPage(Integer page) {
 		this.page = page;
 	}
 
 	/**
-     * 显示的条数
-     * @return limit
-     */
+	 * 显示的条数
+	 * 
+	 * @return limit
+	 */
 	public Integer getLimit() {
 		return limit;
 	}
 
 	/**
-     * 显示的条数
-     * @param limit
-     */
+	 * 显示的条数
+	 * 
+	 * @param limit
+	 */
 	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
-    
-    /**
-     * 家长/从业者
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
 
-    /**
-     * 家长/从业者
-     * @param id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	/**
+	 * 家长/从业者
+	 * 
+	 * @return id
+	 */
+	public Integer getId() {
+		return id;
+	}
 
-    /**
-     * 用户名
-     * @return userName
-     */
-    public String getUserName() {
-        return userName;
-    }
+	/**
+	 * 家长/从业者
+	 * 
+	 * @param id
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    /**
-     * 用户名
-     * @param userName
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	/**
+	 * 用户名
+	 * 
+	 * @return userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
 
-    /**
-     * 密码
-     * @return password
-     */
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * 用户名
+	 * 
+	 * @param userName
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    /**
-     * 密码
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/**
+	 * 密码
+	 * 
+	 * @return password
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    /**
-     * 姓名
-     * @return name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * 密码
+	 * 
+	 * @param password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    /**
-     * 姓名
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * 姓名
+	 * 
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * 手机号
-     * @return tellPhone
-     */
-    public String getTellPhone() {
-        return tellPhone;
-    }
+	/**
+	 * 姓名
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * 手机号
-     * @param tellPhone
-     */
-    public void setTellPhone(String tellPhone) {
-        this.tellPhone = tellPhone;
-    }
+	/**
+	 * 手机号
+	 * 
+	 * @return tellPhone
+	 */
+	public String getTellPhone() {
+		return tellPhone;
+	}
 
-    /**
-     * 邮箱
-     * @return email
-     */
-    public String getEmail() {
-        return email;
-    }
+	/**
+	 * 手机号
+	 * 
+	 * @param tellPhone
+	 */
+	public void setTellPhone(String tellPhone) {
+		this.tellPhone = tellPhone;
+	}
 
-    /**
-     * 邮箱
-     * @param email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	/**
+	 * 邮箱
+	 * 
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-    /**
-     * 证件号码
-     * @return certificateNumber
-     */
-    public String getCertificateNumber() {
-        return certificateNumber;
-    }
+	/**
+	 * 邮箱
+	 * 
+	 * @param email
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    /**
-     * 证件号码
-     * @param certificateNumber
-     */
-    public void setCertificateNumber(String certificateNumber) {
-        this.certificateNumber = certificateNumber;
-    }
+	/**
+	 * 证件号码
+	 * 
+	 * @return certificateNumber
+	 */
+	public String getCertificateNumber() {
+		return certificateNumber;
+	}
 
-    /**
-     * 性别（1.男2.女）
-     * @return sex
-     */
-    public Integer getSex() {
-        return sex;
-    }
+	/**
+	 * 证件号码
+	 * 
+	 * @param certificateNumber
+	 */
+	public void setCertificateNumber(String certificateNumber) {
+		this.certificateNumber = certificateNumber;
+	}
 
-    /**
-     * 性别（1.男2.女）
-     * @param sex
-     */
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
+	/**
+	 * 性别（1.男2.女）
+	 * 
+	 * @return sex
+	 */
+	public Integer getSex() {
+		return sex;
+	}
 
-    /**
-     * 省
-     * @return provice
-     */
-    public String getProvice() {
-        return provice;
-    }
+	/**
+	 * 性别（1.男2.女）
+	 * 
+	 * @param sex
+	 */
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
 
-    /**
-     * 省
-     * @param provice
-     */
-    public void setProvice(String provice) {
-        this.provice = provice;
-    }
+	/**
+	 * 省
+	 * 
+	 * @return provice
+	 */
+	public String getProvice() {
+		return provice;
+	}
 
-    /**
-     * 市
-     * @return city
-     */
-    public String getCity() {
-        return city;
-    }
+	/**
+	 * 省
+	 * 
+	 * @param provice
+	 */
+	public void setProvice(String provice) {
+		this.provice = provice;
+	}
 
-    /**
-     * 市
-     * @param city
-     */
-    public void setCity(String city) {
-        this.city = city;
-    }
+	/**
+	 * 市
+	 * 
+	 * @return city
+	 */
+	public String getCity() {
+		return city;
+	}
 
-    /**
-     * 区
-     * @return area
-     */
-    public String getArea() {
-        return area;
-    }
+	/**
+	 * 市
+	 * 
+	 * @param city
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    /**
-     * 区
-     * @param area
-     */
-    public void setArea(String area) {
-        this.area = area;
-    }
+	/**
+	 * 区
+	 * 
+	 * @return area
+	 */
+	public String getArea() {
+		return area;
+	}
 
-    /**
-     * 详细地址
-     * @return address
-     */
-    public String getAddress() {
-        return address;
-    }
+	/**
+	 * 区
+	 * 
+	 * @param area
+	 */
+	public void setArea(String area) {
+		this.area = area;
+	}
 
-    /**
-     * 详细地址
-     * @param address
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	/**
+	 * 详细地址
+	 * 
+	 * @return address
+	 */
+	public String getAddress() {
+		return address;
+	}
 
-    /**
-     * 1.家长2.从业者
-     * @return type
-     */
-    public Integer getType() {
-        return type;
-    }
+	/**
+	 * 详细地址
+	 * 
+	 * @param address
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    /**
-     * 1.家长2.从业者
-     * @param type
-     */
-    public void setType(Integer type) {
-        this.type = type;
-    }
+	/**
+	 * 1.家长2.从业者
+	 * 
+	 * @return type
+	 */
+	public Integer getType() {
+		return type;
+	}
 
-    /**
-     * 是否是个人（0.否1.是）
-     * @return isIndividual
-     */
-    public Integer getIsIndividual() {
-        return isIndividual;
-    }
+	/**
+	 * 1.家长2.从业者
+	 * 
+	 * @param type
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
-    /**
-     * 是否是个人（0.否1.是）
-     * @param isIndividual
-     */
-    public void setIsIndividual(Integer isIndividual) {
-        this.isIndividual = isIndividual;
-    }
+	/**
+	 * 是否是个人（0.否1.是）
+	 * 
+	 * @return isIndividual
+	 */
+	public Integer getIsIndividual() {
+		return isIndividual;
+	}
 
-    /**
-     * 所属单位
-     * @return institutionId
-     */
-    public Integer getInstitutionId() {
-        return institutionId;
-    }
+	/**
+	 * 是否是个人（0.否1.是）
+	 * 
+	 * @param isIndividual
+	 */
+	public void setIsIndividual(Integer isIndividual) {
+		this.isIndividual = isIndividual;
+	}
 
-    /**
-     * 所属单位
-     * @param institutionId
-     */
-    public void setInstitutionId(Integer institutionId) {
-        this.institutionId = institutionId;
-    }
+	/**
+	 * 所属单位
+	 * 
+	 * @return institutionId
+	 */
+	public Integer getInstitutionId() {
+		return institutionId;
+	}
 
-    /**
-     * 状态（0.无效1.有效）
-     * @return state
-     */
-    public Integer getState() {
-        return state;
-    }
+	/**
+	 * 所属单位
+	 * 
+	 * @param institutionId
+	 */
+	public void setInstitutionId(Integer institutionId) {
+		this.institutionId = institutionId;
+	}
 
-    /**
-     * 状态（0.无效1.有效）
-     * @param state
-     */
-    public void setState(Integer state) {
-        this.state = state;
-    }
+	/**
+	 * 状态（0.无效1.有效）
+	 * 
+	 * @return state
+	 */
+	public Integer getState() {
+		return state;
+	}
 
-    /**
-     * 创建人
-     * @return createId
-     */
-    public Integer getCreateId() {
-        return createId;
-    }
+	/**
+	 * 状态（0.无效1.有效）
+	 * 
+	 * @param state
+	 */
+	public void setState(Integer state) {
+		this.state = state;
+	}
 
-    /**
-     * 创建人
-     * @param createId
-     */
-    public void setCreateId(Integer createId) {
-        this.createId = createId;
-    }
+	/**
+	 * 创建人
+	 * 
+	 * @return createId
+	 */
+	public Integer getCreateId() {
+		return createId;
+	}
 
-    /**
-     * 创建时间
-     * @return createTime
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
+	/**
+	 * 创建人
+	 * 
+	 * @param createId
+	 */
+	public void setCreateId(Integer createId) {
+		this.createId = createId;
+	}
 
-    /**
-     * 创建时间
-     * @param createTime
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	/**
+	 * 创建时间
+	 * 
+	 * @return createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    /**
-     * 更新人
-     * @return updateId
-     */
-    public Integer getUpdateId() {
-        return updateId;
-    }
+	/**
+	 * 创建时间
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    /**
-     * 更新人
-     * @param updateId
-     */
-    public void setUpdateId(Integer updateId) {
-        this.updateId = updateId;
-    }
+	/**
+	 * 更新人
+	 * 
+	 * @return updateId
+	 */
+	public Integer getUpdateId() {
+		return updateId;
+	}
 
-    /**
-     * 更新时间
-     * @return updateTime
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	/**
+	 * 更新人
+	 * 
+	 * @param updateId
+	 */
+	public void setUpdateId(Integer updateId) {
+		this.updateId = updateId;
+	}
 
-    /**
-     * 更新时间
-     * @param updateTime
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	/**
+	 * 更新时间
+	 * 
+	 * @return updateTime
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    /**
-     * 企业编码
-     * @return enterpriseCode
-     */
-    public String getEnterpriseCode() {
-        return enterpriseCode;
-    }
+	/**
+	 * 更新时间
+	 * 
+	 * @param updateTime
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
-    /**
-     * 企业编码
-     * @param enterpriseCode
-     */
-    public void setEnterpriseCode(String enterpriseCode) {
-        this.enterpriseCode = enterpriseCode;
-    }
+	/**
+	 * 企业编码
+	 * 
+	 * @return enterpriseCode
+	 */
+	public String getEnterpriseCode() {
+		return enterpriseCode;
+	}
+
+	/**
+	 * 企业编码
+	 * 
+	 * @param enterpriseCode
+	 */
+	public void setEnterpriseCode(String enterpriseCode) {
+		this.enterpriseCode = enterpriseCode;
+	}
+
+	public Integer getCertificateType() {
+		return certificateType;
+	}
+
+	public void setCertificateType(Integer certificateType) {
+		this.certificateType = certificateType;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public Integer getWorkYear() {
+		return workYear;
+	}
+
+	public void setWorkYear(Integer workYear) {
+		this.workYear = workYear;
+	}
+
+	public String getCensusAddress() {
+		return censusAddress;
+	}
+
+	public void setCensusAddress(String censusAddress) {
+		this.censusAddress = censusAddress;
+	}
+
+	public String getInstitutionAddress() {
+		return institutionAddress;
+	}
+
+	public void setInstitutionAddress(String institutionAddress) {
+		this.institutionAddress = institutionAddress;
+	}
+
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
+
+	public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		this.userHead = userHead;
+	}
+
 }
