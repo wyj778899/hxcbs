@@ -566,7 +566,7 @@ public class MemberInfoService {
 		try {
 			if(Md5Util.validPassword(password,m.getPassword())) {
 				memberInfo.setRoleId(m.getRoleId());
-				memberInfo.setName(m.getName());
+				memberInfo.setName(m.getUserName());
 				memberInfo.setPhoto(m.getPhoto());
 				memberInfo.setRoleType(m.getRoleType());
 				return new Result(0, "登陆成功", memberInfo);
