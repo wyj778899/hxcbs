@@ -10,6 +10,15 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
     <result column="sex" jdbcType="INTEGER" property="sex" />
+    
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="certificate_type" jdbcType="INTEGER" property="certificateType" />
+    <result column="post" jdbcType="VARCHAR" property="post" />
+    <result column="work_year" jdbcType="INTEGER" property="workYear" />
+    <result column="census_address" jdbcType="VARCHAR" property="censusAddress" />
+    <result column="institution_address" jdbcType="VARCHAR" property="institutionAddress" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    
     <result column="provice" jdbcType="VARCHAR" property="provice" />
     <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="area" jdbcType="VARCHAR" property="area" />
@@ -31,12 +40,47 @@
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
     update_id, update_time, enterprise_code,institution_name,real_name,birthday_time
+    , age, certificate_type, post, work_year, census_address, institution_address, education
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from role_practitioner_archives
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询报名人员信息 -->
+  <select id="findApplyInfo" resultType="chinaPress.role.member.vo.PractitionerApplyInfoVo">
+  	SELECT
+		a.user_name AS userName,
+		a.`name`,
+		a.sex,
+		a.tell_phone AS tellPhone,
+		a.certificate_number AS certificateNumber,
+		a.age,
+		a.post,
+		a.work_year AS workYear,
+	CASE
+			a.type 
+			WHEN 1 THEN
+			a.institution_address 
+			WHEN 2 THEN
+			CONCAT( b.business_provice, b.business_city, b.business_area, b.business_address ) 
+		END AS institutionAddress,
+		a.education,
+		a.type,
+	CASE
+			a.type 
+			WHEN 1 THEN
+			a.institution_name 
+			WHEN 2 THEN
+			b.`name` 
+		END AS institutionName 
+	FROM
+		role_practitioner_archives a
+		LEFT JOIN role_institution_archives b ON b.id = a.institution_id 
+	WHERE
+		a.id = #{id,jdbcType=INTEGER}
   </select>
   
   <select id="selectPractitionerParents" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerParent">
@@ -192,6 +236,27 @@
       <if test="realName != null">
         real_name,
       </if>
+      <if test="age != null">
+      	age,
+      </if>
+      <if test="certificateType != null">
+      	certificate_type,
+      </if>
+      <if test="post != null">
+      	post,
+      </if>
+      <if test="workYear != null">
+      	work_year,
+      </if>
+      <if test="censusAddress != null">
+      	census_address,
+      </if>
+      <if test="institutionAddress != null">
+      	institution_address,
+      </if>
+      <if test="education != null">
+      	education,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -265,6 +330,27 @@
       </if>
       <if test="realName != null">
         #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+      	#{age},
+      </if>
+      <if test="certificateType != null">
+      	#{certificateType},
+      </if>
+      <if test="post != null">
+      	#{post},
+      </if>
+      <if test="workYear != null">
+      	#{workYear},
+      </if>
+      <if test="censusAddress != null">
+      	#{censusAddress},
+      </if>
+      <if test="institutionAddress != null">
+      	#{institutionAddress},
+      </if>
+      <if test="education != null">
+      	#{education},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -343,6 +429,27 @@
       </if>
        <if test="realName != null">
         real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+      	age = #{age},
+      </if>
+      <if test="certificateType != null">
+      	#{certificateType},
+      </if>
+      <if test="post != null">
+      	#{post},
+      </if>
+      <if test="workYear != null">
+      	#{workYear},
+      </if>
+      <if test="censusAddress != null">
+      	#{censusAddress},
+      </if>
+      <if test="institutionAddress != null">
+      	institution_address = #{institutionAddress},
+      </if>
+      <if test="education != null">
+      	education = #{education},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

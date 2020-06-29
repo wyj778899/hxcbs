@@ -86,7 +86,7 @@ public class FcApplyService {
 						practitionerInfo.setTellPhone(item.getTellPhone());
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
 						practitionerInfo.setSex(item.getSex());
-						practitionerInfo.setAddress(item.getAddress());
+						practitionerInfo.setInstitutionAddress(item.getInstitutionAddress());
 						practitionerInfo.setType(2);
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
@@ -94,7 +94,7 @@ public class FcApplyService {
 						insMemberModel.setName(item.getName());
 						insMemberModel.setTellPhone(item.getTellPhone());
 						insMemberModel.setSex(item.getSex());
-						insMemberModel.setAddress(item.getAddress());
+						insMemberModel.setAddress(item.getInstitutionAddress());
 						insMemberModel.setIsStart(0);
 						insMemberModel.setRoleId(practitionerInfo.getId());
 						insMemberModel.setRoleType(4);

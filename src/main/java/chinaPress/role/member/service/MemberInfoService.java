@@ -25,6 +25,7 @@ import chinaPress.role.member.model.TrainInstitutionInfo;
 import chinaPress.role.member.model.UserInfo;
 import chinaPress.role.member.vo.MemberCouponInfo;
 import chinaPress.role.member.vo.MemberInfoVo;
+import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 import chinaPress.role.member.vo.UserAndCerVo;
@@ -124,6 +125,15 @@ public class MemberInfoService {
 			}
 		}
 	}
+	
+	/**
+     * 根据手机号查询从业者
+     * @param tellPhone
+     * @return
+     */
+    public int findPractitionerByTellPhone(String tellPhone) {
+    	return memberInfoMapper.findPractitionerByTellPhone(tellPhone);
+    }
 
 	/**
 	 * 通过id查询培训机构信息 
@@ -362,6 +372,15 @@ public class MemberInfoService {
 			return new Result(-1, "查询失败", "");
 		}
 
+	}
+	
+	/**
+	 * 通过id查询家长/从业者报名信息
+	 * @param id
+	 * @return
+	 */
+	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id) {
+		return practitionerInfoMapper.findApplyInfo(id);
 	}
 
 	/**

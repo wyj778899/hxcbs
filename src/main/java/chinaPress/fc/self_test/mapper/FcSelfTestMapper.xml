@@ -19,16 +19,19 @@
   <resultMap type="chinaPress.fc.self_test.vo.FcSelfTestDetailVo" id="DetailResultMap">
   	<id column="e_id" jdbcType="INTEGER" property="id" />
   	<result column="e_score" jdbcType="DECIMAL" property="score" />
+  	<result column="f_name" jdbcType="VARCHAR" property="courseName" />
   	<collection property="stemList" ofType="chinaPress.fc.self_test.vo.FcSelfTestStemDetailVo">
   		<id column="a_id" jdbcType="INTEGER" property="id" />
   		<result column="c_id" jdbcType="INTEGER" property="stemId" />
-  		<result column="c_name" jdbcType="INTEGER" property="stemName" />
+  		<result column="c_name" jdbcType="VARCHAR" property="stemName" />
+  		<result column="c_type" jdbcType="INTEGER" property="stemType" />
   		<collection property="optionList" ofType="chinaPress.fc.self_test.vo.FcSelfTestStemOptionDetailVo">
   			<id column="b_id" jdbcType="INTEGER" property="id" />
   			<result column="d_id" jdbcType="INTEGER" property="optionId" />
   			<result column="d_option_type" jdbcType="INTEGER" property="optionType" />
   			<result column="d_option_name" jdbcType="VARCHAR" property="optionName" />
   			<result column="b_is_select" jdbcType="INTEGER" property="isSelect" />
+  			<result column="d_is_correct" jdbcType="INTEGER" property="isCorrect" />
   		</collection>
   	</collection>
   </resultMap>
@@ -157,21 +160,25 @@
   <select id="detail" resultMap="DetailResultMap">
   	SELECT
 		e.id AS e_id,
+		f.`name` AS f_name,
 		e.score AS e_score,
 		a.id AS a_id,
 		c.id AS c_id,
 		c.question_stem AS c_name,
+		c.question_type AS c_type,
 		b.id AS b_id,
 		d.id AS d_id,
 		d.option_type AS d_option_type,
 		d.option_name AS d_option_name,
-		b.is_select AS b_is_select 
+		b.is_select AS b_is_select,
+		d.is_correct AS d_is_correct
 	FROM
 		fc_self_test e
 	INNER JOIN fc_self_test_stem a ON a.test_id = e.id
 	INNER JOIN fc_self_test_stem_option b ON b.test_stem_id = a.id
 	INNER JOIN fc_question_stem c ON c.id = a.stem_id
 	INNER JOIN fc_question_option d ON d.id = b.option_id
+	INNER JOIN fc_course_archives f ON f.id = e.course_id
 	WHERE e.id = #{id}
   </select>
   

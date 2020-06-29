@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.PractitionerInfo;
+import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 
@@ -19,6 +20,13 @@ public interface PractitionerInfoMapper {
     PractitionerInfo selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(PractitionerInfo record);
+    
+    /**
+     * 查询申请人员信息
+     * @param id
+     * @return
+     */
+    PractitionerApplyInfoVo findApplyInfo(Integer id);
     
     /**
      * 通过用户名，手机号，证件号查询家长信息

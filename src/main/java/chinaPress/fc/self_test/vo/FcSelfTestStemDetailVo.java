@@ -17,7 +17,12 @@ public class FcSelfTestStemDetailVo {
 	/**
 	 * 题干名称
 	 */
-	private Integer stemName;
+	private String stemName;
+
+	/**
+	 * 类型（1.单选2.多选3.判断）
+	 */
+	private Integer stemType;
 
 	/**
 	 * 选项集合
@@ -40,12 +45,20 @@ public class FcSelfTestStemDetailVo {
 		this.stemId = stemId;
 	}
 
-	public Integer getStemName() {
+	public String getStemName() {
 		return stemName;
 	}
 
-	public void setStemName(Integer stemName) {
+	public void setStemName(String stemName) {
 		this.stemName = stemName;
+	}
+
+	public Integer getStemType() {
+		return stemType;
+	}
+
+	public void setStemType(Integer stemType) {
+		this.stemType = stemType;
 	}
 
 	public List<FcSelfTestStemOptionDetailVo> getOptionList() {
