@@ -35,7 +35,6 @@
     <result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
-    <result column="institution_address" jdbcType="VARCHAR" property="institutionAddress" />
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
   </resultMap>
   <sql id="Base_Column_List">
