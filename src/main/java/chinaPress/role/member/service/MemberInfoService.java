@@ -302,7 +302,7 @@ public class MemberInfoService {
 
 	/**
 	 * 更新用户信息 ，更新成功后同时更新员工信息表对应的数据
-	 * 
+	 *   密码不做更新操作
 	 * @param userInfo
 	 * @return
 	 */
@@ -338,27 +338,9 @@ public class MemberInfoService {
 		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 			return new Result(-1, "手机号已注册", "");
 		}
-		UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getId());
-		// 原始密码是否修改,修改后重复赋值
-		if (userInfo.getPassword() != null && userInfo.getPassword() != ""
-				&& !u.getPassword().equals(userInfo.getPassword())) {
-			Jedis jedis = jedisPool.getResource();
-			String value = jedis.get("forget_password_".concat(userInfo.getUserName()));
-			if (value.equals(userInfo.getVerificationCode())) {
-				try {
-					userInfo.setPassword(Md5Util.getEncryptedPwd(userInfo.getPassword()));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new Result(-2, "密码不合法", "");
-				}
-			} else {
-				return new Result(-4, "验证码错误", "");
-			}
-		}
 		int i = userInfoMapper.updateByPrimaryKeySelective(userInfo);
 		m.setPhoto(userInfo.getUserHead());
 		m.setUserName(userInfo.getUserName());
-		m.setPassword(userInfo.getPassword());
 		i += memberInfoMapper.updateByPrimaryKeySelective(m);
 		if (i > 1) {
 			return new Result(0, "修改成功", "");
@@ -461,7 +443,7 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 家长/从业者修改信息
+	 * 家长/从业者修改信息    不做密码更新操作
 	 * 
 	 * @param practitionerInfo
 	 * @return
@@ -495,27 +477,9 @@ public class MemberInfoService {
 		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 			return new Result(-1, "手机号已注册", "");
 		}
-		String password = practitionerInfoMapper.selectByPrimaryKey(practitionerInfo.getId()).getPassword();
-		// 校验密码
-		if (practitionerInfo.getPassword() != null && practitionerInfo.getPassword() != ""
-				&& !password.equals(practitionerInfo.getPassword())) {
-			Jedis jedis = jedisPool.getResource();
-			String value = jedis.get("forget_password_".concat(practitionerInfo.getUserName()));
-			if (value.equals(practitionerInfo.getVerificationCode())) {
-				try {
-					practitionerInfo.setPassword(Md5Util.getEncryptedPwd(practitionerInfo.getPassword()));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new Result(-2, "密码不合法", "");
-				}
-			} else {
-				return new Result(-4, "验证码错误", "");
-			}
-		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
 		memberInfo.setPhoto(practitionerInfo.getUserHead());
 		memberInfo.setUserName(practitionerInfo.getUserName());
-		memberInfo.setPassword(practitionerInfo.getPassword());
 		memberInfo.setName(practitionerInfo.getName());
 		memberInfo.setAddress(practitionerInfo.getAddress());
 		memberInfo.setTellPhone(practitionerInfo.getTellPhone());
@@ -576,7 +540,7 @@ public class MemberInfoService {
 				memberInfo.setRoleType(m.getRoleType());
 				return new Result(0, "登陆成功", memberInfo);
 			} else {
-				return new Result(-3, "密码错误", "");
+				return new Result(-3, "用户或密码错误", "");
 			}
 		} catch (Exception e) {
 			return new Result(-2, "用户或密码错误", "");
@@ -584,7 +548,7 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 更新员工信息
+	 * 更新员工信息   不做密码更新操作
 	 * 
 	 * @param memberInfo
 	 * @return
@@ -606,24 +570,6 @@ public class MemberInfoService {
 		nameParam.setId(id);
 		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 			return new Result(-1, "手机号已注册", "");
-		}
-		MemberInfo param = new MemberInfo();
-		param.setId(memberInfo.getId());
-		String password = memberInfoMapper.selectByPrimaryKey(param).getPassword();
-		if (memberInfo.getPassword() != null && memberInfo.getPassword() != ""
-				&& !password.equals(memberInfo.getPassword())) {
-			Jedis jedis = jedisPool.getResource();
-			String value = jedis.get("forget_password_".concat(memberInfo.getUserName()));
-			if (value.equals(memberInfo.getVerificationCode())) {
-				try {
-					memberInfo.setPassword(Md5Util.getEncryptedPwd(memberInfo.getPassword()));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new Result(-2, "密码不合法", "");
-				}
-			} else {
-				return new Result(-4, "验证码错误", "");
-			}
 		}
 		int i = memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
 		if (i > 0) {
@@ -1182,8 +1128,8 @@ public class MemberInfoService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Result findUserAndCers(Integer roleId, Integer roleType) {
-		List<UserAndCerVo> list = memberInfoMapper.selectUserAndCers(roleId, roleType);
+	public Result findUserAndCers(Integer roleId, Integer roleType,Integer page,Integer limit) {
+		List<UserAndCerVo> list = memberInfoMapper.selectUserAndCers(roleId, roleType,(page-1)*limit,limit);
 		if (list.size() > 0) {
 			return new Result(0, "查询成功", list);
 		} else {

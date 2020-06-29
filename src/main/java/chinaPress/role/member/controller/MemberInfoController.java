@@ -331,8 +331,8 @@ public class MemberInfoController {
 	 * @return
 	 */
 	@RequestMapping("/queryUserAndCers")
-	public Result queryUserAndCers(Integer roleId,Integer roleType) {
-		return memberInfoService.findUserAndCers(roleId, roleType);
+	public Result queryUserAndCers(Integer roleId,Integer roleType,Integer page,Integer limit) {
+		return memberInfoService.findUserAndCers(roleId, roleType,page,limit);
 	}
 	
 	/**
