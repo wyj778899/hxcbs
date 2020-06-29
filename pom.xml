@@ -175,7 +175,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.software.SoftwareApplication</mainClass>
+					<mainClass>chinaPress.ChinaPressApplication</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
