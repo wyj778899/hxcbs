@@ -52,6 +52,19 @@ public class FcApplyPersonParam {
      */
     private String education;
 
+    /**
+     * 角色类型（1.家长2.从业者）
+     */
+    private Integer roleType;
+
+	public Integer getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}
+
 	public String getEducation() {
 		return education;
 	}

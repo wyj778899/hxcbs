@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
+import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.service.FcOrderService;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
@@ -86,5 +88,20 @@ public class FcOrderController {
 	public Result findTerminalPractitionerCourseList(TerminalPractitionerOrderCourseListParam param) {
 		List<TerminalPractitionerOrderCourseListVo> data = fcOrderService.findTerminalPractitionerCourseList(param);
 		return ResultUtil.ok(data);
+	}
+
+	/**
+	 * 新增家长/从业者订单
+	 * @param record
+	 * @return
+	 */
+	@PostMapping("insertPractitioner")
+	public Result insertPractitioner(FcOrder record) {
+		int index = fcOrderService.insertPractitioner(record);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error();
+		}
 	}
 }

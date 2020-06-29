@@ -1,5 +1,6 @@
 package chinaPress.fc.order.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
+import chinaPress.fc.order.dao.FcOrderPersonMapper;
+import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.model.FcOrderPerson;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
@@ -18,6 +22,9 @@ public class FcOrderService {
 
 	@Autowired
 	private FcOrderMapper fcOrderMapper;
+
+	@Autowired
+	private FcOrderPersonMapper fcOrderPersonMapper;
 
 	@Autowired
 	private FcCourseHourMapper fcCourseHourMapper;
@@ -75,5 +82,35 @@ public class FcOrderService {
 	public List<TerminalPractitionerOrderCourseListVo> findTerminalPractitionerCourseList(
 			TerminalPractitionerOrderCourseListParam param) {
 		return fcOrderMapper.findTerminalPractitionerCourseList(param);
+	}
+
+	/**
+	 * 新增家长/从业者订单
+	 * 
+	 * @param record
+	 * @return
+	 */
+	public int insertPractitioner(FcOrder record) {
+		Date current_date = new Date();
+		record.setCode(String.valueOf(current_date.getTime()));
+		record.setDate(current_date);
+		int index = fcOrderMapper.insertSelective(record);
+		if (index > 0) {
+			FcOrderPerson person = new FcOrderPerson();
+			person.setOrderId(record.getId());
+			person.setRoleId(record.getRoleId());
+			// 家长
+			if (record.getRoleType().intValue() == 2) {
+				person.setRoleType(1);
+			}
+			// 从业者
+			else if (record.getRoleType().intValue() == 3) {
+				person.setRoleType(2);
+			}
+			person.setTotalCount(fcCourseHourMapper.selectCourseHourCountByCOurseId(record.getCourseId()));
+			fcOrderPersonMapper.insertSelective(person);
+			return record.getId();
+		}
+		return 0;
 	}
 }

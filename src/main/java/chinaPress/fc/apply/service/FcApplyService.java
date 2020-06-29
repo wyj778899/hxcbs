@@ -68,6 +68,31 @@ public class FcApplyService {
 					memberParam.setTellPhone(item.getTellPhone());
 					MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
 					if (memberInfo != null) {
+						if (memberInfo.getRoleType().intValue() != 3 && memberInfo.getRoleType().intValue() != 4) {
+							continue;
+						}
+
+						// 修改员工
+						MemberInfo updMember = new MemberInfo();
+						updMember.setId(memberInfo.getId());
+						updMember.setName(item.getName());
+						updMember.setSex(item.getSex());
+						memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+
+						// 修改家长/从业者
+						PractitionerInfo updPractitioner = new PractitionerInfo();
+						updPractitioner.setId(memberInfo.getRoleId());
+						updPractitioner.setName(item.getName());
+						updPractitioner.setSex(item.getSex());
+						updPractitioner.setAge(item.getAge());
+						updPractitioner.setCertificateNumber(item.getCertificateNumber());
+						updPractitioner.setPost(item.getPost());
+						updPractitioner.setWorkYear(item.getWorkYear());
+						updPractitioner.setCensusAddress(item.getCensusAddress());
+						updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
+						updPractitioner.setEducation(item.getEducation());
+						practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
+
 						FcApplyPerson applyPerson = new FcApplyPerson();
 						applyPerson.setApplyId(record.getId());
 						applyPerson.setCreateId(record.getCreateId());
@@ -87,7 +112,7 @@ public class FcApplyService {
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
 						practitionerInfo.setSex(item.getSex());
 						practitionerInfo.setInstitutionAddress(item.getInstitutionAddress());
-						practitionerInfo.setType(2);
+						practitionerInfo.setType(item.getRoleType());
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
 						MemberInfo insMemberModel = new MemberInfo();
@@ -97,7 +122,11 @@ public class FcApplyService {
 						insMemberModel.setAddress(item.getInstitutionAddress());
 						insMemberModel.setIsStart(0);
 						insMemberModel.setRoleId(practitionerInfo.getId());
-						insMemberModel.setRoleType(4);
+						if (item.getRoleType().intValue() == 1) {
+							insMemberModel.setRoleType(3);
+						} else if (item.getRoleType().intValue() == 2) {
+							insMemberModel.setRoleType(4);
+						}
 						memberInfoMapper.insertSelective(insMemberModel);
 
 						FcApplyPerson applyPerson = new FcApplyPerson();
@@ -112,7 +141,11 @@ public class FcApplyService {
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
 				person.setRoleId(record.getApplyId());
-				person.setRoleType(record.getApplyType());
+				if (record.getApplyType().intValue() == 2) {
+					person.setRoleType(1);
+				} else {
+					person.setRoleType(2);
+				}
 				person.setCreateId(record.getCreateId());
 				fcApplyPersonMapper.insertSelective(person);
 			}
@@ -150,12 +183,14 @@ public class FcApplyService {
 				insOrder.setCreateId(auditPeople);
 				int insOrderIndex = fcOrderMapper.insertSelective(insOrder);
 				if (insOrderIndex > 0) {
+					int totalCount = fcCourseHourMapper.selectCourseHourCountByCOurseId(applyModel.getCourseId());
 					List<FcApplyPerson> personList = fcApplyPersonMapper.findByApplyId(id);
 					for (FcApplyPerson item : personList) {
 						FcOrderPerson person = new FcOrderPerson();
 						person.setOrderId(insOrder.getId());
 						person.setRoleId(item.getRoleId());
 						person.setRoleType(item.getRoleType());
+						person.setTotalCount(totalCount);
 						person.setCreateId(auditPeople);
 						person.setIsIndividual(0);
 						fcOrderPersonMapper.insertSelective(person);

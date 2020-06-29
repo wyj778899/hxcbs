@@ -72,20 +72,10 @@ public class QrCodeController {
 	 * 
 	 * @author maguoliang
 	 * @param response
-	 * @param roleId          角色id
-	 * @param roleType        角色类型(1.厂商.2.代理商.3.客户.4.顾问.5.后台)
-	 * @param buyProductType  购买产品类型: 如果购买产品种类为会员，那么1.厂商2.代理商3.客户4.顾问
-	 *                        如果购买产品种类为订单，那么此字段为哪种订单1.需求2.产品3.商机
-	 * @param buyProductId    支付的"产品"类型的id
-	 * @param buyProductKind  支付种类1.会员2.订单
-	 * @param payMethod       支付方式1.微信2.支付宝3.网银
-	 * @param nonceTime       随机时间
-	 * @param buyProductPrice 价格
 	 * @throws Exception
 	 */
 	@GetMapping("qrcode")
-	public void getBarCodeImage(HttpServletResponse response, String roleId, String roleType, String buyProductType,
-			String buyProductId, String buyProductKind, Integer payMethod, String nonceTime, String buyProductPrice)
+	public void getBarCodeImage(HttpServletResponse response)
 			throws Exception {
 		// 设置页面不缓存
 		assert response != null;
@@ -102,9 +92,10 @@ public class QrCodeController {
 		data.put("time_stamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
 		data.put("nonce_str", WXPayUtil.generateNonceStr());
 		
-		String buyData = roleId.concat("-").concat(roleType).concat("-").concat(buyProductType).concat("-")
-				.concat(buyProductId).concat("-").concat(buyProductKind).concat("-").concat(nonceTime)
-				.concat("-").concat(buyProductPrice);
+		String buyData = "";
+//				roleId.concat("-").concat(roleType).concat("-").concat(buyProductType).concat("-")
+//				.concat(buyProductId).concat("-").concat(buyProductKind).concat("-").concat(nonceTime)
+//				.concat("-").concat(buyProductPrice);
 		data.put("product_id", buyData);
 		// 生成签名
 		String sign = WXPayUtil.generateSignature(data, config.getKey());
