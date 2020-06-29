@@ -3,6 +3,7 @@
 <mapper namespace="chinaPress.role.teacher.dao.RoleTeacherArchivesMapper">
   <resultMap id="BaseResultMap" type="chinaPress.role.teacher.model.RoleTeacherArchives">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="id_card" jdbcType="VARCHAR" property="idCard" />
     <result column="grade" jdbcType="VARCHAR" property="grade" />
@@ -12,12 +13,13 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, `name`, id_card, grade, create_id, create_time, update_id, update_time
+    id, `name`,photo, id_card, grade, create_id, create_time, update_id, update_time
   </sql>
   <!-- 证书分数查询 -->
   <select id="selectTeacherCertificate" resultType="chinaPress.role.teacher.vo.TeacherCertificateVo">
   	select
   	a.id as `id`,
+  	a.photo as photo,
   	a.name as `name`,
   	a.id_card as idCard,
   	a.grade as grade,
@@ -26,7 +28,7 @@
   	when 2 then '学历证书'
   	when 3 then '认证行为分析治疗室'
   	end as certificateType,
-  	b.photo as photo
+  	b.photo as certificatePhoto
   	from role_teacher_archives a
   	left join fc_certificate_archives b on a.id = b.role_id
   	<where>
@@ -66,6 +68,9 @@
       <if test="id != null">
         id,
       </if>
+      <if test="photo != null">
+        `photo`,
+      </if>
       <if test="name != null">
         `name`,
       </if>
@@ -91,6 +96,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -118,6 +126,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.teacher.model.RoleTeacherArchives">
     update role_teacher_archives
     <set>
+      <if test="photo != null">
+        `photo` = #{photo,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
       </if>

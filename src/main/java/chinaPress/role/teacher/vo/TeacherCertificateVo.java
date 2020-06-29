@@ -7,11 +7,12 @@ import chinaPress.role.member.model.CertificateInfo;
 public class TeacherCertificateVo {
 
 	private Integer id;
+	private String photo;
 	private String name;
 	private String idCard;
 	private String grade;
 	private String certificateType;
-	private String photo;
+	private String certificatePhoto;
 	public String getCertificateType() {
 		return certificateType;
 	}
@@ -47,5 +48,11 @@ public class TeacherCertificateVo {
 	}
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+	public String getCertificatePhoto() {
+		return certificatePhoto;
+	}
+	public void setCertificatePhoto(String certificatePhoto) {
+		this.certificatePhoto = certificatePhoto;
 	}
 }
