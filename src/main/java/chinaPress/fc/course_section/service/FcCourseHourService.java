@@ -19,8 +19,14 @@ public class FcCourseHourService {
 	 * @param sectionId
 	 * @return
 	 */
-	public List<FcCourseHourVo> selectCourseHourListBySectionId(Integer sectionId){
-		return fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
+	public List<FcCourseHourVo> selectCourseHourListBySectionId(Integer sectionId,String requestUrl){
+		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
+		if(data.size()>0) {
+			for (FcCourseHourVo item : data) {
+				item.setAddress(requestUrl+item.getAddress());
+			}
+		}
+		return data;
 	}
 	
 	/**
