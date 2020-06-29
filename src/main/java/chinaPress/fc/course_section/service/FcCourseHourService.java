@@ -22,5 +22,14 @@ public class FcCourseHourService {
 	public List<FcCourseHourVo> selectCourseHourListBySectionId(Integer sectionId){
 		return fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
 	}
+	
+	/**
+	 * 根据课程id查询视频数量
+	 * @param courseId
+	 * @return
+	 */
+	public int selectCourseHourCountByCOurseId(Integer courseId) {
+		return fcCourseHourMapper.selectCourseHourCountByCOurseId(courseId);
+	}
 
 }

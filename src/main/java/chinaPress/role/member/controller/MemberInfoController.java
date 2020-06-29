@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import chinaPress.common.result.model.Result;
+import chinaPress.common.util.ResultUtil;
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.model.PractitionerInfo;
 import chinaPress.role.member.model.TrainInstitutionInfo;
 import chinaPress.role.member.model.UserInfo;
 import chinaPress.role.member.service.MemberInfoService;
+import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 
 @RestController
 @RequestMapping("/member")
@@ -108,6 +110,21 @@ public class MemberInfoController {
 	@RequestMapping("/queryPagePractitioner")
 	public Result queryPagePractitioner(int id) {
 		return memberInfoService.findPractitionerInfo(id);
+	}
+	
+	/**
+	 * 通过id查询家长/从业者报名信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/findPractitionerApplyInfo")
+	public Result findPractitionerApplyInfo(Integer id) {
+		PractitionerApplyInfoVo model = memberInfoService.findPractitionerApplyInfo(id);
+		if (model != null) {
+			return ResultUtil.ok(model);
+		} else {
+			return ResultUtil.error();
+		}
 	}
 	
 	/**

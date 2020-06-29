@@ -93,6 +93,17 @@
 			and tell_phone = #{tellPhone,jdbcType=VARCHAR}
 		</if>
 	</select>
+	
+	<!-- 根据手机号查询从业者 -->
+	<select id="findPractitionerByTellPhone" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			role_staff_archives a 
+		WHERE
+			a.role_type = 4 
+			AND a.tell_phone = #{tellPhone}
+	</select>
 
 	<select id="selectNameAndTell"
 		parameterType="chinaPress.role.member.model.MemberInfo"

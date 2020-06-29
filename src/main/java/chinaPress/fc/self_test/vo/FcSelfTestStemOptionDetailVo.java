@@ -20,12 +20,17 @@ public class FcSelfTestStemOptionDetailVo {
 	/**
 	 * 选项名称
 	 */
-	private Integer optionName;
+	private String optionName;
 
 	/**
 	 * 是否选中（0.否1.是）
 	 */
 	private Integer isSelect;
+
+	/**
+	 * 是否正确（0.错误1.正确）
+	 */
+	private Integer isCorrect;
 
 	public Integer getId() {
 		return id;
@@ -51,11 +56,11 @@ public class FcSelfTestStemOptionDetailVo {
 		this.optionType = optionType;
 	}
 
-	public Integer getOptionName() {
+	public String getOptionName() {
 		return optionName;
 	}
 
-	public void setOptionName(Integer optionName) {
+	public void setOptionName(String optionName) {
 		this.optionName = optionName;
 	}
 
@@ -65,5 +70,13 @@ public class FcSelfTestStemOptionDetailVo {
 
 	public void setIsSelect(Integer isSelect) {
 		this.isSelect = isSelect;
+	}
+
+	public Integer getIsCorrect() {
+		return isCorrect;
+	}
+
+	public void setIsCorrect(Integer isCorrect) {
+		this.isCorrect = isCorrect;
 	}
 }

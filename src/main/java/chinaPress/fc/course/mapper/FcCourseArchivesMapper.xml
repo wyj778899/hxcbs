@@ -75,8 +75,8 @@
   	b.name as categoryName
   	from fc_course_archives a
   	left join fc_course_category b on a.category_id = b.id
-  	where a.is_putaway = 1 and a.state = 1 and a.is_delete = 0
-  	order by rand() limit 5
+  	where a.is_putaway = 1 and a.state = 1 and a.is_delete = 0 and a.category_id = 2
+  	order by rand() limit 2
   </select>
   <!-- 课程列表 -->
   <select id="selectCOurseArchivesList" resultType="chinaPress.fc.course.vo.CourseArchivesVo"

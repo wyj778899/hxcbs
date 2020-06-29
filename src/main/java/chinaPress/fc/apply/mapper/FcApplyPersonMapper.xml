@@ -116,14 +116,14 @@
   </update>
   
   <!-- 终端 数据数量 -->
-  <select id="findTerminalCount" resultType="chinaPress.fc.apply.vo.TerminalApplyPersonListVo"
+  <select id="findTerminalCount" resultType="int"
   	parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
   	SELECT
 		count(*)
 	FROM
 		fc_apply_person a
 	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
-	WHERE a.id = #{applyId}
+	WHERE a.apply_id = #{applyId}
 	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
   </select>
   
@@ -136,11 +136,15 @@
 		b.tell_phone AS tellPhone,
 		b.sex AS sex,
 		b.certificate_number AS certificateNumber,
-		b.address AS address 
+		b.age as age,
+		b.work_year as workYear,
+		b.census_address as censusAddress,
+		b.post as post,
+		b.education AS education
 	FROM
 		fc_apply_person a
 	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
-	WHERE a.id = #{applyId}
+	WHERE a.apply_id = #{applyId}
 	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
 	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
   </select>

@@ -3,13 +3,16 @@ package chinaPress.common.import_export.controller;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +22,14 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
+import chinaPress.role.member.service.MemberInfoService;
 
 @RequestMapping("import")
 @RestController
 public class ImportController {
+	
+	@Autowired
+	private MemberInfoService memberInfoService;
 
 	/**
 	 * 导入机构学员读取信息
@@ -34,6 +41,7 @@ public class ImportController {
 	@RequestMapping("institutionsStudents")
 	public Result institutionsStudents(HttpServletRequest request,
 			@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String fileName = multipartFile.getOriginalFilename();
 		File file = new File(fileName);
 		String fname = file.getName();
@@ -41,6 +49,8 @@ public class ImportController {
 		// 数据集
 		List<FcApplyPersonParam> data = new ArrayList<>();
 		if (prefix.equals("xlsx")) {
+			// 老师数量
+			Integer teacherNumber = 0;
 			try {
 				InputStream is = multipartFile.getInputStream();
 				@SuppressWarnings("resource")
@@ -50,6 +60,9 @@ public class ImportController {
 				for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
 					xssfSheet = xssfWorkbook.getSheetAt(numSheet);
 					if (xssfSheet == null) {
+						continue;
+					}
+					if (xssfSheet.getLastRowNum() == 0) {
 						continue;
 					}
 
@@ -62,13 +75,49 @@ public class ImportController {
 							// 性别
 							String sex = ExcelUtil.formatCell6(xssfRow.getCell(1));
 							if (sex != null && !sex.trim().equals("")) {
-								model.setSex(Integer.parseInt(sex));
+								if (sex.trim().equals("女")) {
+									model.setSex(2);
+								} else {
+									model.setSex(1);
+								}
 							} else {
 								model.setSex(1);
 							}
-							model.setCertificateNumber(ExcelUtil.formatCell4(xssfRow.getCell(2)));
-							model.setTellPhone(ExcelUtil.formatCell4(xssfRow.getCell(3)));
-							model.setAddress(ExcelUtil.formatCell4(xssfRow.getCell(4)));
+							// 年龄
+							String age = ExcelUtil.formatCell6(xssfRow.getCell(2));
+							if (age != null && !age.trim().equals("")) {
+								model.setAge(Integer.parseInt(age));
+							} else {
+								model.setAge(0);
+							}
+
+							// 学历
+							model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
+
+							// 身份账号
+							model.setCertificateNumber(ExcelUtil.formatCell4(xssfRow.getCell(4)));
+
+							// 手机号
+							String tellPhone = ExcelUtil.formatCell4(xssfRow.getCell(5));
+							if (tellPhone != null && !tellPhone.equals("")) {
+								teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
+							}
+							model.setTellPhone(tellPhone);
+							// 岗位
+							model.setPost(ExcelUtil.formatCell4(xssfRow.getCell(6)));
+
+							// 工作年限
+							String workYear = ExcelUtil.formatCell6(xssfRow.getCell(7));
+							if (workYear != null && !workYear.trim().equals("")) {
+								model.setWorkYear(Integer.parseInt(workYear));
+							} else {
+								model.setWorkYear(0);
+							}
+
+							// 户籍所在省市
+							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(8)));
+							// 工作所在详细地址
+							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
 							data.add(model);
 						}
 					}
@@ -77,7 +126,15 @@ public class ImportController {
 			} catch (Exception e) {
 				return ResultUtil.custom(-1, "模板导入异常，请检查档案模板");
 			}
-			return ResultUtil.ok(data);
+
+			// 机构名称
+			resultMap.put("institutionName", "机构名称");
+			// 老师数量
+			resultMap.put("teacherNumber", teacherNumber);
+			// 申请数量
+			resultMap.put("applyNumber", data.size());
+			resultMap.put("data", data);
+			return ResultUtil.ok(resultMap);
 		} else {
 			return ResultUtil.custom(-1, "模版格式不正确");
 		}

@@ -16,6 +16,11 @@ public class FcSelfTestDetailVo {
 	private BigDecimal score;
 
 	/**
+	 * 课程名称
+	 */
+	private String courseName;
+
+	/**
 	 * 题干集合
 	 */
 	private List<FcSelfTestStemDetailVo> stemList;
@@ -42,5 +47,13 @@ public class FcSelfTestDetailVo {
 
 	public void setStemList(List<FcSelfTestStemDetailVo> stemList) {
 		this.stemList = stemList;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 }
