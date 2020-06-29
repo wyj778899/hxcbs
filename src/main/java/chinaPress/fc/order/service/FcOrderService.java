@@ -113,4 +113,34 @@ public class FcOrderService {
 		}
 		return 0;
 	}
+
+	/**
+	 * 根据id查询
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public FcOrder selectById(Integer id) {
+		return fcOrderMapper.selectByPrimaryKey(id);
+	}
+
+	/**
+	 * 根据code 查询
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public FcOrder selectByCode(String code) {
+		return fcOrderMapper.selectByCode(code);
+	}
+
+	/**
+	 * 修改
+	 * 
+	 * @param record
+	 * @return
+	 */
+	public int updateByPrimaryKeySelective(FcOrder record) {
+		return fcOrderMapper.updateByPrimaryKeySelective(record);
+	}
 }

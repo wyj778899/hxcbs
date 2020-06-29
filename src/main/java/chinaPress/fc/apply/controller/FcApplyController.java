@@ -33,12 +33,7 @@ public class FcApplyController {
 	 */
 	@PostMapping("insert")
 	public Result insert(FcApply record, String personJson) {
-		int index = fcApplyService.insert(record, personJson);
-		if (index > 0) {
-			return ResultUtil.custom(1, "操作成功");
-		} else {
-			return ResultUtil.custom(0, "操作失败");
-		}
+		return fcApplyService.insert(record, personJson);
 	}
 
 	/**
@@ -90,6 +85,23 @@ public class FcApplyController {
 		TerminalPractitionerApplyDetailVo detail = fcApplyService.findTerminalPractitionerDetail(id);
 		if (detail != null) {
 			return ResultUtil.ok(detail);
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 审核
+	 * 
+	 * @param id
+	 * @param auditStatus
+	 * @param auditPeople
+	 * @return
+	 */
+	public Result audit(Integer id, Integer auditStatus, Integer auditPeople) {
+		int index = fcApplyService.audit(id, auditStatus, auditPeople);
+		if (index > 0) {
+			return ResultUtil.ok();
 		} else {
 			return ResultUtil.error();
 		}

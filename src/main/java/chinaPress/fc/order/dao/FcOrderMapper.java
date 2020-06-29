@@ -19,6 +19,8 @@ public interface FcOrderMapper {
 	int insertSelective(FcOrder record);
 
 	FcOrder selectByPrimaryKey(Integer id);
+	
+	FcOrder selectByCode(String code);
 
 	int updateByPrimaryKeySelective(FcOrder record);
 

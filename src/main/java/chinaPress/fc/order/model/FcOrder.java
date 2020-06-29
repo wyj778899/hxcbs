@@ -106,6 +106,11 @@ public class FcOrder {
 	private BigDecimal payAmount;
 
 	/**
+	 * 报名申请id
+	 */
+	private Integer applyId;
+
+	/**
 	 * 我的课程/订单
 	 * 
 	 * @return id
@@ -415,5 +420,13 @@ public class FcOrder {
 
 	public void setPayAmount(BigDecimal payAmount) {
 		this.payAmount = payAmount;
+	}
+
+	public Integer getApplyId() {
+		return applyId;
+	}
+
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
 	}
 }

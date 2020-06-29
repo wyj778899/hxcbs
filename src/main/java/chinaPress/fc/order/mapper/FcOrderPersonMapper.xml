@@ -172,4 +172,11 @@
 	</where>
 	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
   </select>
+  
+  <update id="updateIndividualByOrderId">
+  	UPDATE fc_order_person 
+	SET is_individual = 1 
+	WHERE
+		order_id = #{orderId}
+  </update>
 </mapper>

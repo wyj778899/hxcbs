@@ -1,12 +1,18 @@
 package chinaPress.fc.apply.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import chinaPress.common.result.model.Result;
+import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.JacksonUtil;
+import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
 import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
@@ -16,6 +22,7 @@ import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
 import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
+import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
@@ -50,6 +57,12 @@ public class FcApplyService {
 	@Autowired
 	private FcCourseHourMapper fcCourseHourMapper;
 
+	@Autowired
+	private SMSService smsService;
+
+	@Autowired
+	private FcCourseArchivesMapper fcCourseArchivesMapper;
+
 	/**
 	 * 新增
 	 * 
@@ -57,10 +70,14 @@ public class FcApplyService {
 	 * @param personJson
 	 * @return
 	 */
-	public int insert(FcApply record, String personJson) {
+	@Transactional
+	public Result insert(FcApply record, String personJson) {
+		Map<String, Object> resultMap = new HashMap<>();
 		int index = fcApplyMapper.insertSelective(record);
 		if (index > 0) {
+			int staffRoleType = 0;
 			if (record.getApplyType().intValue() == 1) {
+				staffRoleType = 2;
 				List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
 				for (FcApplyPersonParam item : personList) {
 
@@ -137,20 +154,39 @@ public class FcApplyService {
 						fcApplyPersonMapper.insertSelective(applyPerson);
 					}
 				}
+
+				MemberInfo memberParam = new MemberInfo();
+				memberParam.setRoleId(record.getApplyId());
+				memberParam.setRoleType(staffRoleType);
+				MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+				if (memberInfo != null) {
+					String courseName = fcCourseArchivesMapper.selectByPrimaryKey(record.getCourseId()).getName();
+					String message = "【华夏云课堂】尊敬的机构用户：您已成功提交" + courseName
+							+ "课程的报名信息，我们会在2-3个工作日进行审核，您可在“我的课堂”中查询结果。如有疑义，可致电010-64672273。感谢您的支持！";
+					smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+				}
+
+				resultMap.put("type", 1);
+				return ResultUtil.ok(resultMap);
 			} else {
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
 				person.setRoleId(record.getApplyId());
 				if (record.getApplyType().intValue() == 2) {
 					person.setRoleType(1);
-				} else {
+					staffRoleType = 3;
+				} else if (record.getApplyType().intValue() == 3) {
 					person.setRoleType(2);
+					staffRoleType = 4;
 				}
 				person.setCreateId(record.getCreateId());
 				fcApplyPersonMapper.insertSelective(person);
+				resultMap.put("type", 2);
+				resultMap.put("applyId", record.getId());
+				return ResultUtil.ok(resultMap);
 			}
 		}
-		return index;
+		return ResultUtil.error();
 	}
 
 	/**
@@ -195,6 +231,30 @@ public class FcApplyService {
 						person.setIsIndividual(0);
 						fcOrderPersonMapper.insertSelective(person);
 					}
+				}
+			}
+
+			MemberInfo memberParam = new MemberInfo();
+			memberParam.setRoleId(applyModel.getApplyId());
+			if (applyModel.getApplyType() == 1) {
+				memberParam.setRoleType(2);
+			} else if (applyModel.getApplyType() == 2) {
+				memberParam.setRoleType(3);
+			} else if (applyModel.getApplyType() == 3) {
+				memberParam.setRoleType(4);
+			}
+			MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+			if (memberInfo != null) {
+				String courseName = fcCourseArchivesMapper.selectByPrimaryKey(applyModel.getCourseId()).getName();
+				String message = "";
+				if (applyModel.getApplyType().intValue() == 1 && auditStatus == 2) {
+					// 审核
+					message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+					smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+				} else if (applyModel.getApplyType().intValue() == 1 && auditStatus == 3) {
+					// 驳回
+//					message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+//					smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 				}
 			}
 		}

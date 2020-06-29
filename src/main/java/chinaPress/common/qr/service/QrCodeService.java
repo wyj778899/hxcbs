@@ -1,19 +1,49 @@
 package chinaPress.common.qr.service;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayConstants;
 import chinaPress.common.wxpay.WXPayConstants.SignType;
 import chinaPress.common.wxpay.WXPayUtil;
+import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.course.dao.FcCourseArchivesMapper;
+import chinaPress.fc.course.model.FcCourseArchives;
+import chinaPress.fc.order.dao.FcOrderPersonMapper;
+import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.service.FcOrderService;
+import chinaPress.role.member.dao.MemberInfoMapper;
+import chinaPress.role.member.model.MemberInfo;
 
 @Service
 public class QrCodeService {
+
+	@Autowired
+	private FcOrderService fcOrderService;
+
+	@Autowired
+	private FcCourseArchivesMapper fcCourseArchivesMapper;
+
+	@Autowired
+	private FcOrderPersonMapper fcOrderPersonMapper;
+
+	@Autowired
+	private FcApplyMapper fcApplyMapper;
+
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
+
+	@Autowired
+	private SMSService smsService;
 
 	/**
 	 * 微信支付模式一支付回调
@@ -25,30 +55,20 @@ public class QrCodeService {
 	 */
 	public Map<String, String> wxPayCallback(Map<String, String> wxPayCallbackMap) throws Exception {
 		// 购买的信息
-		String buyInfo = wxPayCallbackMap.get("product_id");
-		WXPayUtil.getLogger().info(buyInfo);
+		String orderId = wxPayCallbackMap.get("product_id");
 		String openId = wxPayCallbackMap.get("openid");
-		String roleId = buyInfo.split("-")[0];
-		String roleType = buyInfo.split("-")[1];
-		String buyProductType = buyInfo.split("-")[2];
-		String buyProductId = buyInfo.split("-")[3];
-		String buyProductKind = buyInfo.split("-")[4];
-		String buyProductPrice = buyInfo.split("-")[6];
+
+		FcOrder orderModel = fcOrderService.selectById(Integer.parseInt(orderId));
+
 		// 统一下单
 		MyWXPayConfig config = new MyWXPayConfig();
 		WXPay wxPay = new WXPay(config);
 		Map<String, String> reqData = new HashMap<>();
-		String body = "";
-		if (buyProductKind.equals("1")) {
-			body = "软件网-会员充值";
-		}
-		if (buyProductKind.equals("2")) {
-			body = "软件网-下订单";
-		}
+		String body = "购买课程";
+
 		reqData.put("body", body);
-		reqData.put("out_trade_no", buyInfo);
-		reqData.put("total_fee", String.valueOf(new BigDecimal(buyProductPrice).multiply(new BigDecimal(100))));
-//		reqData.put("total_fee", buyProductPrice);
+		reqData.put("out_trade_no", orderModel.getCode());
+		reqData.put("total_fee", String.valueOf(orderModel.getPayAmount().multiply(new BigDecimal(100))));
 		reqData.put("spbill_create_ip", "127.0.0.1");
 		reqData.put("notify_url", "http://www.zryuxiang.com:8080/software/notify_url");
 		reqData.put("trade_type", "NATIVE"); // 交易类型
@@ -58,14 +78,6 @@ public class QrCodeService {
 		Map<String, String> resParams = new HashMap<String, String>();
 		// 统一下单成功
 		if (resultMap.get("return_code").equals("SUCCESS")) {
-//					// 业务成功
-//					if (resultMap.get("result_code").equals("SUCCESS")) {
-//						
-//					}
-//					// 业务失败
-//					else if (resultMap.get("result_code").equals("FAIL")) {
-//						
-//					}
 			// 暂时只做统一下单成功，就立马需要支付，中间暂不做业务
 			resParams.put("return_code", "SUCCESS"); // 必须
 			resParams.put("appid", config.getAppID()); // 必须
@@ -103,75 +115,65 @@ public class QrCodeService {
 			MyWXPayConfig config = new MyWXPayConfig();
 			// 验证签名
 			if (WXPayUtil.isSignatureValid(resultMap, config.getKey(), SignType.HMACSHA256)) {
-				// 暂不做：实际支付金额和系统的商品金额的对比
-				// String total_fee = resultMap.get("total_fee");
-				// WXPayUtil.getLogger().info("商城支付通知，订单id（" + orderId + "）金额与支付金额不一致");
-
 				String buyInfo = resultMap.get("out_trade_no");
-				WXPayUtil.getLogger().info(buyInfo);
-				String roleId = buyInfo.split("-")[0];
-				String roleType = buyInfo.split("-")[1];
-				String buyProductType = buyInfo.split("-")[2];
-				String buyProductId = buyInfo.split("-")[3];
-				String buyProductKind = buyInfo.split("-")[4];
-				String buyProductPrice = buyInfo.split("-")[6];
-//				// 购买的会员
-//				if (buyProductKind.equals("1")) {
-//					RoleCost record = new RoleCost();
-//					record.setPayTs(new Date());
-//					record.setPayWay(2);
-//					record.setRelationId(Integer.parseInt(buyProductId));
-//					record.setRelationType(Integer.parseInt(roleType));
-//					record.setRoleId(Integer.parseInt(roleId));
-//					Date expireDate = CalculateTimeUtil
-//							.parse(CalculateTimeUtil.getFewDaysLater(30, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss");
-//					record.setExpireTime(expireDate);
-//					int index = roleCostMapper.insertSelective(record);
-//					// 1.厂商.2.代理商.3.客户.4.顾问.5.后台
-//					if (roleType.equals("1")) {
-//
-//					} else if (roleType.equals("2")) {
-//
-//					} else if (roleType.equals("3")) {
-//
-//					} else if (roleType.equals("4")) {
-//
-//					}
-//					if (index > 0) {
-//						// 支付成功、新增一条消费记录
-//						FcExpenseRecord expenseRecord = new FcExpenseRecord();
-//						expenseRecord.setOrderCode(sysOrderCodeService.insertOrderCode(5));
-//						expenseRecord.setPaymentMode(2);
-//						expenseRecord.setPaymentOrderCode(resultMap.get("transaction_id").toString());
-//						expenseRecord.setPaymentTime(new Date());
-//						expenseRecord.setRoleId(Integer.parseInt(roleId));
-//						expenseRecord.setOrderId(record.getId());
-//						expenseRecord.setRoleType(Integer.parseInt(roleType));
-//						expenseRecord.setType(1);
-//						fcExpenseRecordService.insert(expenseRecord);
-//						resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-//					} else {
-//						resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付成功，购买会员失败]]></return_msg></xml>";
-//					}
-//				}
-//				// 购买的订单
-//				else if (buyProductKind.equals("2")) {
-//					// 修改订单状态
-//					// 需求订单
-//					if (buyProductType.equals("1")) {
-//						FcOrderDemand fcOrderDemand = new FcOrderDemand();
-//						fcOrderDemand.setId(Integer.parseInt(buyProductId));
-//						fcOrderDemand.setOrderState(3);
-//						fcOrderDemandService.updateFcOrderDemandSelective(fcOrderDemand,null);
-//					}
-//					// 产品订单
-//					else if (buyProductType.equals("2")) {
-//						FcOrderProduct fcOrderProduct = new FcOrderProduct();
-//						fcOrderProduct.setId(Integer.parseInt(buyProductId));
-//						fcOrderProduct.setOrderState(2);
-//						fcOrderProductService.updateFcOrderProductSelective(fcOrderProduct);
-//					}
-//				}
+				// 订单详情
+				FcOrder orderModel = fcOrderService.selectByCode(buyInfo);
+				if (orderModel != null) {
+					if (orderModel.getPayStatus() == 1) {
+						// 课程档案
+						FcCourseArchives courseModel = fcCourseArchivesMapper
+								.selectByPrimaryKey(orderModel.getCourseId());
+
+						FcOrder updOrder = new FcOrder();
+						updOrder.setId(orderModel.getId());
+						// 当前时间
+						Calendar current_calendar = Calendar.getInstance();
+						// 开始时间
+						updOrder.setStartTime(current_calendar.getTime());
+						// 结束时间
+						current_calendar.add(Calendar.DAY_OF_YEAR, courseModel.getCourseNumber());
+						updOrder.setEndTime(current_calendar.getTime());
+						updOrder.setPayStatus(2);
+						fcOrderService.updateByPrimaryKeySelective(updOrder);
+
+						// 修改订单子数据为个人
+						fcOrderPersonMapper.updateIndividualByOrderId(orderModel.getId());
+
+						// 修改申请记录为已缴费
+						if (orderModel.getApplyId() != null) {
+							FcApply updApply = new FcApply();
+							updApply.setId(orderModel.getApplyId());
+							updApply.setApplySchedule(2);
+							fcApplyMapper.updateByPrimaryKeySelective(updApply);
+						}
+
+						MemberInfo memberParam = new MemberInfo();
+						memberParam.setRoleId(orderModel.getRoleId());
+						if (orderModel.getRoleType() == 1) {
+							memberParam.setRoleType(2);
+						} else if (orderModel.getRoleType() == 2) {
+							memberParam.setRoleType(3);
+						} else if (orderModel.getRoleType() == 3) {
+							memberParam.setRoleType(4);
+						}
+						MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+						if (memberInfo != null) {
+							String courseName = fcCourseArchivesMapper.selectByPrimaryKey(orderModel.getCourseId())
+									.getName();
+							String message = "";
+							if (orderModel.getRoleType().intValue() == 1) {
+								// 机构
+							} else {
+								// 家长/从业者
+								message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+								smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+							}
+						}
+					}
+					resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+				} else {
+					resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付成功，购买会员失败]]></return_msg></xml>";
+				}
 			} else {
 				resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[验签失败]]></return_msg></xml>";
 			}

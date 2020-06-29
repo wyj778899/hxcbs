@@ -29,11 +29,11 @@ import chinaPress.common.qr.service.QrCodeService;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayUtil;
+import chinaPress.fc.order.service.FcOrderService;
 
 @RestController
 public class QrCodeController {
-//	@Autowired
-//	private RoleCostService roleCostService;
+	
 	@Autowired
 	private QrCodeService qrCodeService;
 
@@ -75,7 +75,7 @@ public class QrCodeController {
 	 * @throws Exception
 	 */
 	@GetMapping("qrcode")
-	public void getBarCodeImage(HttpServletResponse response)
+	public void getBarCodeImage(HttpServletResponse response, String orderId)
 			throws Exception {
 		// 设置页面不缓存
 		assert response != null;
@@ -91,16 +91,11 @@ public class QrCodeController {
 		data.put("mch_id", config.getMchID());
 		data.put("time_stamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
 		data.put("nonce_str", WXPayUtil.generateNonceStr());
-		
-		String buyData = "";
-//				roleId.concat("-").concat(roleType).concat("-").concat(buyProductType).concat("-")
-//				.concat(buyProductId).concat("-").concat(buyProductKind).concat("-").concat(nonceTime)
-//				.concat("-").concat(buyProductPrice);
-		data.put("product_id", buyData);
+		data.put("product_id", orderId);
 		// 生成签名
 		String sign = WXPayUtil.generateSignature(data, config.getKey());
 		String text = "weixin://wxpay/bizpayurl?sign=" + sign + "&appid=" + config.getAppID() + "&mch_id="
-				+ config.getMchID() + "&product_id=" + buyData + "&time_stamp=" + data.get("time_stamp") + "&nonce_str="
+				+ config.getMchID() + "&product_id=" + orderId + "&time_stamp=" + data.get("time_stamp") + "&nonce_str="
 				+ data.get("nonce_str");
 
 		BufferedImage bufferedImage = QREncode(text);
