@@ -444,16 +444,16 @@
       	age = #{age},
       </if>
       <if test="certificateType != null">
-      	#{certificateType},
+      	certificate_type = #{certificateType},
       </if>
       <if test="post != null">
-      	#{post},
+      	post = #{post},
       </if>
       <if test="workYear != null">
-      	#{workYear},
+      	work_year = #{workYear},
       </if>
       <if test="censusAddress != null">
-      	#{censusAddress},
+      	census_address = #{censusAddress},
       </if>
       <if test="institutionAddress != null">
       	institution_address = #{institutionAddress},

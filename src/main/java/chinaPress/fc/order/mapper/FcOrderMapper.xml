@@ -23,11 +23,25 @@
     <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
     <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
     <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    
+    
+    <result column="invoice_type" jdbcType="INTEGER" property="invoiceType" />
+    <result column="invoice_title" jdbcType="VARCHAR" property="invoiceTitle" />
+    <result column="invoice_number" jdbcType="VARCHAR" property="invoiceNumber" />
+    <result column="invoice_details" jdbcType="VARCHAR" property="invoiceDetails" />
+    <result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+    <result column="consignee_area" jdbcType="VARCHAR" property="consigneeArea" />
+    <result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+    <result column="consignee_phone" jdbcType="VARCHAR" property="consigneePhone" />
+    <result column="payment_mode" jdbcType="VARCHAR" property="paymentMode" />
+    <result column="third_party_no" jdbcType="VARCHAR" property="thirdPartyNo" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `date`, code, role_type, role_id, course_id, start_time, end_time, is_coupon, 
     coupon_id, pay_status, `state`, create_id, create_time, update_id, update_time, is_individual,
     order_amount, discount_amount, pay_amount, apply_id
+    , invoice_type , invoice_title, invoice_number, invoice_details, consignee_name
+    , consignee_area, consignee_address, consignee_phone, payment_mode, third_party_no
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -109,6 +123,16 @@
       <if test="applyId != null">
       	apply_id,
       </if>
+	  <if test="invoiceType != null">invoice_type,</if>
+	  <if test="invoiceTitle != null">invoice_title,</if>
+	  <if test="invoiceNumber != null">invoice_number,</if>
+	  <if test="invoiceDetails != null">invoice_details,</if>
+	  <if test="consigneeName != null">consignee_name,</if>
+	  <if test="consigneeArea != null">consignee_area,</if>
+	  <if test="consigneeAddress != null">consignee_address,</if>
+	  <if test="consigneePhone != null">consignee_phone,</if>
+	  <if test="paymentMode != null">payment_mode,</if>
+	  <if test="thirdPartyNo != null">third_party_no,</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -174,6 +198,16 @@
       <if test="applyId != null">
       	#{applyId},
       </if>
+      <if test="invoiceType != null">#{invoiceType},</if>
+	  <if test="invoiceTitle != null">#{invoiceTitle},</if>
+	  <if test="invoiceNumber != null">#{invoiceNumber},</if>
+	  <if test="invoiceDetails != null">#{invoiceDetails},</if>
+	  <if test="consigneeName != null">#{consigneeName},</if>
+	  <if test="consigneeArea != null">#{consigneeArea},</if>
+	  <if test="consigneeAddress != null">#{consigneeAddress},</if>
+	  <if test="consigneePhone != null">#{consigneePhone},</if>
+	  <if test="paymentMode != null">#{paymentMode},</if>
+	  <if test="thirdPartyNo != null">#{thirdPartyNo},</if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.order.model.FcOrder">
@@ -239,6 +273,16 @@
       <if test="applyId != null">
       	#{applyId},
       </if>
+      <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+	  <if test="invoiceTitle != null">invoice_title = #{invoiceTitle},</if>
+	  <if test="invoiceNumber != null">invoice_number = #{invoiceNumber},</if>
+	  <if test="invoiceDetails != null">invoice_details = #{invoiceDetails},</if>
+	  <if test="consigneeName != null">consignee_name = #{consigneeName},</if>
+	  <if test="consigneeArea != null">consignee_area = #{consigneeArea},</if>
+	  <if test="consigneeAddress != null">consignee_address = #{consigneeAddress},</if>
+	  <if test="consigneePhone != null">consignee_phone = #{consigneePhone},</if>
+	  <if test="paymentMode != null">payment_mode = #{paymentMode},</if>
+	  <if test="thirdPartyNo != null">third_party_no = #{thirdPartyNo},</if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
