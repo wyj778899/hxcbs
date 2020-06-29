@@ -110,16 +110,6 @@ public class FcOrder {
 	 */
 	private Integer applyId;
 
-//	<result column="invoice_type" jdbcType="INTEGER" property="invoiceType" />
-//    <result column="invoice_title" jdbcType="VARCHAR" property="invoiceTitle" />
-//    <result column="invoice_number" jdbcType="VARCHAR" property="invoiceNumber" />
-//    <result column="invoice_details" jdbcType="VARCHAR" property="invoiceDetails" />
-//    <result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
-//    <result column="consignee_area" jdbcType="VARCHAR" property="consigneeArea" />
-//    <result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
-//    <result column="consignee_phone" jdbcType="VARCHAR" property="consigneePhone" />
-//    <result column="payment_mode" jdbcType="VARCHAR" property="paymentMode" />
-//    <result column="third_party_no" jdbcType="VARCHAR" property="thirdPartyNo" />
 	/**
 	 * 发票类型：1.无需发票，2.个人，3.公司
 	 */
@@ -169,6 +159,16 @@ public class FcOrder {
 	 * 第三方单号
 	 */
 	private String thirdPartyNo;
+
+	private Integer isIndividual;
+
+	public Integer getIsIndividual() {
+		return isIndividual;
+	}
+
+	public void setIsIndividual(Integer isIndividual) {
+		this.isIndividual = isIndividual;
+	}
 
 	/**
 	 * 我的课程/订单

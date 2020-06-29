@@ -19,7 +19,7 @@ public interface FcOrderMapper {
 	int insertSelective(FcOrder record);
 
 	FcOrder selectByPrimaryKey(Integer id);
-	
+
 	FcOrder selectByCode(String code);
 
 	int updateByPrimaryKeySelective(FcOrder record);
@@ -58,9 +58,20 @@ public interface FcOrderMapper {
 
 	/**
 	 * 终端家长 课程数据集合
+	 * 
 	 * @param param
 	 * @return
 	 */
 	List<TerminalPractitionerOrderCourseListVo> findTerminalPractitionerCourseList(
 			TerminalPractitionerOrderCourseListParam param);
+
+	/**
+	 * 查询课程是否拥有
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型：1.家长2.从业者
+	 * @param courseId 课程id
+	 * @return
+	 */
+	int findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId);
 }
