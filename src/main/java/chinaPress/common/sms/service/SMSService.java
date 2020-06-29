@@ -46,7 +46,7 @@ public class SMSService {
 			return map;
 		}
 		MemberInfo param = new MemberInfo();
-		param.setUserName(phone);
+		param.setTellPhone(phone);
 		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
 		if (m != null) {
 			if (m.getIsStart() == 1) {
@@ -76,7 +76,7 @@ public class SMSService {
 			map.put("messag", "请输入正确的手机号");
 		} else {
 			MemberInfo param = new MemberInfo();
-			param.setUserName(phone);
+			param.setTellPhone(phone);
 			MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
 			if (m == null) {
 				map.put("code", -2);

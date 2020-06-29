@@ -345,4 +345,5 @@ public class MemberInfoController {
 	public Result queryUserAndCerCounts(Integer roleId,Integer roleType) {
 		return memberInfoService.findUserAndCerCounts(roleId, roleType);
 	}
+	
 }
