@@ -30,5 +30,19 @@ public class FcCourseHourController {
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
+	
+	/**
+	 * 根据课程id查询视频数量
+	 * @param sectionId
+	 * @return
+	 */
+	@RequestMapping("selectCourseHourCountByCOurseId")
+	public Result selectCourseHourCountByCOurseId(Integer courseId){
+		int count = fcCourseHourService.selectCourseHourCountByCOurseId(courseId);
+		if(count>0) {
+			return ResultUtil.custom(1, "查询成功", count);
+		}
+		return ResultUtil.custom(-1, "查询失败", count);
+	}
 
 }
