@@ -66,6 +66,12 @@ public class FcCourseArchivesService {
 	public CourseArchivesNewVo selectCourseArchivesById(Integer id) {
 		CourseArchivesNewVo data = fcCourseArchivesMapper.selectCourseArchivesById(id);
 		if(data!=null) {
+			int count = fcCourseHourMapper.selectCourseHourCountByCOurseId(id);
+			if(count>0) {
+				data.setCourseCount(count);
+			}else {
+				data.setCourseCount(0);
+			}
 			List<TreeNode> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
 			if(list.size()>0) {
 				data.setSectionList(TreeUtil.buildByRecursive(list));

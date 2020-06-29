@@ -2,12 +2,12 @@ package chinaPress.role.member.vo;
 
 /**
  * 用户信息用于发布优惠券
+ * 
  * @author Administrator
  *
  */
 public class MemberCouponInfo {
 
-	
 	/**
 	 * 编号
 	 */
@@ -16,31 +16,26 @@ public class MemberCouponInfo {
 	 * 用户名
 	 */
 	private String name;
-	
+
 	/**
 	 * 手机号
 	 */
 	private String tellPhone;
-	
+
 	/**
 	 * 所属类型
 	 */
 	private Integer roleType;
-	
+
 	/**
 	 * 角色id
 	 */
 	private Integer roleId;
-	
+
 	/**
 	 * 角色名称
 	 */
 	private String RoleName;
-	
-	
-	
-	
-	
 
 	public Integer getRoleId() {
 		return roleId;
@@ -89,7 +84,5 @@ public class MemberCouponInfo {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	
-	
+
 }

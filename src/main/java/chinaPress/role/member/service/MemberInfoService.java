@@ -121,7 +121,7 @@ public class MemberInfoService {
 			memberInfo.setRoleType(2);
 			count += memberInfoMapper.insertSelective(memberInfo);
 			if(count>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0,"添加成功","");
 			}else {
 				return new Result(-3,"数据库错误","");
@@ -274,7 +274,7 @@ public class MemberInfoService {
 			memberInfo.setRoleType(5);
 			i+= memberInfoMapper.insertSelective(memberInfo);
 			if(i>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0, "添加成功", "");
 			}else {
 				return new Result(-3, "数据库错误", "");
@@ -419,7 +419,7 @@ public class MemberInfoService {
 			}
 			i+=memberInfoMapper.insertSelective(memberInfo);
 			if(i>1) {
-				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
+//				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
 				return new Result(0, "添加成功", "");
 			}else {
 				return new Result(-3, "数据库错误", "");
@@ -558,7 +558,7 @@ public class MemberInfoService {
 		}
 		//员工类型为从业者并且状态没有审核
 		if(m.getRoleType()==2 && m.getState()!=2) {
-			return new Result(-4, "该用户没有权限", "");
+			return new Result(-4, "该账号正在审核中...", "");
 		}
 		try {
 			if(Md5Util.validPassword(password,m.getPassword())) {
