@@ -17,7 +17,7 @@ public class MyWXPayConfig extends WXPayConfig {
 		if (os != null && os.toLowerCase().indexOf("linux") > -1) {
 			certPath = "/home/ecloud_file/cert/wx_pay/apiclient_cert.p12";
 		} else if (os != null && os.toLowerCase().indexOf("windows") > -1) {
-			certPath = "c:/ecloud_file/apiclient_cert.p12";
+			certPath = "c:/ecloud_file/1540000301_20190703_cert/apiclient_cert.p12";
 		}
 		File file = new File(certPath);
 		InputStream certStream = new FileInputStream(file);

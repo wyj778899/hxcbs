@@ -1,5 +1,7 @@
 package chinaPress.fc.apply.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +32,11 @@ public class FcApplyController {
 	 * @param record
 	 * @param personJson
 	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@PostMapping("insert")
-	public Result insert(FcApply record, String personJson) {
+	public Result insert(FcApply record, String personJson) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		return fcApplyService.insert(record, personJson);
 	}
 

@@ -3,6 +3,11 @@ package chinaPress.fc.apply.vo;
 public class FcApplyPersonParam {
 
 	/**
+	 * 用户名
+	 */
+	private String userName;
+
+	/**
 	 * 姓名
 	 */
 	private String name;
@@ -16,46 +21,51 @@ public class FcApplyPersonParam {
 	 * 性别（1.男2.女）
 	 */
 	private Integer sex;
-	
+
 	/**
-     * 年龄
-     */
-    private Integer age;
+	 * 年龄
+	 */
+	private Integer age;
 
 	/**
 	 * 证件号码
 	 */
 	private String certificateNumber;
-	
-	/**
-     * 岗位
-     */
-    private String post;
-    
-    /**
-     * 工作年限
-     */
-    private Integer workYear;
-    
-    /**
-     * 户籍地址
-     */
-    private String censusAddress;
-    
-    /**
-     * 单位地址
-     */
-    private String institutionAddress;
-    
-    /**
-     * 学历
-     */
-    private String education;
 
-    /**
-     * 角色类型（1.家长2.从业者）
-     */
-    private Integer roleType;
+	/**
+	 * 岗位
+	 */
+	private String post;
+
+	/**
+	 * 工作年限
+	 */
+	private Integer workYear;
+
+	/**
+	 * 户籍地址
+	 */
+	private String censusAddress;
+
+	/**
+	 * 单位地址
+	 */
+	private String institutionAddress;
+
+	/**
+	 * 学历
+	 */
+	private String education;
+
+	/**
+	 * 角色类型（1.家长2.从业者）
+	 */
+	private Integer roleType;
+
+	/**
+	 * 机构名称
+	 */
+	private String institutionName;
 
 	public Integer getRoleType() {
 		return roleType;
@@ -143,5 +153,21 @@ public class FcApplyPersonParam {
 
 	public void setInstitutionAddress(String institutionAddress) {
 		this.institutionAddress = institutionAddress;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getInstitutionName() {
+		return institutionName;
+	}
+
+	public void setInstitutionName(String institutionName) {
+		this.institutionName = institutionName;
 	}
 }
