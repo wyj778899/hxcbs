@@ -23,6 +23,8 @@ import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
 import chinaPress.role.teacher.service.RoleTeacherArchivesService;
+import chinaPress.role.teacher.vo.StemParam;
+import chinaPress.role.teacher.vo.TeacherArchivesParam;
 import chinaPress.role.teacher.vo.TeacherCertificateVo;
 
 @RestController
@@ -30,6 +32,20 @@ public class TeacherController {
 	
 	@Autowired
 	private RoleTeacherArchivesService roleTeacherArchivesService;
+	
+	/**
+	 * 根据id查询教师详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("selectTeacherById")
+	public Result selectTeacherById(Integer id) {
+		TeacherArchivesParam data = roleTeacherArchivesService.selectTeacherById(id);
+		if(data!=null) {
+			return ResultUtil.custom(1, "查询成功", data);
+		}
+		return ResultUtil.custom(-1, "查询失败", data);
+	}
 	
 	/**
 	 * 证书分数查询
@@ -55,7 +71,7 @@ public class TeacherController {
 		String fname = file.getName();
 		String prefix = fname.substring(fname.lastIndexOf(".") + 1);
 		// 数据集
-		List<FcApplyPersonParam> data = new ArrayList<>();
+		List<StemParam> data = new ArrayList<>();
 		if (prefix.equals("xlsx")) {
 			try {
 				InputStream is = multipartFile.getInputStream();
@@ -73,14 +89,15 @@ public class TeacherController {
 					for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 						if (xssfRow != null) {
-							FcApplyPersonParam model = new FcApplyPersonParam();
+							//题干
+							StemParam model = new StemParam();
 							String typeName = ExcelUtil.formatCell4(xssfRow.getCell(1));
 							if(typeName == "单选") {
-								
+								model.setType(1);
 							}else if(typeName == "多选") {
-								
+								model.setType(2);
 							}else if(typeName == "判断") {
-								
+								model.setType(3);
 							}
 							data.add(model);
 						}
