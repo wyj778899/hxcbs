@@ -28,9 +28,11 @@ import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
+import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.model.FcOrderPerson;
+import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.model.MemberInfo;
@@ -66,17 +68,21 @@ public class FcApplyService {
 	@Autowired
 	private FcCourseArchivesMapper fcCourseArchivesMapper;
 
+	@Autowired
+	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+
 	/**
 	 * 新增
 	 * 
 	 * @param record
 	 * @param personJson
 	 * @return
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchAlgorithmException
 	 */
 	@Transactional
-	public Result insert(FcApply record, String personJson) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public Result insert(FcApply record, String personJson)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Map<String, Object> resultMap = new HashMap<>();
 		int index = fcApplyMapper.insertSelective(record);
 		if (index > 0) {
@@ -183,7 +189,7 @@ public class FcApplyService {
 				resultMap.put("type", 1);
 				return ResultUtil.ok(resultMap);
 			} else {
-				
+
 				FcApplyPersonParam personModel = personList.get(0);
 				MemberInfo memberParam = new MemberInfo();
 				memberParam.setTellPhone(personModel.getTellPhone());
@@ -211,7 +217,7 @@ public class FcApplyService {
 					updPractitioner.setInstitutionAddress(personModel.getInstitutionAddress());
 					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 				}
-				
+
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
 				person.setRoleId(record.getApplyId());
@@ -270,7 +276,14 @@ public class FcApplyService {
 						person.setTotalCount(totalCount);
 						person.setCreateId(auditPeople);
 						person.setIsIndividual(0);
-						fcOrderPersonMapper.insertSelective(person);
+						int personIndex = fcOrderPersonMapper.insertSelective(person);
+						if (personIndex > 0) {
+							FcOrderPersonHour personHour = new FcOrderPersonHour();
+							personHour.setOrderPersonId(person.getId());
+							personHour.setHourId(
+									fcCourseHourMapper.selectCourseHourIdBysectionId(applyModel.getCourseId()));
+							fcOrderPersonHourMapper.insertSelective(personHour);
+						}
 					}
 				}
 			}

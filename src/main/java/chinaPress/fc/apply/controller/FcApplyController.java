@@ -32,11 +32,12 @@ public class FcApplyController {
 	 * @param record
 	 * @param personJson
 	 * @return
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchAlgorithmException
 	 */
 	@PostMapping("insert")
-	public Result insert(FcApply record, String personJson) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public Result insert(FcApply record, String personJson)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		return fcApplyService.insert(record, personJson);
 	}
 
@@ -102,6 +103,7 @@ public class FcApplyController {
 	 * @param auditPeople
 	 * @return
 	 */
+	@PostMapping("audit")
 	public Result audit(Integer id, Integer auditStatus, Integer auditPeople) {
 		int index = fcApplyService.audit(id, auditStatus, auditPeople);
 		if (index > 0) {

@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.course_section.service.FcCourseHourService;
 import chinaPress.fc.order.dao.FcOrderMapper;
+import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.model.FcOrderPerson;
+import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
@@ -28,7 +31,10 @@ public class FcOrderService {
 
 	@Autowired
 	private FcCourseHourMapper fcCourseHourMapper;
-
+	
+	@Autowired
+	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+	
 	/**
 	 * 终端 我的订单数据数量
 	 * 
@@ -109,7 +115,13 @@ public class FcOrderService {
 				person.setRoleType(2);
 			}
 			person.setTotalCount(fcCourseHourMapper.selectCourseHourCountByCOurseId(record.getCourseId()));
-			fcOrderPersonMapper.insertSelective(person);
+			int personIndex = fcOrderPersonMapper.insertSelective(person);
+			if (personIndex > 0) {
+				FcOrderPersonHour personHour = new FcOrderPersonHour();
+				personHour.setOrderPersonId(person.getId());
+				personHour.setHourId(fcCourseHourMapper.selectCourseHourIdBysectionId(record.getCourseId()));
+				fcOrderPersonHourMapper.insertSelective(personHour);
+			}
 			return record.getId();
 		}
 		return 0;
