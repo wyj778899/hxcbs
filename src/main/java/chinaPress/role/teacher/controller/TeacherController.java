@@ -74,8 +74,14 @@ public class TeacherController {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 						if (xssfRow != null) {
 							FcApplyPersonParam model = new FcApplyPersonParam();
-							// 姓名
-							model.setName(ExcelUtil.formatCell4(xssfRow.getCell(0)));
+							String typeName = ExcelUtil.formatCell4(xssfRow.getCell(1));
+							if(typeName == "单选") {
+								
+							}else if(typeName == "多选") {
+								
+							}else if(typeName == "判断") {
+								
+							}
 							data.add(model);
 						}
 					}

@@ -92,6 +92,7 @@ public class FcOrderController {
 
 	/**
 	 * 新增家长/从业者订单
+	 * 
 	 * @param record
 	 * @return
 	 */
@@ -100,6 +101,24 @@ public class FcOrderController {
 		int index = fcOrderService.insertPractitioner(record);
 		if (index > 0) {
 			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 查询课程是否拥有
+	 * 
+	 * @param roleId
+	 * @param roleType
+	 * @param courseId
+	 * @return
+	 */
+	@GetMapping("findMyCourseIsExist")
+	public Result findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
+		int index = fcOrderService.findMyCourseIsExist(roleId, roleType, courseId);
+		if (index > 0) {
+			return ResultUtil.ok();
 		} else {
 			return ResultUtil.error();
 		}

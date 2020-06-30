@@ -409,4 +409,20 @@
 	<if test="status != null">HAVING `status` = #{status}</if>
 	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
   </select>
+  
+  <!-- 查询课程是否拥有 -->
+  <select id="findMyCourseIsExist" resultType="int">
+  	SELECT
+		count(*)
+	FROM
+		fc_order a
+		INNER JOIN fc_order_person b ON b.order_id = a.id
+		INNER JOIN fc_course_archives c ON c.id = a.course_id 
+	WHERE
+		b.is_individual = 1 
+		AND a.start_time <![CDATA[ < ]]> NOW() AND a.end_time <![CDATA[ > ]]> NOW()
+		AND b.role_id = #{roleId}
+		AND b.role_type = #{roleType}
+		AND a.course_id = #{courseId} 
+  </select>
 </mapper>

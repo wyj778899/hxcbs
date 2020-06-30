@@ -28,7 +28,8 @@
     delete from fc_order_person
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.order.model.FcOrderPerson">
+  <insert id="insertSelective" parameterType="chinaPress.fc.order.model.FcOrderPerson" 
+	useGeneratedKeys="true" keyProperty="id">
     insert into fc_order_person
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
