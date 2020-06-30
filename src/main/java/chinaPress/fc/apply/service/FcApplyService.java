@@ -230,6 +230,7 @@ public class FcApplyService {
 				fcApplyPersonMapper.insertSelective(person);
 				resultMap.put("type", 2);
 				resultMap.put("applyId", record.getId());
+				resultMap.put("courseId", record.getCourseId());
 				return ResultUtil.ok(resultMap);
 			}
 		}
