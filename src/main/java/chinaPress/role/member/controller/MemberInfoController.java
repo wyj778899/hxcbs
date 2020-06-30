@@ -374,4 +374,15 @@ public class MemberInfoController {
 	public Result registerUserPwd(String tellPhone,String passwordOld,String passwordNew,String password) {
 		return memberInfoService.updateUserPwd(tellPhone,passwordOld,passwordNew,password);
 	}
+	
+	
+	/**
+	 * 普通用户升级为家长/从业者    用户信息更换
+	 * @param practitioner
+	 * @return
+	 */
+	@RequestMapping("/modifyUserUpgrade")
+	public Result modifyUserUpgrade(PractitionerInfo practitionerInfo) {
+		return memberInfoService.setRoleUserToPra(practitionerInfo);
+	}
 }
