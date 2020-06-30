@@ -26,6 +26,22 @@ public class MemberInfoVo {
 	 * 角色类型
 	 */
 	private Integer roleType;
+	
+	/**
+	 * 手机号
+	 */
+	private String tellPhone;
+	
+	
+	
+	
+	public String getTellPhone() {
+		return tellPhone;
+	}
+
+	public void setTellPhone(String tellPhone) {
+		this.tellPhone = tellPhone;
+	}
 
 	public String getName() {
 		return name;

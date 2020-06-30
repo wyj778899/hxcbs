@@ -538,6 +538,7 @@ public class MemberInfoService {
 				memberInfo.setName(m.getUserName());
 				memberInfo.setPhoto(m.getPhoto());
 				memberInfo.setRoleType(m.getRoleType());
+				memberInfo.setTellPhone(m.getTellPhone());
 				return new Result(0, "登陆成功", memberInfo);
 			} else {
 				return new Result(-3, "用户或密码错误", "");
