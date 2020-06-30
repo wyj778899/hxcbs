@@ -12,6 +12,8 @@ import chinaPress.fc.course_section.vo.FcCourseHourVo;
 @Repository
 public interface FcCourseHourMapper {
 	
+	List<Integer> selectCourseHourIdBysectionId(Integer courseId);
+	
 	/**
 	 * 根据章节id查询关联课时
 	 * @param sectionId
