@@ -6,7 +6,7 @@
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="hour_id" jdbcType="INTEGER" property="hourId" />
     <result column="question_type" jdbcType="INTEGER" property="questionType" />
-    <result column="task difficulty" jdbcType="INTEGER" property="taskDifficulty" />
+    <result column="task_difficulty" jdbcType="INTEGER" property="taskDifficulty" />
     <result column="question_stem" jdbcType="VARCHAR" property="questionStem" />
     <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
     <result column="state" jdbcType="INTEGER" property="state" />
@@ -17,7 +17,7 @@
     <result column="grade" jdbcType="VARCHAR" property="grade" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, course_id, hour_id, question_type, `task difficulty`, question_stem, is_delete, 
+    id, course_id, hour_id, question_type, `task_difficulty`, question_stem, is_delete, 
     `state`, create_id, create_time, update_id, update_time,grade
   </sql>
   <!-- 根据课程和课时查询关联的试题 -->
@@ -25,7 +25,7 @@
   	select
   	id `id`,
   	question_type questionType,
-  	task difficulty taskDifficulty,
+  	task_difficulty taskDifficulty,
   	question_stem questionStem,
   	grade grade
   	from fc_question_stem
@@ -65,7 +65,7 @@
         question_type,
       </if>
       <if test="taskDifficulty != null">
-        `task difficulty`,
+        `task_difficulty`,
       </if>
       <if test="questionStem != null">
         question_stem,
@@ -141,7 +141,7 @@
         question_type = #{questionType,jdbcType=INTEGER},
       </if>
       <if test="taskDifficulty != null">
-        `task difficulty` = #{taskDifficulty,jdbcType=INTEGER},
+        `task_difficulty` = #{taskDifficulty,jdbcType=INTEGER},
       </if>
       <if test="questionStem != null">
         question_stem = #{questionStem,jdbcType=VARCHAR},

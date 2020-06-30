@@ -24,6 +24,7 @@
     stem_id as stemId,
     option_type as optionType,
     option_name as optionName,
+    is_correct as isCorrect
     from fc_question_option
     where stem_id = #{id,jdbcType=INTEGER}
   </select>
