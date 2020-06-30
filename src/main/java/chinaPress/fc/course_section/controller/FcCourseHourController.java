@@ -25,8 +25,8 @@ public class FcCourseHourController {
 	 * @return
 	 */
 	@RequestMapping("selectCourseHourListBySectionId")
-	public Result selectCourseHourListBySectionId(Integer sectionId){
-		return fcCourseHourService.selectCourseHourListBySectionId(sectionId);
+	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType){
+		return fcCourseHourService.selectCourseHourListBySectionId(sectionId,courseId,sectionId,roleType);
 		
 	}
 	
