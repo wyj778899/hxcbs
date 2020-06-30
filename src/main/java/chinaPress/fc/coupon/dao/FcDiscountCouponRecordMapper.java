@@ -9,6 +9,7 @@ import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
+import chinaPress.fc.coupon.vo.FcOrderDiscountCoupon;
 import io.lettuce.core.dynamic.annotation.Param;
 
 @Mapper
@@ -140,4 +141,15 @@ public interface FcDiscountCouponRecordMapper {
 	 */
 	int grantCoupon(@Param("grantRoleId") Integer grantRoleId, @Param("grantRoleType") Integer grantRoleType,
 			@Param("couponRecordIdList") List<String> couponRecordIdList);
+
+	/**
+	 * 根据优惠券编码，角色id，角色类型查询
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   角色id
+	 * @param grantRoleType 角色类型
+	 * @param couponCode    优惠券编码
+	 */
+	FcOrderDiscountCoupon selectOrderCoupon(@Param("grantRoleId") Integer grantRoleId,
+			@Param("grantRoleType") Integer grantRoleType, @Param("couponCode") String couponCode);
 }

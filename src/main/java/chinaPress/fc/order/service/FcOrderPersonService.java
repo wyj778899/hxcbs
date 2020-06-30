@@ -65,4 +65,22 @@ public class FcOrderPersonService {
 		}
 		return 0;
 	}
+
+	/**
+	 * 查询课时是否通过
+	 * 
+	 * @param roleId
+	 * @param roleType
+	 * @param courseId
+	 * @param hourId
+	 * @return
+	 */
+	public int findPersonHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+		FcOrderPersonHour model = fcOrderPersonMapper.findPersonHour(roleId, roleType, courseId, hourId);
+		if (model != null) {
+			return model.getIsPass();
+		} else {
+			return -1;
+		}
+	}
 }

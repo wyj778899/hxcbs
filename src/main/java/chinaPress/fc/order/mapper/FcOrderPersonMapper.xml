@@ -204,4 +204,22 @@
 	SET have_count = have_count + 1
 	where id = #{id} 
   </update>
+  
+  <!-- 查询课时 -->
+  <select id="findPersonHour" resultType="chinaPress.fc.order.model.FcOrderPersonHour">
+  	SELECT
+		c.id,
+		c.order_person_id AS orderPersonId,
+		c.hour_id AS hourId,
+		c.is_pass AS isPass 
+	FROM
+		fc_order a
+		LEFT JOIN fc_order_person b ON b.order_id = a.id
+		LEFT JOIN fc_order_person_hour c ON c.order_person_id = b.id 
+	WHERE
+		a.course_id = #{courseId}
+		AND b.role_id = #{roleId}
+		AND b.role_type = #{roleType}
+		AND c.hour_id = #{hourId}
+  </select>
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +43,39 @@ public class FcOrderPersonController {
 	public Result findTerminalList(TerminalInstitutionOrderPersonParam param) {
 		List<TerminalInstitutionOrderPersonVo> data = fcOrderPersonService.findTerminalList(param);
 		return ResultUtil.ok(data);
+	}
+
+	/**
+	 * 修改已看数量
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型（1.家长2.从业者）
+	 * @param courseId 课程id
+	 * @param hourId   课时id
+	 * @param isPass   是否通过：1.是，2.否
+	 * @return
+	 */
+	@PostMapping("setHaveCount")
+	public Result setHaveCount(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
+		int index = fcOrderPersonService.setHaveCount(roleId, roleType, courseId, hourId, isPass);
+		if (index > 0) {
+			return ResultUtil.ok();
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 查询课时是否通过
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型（1.家长2.从业者）
+	 * @param courseId 课程id
+	 * @param hourId   课时id
+	 * @return
+	 */
+	@PostMapping("findPersonHourIsPass")
+	public int findPersonHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+		return fcOrderPersonService.findPersonHourIsPass(roleId, roleType, courseId, hourId);
 	}
 }

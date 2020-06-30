@@ -10,6 +10,7 @@ import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
+import chinaPress.fc.coupon.vo.FcOrderDiscountCoupon;
 
 @Service
 public class FcDiscountCouponRecordService {
@@ -132,5 +133,17 @@ public class FcDiscountCouponRecordService {
 	public int grantCoupon(Integer roleId, Integer roleType, String couponRecordIds) {
 		List<String> couponRecordIdList = JacksonUtil.fromJSONList(couponRecordIds, String.class);
 		return fcDiscountCouponRecordMapper.grantCoupon(roleId, roleType, couponRecordIdList);
+	}
+
+	/**
+	 * 根据优惠券编码，角色id，角色类型查询
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   角色id
+	 * @param grantRoleType 角色类型
+	 * @param couponCode    优惠券编码
+	 */
+	public FcOrderDiscountCoupon selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode) {
+		return fcDiscountCouponRecordMapper.selectOrderCoupon(grantRoleId, grantRoleType, couponCode);
 	}
 }

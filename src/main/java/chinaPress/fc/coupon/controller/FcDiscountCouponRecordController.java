@@ -12,6 +12,7 @@ import chinaPress.fc.coupon.service.FcDiscountCouponRecordService;
 import chinaPress.fc.coupon.vo.FcDiscountCouponRecordVo;
 import chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo;
 import chinaPress.fc.coupon.vo.FcDiscountValidCouponVo;
+import chinaPress.fc.coupon.vo.FcOrderDiscountCoupon;
 
 @RestController
 @RequestMapping("coupon/record")
@@ -150,6 +151,25 @@ public class FcDiscountCouponRecordController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResultUtil.custom(0, "发放失败", 0);
+		}
+	}
+
+	/**
+	 * 根据优惠券编码，角色id，角色类型查询
+	 * 
+	 * @author maguoliang
+	 * @param grantRoleId   角色id
+	 * @param grantRoleType 角色类型
+	 * @param couponCode    优惠券编码
+	 */
+	@RequestMapping("index/order")
+	public Result selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode) {
+		FcOrderDiscountCoupon fcOrderDiscountCoupon = fcDiscountCouponRecordService.selectOrderCoupon(grantRoleId,
+				grantRoleType, couponCode);
+		if (fcOrderDiscountCoupon != null) {
+			return ResultUtil.ok(fcOrderDiscountCoupon);
+		} else {
+			return ResultUtil.error();
 		}
 	}
 }
