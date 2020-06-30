@@ -52,7 +52,7 @@ public interface FcOrderPersonMapper {
 	 * @param courseId 课程id
 	 * @return
 	 */
-	int findOrderPersonId(Integer roleId, Integer roleType, Integer courseId);
+	Integer findOrderPersonId(Integer roleId, Integer roleType, Integer courseId);
 
 	/**
 	 * 修改已看数量
