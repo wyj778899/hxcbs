@@ -166,6 +166,10 @@ public class FcDiscountCouponRecordController {
 	public Result selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode) {
 		FcOrderDiscountCoupon fcOrderDiscountCoupon = fcDiscountCouponRecordService.selectOrderCoupon(grantRoleId,
 				grantRoleType, couponCode);
-		return ResultUtil.ok(fcOrderDiscountCoupon);
+		if (fcOrderDiscountCoupon != null) {
+			return ResultUtil.ok(fcOrderDiscountCoupon);
+		} else {
+			return ResultUtil.error();
+		}
 	}
 }
