@@ -1,13 +1,15 @@
 package chinaPress.fc.order.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
-import chinaPress.fc.course_section.service.FcCourseHourService;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
@@ -17,6 +19,7 @@ import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
@@ -31,10 +34,10 @@ public class FcOrderService {
 
 	@Autowired
 	private FcCourseHourMapper fcCourseHourMapper;
-	
+
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
-	
+
 	/**
 	 * 终端 我的订单数据数量
 	 * 
@@ -165,7 +168,42 @@ public class FcOrderService {
 	 * @param courseId
 	 * @return
 	 */
-	public int findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
-		return fcOrderMapper.findMyCourseIsExist(roleId, roleType, courseId);
+	public Map<String, Object> findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		FcOrder order = fcOrderMapper.findMyCourseIsExist(roleId, roleType, courseId);
+		if (order != null) {
+			Date current_date = new Date();
+			if (order.getStartTime() == null && order.getEndTime() == null) {
+				map.put("code", 1);
+				map.put("message", "未支付订单，请进行支付");
+				map.put("orderId", order.getId());
+			} else {
+				if (order.getEndTime().getTime() > current_date.getTime()) {
+					map.put("code", 0);
+					map.put("message", "该课程学习中，不可再次购买");
+				} else {
+					map.put("code", -1);
+					map.put("message", "未有课程，可以购买");
+				}
+			}
+		} else {
+			map.put("code", -1);
+			map.put("message", "未有课程，可以购买");
+		}
+		return map;
+	}
+
+	/**
+	 * 终端支付订单详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id) {
+		TerminalPayOrderDetailVo detail = fcOrderMapper.findTerminalPayOrderDetail(id);
+		if (detail != null) {
+			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+		}
+		return detail;
 	}
 }

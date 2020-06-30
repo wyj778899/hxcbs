@@ -1,0 +1,97 @@
+package chinaPress.fc.order.vo;
+
+import java.math.BigDecimal;
+
+public class TerminalPayOrderDetailVo {
+
+	/**
+	 * 订单id
+	 */
+	private Integer id;
+
+	/**
+	 * 订单编码
+	 */
+	private String code;
+
+	/**
+	 * 支付金额
+	 */
+	private BigDecimal payAmount;
+
+	/**
+	 * 课程id
+	 */
+	private Integer courseId;
+
+	/**
+	 * 课程名称
+	 */
+	private String courseName;
+
+	/**
+	 * 视频数量
+	 */
+	private Integer videoNumber;
+
+	/**
+	 * 课程价格
+	 */
+	private BigDecimal coursePrice;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public BigDecimal getPayAmount() {
+		return payAmount;
+	}
+
+	public void setPayAmount(BigDecimal payAmount) {
+		this.payAmount = payAmount;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public Integer getVideoNumber() {
+		return videoNumber;
+	}
+
+	public void setVideoNumber(Integer videoNumber) {
+		this.videoNumber = videoNumber;
+	}
+
+	public BigDecimal getCoursePrice() {
+		return coursePrice;
+	}
+
+	public void setCoursePrice(BigDecimal coursePrice) {
+		this.coursePrice = coursePrice;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+}

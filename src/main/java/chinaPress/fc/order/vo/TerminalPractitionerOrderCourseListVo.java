@@ -16,7 +16,7 @@ public class TerminalPractitionerOrderCourseListVo {
 	 * 课程封面
 	 */
 	private String photo;
-
+	
 	/**
 	 * 课程名称
 	 */
