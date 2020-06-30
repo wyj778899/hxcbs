@@ -28,10 +28,9 @@ public class FcCourseHourService {
 	 * @param sectionId
 	 * @return
 	 */
-	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType){
+	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType,Integer type){
 		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
 		if(data.size()>0) {
-			
 			Map<String, Object> map = fcOrderService.findMyCourseIsExist(personId, roleType, courseId);
 			if(map.get("code").toString().equals("0")) {
 				int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId, data.get(0).getId());
@@ -43,7 +42,11 @@ public class FcCourseHourService {
 					return ResultUtil.custom(-1, "暂无视频");
 				}
 			}else {
-				return ResultUtil.custom(1, "免费试看", data);
+				if(type == 1) {
+					return ResultUtil.custom(1, "免费试看", data);
+				}else {
+					return ResultUtil.custom(-1, "暂无视频");
+				}
 			}
 			
 		}else {
