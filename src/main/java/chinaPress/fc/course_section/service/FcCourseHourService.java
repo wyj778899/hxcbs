@@ -29,9 +29,9 @@ public class FcCourseHourService {
 		if(data.size()>0) {
 			int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId, data.get(0).getId());
 			if(index == 1) {//通过
-				return ResultUtil.custom(1, "操作成功", data);
+				return ResultUtil.custom(1, "查询成功", data);
 			}else if(index == 0){
-				return ResultUtil.custom(0, "操作成功", data);
+				return ResultUtil.custom(0, "看过未考过", data);
 			}else {
 				return ResultUtil.custom(-1, "暂无视频");
 			}
