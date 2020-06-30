@@ -69,7 +69,7 @@ public interface MemberInfoMapper {
      * @param roleType
      * @return
      */
-    List<UserAndCerVo> selectUserAndCers(Integer roleId,Integer roleType);
+    List<UserAndCerVo> selectUserAndCers(Integer roleId,Integer roleType,Integer page,Integer limit);
     
     
     /**

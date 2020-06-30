@@ -91,6 +91,7 @@ public class FcOrderService {
 	 * @return
 	 */
 	public int insertPractitioner(FcOrder record) {
+		record.setPayStatus(1);
 		Date current_date = new Date();
 		record.setCode(String.valueOf(current_date.getTime()));
 		record.setDate(current_date);
@@ -142,5 +143,17 @@ public class FcOrderService {
 	 */
 	public int updateByPrimaryKeySelective(FcOrder record) {
 		return fcOrderMapper.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 查询课程是否拥有
+	 * 
+	 * @param roleId
+	 * @param roleType
+	 * @param courseId
+	 * @return
+	 */
+	public int findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
+		return fcOrderMapper.findMyCourseIsExist(roleId, roleType, courseId);
 	}
 }

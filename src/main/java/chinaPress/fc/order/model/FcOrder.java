@@ -111,6 +111,66 @@ public class FcOrder {
 	private Integer applyId;
 
 	/**
+	 * 发票类型：1.无需发票，2.个人，3.公司
+	 */
+	private Integer invoiceType;
+
+	/**
+	 * 发票抬头
+	 */
+	private String invoiceTitle;
+
+	/**
+	 * 发票税号
+	 */
+	private String invoiceNumber;
+
+	/**
+	 * 发票明细
+	 */
+	private String invoiceDetails;
+
+	/**
+	 * 收货人姓名
+	 */
+	private String consigneeName;
+
+	/**
+	 * 收获地区
+	 */
+	private String consigneeArea;
+
+	/**
+	 * 收获详细地址
+	 */
+	private String consigneeAddress;
+
+	/**
+	 * 收获电话
+	 */
+	private String consigneePhone;
+
+	/**
+	 * 支付方式：1.微信，2.支付宝
+	 */
+	private String paymentMode;
+
+	/**
+	 * 第三方单号
+	 */
+	private String thirdPartyNo;
+
+	private Integer isIndividual;
+
+	public Integer getIsIndividual() {
+		return isIndividual;
+	}
+
+	public void setIsIndividual(Integer isIndividual) {
+		this.isIndividual = isIndividual;
+	}
+
+	/**
 	 * 我的课程/订单
 	 * 
 	 * @return id
@@ -428,5 +488,85 @@ public class FcOrder {
 
 	public void setApplyId(Integer applyId) {
 		this.applyId = applyId;
+	}
+
+	public Integer getInvoiceType() {
+		return invoiceType;
+	}
+
+	public void setInvoiceType(Integer invoiceType) {
+		this.invoiceType = invoiceType;
+	}
+
+	public String getInvoiceTitle() {
+		return invoiceTitle;
+	}
+
+	public void setInvoiceTitle(String invoiceTitle) {
+		this.invoiceTitle = invoiceTitle;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+
+	public String getInvoiceDetails() {
+		return invoiceDetails;
+	}
+
+	public void setInvoiceDetails(String invoiceDetails) {
+		this.invoiceDetails = invoiceDetails;
+	}
+
+	public String getConsigneeName() {
+		return consigneeName;
+	}
+
+	public void setConsigneeName(String consigneeName) {
+		this.consigneeName = consigneeName;
+	}
+
+	public String getConsigneeArea() {
+		return consigneeArea;
+	}
+
+	public void setConsigneeArea(String consigneeArea) {
+		this.consigneeArea = consigneeArea;
+	}
+
+	public String getConsigneeAddress() {
+		return consigneeAddress;
+	}
+
+	public void setConsigneeAddress(String consigneeAddress) {
+		this.consigneeAddress = consigneeAddress;
+	}
+
+	public String getConsigneePhone() {
+		return consigneePhone;
+	}
+
+	public void setConsigneePhone(String consigneePhone) {
+		this.consigneePhone = consigneePhone;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+
+	public String getThirdPartyNo() {
+		return thirdPartyNo;
+	}
+
+	public void setThirdPartyNo(String thirdPartyNo) {
+		this.thirdPartyNo = thirdPartyNo;
 	}
 }

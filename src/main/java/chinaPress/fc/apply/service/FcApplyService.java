@@ -1,5 +1,7 @@
 package chinaPress.fc.apply.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.JacksonUtil;
+import chinaPress.common.util.Md5Util;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
 import chinaPress.fc.apply.dao.FcApplyPersonMapper;
@@ -69,16 +72,18 @@ public class FcApplyService {
 	 * @param record
 	 * @param personJson
 	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@Transactional
-	public Result insert(FcApply record, String personJson) {
+	public Result insert(FcApply record, String personJson) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Map<String, Object> resultMap = new HashMap<>();
 		int index = fcApplyMapper.insertSelective(record);
 		if (index > 0) {
 			int staffRoleType = 0;
+			List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
 			if (record.getApplyType().intValue() == 1) {
 				staffRoleType = 2;
-				List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
 				for (FcApplyPersonParam item : personList) {
 
 					MemberInfo memberParam = new MemberInfo();
@@ -121,20 +126,29 @@ public class FcApplyService {
 						}
 						fcApplyPersonMapper.insertSelective(applyPerson);
 					} else {
+						item.setRoleType(2);
 						// 新增家长/从业者
 						PractitionerInfo practitionerInfo = new PractitionerInfo();
 						practitionerInfo.setUserName(item.getTellPhone());
+						practitionerInfo.setPassword(Md5Util.getEncryptedPwd("123456"));
 						practitionerInfo.setName(item.getName());
 						practitionerInfo.setTellPhone(item.getTellPhone());
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
 						practitionerInfo.setSex(item.getSex());
+						practitionerInfo.setAge(item.getAge());
+						practitionerInfo.setPost(item.getPost());
+						practitionerInfo.setWorkYear(item.getWorkYear());
+						practitionerInfo.setCensusAddress(item.getCensusAddress());
 						practitionerInfo.setInstitutionAddress(item.getInstitutionAddress());
+						practitionerInfo.setEducation(item.getEducation());
 						practitionerInfo.setType(item.getRoleType());
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
 						MemberInfo insMemberModel = new MemberInfo();
+						insMemberModel.setUserName(item.getTellPhone());
 						insMemberModel.setName(item.getName());
 						insMemberModel.setTellPhone(item.getTellPhone());
+						insMemberModel.setPassword(Md5Util.getEncryptedPwd("123456"));
 						insMemberModel.setSex(item.getSex());
 						insMemberModel.setAddress(item.getInstitutionAddress());
 						insMemberModel.setIsStart(0);
@@ -150,7 +164,7 @@ public class FcApplyService {
 						applyPerson.setApplyId(record.getId());
 						applyPerson.setCreateId(record.getCreateId());
 						applyPerson.setRoleId(practitionerInfo.getId());
-						applyPerson.setRoleType(2);
+						applyPerson.setRoleType(item.getRoleType());
 						fcApplyPersonMapper.insertSelective(applyPerson);
 					}
 				}
@@ -169,15 +183,42 @@ public class FcApplyService {
 				resultMap.put("type", 1);
 				return ResultUtil.ok(resultMap);
 			} else {
+				
+				FcApplyPersonParam personModel = personList.get(0);
+				MemberInfo memberParam = new MemberInfo();
+				memberParam.setTellPhone(personModel.getTellPhone());
+				MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+				if (memberInfo != null) {
+					// 修改员工
+					MemberInfo updMember = new MemberInfo();
+					updMember.setId(memberInfo.getId());
+					updMember.setName(personModel.getName());
+					memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+
+					// 修改家长/从业者
+					PractitionerInfo updPractitioner = new PractitionerInfo();
+					updPractitioner.setId(memberInfo.getRoleId());
+					// 姓名
+					updPractitioner.setName(personModel.getName());
+					updPractitioner.setAge(personModel.getAge());
+					updPractitioner.setPost(personModel.getPost());
+					updPractitioner.setWorkYear(personModel.getWorkYear());
+					// 学历
+					updPractitioner.setEducation(personModel.getEducation());
+					// 机构名称
+					updPractitioner.setInstitutionName(personModel.getInstitutionName());
+					// 单位地址
+					updPractitioner.setInstitutionAddress(personModel.getInstitutionAddress());
+					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
+				}
+				
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
 				person.setRoleId(record.getApplyId());
 				if (record.getApplyType().intValue() == 2) {
 					person.setRoleType(1);
-					staffRoleType = 3;
 				} else if (record.getApplyType().intValue() == 3) {
 					person.setRoleType(2);
-					staffRoleType = 4;
 				}
 				person.setCreateId(record.getCreateId());
 				fcApplyPersonMapper.insertSelective(person);
