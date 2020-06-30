@@ -411,18 +411,34 @@
   </select>
   
   <!-- 查询课程是否拥有 -->
-  <select id="findMyCourseIsExist" resultType="int">
+  <select id="findMyCourseIsExist" resultMap="BaseResultMap">
   	SELECT
-		count(*)
+		a.*
 	FROM
 		fc_order a
 		INNER JOIN fc_order_person b ON b.order_id = a.id
 		INNER JOIN fc_course_archives c ON c.id = a.course_id 
 	WHERE
 		b.is_individual = 1 
-		AND a.start_time <![CDATA[ < ]]> NOW() AND a.end_time <![CDATA[ > ]]> NOW()
 		AND b.role_id = #{roleId}
 		AND b.role_type = #{roleType}
 		AND a.course_id = #{courseId} 
+	LIMIT 1
+  </select>
+  
+  <!-- 终端支付订单详情 -->
+  <select id="findTerminalPayOrderDetail" resultType="chinaPress.fc.order.vo.TerminalPayOrderDetailVo">
+  	SELECT
+		a.id,
+		a.`code`,
+		a.pay_amount AS payAmount,
+		b.id AS courseId,
+		b.`name` AS courseName,
+		b.course_price AS coursePrice 
+	FROM
+		fc_order a
+		INNER JOIN fc_course_archives b ON b.id = a.course_id 
+	WHERE
+		a.id = #{id}
   </select>
 </mapper>

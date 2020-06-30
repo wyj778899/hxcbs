@@ -9,6 +9,7 @@ import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
@@ -73,5 +74,12 @@ public interface FcOrderMapper {
 	 * @param courseId 课程id
 	 * @return
 	 */
-	int findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId);
+	FcOrder findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId);
+
+	/**
+	 * 终端支付订单详情
+	 * @param id
+	 * @return
+	 */
+	TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id);
 }

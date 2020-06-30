@@ -134,7 +134,8 @@ public class MemberInfoService {
 	public int findPractitionerByTellPhone(String tellPhone) {
 		return memberInfoMapper.findPractitionerByTellPhone(tellPhone);
 	}
-
+	
+	
 	/**
 	 * 通过id查询培训机构信息
 	 * 
@@ -158,6 +159,7 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setInstitution(TrainInstitutionInfo trainInstitutionInfo) {
+		
 		// 通过用户名和密码到员工表查询用户信息 获取员工id更新员工操作
 		MemberInfo param = new MemberInfo();
 		param.setUserName(trainInstitutionInfo.getUserName());
@@ -1269,6 +1271,85 @@ public class MemberInfoService {
 			return new Result(0, "修改成功", "");
 		}else {
 			return new Result(-2, "系统错误", "");
+		}
+	}
+	
+	
+	/**
+	 * wyj add   20200630
+	 * 普通用户更换为家长/从业者
+	 * 1：添加家长从业者
+	 * 2：更新员工表记录
+	 * 3：删除普通用户表信息
+	 * @param practitionerInfo
+	 * @return
+	 */
+	public Result setRoleUserToPra(PractitionerInfo practitionerInfo) {
+		//用户名和手机号
+		String tellPhone = practitionerInfo.getTellPhone();
+		String userName = practitionerInfo.getUserName();
+		// 通过用户名和手机号获取用户信息
+		MemberInfo param = new MemberInfo();
+		param.setUserName(userName);
+		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+		if (m == null) {
+			MemberInfo param1 = new MemberInfo();
+			param1.setTellPhone(tellPhone);
+			m = memberInfoMapper.selectByPrimaryKey(param1);
+		}
+		if (m == null) {
+			return new Result(-1, "此用户信息不存在，无法更换注册身份", "");
+		}
+		//普通员工的id     查询普通员工的信息
+		Integer id = m.getRoleId();
+		UserInfo userInfo=userInfoMapper.selectByPrimaryKey(id);
+		if(userInfo==null) {
+			return new Result(-1, "此用户信息不存在，无法更换注册身份", "");
+		}
+		//首次注册状态为有效
+		practitionerInfo.setState(1);
+		//密码获取员工表的用户密码
+		practitionerInfo.setPassword(userInfo.getPassword());
+		//添加家长/从业者操作
+		int i= practitionerInfoMapper.insertSelective(practitionerInfo);
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setUserName(practitionerInfo.getUserName());
+		memberInfo.setPassword(practitionerInfo.getPassword());
+		memberInfo.setName(practitionerInfo.getName());
+		memberInfo.setAddress(practitionerInfo.getAddress());
+		memberInfo.setTellPhone(practitionerInfo.getTellPhone());
+		memberInfo.setSex(practitionerInfo.getSex());
+		memberInfo.setProvice(practitionerInfo.getProvice());
+		memberInfo.setCity(practitionerInfo.getCity());
+		memberInfo.setArea(practitionerInfo.getArea());
+		memberInfo.setAddress(practitionerInfo.getAddress());
+		memberInfo.setEmail(practitionerInfo.getEmail());
+		memberInfo.setIsStart(1);
+		memberInfo.setState(2);
+		memberInfo.setRoleId(practitionerInfo.getId());
+		memberInfo.setId(m.getId());
+		// 状态有值进行操作
+		if (1 == practitionerInfo.getType()) {
+			memberInfo.setRoleType(3);
+		}
+		if (2 == practitionerInfo.getType()) {
+			memberInfo.setRoleType(4);
+		}
+		//添加员工档案操作
+		i += memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+		//删除普通用户操作
+		i +=userInfoMapper.deleteByPrimaryKey(id);
+		//返回一个session里面的用户信息
+		MemberInfoVo memberVo = new MemberInfoVo();
+		memberVo.setRoleId(memberInfo.getRoleId());//角色id
+		memberVo.setName(memberInfo.getUserName());//用户名
+		memberVo.setPhoto(memberInfo.getPhoto());//头像
+		memberVo.setRoleType(memberInfo.getRoleType());//角色类型
+		memberVo.setTellPhone(memberInfo.getTellPhone());//手机号
+		if(i>2) {
+			return new Result(0, "更换成功", memberVo);
+		}else {
+			return new Result(-1, "更换失败", "");
 		}
 	}
 }

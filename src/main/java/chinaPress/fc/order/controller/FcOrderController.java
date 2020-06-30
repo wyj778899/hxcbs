@@ -1,6 +1,7 @@
 package chinaPress.fc.order.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import chinaPress.fc.order.service.FcOrderService;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
+import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 
@@ -109,16 +111,27 @@ public class FcOrderController {
 	/**
 	 * 查询课程是否拥有
 	 * 
-	 * @param roleId
-	 * @param roleType
-	 * @param courseId
+	 * @param roleId 角色id
+	 * @param roleType 角色类型（1.家长2.从业者）
+	 * @param courseId 课程id
 	 * @return
 	 */
 	@GetMapping("findMyCourseIsExist")
-	public Result findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
-		int index = fcOrderService.findMyCourseIsExist(roleId, roleType, courseId);
-		if (index > 0) {
-			return ResultUtil.ok();
+	public Map<String, Object> findMyCourseIsExist(Integer roleId, Integer roleType, Integer courseId) {
+		return fcOrderService.findMyCourseIsExist(roleId, roleType, courseId);
+	}
+
+	/**
+	 * 终端支付订单详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("findTerminalPayOrderDetail")
+	public Result findTerminalPayOrderDetail(Integer id) {
+		TerminalPayOrderDetailVo data = fcOrderService.findTerminalPayOrderDetail(id);
+		if (data != null) {
+			return ResultUtil.ok(data);
 		} else {
 			return ResultUtil.error();
 		}
