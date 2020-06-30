@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.order.model.FcOrderPerson;
+import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo;
 
@@ -60,4 +61,14 @@ public interface FcOrderPersonMapper {
 	 * @return
 	 */
 	int updateHaveCount(Integer id);
+
+	/**
+	 * 查询课时
+	 * @param roleId
+	 * @param roleType
+	 * @param courseId
+	 * @param hourId
+	 * @return
+	 */
+	FcOrderPersonHour findPersonHour(Integer roleId, Integer roleType, Integer courseId, Integer hourId);
 }
