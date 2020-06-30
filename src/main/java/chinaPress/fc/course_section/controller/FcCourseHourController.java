@@ -25,12 +25,8 @@ public class FcCourseHourController {
 	 * @return
 	 */
 	@RequestMapping("selectCourseHourListBySectionId")
-	public Result selectCourseHourListBySectionId(Integer sectionId,HttpServletRequest request){
-		String requestUrl = request.getScheme() //当前链接使用的协议
-			    +"://" + request.getServerName()//服务器地址 
-			    + ":" + request.getServerPort() //端口号 
-			    + request.getContextPath(); //应用名称，如果应用名称为
-		List<FcCourseHourVo> data = fcCourseHourService.selectCourseHourListBySectionId(sectionId,requestUrl);
+	public Result selectCourseHourListBySectionId(Integer sectionId){
+		List<FcCourseHourVo> data = fcCourseHourService.selectCourseHourListBySectionId(sectionId);
 		if(data.size()>0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
