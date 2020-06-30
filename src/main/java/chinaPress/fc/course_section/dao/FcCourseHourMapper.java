@@ -12,7 +12,12 @@ import chinaPress.fc.course_section.vo.FcCourseHourVo;
 @Repository
 public interface FcCourseHourMapper {
 	
-	List<Integer> selectCourseHourIdBysectionId(Integer courseId);
+	/**
+	 * 根据课程id查询第一个视频的id
+	 * @param courseId
+	 * @return
+	 */
+	Integer selectCourseHourIdBysectionId(Integer courseId);
 	
 	/**
 	 * 根据章节id查询关联课时

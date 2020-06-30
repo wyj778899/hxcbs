@@ -15,20 +15,6 @@ public class FcCourseHourService {
 	private FcCourseHourMapper fcCourseHourMapper;
 	
 	/**
-	 * 根据课程id查询课程关联的视频第一个id
-	 * @param courseId
-	 * @return
-	 */
-	public int selectCourseHourIdBysectionId(Integer courseId) {
-		List<Integer> list = fcCourseHourMapper.selectCourseHourIdBysectionId(courseId);
-		if(list.size()>0) {
-			return list.get(0);
-		}else {
-			return 0;
-		}
-	}
-	
-	/**
 	 * 根据章节id查询关联课时
 	 * @param sectionId
 	 * @return
