@@ -115,6 +115,7 @@ public class QrCodeService {
 			MyWXPayConfig config = new MyWXPayConfig();
 			// 验证签名
 			if (WXPayUtil.isSignatureValid(resultMap, config.getKey(), SignType.HMACSHA256)) {
+				// 订单编码
 				String buyInfo = resultMap.get("out_trade_no");
 				// 订单详情
 				FcOrder orderModel = fcOrderService.selectByCode(buyInfo);

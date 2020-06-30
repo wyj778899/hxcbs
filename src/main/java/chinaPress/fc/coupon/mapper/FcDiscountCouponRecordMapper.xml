@@ -404,7 +404,7 @@
 		where
 			a.grant_role_id = #{grantRoleId}
 			and a.grant_role_type = #{grantRoleType}
-			and a.code = #{code}
+			and a.code = #{couponCode}
 			and a.start_time <![CDATA[<=]]> now()
 			and now() <![CDATA[<=]]> a.end_time
 			and b.type = 1

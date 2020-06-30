@@ -175,7 +175,7 @@
   </select>
   
   <!-- 查询订单人员id -->
-  <select id="findOrderPersonId" resultType="int">
+  <select id="findOrderPersonId" resultType="java.lang.Integer">
   	SELECT
 		b.id
 	FROM
@@ -221,5 +221,7 @@
 		AND b.role_id = #{roleId}
 		AND b.role_type = #{roleType}
 		AND c.hour_id = #{hourId}
+	ORDER BY c.id
+	LIMIT 1
   </select>
 </mapper>

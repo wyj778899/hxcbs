@@ -70,7 +70,7 @@ public class FcOrderPersonService {
 	 * 查询课时是否通过
 	 * 
 	 * @param roleId
-	 * @param roleType
+	 * @param roleType 角色类型（1.家长2.从业者）
 	 * @param courseId
 	 * @param hourId
 	 * @return
