@@ -60,7 +60,7 @@ public class UploadController {
 		Properties prop = System.getProperties();
 		String os = prop.getProperty("os.name");
 		if (os != null && os.toLowerCase().indexOf("linux") > -1) {
-			savePath = "/home/ecloud_file/";
+			savePath = "/data/";
 		} else if (os != null && os.toLowerCase().indexOf("windows") > -1) {
 			savePath = "c:/ecloud_file/";
 		}
