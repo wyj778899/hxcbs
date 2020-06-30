@@ -24,6 +24,7 @@ public class RoleTeacherArchivesService {
 	public TeacherArchivesParam selectTeacherById(Integer id) {
 		TeacherArchivesParam model = roleTeacherArchivesMapper.selectTeacherById(id);
 		if(model!=null) {
+			model.setIdCard(model.getIdCard().replaceAll("(\\d{4})\\d{10}(\\d{4})", "$1**********$2"));
 			List<CertificateInfo> list = roleTeacherArchivesMapper.selectcertificateList(id, 4);
 			if(list.size()>0) {
 				model.setCertificateList(list);
@@ -33,7 +34,13 @@ public class RoleTeacherArchivesService {
 	}
 	
 	public List<TeacherCertificateVo> selectTeacherCertificate(String name,String idCard,Integer type,Integer certificateType){
-		return  roleTeacherArchivesMapper.selectTeacherCertificate(name, idCard, type,certificateType);
+		List<TeacherCertificateVo> data = roleTeacherArchivesMapper.selectTeacherCertificate(name, idCard, type,certificateType);
+		if(data.size()>0) {
+			for (TeacherCertificateVo item : data) {
+				item.setIdCard(item.getIdCard().replaceAll("(\\d{4})\\d{10}(\\d{4})", "$1**********$2"));
+			}
+		}
+		return  data;
 	}
 
 }

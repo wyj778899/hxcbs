@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.result.model.Result;
+import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.vo.FcCourseHourVo;
 
@@ -19,8 +21,14 @@ public class FcCourseHourService {
 	 * @param sectionId
 	 * @return
 	 */
-	public List<FcCourseHourVo> selectCourseHourListBySectionId(Integer sectionId){
-		return  fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
+	public Result selectCourseHourListBySectionId(Integer sectionId){
+		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
+		if(data.size()>0) {
+			data.get(0).getId();
+			return ResultUtil.custom(1, "操作成功", data);
+		}else {
+			return ResultUtil.custom(-1, "暂无视频");
+		}
 		
 	}
 	

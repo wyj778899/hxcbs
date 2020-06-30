@@ -26,11 +26,8 @@ public class FcCourseHourController {
 	 */
 	@RequestMapping("selectCourseHourListBySectionId")
 	public Result selectCourseHourListBySectionId(Integer sectionId){
-		List<FcCourseHourVo> data = fcCourseHourService.selectCourseHourListBySectionId(sectionId);
-		if(data.size()>0) {
-			return ResultUtil.custom(1, "查询成功", data);
-		}
-		return ResultUtil.custom(-1, "查询失败", data);
+		return fcCourseHourService.selectCourseHourListBySectionId(sectionId);
+		
 	}
 	
 	/**
