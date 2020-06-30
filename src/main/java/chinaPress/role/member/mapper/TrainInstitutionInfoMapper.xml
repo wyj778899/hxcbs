@@ -59,19 +59,53 @@
          role_staff_archives b
     where a.state = 1 and b.role_type = 2 and a.id = b.role_id
 	    <if test="name!=null and name!=''">
-	    	and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	    	and a.name like CONCAT('%',#{name},'%')
 	    </if>
 	    <if test="code!=null and code!=''">
-	    	and a.code like CONCAT('%',CONCAT(#{code},'%'))
+	    	and a.code like CONCAT('%',#{code},'%')
 	    </if>
 	    <if test="legalPerson!=null and legalPerson!=''">
-	    	and a.legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    	and a.legal_person like CONCAT('%',#{legalPerson},'%')
 	    </if>
 	    <if test="registerTell!=null and registerTell!=''">
-	    	and a.register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    	and a.register_tell like CONCAT('%',#{registerTell},'%')
 	    </if>
 	order by b.create_time desc
 	limit #{page} , #{limit}
+  </select>
+  
+  <!-- 公司地区和公司名称查询培训机构信息 -->
+  <select id="selectInstAndEmpInfo" resultType="chinaPress.role.member.vo.InstitutionAndEmpInfo">
+	select a.business_provice as area,
+		   a.name as name,
+		   count(b.institution_id) as count
+	from role_institution_archives a
+	left join fc_binding_info b
+	on a.id = b.institution_id
+	where b.binding_role_type = 4
+		  and b.reply_status in (1,2,3)
+		  <if test="area!=null and area!=''">
+	    	and a.business_provice = #{area}           <!-- 地区 -->
+	      </if>
+	      <if test="name!=null and name!=''">
+	    	and a.name like CONCAT('%',#{name},'%')              <!-- 机构名称 -->
+	      </if>
+	group by a.business_provice,
+	         a.name
+	limit #{page} , #{limit}
+  </select>
+  
+  <!-- 公司地区和公司名称查询培训机构信息个数 -->
+  <select id="selectInstAndEmpInfoCount" resultType="java.lang.Integer">
+	select count(*)
+    from role_institution_archives 
+    where id in (select institution_id from fc_binding_info where binding_role_type = 4 and reply_status in (1,2,3))
+    	  <if test="area!=null and area!=''">
+	    	and business_provice = #{area}
+	      </if>
+	      <if test="name!=null and name!=''">
+	    	and name like CONCAT('%',#{name},'%')
+	      </if>
   </select>
   
   <select id="selectCount" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultType="java.lang.Integer">
@@ -79,16 +113,16 @@
     from role_institution_archives a,role_staff_archives b
     where a.state = 1 and b.role_type = 2 and a.id = b.role_id
 	    <if test="name!=null and name!=''">
-	    	and a.name like CONCAT('%',CONCAT(#{name},'%'))
+	    	and a.name like CONCAT('%',#{name},'%')
 	    </if>
 	    <if test="code!=null and code!=''">
-	    	and a.code like CONCAT('%',CONCAT(#{code},'%'))
+	    	and a.code like CONCAT('%',#{code},'%')
 	    </if>
 	    <if test="legalPerson!=null and legalPerson!=''">
-	    	and a.legal_person like CONCAT('%',CONCAT(#{legalPerson},'%'))
+	    	and a.legal_person like CONCAT('%',#{legalPerson},'%')
 	    </if>
 	    <if test="registerTell!=null and registerTell!=''">
-	    	and a.register_tell like CONCAT('%',CONCAT(#{registerTell},'%'))
+	    	and a.register_tell like CONCAT('%',#{registerTell},'%')
 	    </if>
   </select>
   
