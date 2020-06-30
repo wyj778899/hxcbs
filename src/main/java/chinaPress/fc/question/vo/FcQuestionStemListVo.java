@@ -13,8 +13,16 @@ public class FcQuestionStemListVo {
 	private String questionStem;
 	//分数
 	private String grade;
+	//解析
+	private String analysis;
 	//选项
 	private List<FcQuestionOptionVo> optionList;
+	public String getAnalysis() {
+		return analysis;
+	}
+	public void setAnalysis(String analysis) {
+		this.analysis = analysis;
+	}
 	public List<FcQuestionOptionVo> getOptionList() {
 		return optionList;
 	}

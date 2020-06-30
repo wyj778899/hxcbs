@@ -18,8 +18,8 @@ public class FcQuestionStemService {
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
 	
-	public List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId,Integer hourId){
-		List<FcQuestionStemListVo> data = fcQuestionStemMapper.selectQuestionStemList(courseId, hourId);
+	public List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId,Integer hourId,Integer type){
+		List<FcQuestionStemListVo> data = fcQuestionStemMapper.selectQuestionStemList(courseId, hourId,type);
 		if(data.size()>0) {
 			for (FcQuestionStemListVo item : data) {
 				List<FcQuestionOptionVo> optionList = fcQuestionOptionMapper.selectByStemId(item.getId());

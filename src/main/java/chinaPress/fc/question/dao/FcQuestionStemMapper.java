@@ -20,7 +20,7 @@ public interface FcQuestionStemMapper {
 	 * @param pageSize
 	 * @return
 	 */
-	List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId,Integer hourId);
+	List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId,Integer hourId,Integer type);
 	
     int deleteByPrimaryKey(Integer id);
 

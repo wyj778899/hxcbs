@@ -24,8 +24,8 @@ public class FcQuestionStemController {
 	 * @return
 	 */
 	@RequestMapping("selectQuestionStemList")
-	public Result selectQuestionStemList(Integer courseId,Integer hourId) {
-		List<FcQuestionStemListVo> data = fcQuestionStemService.selectQuestionStemList(courseId, hourId);
+	public Result selectQuestionStemList(Integer courseId,Integer hourId,Integer type) {
+		List<FcQuestionStemListVo> data = fcQuestionStemService.selectQuestionStemList(courseId, hourId,type);
 		if(data.size()>0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
