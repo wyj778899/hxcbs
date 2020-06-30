@@ -13,5 +13,12 @@ public interface FcOrderPersonHourMapper {
     FcOrderPersonHour selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(FcOrderPersonHour record);
+    
+    /**
+     * 修改是否通过
+     * @param record
+     * @return
+     */
+    int updateIsPass(FcOrderPersonHour record);
 
 }

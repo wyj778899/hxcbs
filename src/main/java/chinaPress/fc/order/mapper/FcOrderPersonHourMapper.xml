@@ -62,4 +62,12 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 修改是否通过 -->
+  <update id="updateIsPass" parameterType="chinaPress.fc.order.model.FcOrderPersonHour">
+  	update fc_order_person_hour
+  	set is_pass = #{isPass,jdbcType=INTEGER}
+  	where order_person_id = #{orderPersonId,jdbcType=INTEGER}
+  	AND hour_id = #{hourId,jdbcType=INTEGER}
+  </update>
 </mapper>
