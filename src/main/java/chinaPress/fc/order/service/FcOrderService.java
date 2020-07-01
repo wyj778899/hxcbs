@@ -90,7 +90,14 @@ public class FcOrderService {
 	 */
 	public List<TerminalPractitionerOrderCourseListVo> findTerminalPractitionerCourseList(
 			TerminalPractitionerOrderCourseListParam param) {
-		return fcOrderMapper.findTerminalPractitionerCourseList(param);
+		Date current_date = new Date();
+		List<TerminalPractitionerOrderCourseListVo> data = fcOrderMapper.findTerminalPractitionerCourseList(param);
+		for (TerminalPractitionerOrderCourseListVo item : data) {
+			if (item.getEndTime().getTime() < current_date.getTime()) {
+				item.setStatus(3);
+			}
+		}
+		return data;
 	}
 
 	/**

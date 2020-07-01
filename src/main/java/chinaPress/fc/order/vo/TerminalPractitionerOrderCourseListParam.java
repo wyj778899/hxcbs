@@ -20,7 +20,7 @@ public class TerminalPractitionerOrderCourseListParam extends PageParam {
 	private String courseName;
 
 	/**
-	 * 状态：1.学习中，2.已完成
+	 * 状态：1.学习中，2.已完成，3.已过期
 	 */
 	private Integer status;
 
