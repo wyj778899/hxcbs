@@ -433,6 +433,7 @@
 		a.`code`,
 		a.pay_amount AS payAmount,
 		b.id AS courseId,
+		b.photo AS coursePhoto,
 		b.`name` AS courseName,
 		b.course_price AS coursePrice 
 	FROM

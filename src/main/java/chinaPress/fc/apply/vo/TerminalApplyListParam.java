@@ -17,7 +17,7 @@ public class TerminalApplyListParam extends PageParam {
 	/**
 	 * 课程名称
 	 */
-	private Integer courseName;
+	private String courseName;
 
 	public Integer getRoleType() {
 		return roleType;
@@ -35,11 +35,11 @@ public class TerminalApplyListParam extends PageParam {
 		this.roleId = roleId;
 	}
 
-	public Integer getCourseName() {
+	public String getCourseName() {
 		return courseName;
 	}
 
-	public void setCourseName(Integer courseName) {
+	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
 }

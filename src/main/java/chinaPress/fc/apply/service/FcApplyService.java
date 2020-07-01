@@ -105,7 +105,7 @@ public class FcApplyService {
 						updMember.setId(memberInfo.getId());
 						updMember.setName(item.getName());
 						updMember.setSex(item.getSex());
-						memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+						memberInfoMapper.updateByPrimaryKeySelective(updMember);
 
 						// 修改家长/从业者
 						PractitionerInfo updPractitioner = new PractitionerInfo();

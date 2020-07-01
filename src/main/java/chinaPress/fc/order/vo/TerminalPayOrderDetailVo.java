@@ -27,6 +27,11 @@ public class TerminalPayOrderDetailVo {
 	/**
 	 * 课程名称
 	 */
+	private String coursePhoto;
+
+	/**
+	 * 课程名称
+	 */
 	private String courseName;
 
 	/**
@@ -93,5 +98,13 @@ public class TerminalPayOrderDetailVo {
 
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+
+	public String getCoursePhoto() {
+		return coursePhoto;
+	}
+
+	public void setCoursePhoto(String coursePhoto) {
+		this.coursePhoto = coursePhoto;
 	}
 }
