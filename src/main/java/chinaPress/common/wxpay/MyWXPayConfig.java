@@ -15,7 +15,7 @@ public class MyWXPayConfig extends WXPayConfig {
 		Properties prop = System.getProperties();
 		String os = prop.getProperty("os.name");
 		if (os != null && os.toLowerCase().indexOf("linux") > -1) {
-			certPath = "/home/ecloud_file/cert/wx_pay/apiclient_cert.p12";
+			certPath = "/home/ecloud_file/cert/qyys/apiclient_cert.p12";
 		} else if (os != null && os.toLowerCase().indexOf("windows") > -1) {
 			certPath = "c:/ecloud_file/1540000301_20190703_cert/apiclient_cert.p12";
 		}
