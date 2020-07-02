@@ -112,13 +112,15 @@ public class FcApplyService {
 						updPractitioner.setId(memberInfo.getRoleId());
 						updPractitioner.setName(item.getName());
 						updPractitioner.setSex(item.getSex());
-						updPractitioner.setAge(item.getAge());
 						updPractitioner.setCertificateNumber(item.getCertificateNumber());
 						updPractitioner.setPost(item.getPost());
 						updPractitioner.setWorkYear(item.getWorkYear());
 						updPractitioner.setCensusAddress(item.getCensusAddress());
 						updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
 						updPractitioner.setEducation(item.getEducation());
+						updPractitioner.setEthnic(item.getEthnic());
+						updPractitioner.setNativePlace(item.getNativePlace());
+						updPractitioner.setMailingAddress(item.getMailingAddress());
 						practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 
 						FcApplyPerson applyPerson = new FcApplyPerson();
@@ -141,13 +143,15 @@ public class FcApplyService {
 						practitionerInfo.setTellPhone(item.getTellPhone());
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
 						practitionerInfo.setSex(item.getSex());
-						practitionerInfo.setAge(item.getAge());
 						practitionerInfo.setPost(item.getPost());
 						practitionerInfo.setWorkYear(item.getWorkYear());
 						practitionerInfo.setCensusAddress(item.getCensusAddress());
 						practitionerInfo.setInstitutionAddress(item.getInstitutionAddress());
 						practitionerInfo.setEducation(item.getEducation());
 						practitionerInfo.setType(item.getRoleType());
+						practitionerInfo.setEthnic(item.getEthnic());
+						practitionerInfo.setNativePlace(item.getNativePlace());
+						practitionerInfo.setMailingAddress(item.getMailingAddress());
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
 						MemberInfo insMemberModel = new MemberInfo();
@@ -206,7 +210,6 @@ public class FcApplyService {
 					updPractitioner.setId(memberInfo.getRoleId());
 					// 姓名
 					updPractitioner.setName(personModel.getName());
-					updPractitioner.setAge(personModel.getAge());
 					updPractitioner.setPost(personModel.getPost());
 					updPractitioner.setWorkYear(personModel.getWorkYear());
 					// 学历
@@ -215,6 +218,9 @@ public class FcApplyService {
 					updPractitioner.setInstitutionName(personModel.getInstitutionName());
 					// 单位地址
 					updPractitioner.setInstitutionAddress(personModel.getInstitutionAddress());
+					updPractitioner.setEthnic(personModel.getEthnic());
+					updPractitioner.setNativePlace(personModel.getNativePlace());
+					updPractitioner.setMailingAddress(personModel.getMailingAddress());
 					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 				}
 

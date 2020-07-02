@@ -83,13 +83,8 @@ public class ImportController {
 							} else {
 								model.setSex(1);
 							}
-							// 年龄
-							String age = ExcelUtil.formatCell6(xssfRow.getCell(2));
-							if (age != null && !age.trim().equals("")) {
-								model.setAge(Integer.parseInt(age));
-							} else {
-								model.setAge(0);
-							}
+							// 民族
+							model.setEthnic(ExcelUtil.formatCell6(xssfRow.getCell(2)));
 
 							// 学历
 							model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
@@ -113,11 +108,14 @@ public class ImportController {
 							} else {
 								model.setWorkYear(0);
 							}
-
+							// 籍贯
+							model.setNativePlace(ExcelUtil.formatCell4(xssfRow.getCell(8)));
 							// 户籍所在省市
-							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(8)));
+							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
 							// 工作所在详细地址
-							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
+							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(10)));
+							// 邮寄地址
+							model.setMailingAddress(ExcelUtil.formatCell4(xssfRow.getCell(11)));
 							data.add(model);
 						}
 					}

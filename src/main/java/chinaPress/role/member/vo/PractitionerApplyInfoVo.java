@@ -23,11 +23,6 @@ public class PractitionerApplyInfoVo {
 	private Integer sex;
 
 	/**
-	 * 年龄
-	 */
-	private Integer age;
-
-	/**
 	 * 证件号码
 	 */
 	private String certificateNumber;
@@ -61,6 +56,21 @@ public class PractitionerApplyInfoVo {
 	 * 公司姓名
 	 */
 	private String institutionName;
+
+	/**
+	 * 民族
+	 */
+	private String ethnic;
+
+	/**
+	 * 籍贯
+	 */
+	private String nativePlace;
+
+	/**
+	 * 邮寄地址
+	 */
+	private String mailingAddress;
 
 	public String getUserName() {
 		return userName;
@@ -118,14 +128,6 @@ public class PractitionerApplyInfoVo {
 		this.tellPhone = tellPhone;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public String getPost() {
 		return post;
 	}
@@ -156,5 +158,29 @@ public class PractitionerApplyInfoVo {
 
 	public void setEducation(String education) {
 		this.education = education;
+	}
+
+	public String getEthnic() {
+		return ethnic;
+	}
+
+	public void setEthnic(String ethnic) {
+		this.ethnic = ethnic;
+	}
+
+	public String getNativePlace() {
+		return nativePlace;
+	}
+
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
+	}
+
+	public String getMailingAddress() {
+		return mailingAddress;
+	}
+
+	public void setMailingAddress(String mailingAddress) {
+		this.mailingAddress = mailingAddress;
 	}
 }

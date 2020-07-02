@@ -184,6 +184,21 @@ public class PractitionerInfo {
 	 */
 	private String userHead;
 
+	/**
+	 * 民族
+	 */
+	private String ethnic;
+
+	/**
+	 * 籍贯
+	 */
+	private String nativePlace;
+
+	/**
+	 * 邮寄地址
+	 */
+	private String mailingAddress;
+
 	public String getRealName() {
 		return realName;
 	}
@@ -704,4 +719,27 @@ public class PractitionerInfo {
 		this.userHead = userHead;
 	}
 
+	public String getEthnic() {
+		return ethnic;
+	}
+
+	public void setEthnic(String ethnic) {
+		this.ethnic = ethnic;
+	}
+
+	public String getNativePlace() {
+		return nativePlace;
+	}
+
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
+	}
+
+	public String getMailingAddress() {
+		return mailingAddress;
+	}
+
+	public void setMailingAddress(String mailingAddress) {
+		this.mailingAddress = mailingAddress;
+	}
 }
