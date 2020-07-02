@@ -1,12 +1,12 @@
 package chinaPress.fc.course_section.dao;
 
-import chinaPress.common.tree.model.TreeNode;
-import chinaPress.fc.course_section.model.FcCourseSection;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import chinaPress.fc.course_section.model.FcCourseSection;
+import chinaPress.fc.course_section.vo.FcCourseSectionVo;
 
 @Mapper
 @Repository
@@ -17,7 +17,7 @@ public interface FcCourseSectionMapper {
 	 * @param courseId
 	 * @return
 	 */
-	List<TreeNode> selectCourseSectionList(Integer courseId);
+	List<FcCourseSectionVo> selectCourseSectionList(Integer courseId);
 	
     int deleteByPrimaryKey(Integer id);
 

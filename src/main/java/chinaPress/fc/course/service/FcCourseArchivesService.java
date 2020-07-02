@@ -6,20 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import chinaPress.common.tree.model.TreeNode;
 import chinaPress.common.util.JacksonUtil;
-import chinaPress.common.util.TreeUtil;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
+import chinaPress.fc.course.util.FcCourseSectionTreeUtil;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
-import chinaPress.fc.course_category.dao.FcCourseCategoryMapper;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.course_section.model.FcCourseSection;
+import chinaPress.fc.course_section.vo.FcCourseSectionVo;
 import chinaPress.fc.question.dao.FcQuestionOptionMapper;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
 import chinaPress.fc.question.model.FcQuestionOption;
@@ -72,9 +71,9 @@ public class FcCourseArchivesService {
 			}else {
 				data.setCourseCount(0);
 			}
-			List<TreeNode> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
+			List<FcCourseSectionVo> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
 			if(list.size()>0) {
-				data.setSectionList(TreeUtil.buildByRecursive(list));
+				data.setSectionList(FcCourseSectionTreeUtil.buildByRecursive(list));
 			}
 		}
 		return data;
