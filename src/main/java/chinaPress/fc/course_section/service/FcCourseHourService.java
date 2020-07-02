@@ -50,7 +50,11 @@ public class FcCourseHourService {
 			}
 			
 		}else {
-			return ResultUtil.custom(-1, "暂无视频");
+			if(type == 0) {
+				return ResultUtil.custom(1, "免费试看", data);
+			}else {
+				return ResultUtil.custom(-1, "暂无视频");
+			}
 		}
 		
 	}
