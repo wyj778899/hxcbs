@@ -87,6 +87,10 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
+		jedis.close();
+		if(value=="" || value == null) {
+			return new Result(-4, "系统错误", "");
+		}
 		// 校验验证码是否正确
 		if (value.equals(trainInstitutionInfo.getVerificationCode())) {
 			// 状态默认为有效
@@ -201,6 +205,10 @@ public class MemberInfoService {
 			try {
 				Jedis jedis = jedisPool.getResource();
 				String value = jedis.get("forget_password_".concat(trainInstitutionInfo.getUserName()));
+				jedis.close();
+				if(value=="" || value == null) {
+					return new Result(-4, "系统错误", "");
+				}
 				if (value.equals(trainInstitutionInfo.getVerificationCode())) {
 					// 重新赋值培训机构密码
 					trainInstitutionInfo.setPassword(Md5Util.getEncryptedPwd(trainInstitutionInfo.getPassword()));
@@ -257,6 +265,10 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
+		jedisPool.close();
+		if(value=="" || value == null) {
+			return new Result(-4, "系统错误", "");
+		}
 		if (value.equals(userInfo.getVerificationCode())) {
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setUserName(userName);
@@ -374,6 +386,10 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
+		jedisPool.close();
+		if(value=="" || value == null) {
+			return new Result(-4, "系统错误", "");
+		}
 		if (value.equals(practitionerInfo.getVerificationCode())) {
 			try {
 				practitionerInfo.setPassword(Md5Util.getEncryptedPwd(practitionerInfo.getPassword()));
@@ -614,6 +630,10 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(memberInfo.getUserName()));
+		jedisPool.close();
+		if(value=="" || value == null) {
+			return new Result(-4, "系统错误", "");
+		}
 		if (value.equals(memberInfo.getVerificationCode())) {
 			try {
 				memberInfo.setPassword(Md5Util.getEncryptedPwd(memberInfo.getPassword()));
@@ -1170,6 +1190,7 @@ public class MemberInfoService {
 		if(m!=null) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(memberInfo.getTellPhone()));
+			jedisPool.close();
 			if(value==null || value=="") {
 				return new Result(-1, "用户不存在", "");
 			}
