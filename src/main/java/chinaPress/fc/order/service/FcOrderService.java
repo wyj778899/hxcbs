@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
+import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
@@ -37,6 +38,9 @@ public class FcOrderService {
 
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+	
+	@Autowired
+	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
 
 	/**
 	 * 终端 我的订单数据数量
@@ -107,12 +111,25 @@ public class FcOrderService {
 	 * @return
 	 */
 	public int insertPractitioner(FcOrder record) {
+		if (record.getCouponId() != null) {
+			record.setIsCoupon(1);
+		} else {
+			record.setIsCoupon(0);
+		}
 		record.setPayStatus(1);
 		Date current_date = new Date();
 		record.setCode(String.valueOf(current_date.getTime()));
 		record.setDate(current_date);
 		int index = fcOrderMapper.insertSelective(record);
 		if (index > 0) {
+			// 如果使用优惠券，修改优惠券状态为已核销
+			if (record.getIsCoupon().intValue() == 1) {
+				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+				couponRecord.setId(record.getCouponId());
+				couponRecord.setStatus(3);
+				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
+			}
+			
 			FcOrderPerson person = new FcOrderPerson();
 			person.setOrderId(record.getId());
 			person.setRoleId(record.getRoleId());
@@ -180,11 +197,11 @@ public class FcOrderService {
 		FcOrder order = fcOrderMapper.findMyCourseIsExist(roleId, roleType, courseId);
 		if (order != null) {
 			Date current_date = new Date();
-			if (order.getStartTime() == null && order.getEndTime() == null) {
+			if (order.getPayStatus() == 1) {
 				map.put("code", 1);
 				map.put("message", "未支付订单，请进行支付");
 				map.put("orderId", order.getId());
-			} else {
+			} else if (order.getPayStatus() == 2) {
 				if (order.getEndTime().getTime() > current_date.getTime()) {
 					map.put("code", 0);
 					map.put("message", "该课程学习中，不可再次购买");
@@ -192,6 +209,9 @@ public class FcOrderService {
 					map.put("code", -1);
 					map.put("message", "未有课程，可以购买");
 				}
+			} else {
+				map.put("code", -1);
+				map.put("message", "未有课程，可以购买");
 			}
 		} else {
 			map.put("code", -1);
