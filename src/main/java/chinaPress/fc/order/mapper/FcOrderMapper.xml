@@ -443,4 +443,36 @@
 	WHERE
 		a.id = #{id}
   </select>
+  
+  <!-- 终端提交订单详情 -->
+  <select id="findTerminalSubmitOrderDetail" resultType="chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo">
+  	SELECT
+		a.id,
+		a.date,
+		a.`code`,
+		b.id AS courseId,
+		b.photo AS coursePhoto,
+		b.`name` AS courseName,
+		b.course_price AS coursePrice,
+		a.is_coupon AS isCoupon,
+		c.id AS couponId,
+		c.`code` AS couponCode,
+		a.order_amount AS orderAmount,
+		a.discount_amount AS discountAmount,
+		a.pay_amount AS payAmount,
+		a.invoice_type AS invoiceType,
+		a.invoice_title AS invoiceTitle,
+		a.invoice_number AS invoiceNumber,
+		a.invoice_details AS invoiceDetails,
+		a.consignee_name AS consigneeName,
+		a.consignee_area AS consigneeArea,
+		a.consignee_address AS consigneeAddress,
+		a.consignee_phone AS consigneePhone 
+	FROM
+		fc_order a
+		INNER JOIN fc_course_archives b ON b.id = a.course_id
+		LEFT JOIN fc_discount_coupon_record c ON c.id = a.coupon_id 
+	WHERE
+		a.id = #{id}
+  </select>
 </mapper>

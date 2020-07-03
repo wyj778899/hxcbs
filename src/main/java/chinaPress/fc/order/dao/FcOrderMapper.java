@@ -12,6 +12,7 @@ import chinaPress.fc.order.vo.TerminalOrderListVo;
 import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
+import chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo;
 
 @Mapper
 @Repository
@@ -78,8 +79,17 @@ public interface FcOrderMapper {
 
 	/**
 	 * 终端支付订单详情
+	 * 
 	 * @param id
 	 * @return
 	 */
 	TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id);
+
+	/**
+	 * 终端提交订单详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	TerminalSubmitOrderDetailVo findTerminalSubmitOrderDetail(Integer id);
 }

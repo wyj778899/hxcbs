@@ -91,7 +91,9 @@ public class FcApplyService {
 			if (record.getApplyType().intValue() == 1) {
 				staffRoleType = 2;
 				for (FcApplyPersonParam item : personList) {
-
+					if (item.getSex() == null) {
+						item.setSex(1);
+					}
 					MemberInfo memberParam = new MemberInfo();
 					memberParam.setTellPhone(item.getTellPhone());
 					MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);

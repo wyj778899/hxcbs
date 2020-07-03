@@ -23,6 +23,7 @@ import chinaPress.fc.order.vo.TerminalOrderListVo;
 import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
+import chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo;
 
 @Service
 public class FcOrderService {
@@ -38,7 +39,7 @@ public class FcOrderService {
 
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
-	
+
 	@Autowired
 	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
 
@@ -129,7 +130,7 @@ public class FcOrderService {
 				couponRecord.setStatus(3);
 				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
 			}
-			
+
 			FcOrderPerson person = new FcOrderPerson();
 			person.setOrderId(record.getId());
 			person.setRoleId(record.getRoleId());
@@ -148,6 +149,40 @@ public class FcOrderService {
 				personHour.setOrderPersonId(person.getId());
 				personHour.setHourId(fcCourseHourMapper.selectCourseHourIdBysectionId(record.getCourseId()));
 				fcOrderPersonHourMapper.insertSelective(personHour);
+			}
+			return record.getId();
+		}
+		return 0;
+	}
+	
+	/**
+	 * 修改家长/从业者订单
+	 * @param record
+	 * @return
+	 */
+	public int updatePractitioner(FcOrder record) {
+		FcOrder orderModel = fcOrderMapper.selectByPrimaryKey(record.getId());
+		if (orderModel == null) {
+			return 0;
+		}
+		if (record.getCouponId() != null) {
+			record.setIsCoupon(1);
+		} else {
+			record.setIsCoupon(0);
+		}
+		if (orderModel.getIsCoupon().intValue() == 1) {
+			FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+			couponRecord.setId(orderModel.getCouponId());
+			couponRecord.setStatus(2);
+			fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
+		}
+		int index = fcOrderMapper.updateByPrimaryKeySelective(record);
+		if (index > 0) {
+			if (record.getIsCoupon().intValue() == 1) {
+				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+				couponRecord.setId(record.getCouponId());
+				couponRecord.setStatus(3);
+				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
 			}
 			return record.getId();
 		}
@@ -188,7 +223,7 @@ public class FcOrderService {
 	 * 查询课程是否拥有
 	 * 
 	 * @param roleId
-	 * @param roleType
+	 * @param roleType 角色类型：1.家长2.从业者
 	 * @param courseId
 	 * @return
 	 */
@@ -228,6 +263,20 @@ public class FcOrderService {
 	 */
 	public TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id) {
 		TerminalPayOrderDetailVo detail = fcOrderMapper.findTerminalPayOrderDetail(id);
+		if (detail != null) {
+			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+		}
+		return detail;
+	}
+
+	/**
+	 * 终端提交订单详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public TerminalSubmitOrderDetailVo findTerminalSubmitOrderDetail(Integer id) {
+		TerminalSubmitOrderDetailVo detail = fcOrderMapper.findTerminalSubmitOrderDetail(id);
 		if (detail != null) {
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}

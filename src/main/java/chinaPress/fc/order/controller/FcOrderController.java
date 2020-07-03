@@ -19,6 +19,7 @@ import chinaPress.fc.order.vo.TerminalOrderListVo;
 import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
+import chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo;
 
 @RequestMapping("fc_order")
 @RestController
@@ -107,11 +108,26 @@ public class FcOrderController {
 			return ResultUtil.error();
 		}
 	}
+	
+	/**
+	 * 修改家长/从业者订单
+	 * @param record
+	 * @return
+	 */
+	@PostMapping("updatePractitioner")
+	public Result updatePractitioner(FcOrder record) {
+		int index = fcOrderService.updatePractitioner(record);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error();
+		}
+	}
 
 	/**
 	 * 查询课程是否拥有
 	 * 
-	 * @param roleId 角色id
+	 * @param roleId   角色id
 	 * @param roleType 角色类型（1.家长2.从业者）
 	 * @param courseId 课程id
 	 * @return
@@ -130,6 +146,22 @@ public class FcOrderController {
 	@GetMapping("findTerminalPayOrderDetail")
 	public Result findTerminalPayOrderDetail(Integer id) {
 		TerminalPayOrderDetailVo data = fcOrderService.findTerminalPayOrderDetail(id);
+		if (data != null) {
+			return ResultUtil.ok(data);
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 终端提交订单详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("findTerminalSubmitOrderDetail")
+	public Result findTerminalSubmitOrderDetail(Integer id) {
+		TerminalSubmitOrderDetailVo data = fcOrderService.findTerminalSubmitOrderDetail(id);
 		if (data != null) {
 			return ResultUtil.ok(data);
 		} else {

@@ -161,11 +161,12 @@ public class FcDiscountCouponRecordController {
 	 * @param grantRoleId   角色id
 	 * @param grantRoleType 角色类型
 	 * @param couponCode    优惠券编码
+	 * @param courseId		课程id
 	 */
 	@RequestMapping("index/order")
-	public Result selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode) {
+	public Result selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode, Integer courseId) {
 		FcOrderDiscountCoupon fcOrderDiscountCoupon = fcDiscountCouponRecordService.selectOrderCoupon(grantRoleId,
-				grantRoleType, couponCode);
+				grantRoleType, couponCode, courseId);
 		if (fcOrderDiscountCoupon != null) {
 			return ResultUtil.ok(fcOrderDiscountCoupon);
 		} else {

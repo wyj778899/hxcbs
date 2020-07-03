@@ -15,52 +15,82 @@ import chinaPress.fc.order.service.FcOrderService;
 
 @Service
 public class FcCourseHourService {
-	
+
 	@Autowired
 	private FcCourseHourMapper fcCourseHourMapper;
 	@Autowired
 	private FcOrderPersonService fcOrderPersonService;
 	@Autowired
 	private FcOrderService fcOrderService;
-	
+
 	/**
 	 * 根据章节id查询关联课时
-	 * @param sectionId
+	 * 
+	 * @param personId  角色id
+	 * @param courseId  课程id
+	 * @param sectionId 章节id
+	 * @param roleType  角色类型：1.家长2.从业者
+	 * @param type      视频下标，只有第一个视频会有值
 	 * @return
 	 */
-	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType,Integer type){
+	public Result selectCourseHourListBySectionId(Integer personId, Integer courseId, Integer sectionId,
+			Integer roleType, Integer type) {
+		// 根据章节id查询是否有视频
 		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
-		if(data.size()>0) {
+		if (data.size() > 0) {
+			// 查询该课程是否买过
 			Map<String, Object> map = fcOrderService.findMyCourseIsExist(personId, roleType, courseId);
-			if(map.get("code").toString().equals("0")) {
-				int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId, data.get(0).getId());
-				if(index == 1) {//通过
-					return ResultUtil.custom(1, "查询成功", data);
-				}else if(index == 0){
-					return ResultUtil.custom(0, "看过未考过", data);
-				}else {
-					return ResultUtil.custom(-1, "暂无视频");
+			if (map.get("code").toString().equals("0")) {
+				// 查询 当前角色  针对于当前课程的选择的课时是否看过/考过
+				int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId,
+						data.get(0).getId());
+				if (index == 1) {// 通过
+					return ResultUtil.custom(1, "可以观看", data);
+				} else if (index == 0) {
+					return ResultUtil.custom(2, "看过未考过", data);
+				} else {
+					return ResultUtil.custom(0, "暂未学习到该视频");
 				}
-			}else {
-				if(type == 0) {
+			} else {
+				if (type == 0) {
 					return ResultUtil.custom(1, "免费试看", data);
-				}else {
-					return ResultUtil.custom(-1, "暂无视频");
+				} else {
+					return ResultUtil.custom(-1, "暂无购买课程");
 				}
 			}
-			
-		}else {
-			if(type == 0) {
-				return ResultUtil.custom(1, "免费试看", data);
-			}else {
-				return ResultUtil.custom(-1, "暂无视频");
-			}
+
+		} else {
+			return ResultUtil.custom(-1, "暂无视频");
 		}
-		
+
 	}
-	
+
+	/**
+	 * 是否可以学习该章节
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型：1.家长2.从业者
+	 * @param courseId 课程id
+	 * @param hourId   课时id
+	 * @return
+	 */
+	public Result findIsLearnSection(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+		Map<String, Object> map = fcOrderService.findMyCourseIsExist(roleId, roleType, courseId);
+		if (map.get("code").toString().equals("0")) {
+			int index = fcOrderPersonService.findPersonHourIsPass(roleId, roleType, courseId, roleId);
+			if (index == 1) {// 通过
+				return ResultUtil.custom(1, "可以观看");
+			} else {
+				return ResultUtil.custom(0, "暂未学习到该视频");
+			}
+		} else {
+			return ResultUtil.custom(-1, "暂无购买课程");
+		}
+	}
+
 	/**
 	 * 根据课程id查询视频数量
+	 * 
 	 * @param courseId
 	 * @return
 	 */

@@ -396,15 +396,19 @@
 	
 	<!-- 根据优惠券编码，角色id，角色类型查询 -->
 	<select id="selectOrderCoupon" resultType="chinaPress.fc.coupon.vo.FcOrderDiscountCoupon">
-		select
-			a.id, b.enough_money enoughMoney, b.discount_money discountMoney
-		from
+		SELECT
+			a.id,
+			b.enough_money enoughMoney,
+			b.discount_money discountMoney 
+		FROM
 			fc_discount_coupon_record a
-		inner join fc_discount_coupon b on a.coupon_id = b.id 
+			INNER JOIN fc_discount_coupon b ON a.coupon_id = b.id
+			INNER JOIN fc_discount_coupon_course c on c.coupon_id = b.id
 		where
 			a.grant_role_id = #{grantRoleId}
 			and a.grant_role_type = #{grantRoleType}
 			and a.code = #{couponCode}
+			and c.course_id = #{courseId}
 			and b.start_time <![CDATA[<=]]> now()
 			and now() <![CDATA[<=]]> b.end_time
 			and b.type = 1
