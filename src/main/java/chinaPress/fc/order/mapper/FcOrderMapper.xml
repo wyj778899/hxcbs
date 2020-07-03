@@ -421,7 +421,6 @@
 		INNER JOIN fc_course_archives c ON c.id = a.course_id 
 	WHERE
 		b.is_individual = 1 
-		AND a.pay_status = 2
 		AND b.role_id = #{roleId}
 		AND b.role_type = #{roleType}
 		AND a.course_id = #{courseId} 
