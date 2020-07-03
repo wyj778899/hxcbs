@@ -1,5 +1,7 @@
 package chinaPress.fc.coupon.vo;
 
+import java.math.BigDecimal;
+
 public class FcDiscountMyCouponRecordListVo {
 	/**
 	 * id
@@ -25,6 +27,14 @@ public class FcDiscountMyCouponRecordListVo {
 	 * 关联课程
 	 */
 	private String courseName;
+	/**
+	 * 满多少元减多少元
+	 */
+	private BigDecimal enoughMoney;
+	/**
+	 * 优惠多少元
+	 */
+	private BigDecimal discountMoney;
 
 	/**
 	 * 获取：id
@@ -108,5 +118,33 @@ public class FcDiscountMyCouponRecordListVo {
 	 */
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	/**
+	 * 获取：enoughMoney
+	 */
+	public BigDecimal getEnoughMoney() {
+		return enoughMoney;
+	}
+
+	/**
+	 * 设置：enoughMoney
+	 */
+	public void setEnoughMoney(BigDecimal enoughMoney) {
+		this.enoughMoney = enoughMoney;
+	}
+
+	/**
+	 * 获取：discountMoney
+	 */
+	public BigDecimal getDiscountMoney() {
+		return discountMoney;
+	}
+
+	/**
+	 * 设置：discountMoney
+	 */
+	public void setDiscountMoney(BigDecimal discountMoney) {
+		this.discountMoney = discountMoney;
 	}
 }

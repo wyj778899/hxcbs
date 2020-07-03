@@ -18,36 +18,27 @@
         </commentGenerator>
         <!-- 数据源 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://39.106.111.184:3306/press?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        connectionURL="jdbc:mysql://39.106.111.184:3306/press_test?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
                         userId="root" password="mlmMysqldb123!@#">
             <property name="useInformationSchema" value="true"></property>
             <!-- 可以防止不同数据库中相同表名时，生成的代码不对 -->
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-<<<<<<< HEAD
-        <javaModelGenerator targetPackage="chinaPress.role.teacher.model" targetProject="src/main/java"/>
-=======
-        <javaModelGenerator targetPackage="chinaPress.fc.binding.model" targetProject="src/main/java"/>
->>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
+        <javaModelGenerator targetPackage="chinaPress.fc.book.model" targetProject="src/main/java"/>
         <!-- mapper -->
-<<<<<<< HEAD
-        <sqlMapGenerator targetPackage="chinaPress.role.teacher.mapper" targetProject="src/main/java"/>
-=======
-        <sqlMapGenerator targetPackage="chinaPress.fc.binding.mapper" targetProject="src/main/java"/>
->>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
+        <sqlMapGenerator targetPackage="chinaPress.fc.book.mapper" targetProject="src/main/java"/>
         <!-- dao -->
-<<<<<<< HEAD
-        <javaClientGenerator targetPackage="chinaPress.role.teacher.dao" targetProject="src/main/java" type="XMLMAPPER"/>
-=======
-        <javaClientGenerator targetPackage="chinaPress.fc.binding.dao" targetProject="src/main/java" type="XMLMAPPER"/>
->>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
+        <javaClientGenerator targetPackage="chinaPress.fc.book.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-<<<<<<< HEAD
-        <table tableName="role_teacher_archives" domainObjectName="RoleTeacherArchives" enableCountByExample="false"
-=======
-        <table tableName="fc_binding_info" domainObjectName="FcBindingInfo" enableCountByExample="false"
->>>>>>> branch 'master' of http://gitlab.zryuxiang.com:8088/maguoliang/chinapress.git
+        <table tableName="fc_book_archives" domainObjectName="FcBookArchives" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--解决长文本生成带WithBLOBs问题-->
+            <columnOverride column="request_data" jdbcType="VARCHAR"/>
+            <columnOverride column="response_data" jdbcType="VARCHAR"/>
+        </table>
+        <table tableName="fc_course_book" domainObjectName="FcCourseBook" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->

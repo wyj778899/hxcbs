@@ -300,7 +300,7 @@
 		select
 			a.id, a.name, concat(date_format(a.start_time, '%Y/%m/%d %T'), ' - ', date_format(a.end_time, '%Y/%m/%d %T')) validTime,
 			case a.type when 1 then '满减券' when 2 then '观看券' else '-' end typeName,
-			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '员'), '') money,
+			IFNULL(concat('满', a.enough_money, '元减', a.discount_money, '元'), '') money,
 			a.count, c.name courseName
 		from
 			fc_discount_coupon a
