@@ -29,42 +29,46 @@ import chinaPress.role.teacher.vo.TeacherCertificateVo;
 
 @RestController
 public class TeacherController {
-	
+
 	@Autowired
 	private RoleTeacherArchivesService roleTeacherArchivesService;
-	
+
 	/**
 	 * 根据id查询教师详情
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping("selectTeacherById")
 	public Result selectTeacherById(Integer id) {
 		TeacherArchivesParam data = roleTeacherArchivesService.selectTeacherById(id);
-		if(data!=null) {
+		if (data != null) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
-	
+
 	/**
 	 * 证书分数查询
+	 * 
 	 * @param request
 	 * @param multipartFile
 	 * @return
 	 */
 	@RequestMapping("selectTeacherCertificate")
-	public Result selectTeacherCertificate(String name,String idCard,Integer type,Integer certificateType) {
-		List<TeacherCertificateVo> data = roleTeacherArchivesService.selectTeacherCertificate(name, idCard, type,certificateType);
-		if(data.size()>0) {
+	public Result selectTeacherCertificate(String name, String idCard, Integer type, Integer certificateType,
+			String certificateCode) {
+		List<TeacherCertificateVo> data = roleTeacherArchivesService.selectTeacherCertificate(name, idCard, type,
+				certificateType, certificateCode);
+		if (data.size() > 0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
-	
+
 	@RequestMapping("importTeacher")
 	public Result importTeacher(HttpServletRequest request,
-			@RequestParam(value = "file", required = false ) MultipartFile multipartFile) {
+			@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String fileName = multipartFile.getOriginalFilename();
 		File file = new File(fileName);
@@ -89,14 +93,14 @@ public class TeacherController {
 					for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 						if (xssfRow != null) {
-							//题干
+							// 题干
 							StemParam model = new StemParam();
 							String typeName = ExcelUtil.formatCell4(xssfRow.getCell(1));
-							if(typeName == "单选") {
+							if (typeName == "单选") {
 								model.setType(1);
-							}else if(typeName == "多选") {
+							} else if (typeName == "多选") {
 								model.setType(2);
-							}else if(typeName == "判断") {
+							} else if (typeName == "判断") {
 								model.setType(3);
 							}
 							data.add(model);
@@ -107,9 +111,9 @@ public class TeacherController {
 				// TODO: handle exception
 				return ResultUtil.custom(-1, "模板导入异常，请检查档案模板");
 			}
-			
+
 			return ResultUtil.custom(1, "导入成功");
-		}else {
+		} else {
 			return ResultUtil.custom(-1, "模版格式不正确");
 		}
 	}
