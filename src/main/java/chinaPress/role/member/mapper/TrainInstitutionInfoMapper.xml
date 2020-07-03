@@ -30,13 +30,14 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
+    <result column="is_flag" jdbcType="INTEGER" property="isFlag" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
     register_certificate, register_provice, register_city, register_area, register_address, 
     business_provice, business_city, business_area, business_address, business_photo, 
     practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code,user_head
+    update_id, update_time, enterprise_code,user_head,is_flag
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -218,6 +219,9 @@
       <if test="enterpriseCode != null">
         enterprise_code,
       </if>
+      <if test="isFlag != null">
+        is_flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -303,6 +307,9 @@
       </if>
       <if test="enterpriseCode != null">
         #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isFlag != null">
+        #{isFlag,jdbcType=INTEGER},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -392,6 +399,9 @@
       </if>
       <if test="enterpriseCode != null">
         enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isFlag != null">
+        is_flag = #{isFlag,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

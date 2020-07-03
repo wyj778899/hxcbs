@@ -334,7 +334,8 @@
 	<!-- 查询我的优惠券 -->
 	<select id="selectMyCouponRecordList" resultType="chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo">
 		select
-			a.id, b.name, date_format(b.start_time, '%Y/%m/%d') startTime,
+			a.id, b.name, b.enough_money enoughMoney, b.discount_money discountMoney,
+			date_format(b.start_time, '%Y/%m/%d') startTime, 
 			date_format(b.end_time, '%Y/%m/%d') endTime, a.code,
 			d.name courseName
 		from

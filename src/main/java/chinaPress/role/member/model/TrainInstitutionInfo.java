@@ -163,9 +163,20 @@ public class TrainInstitutionInfo {
      */
     private String userHead;
     
+    /**
+     * 是否为中国残联定点机构
+     */
+    private Integer isFlag;
     
-    
-    public String getUserHead() {
+    public Integer getIsFlag() {
+		return isFlag;
+	}
+
+	public void setIsFlag(Integer isFlag) {
+		this.isFlag = isFlag;
+	}
+
+	public String getUserHead() {
 		return userHead;
 	}
 

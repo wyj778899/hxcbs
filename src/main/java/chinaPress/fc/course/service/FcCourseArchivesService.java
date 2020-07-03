@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.util.JacksonUtil;
+import chinaPress.fc.book.dao.FcCourseBookMapper;
+import chinaPress.fc.book.vo.FcCourseBookVo;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course.util.FcCourseSectionTreeUtil;
@@ -36,6 +38,9 @@ public class FcCourseArchivesService {
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
+	@Autowired
+	private FcCourseBookMapper fcCourseBookMapper;
+	
 	
 	/**
 	 * 根据分类id查询关联课程
@@ -75,6 +80,9 @@ public class FcCourseArchivesService {
 			if(list.size()>0) {
 				data.setSectionList(FcCourseSectionTreeUtil.buildByRecursive(list));
 			}
+			// 查询相关推荐书籍
+			List<FcCourseBookVo> bookList = fcCourseBookMapper.selectFcCourseAboutBook(id);
+			data.setBookList(bookList);
 		}
 		return data;
 	}

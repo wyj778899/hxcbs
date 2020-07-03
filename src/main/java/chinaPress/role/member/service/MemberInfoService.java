@@ -265,7 +265,7 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
-		jedisPool.close();
+		jedis.close();
 		if(value=="" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
@@ -386,7 +386,7 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
-		jedisPool.close();
+		jedis.close();
 		if(value=="" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
@@ -630,7 +630,7 @@ public class MemberInfoService {
 		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(memberInfo.getUserName()));
-		jedisPool.close();
+		jedis.close();
 		if(value=="" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
@@ -1190,7 +1190,7 @@ public class MemberInfoService {
 		if(m!=null) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(memberInfo.getTellPhone()));
-			jedisPool.close();
+			jedis.close();
 			if(value==null || value=="") {
 				return new Result(-1, "用户不存在", "");
 			}

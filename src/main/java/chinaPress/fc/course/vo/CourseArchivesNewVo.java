@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import chinaPress.fc.book.vo.FcCourseBookVo;
 import chinaPress.fc.course_section.vo.FcCourseSectionVo;
 
 public class CourseArchivesNewVo {
@@ -22,6 +23,7 @@ public class CourseArchivesNewVo {
 	private Date updateTime;// 更新时间
 	private Integer courseCount;// 视频数量
 	private List<FcCourseSectionVo> sectionList;
+	private List<FcCourseBookVo> bookList;// 推荐书籍
 
 	public Integer getCourseCount() {
 		return courseCount;
@@ -117,6 +119,20 @@ public class CourseArchivesNewVo {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	/**
+	 * 获取：bookList
+	 */
+	public List<FcCourseBookVo> getBookList() {
+		return bookList;
+	}
+
+	/**
+	 * 设置：bookList
+	 */
+	public void setBookList(List<FcCourseBookVo> bookList) {
+		this.bookList = bookList;
 	}
 
 }

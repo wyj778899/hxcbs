@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.book.dao.FcCourseBookMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.book.model.FcCourseBook">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="course_id" jdbcType="INTEGER"
+			property="courseId" />
+		<result column="book_id" jdbcType="INTEGER" property="bookId" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, course_id, book_id, create_id, create_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_course_book
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_course_book
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.fc.book.model.FcCourseBook">
+		insert into fc_course_book (id, course_id, book_id,
+		create_id, create_time)
+		values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER},
+		#{bookId,jdbcType=INTEGER},
+		#{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.book.model.FcCourseBook">
+		insert into fc_course_book
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="courseId != null">
+				course_id,
+			</if>
+			<if test="bookId != null">
+				book_id,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="bookId != null">
+				#{bookId,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.book.model.FcCourseBook">
+		update fc_course_book
+		<set>
+			<if test="courseId != null">
+				course_id = #{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="bookId != null">
+				book_id = #{bookId,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.fc.book.model.FcCourseBook">
+		update fc_course_book
+		set course_id = #{courseId,jdbcType=INTEGER},
+		book_id = #{bookId,jdbcType=INTEGER},
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询该课程的相关推荐书籍 -->
+	<select id="selectFcCourseAboutBook" resultType="chinaPress.fc.book.vo.FcCourseBookVo">
+		select
+			b.id, b.name, b.picture, b.price, b.sets
+		from
+			fc_course_book a
+		left join fc_book_archives b on a.book_id = b.id
+		where
+			a.course_id = #{courseId}
+	</select>
+</mapper>
