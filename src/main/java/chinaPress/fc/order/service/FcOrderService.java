@@ -285,6 +285,7 @@ public class FcOrderService {
 	public TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id) {
 		TerminalPayOrderDetailVo detail = fcOrderMapper.findTerminalPayOrderDetail(id);
 		if (detail != null) {
+			detail.setBookIds(fcOrderBookMapper.findBookIds(id));
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;

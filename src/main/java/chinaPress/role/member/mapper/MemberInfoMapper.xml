@@ -116,7 +116,7 @@
 		resultType="chinaPress.role.member.vo.MemberCouponInfo">
 		select
 		id as id,
-		name as name,
+		user_name as name,
 		tell_phone as tellPhone,
 		role_type as roleType,
 		role_id as roleId,
