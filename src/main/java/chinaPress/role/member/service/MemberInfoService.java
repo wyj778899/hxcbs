@@ -750,8 +750,10 @@ public class MemberInfoService {
 		int firstRowNum = 0;
 		// 最后一行
 		int lastRowNum = 0;
-		// 参数对象
-		MemberInfo param = new MemberInfo();
+		// 参数对象  校验用户名
+		MemberInfo paramUserName = new MemberInfo();
+		// 参数对象  校验手机号
+		MemberInfo paramPhone = new MemberInfo();
 		// 返回信息
 		String result = "";
 		// 循环获取表格
@@ -813,8 +815,15 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写注册人手机号信息,");
 						continue;
 					} else {
-						trainInstitutionInfo.setRegisterTell(registerTell);
-						memberInfo.setTellPhone(registerTell);
+						paramPhone.setTellPhone(registerTell);
+						MemberInfo m = memberInfoMapper.selectByPrimaryKey(paramPhone);
+						if (m != null) {
+							sb.append("第" + (j + 1) + "行信息出错：手机号已存在,");
+							continue;
+						}else {
+							trainInstitutionInfo.setRegisterTell(registerTell);
+							memberInfo.setTellPhone(registerTell);
+						}
 					}
 					// 注册人证件号
 					String registerCertificate = ExcelUtil.formatCell4(row.getCell(6)).trim();
@@ -898,8 +907,8 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写用户名信息,");
 						continue;
 					} else {
-						param.setUserName(userName);
-						MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+						paramUserName.setUserName(userName);
+						MemberInfo m = memberInfoMapper.selectByPrimaryKey(paramUserName);
 						if (m != null) {
 							sb.append("第" + (j + 1) + "行信息出错：用户名已存在,");
 							continue;
@@ -930,6 +939,22 @@ public class MemberInfoService {
 					} else {
 						trainInstitutionInfo.setEnterpriseCode(enterpriseCode);
 					}
+					// 是否为中国残联定点机构
+					String flag = ExcelUtil.formatCell4(row.getCell(18)).trim();
+					if (flag == null || flag == "") {
+						sb.append("第" + (j + 1) + "行信息出错：请填写是否为中国残联定点机构信息,");
+						continue;
+					} else {
+						if("是".equals(flag)) {
+							trainInstitutionInfo.setIsFlag(1);
+						}else if("否".equals(flag)) {
+							trainInstitutionInfo.setIsFlag(0);
+						}else {
+							sb.append("第" + (j + 1) + "行信息出错：是否为中国残联定点机构不合法,");
+							continue;
+						}
+						
+					}
 					// 审核状态和状态excel导入都赋值为有效
 					trainInstitutionInfo.setState(1);
 					trainInstitutionInfo.setAuditStatus(2);
@@ -948,8 +973,8 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写用户名信息,");
 						continue;
 					} else {
-						param.setUserName(userName);
-						MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+						paramUserName.setUserName(userName);
+						MemberInfo m = memberInfoMapper.selectByPrimaryKey(paramUserName);
 						if (m != null) {
 							sb.append("第" + (j + 1) + "行信息出错：用户名已存在,");
 							continue;
@@ -987,8 +1012,15 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写手机号信息,");
 						continue;
 					} else {
-						practitionerInfo.setTellPhone(tellPhone);
-						memberInfo.setTellPhone(tellPhone);
+						paramPhone.setTellPhone(tellPhone);
+						MemberInfo m = memberInfoMapper.selectByPrimaryKey(paramPhone);
+						if (m != null) {
+							sb.append("第" + (j + 1) + "行信息出错：手机号已存在,");
+							continue;
+						}else {
+							practitionerInfo.setTellPhone(tellPhone);
+							memberInfo.setTellPhone(tellPhone);
+						}
 					}
 					// 邮箱
 					String email = ExcelUtil.formatCell4(row.getCell(4)).trim();
@@ -1013,8 +1045,16 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写性别信息,");
 						continue;
 					} else {
-						practitionerInfo.setSex(Integer.parseInt(sex));
-						memberInfo.setSex(Integer.parseInt(sex));
+						if("男".equals(sex)) {
+							practitionerInfo.setSex(1);
+							memberInfo.setSex(1);
+						}else if("女".equals(sex)) {
+							practitionerInfo.setSex(0);
+							memberInfo.setSex(0);
+						}else{
+							sb.append("第" + (j + 1) + "行信息出错：性别填写不合法,");
+							continue;
+						}
 					}
 					// 省
 					String provice = ExcelUtil.formatCell4(row.getCell(7)).trim();
@@ -1058,11 +1098,15 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写家长/从业者信息,");
 						continue;
 					} else {
-						practitionerInfo.setType(Integer.parseInt(state));
-						if ("1".equals(state)) {
+						if ("家长".equals(state)) {
+							practitionerInfo.setType(1);
 							memberInfo.setRoleType(3);
-						} else if ("2".equals(state)) {
+						} else if ("从业者".equals(state)) {
+							practitionerInfo.setType(2);
 							memberInfo.setRoleType(4);
+						}else {
+							sb.append("第" + (j + 1) + "行信息出错：家长/从业者信息填写不合法,");
+							continue;
 						}
 					}
 					// 是否是个人
@@ -1071,7 +1115,14 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写是否是个人信息,");
 						continue;
 					} else {
-						practitionerInfo.setIsIndividual(Integer.parseInt(isIndividual));
+						if("是".equals(isIndividual)) {
+							practitionerInfo.setIsIndividual(1);
+						}else if("否".equals(isIndividual)) {
+							practitionerInfo.setIsIndividual(0);
+						}else {
+							sb.append("第" + (j + 1) + "行信息出错：是否是个人信息填写不合法,");
+							continue;
+						}
 					}
 					// 所属单位
 					String institutionId = ExcelUtil.formatCell4(row.getCell(13)).trim();
