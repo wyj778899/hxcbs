@@ -270,7 +270,7 @@ public class MemberInfoController {
 	 * @param type 1为培训机构   2为家长/从业者
 	 * @return
 	 */
-	@RequestMapping("/dataImport.do")
+	@RequestMapping("/dataImport")
 	@ResponseBody
 	public Result dataImport(MultipartFile file,HttpServletRequest request, HttpServletResponse response,Integer type) {
 		Result result = null;

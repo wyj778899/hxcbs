@@ -70,7 +70,9 @@
 			WHEN 1 THEN
 			a.institution_address 
 			WHEN 2 THEN
-			CONCAT( b.business_provice, b.business_city, b.business_area, b.business_address ) 
+			(CASE WHEN a.institution_id !=NULL AND a.institution_id !=''
+            THEN CONCAT( b.business_provice, b.business_city, b.business_area, b.business_address )
+						ELSE a.institution_address END)
 		END AS institutionAddress,
 		a.education,
 		a.type,
@@ -79,7 +81,9 @@
 			WHEN 1 THEN
 			a.institution_name 
 			WHEN 2 THEN
-			b.`name` 
+			(CASE WHEN a.institution_id !=NULL AND a.institution_id !=''
+            THEN b.`name`
+						ELSE a.institution_address END)
 		END AS institutionName,
 		a.ethnic AS ethnic,
 		a.native_place AS nativePlace,
