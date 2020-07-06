@@ -53,7 +53,7 @@ public class FcCourseHourService {
 				}
 			} else {
 				if (type == 0) {
-					return ResultUtil.custom(1, "免费试看", data);
+					return ResultUtil.custom(3, "免费试看", data);
 				} else {
 					return ResultUtil.custom(-1, "暂无购买课程");
 				}
