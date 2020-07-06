@@ -118,6 +118,7 @@ public class FcApplyService {
 						updPractitioner.setPost(item.getPost());
 						updPractitioner.setWorkYear(item.getWorkYear());
 						updPractitioner.setCensusAddress(item.getCensusAddress());
+						updPractitioner.setInstitutionName(item.getInstitutionName());
 						updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
 						updPractitioner.setEducation(item.getEducation());
 						updPractitioner.setEthnic(item.getEthnic());
@@ -148,6 +149,7 @@ public class FcApplyService {
 						practitionerInfo.setPost(item.getPost());
 						practitionerInfo.setWorkYear(item.getWorkYear());
 						practitionerInfo.setCensusAddress(item.getCensusAddress());
+						practitionerInfo.setInstitutionName(item.getInstitutionName());
 						practitionerInfo.setInstitutionAddress(item.getInstitutionAddress());
 						practitionerInfo.setEducation(item.getEducation());
 						practitionerInfo.setType(item.getRoleType());
