@@ -2,6 +2,7 @@ package chinaPress.fc.order.vo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class TerminalSubmitOrderDetailVo {
 	/**
@@ -113,6 +114,11 @@ public class TerminalSubmitOrderDetailVo {
 	 * 收获电话
 	 */
 	private String consigneePhone;
+
+	/**
+	 * 书籍id集合
+	 */
+	private List<Integer> bookIds;
 
 	public Integer getId() {
 		return id;
@@ -288,5 +294,13 @@ public class TerminalSubmitOrderDetailVo {
 
 	public void setConsigneePhone(String consigneePhone) {
 		this.consigneePhone = consigneePhone;
+	}
+
+	public List<Integer> getBookIds() {
+		return bookIds;
+	}
+
+	public void setBookIds(List<Integer> bookIds) {
+		this.bookIds = bookIds;
 	}
 }

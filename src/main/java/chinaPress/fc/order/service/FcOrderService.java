@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.order.dao.FcOrderBookMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.model.FcOrderBook;
 import chinaPress.fc.order.model.FcOrderPerson;
 import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
@@ -42,6 +44,9 @@ public class FcOrderService {
 
 	@Autowired
 	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
+
+	@Autowired
+	private FcOrderBookMapper fcOrderBookMapper;
 
 	/**
 	 * 终端 我的订单数据数量
@@ -109,9 +114,10 @@ public class FcOrderService {
 	 * 新增家长/从业者订单
 	 * 
 	 * @param record
+	 * @param bookIdsStr
 	 * @return
 	 */
-	public int insertPractitioner(FcOrder record) {
+	public int insertPractitioner(FcOrder record, String bookIdsStr) {
 		if (record.getCouponId() != null) {
 			record.setIsCoupon(1);
 		} else {
@@ -123,6 +129,13 @@ public class FcOrderService {
 		record.setDate(current_date);
 		int index = fcOrderMapper.insertSelective(record);
 		if (index > 0) {
+			if (bookIdsStr != null && !bookIdsStr.equals("")) {
+				String[] bookIds = bookIdsStr.split(",");
+				for (String bookId : bookIds) {
+					fcOrderBookMapper.insertSelective(new FcOrderBook(record.getId(), Integer.parseInt(bookId)));
+				}
+			}
+
 			// 如果使用优惠券，修改优惠券状态为已核销
 			if (record.getIsCoupon().intValue() == 1) {
 				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
@@ -154,13 +167,15 @@ public class FcOrderService {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 修改家长/从业者订单
+	 * 
 	 * @param record
+	 * @param bookIdsStr
 	 * @return
 	 */
-	public int updatePractitioner(FcOrder record) {
+	public int updatePractitioner(FcOrder record, String bookIdsStr) {
 		FcOrder orderModel = fcOrderMapper.selectByPrimaryKey(record.getId());
 		if (orderModel == null) {
 			return 0;
@@ -178,6 +193,12 @@ public class FcOrderService {
 		}
 		int index = fcOrderMapper.updateByPrimaryKeySelective(record);
 		if (index > 0) {
+			if (bookIdsStr != null && !bookIdsStr.equals("")) {
+				String[] bookIds = bookIdsStr.split(",");
+				for (String bookId : bookIds) {
+					fcOrderBookMapper.insertSelective(new FcOrderBook(record.getId(), Integer.parseInt(bookId)));
+				}
+			}
 			if (record.getIsCoupon().intValue() == 1) {
 				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
 				couponRecord.setId(record.getCouponId());
@@ -278,6 +299,7 @@ public class FcOrderService {
 	public TerminalSubmitOrderDetailVo findTerminalSubmitOrderDetail(Integer id) {
 		TerminalSubmitOrderDetailVo detail = fcOrderMapper.findTerminalSubmitOrderDetail(id);
 		if (detail != null) {
+			detail.setBookIds(fcOrderBookMapper.findBookIds(id));
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;

@@ -100,23 +100,24 @@ public class FcOrderController {
 	 * @return
 	 */
 	@PostMapping("insertPractitioner")
-	public Result insertPractitioner(FcOrder record) {
-		int index = fcOrderService.insertPractitioner(record);
+	public Result insertPractitioner(FcOrder record, String bookIdsStr) {
+		int index = fcOrderService.insertPractitioner(record, bookIdsStr);
 		if (index > 0) {
 			return ResultUtil.ok(index);
 		} else {
 			return ResultUtil.error();
 		}
 	}
-	
+
 	/**
 	 * 修改家长/从业者订单
+	 * 
 	 * @param record
 	 * @return
 	 */
 	@PostMapping("updatePractitioner")
-	public Result updatePractitioner(FcOrder record) {
-		int index = fcOrderService.updatePractitioner(record);
+	public Result updatePractitioner(FcOrder record, String bookIdsStr) {
+		int index = fcOrderService.updatePractitioner(record, bookIdsStr);
 		if (index > 0) {
 			return ResultUtil.ok(index);
 		} else {
@@ -163,6 +164,7 @@ public class FcOrderController {
 	public Result findTerminalSubmitOrderDetail(Integer id) {
 		TerminalSubmitOrderDetailVo data = fcOrderService.findTerminalSubmitOrderDetail(id);
 		if (data != null) {
+			
 			return ResultUtil.ok(data);
 		} else {
 			return ResultUtil.error();
