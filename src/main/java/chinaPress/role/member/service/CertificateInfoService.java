@@ -59,6 +59,21 @@ public class CertificateInfoService {
 			return new Result(-1, "数据库错误", "");
 		}
 	}
+	
+	/**
+	 * 通过id 查询证书只返回证书图片信息
+	 * @param id
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Result findCertificateOnePrice(Integer id) {
+		CertificateInfo c = certificateInfoMapper.selectByPrimaryKey(id);
+		if (c != null) {
+			return new Result(0, "查询成功", c.getPhoto());
+		} else {
+			return new Result(-1, "数据库错误", "");
+		}
+	}
 
 	/**
 	 * 通过id 查询证书

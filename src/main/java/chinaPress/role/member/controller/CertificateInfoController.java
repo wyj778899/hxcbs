@@ -49,6 +49,17 @@ public class CertificateInfoController {
 	}
 	
 	/**
+	 * 通过id查询证书信息  只显示用户的证书图片信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/queryPageCertificatePrice")
+	public Result queryPageCertificatePrice(Integer id) {
+		return certificateInfoService.findCertificateOnePrice(id);
+	}
+	
+	
+	/**
 	 * 通过证书id 查询用户和证书的关联信息    用于管理员审核证书信息
 	 * @param id
 	 * @return
