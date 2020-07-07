@@ -313,7 +313,8 @@
 		b.`name` AS courseName,
 		b.course_price AS coursePrice,
 		b.course_number AS courseNumber,
-		a.pay_status AS payStatus 
+		a.pay_status AS payStatus,
+		a.create_time createTime
 	FROM
 		fc_order a
 		LEFT JOIN fc_course_archives b ON b.id = a.course_id 

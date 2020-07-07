@@ -43,6 +43,11 @@ public class TerminalOrderListVo {
 	 */
 	private Integer payStatus;
 
+	/**
+	 * 订单创建时间
+	 */
+	private Date createTime;
+
 	public Integer getId() {
 		return id;
 	}
@@ -97,5 +102,19 @@ public class TerminalOrderListVo {
 
 	public void setCourseNumber(Integer courseNumber) {
 		this.courseNumber = courseNumber;
+	}
+
+	/**
+	 * 获取：createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * 设置：createTime
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
