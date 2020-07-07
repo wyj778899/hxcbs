@@ -31,13 +31,14 @@
     <result column="enterprise_code" jdbcType="VARCHAR" property="enterpriseCode" />
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
     <result column="is_flag" jdbcType="INTEGER" property="isFlag" />
+    <result column="register_post" jdbcType="VARCHAR" property="registerPost" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
     register_certificate, register_provice, register_city, register_area, register_address, 
     business_provice, business_city, business_area, business_address, business_photo, 
     practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code,user_head,is_flag
+    update_id, update_time, enterprise_code,user_head,is_flag,register_post
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -168,6 +169,9 @@
       <if test="registerCity != null">
         register_city,
       </if>
+      <if test="registerPost != null">
+        register_post,
+      </if>
       <if test="registerArea != null">
         register_area,
       </if>
@@ -257,6 +261,9 @@
       <if test="registerCity != null">
         #{registerCity,jdbcType=VARCHAR},
       </if>
+      <if test="registerPost != null">
+        #{registerPost,jdbcType=VARCHAR},
+      </if>
       <if test="registerArea != null">
         #{registerArea,jdbcType=VARCHAR},
       </if>
@@ -336,6 +343,9 @@
       </if>
       <if test="registerName != null">
         register_name = #{registerName,jdbcType=VARCHAR},
+      </if>
+      <if test="registerPost != null">
+        register_post = #{registerPost,jdbcType=VARCHAR},
       </if>
       <if test="registerTell != null">
         register_tell = #{registerTell,jdbcType=VARCHAR},
