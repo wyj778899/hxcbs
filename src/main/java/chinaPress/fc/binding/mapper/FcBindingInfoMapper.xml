@@ -214,7 +214,7 @@
 	<select id="selectBindingInfoMemberList" resultType="chinaPress.role.member.vo.MemberCouponInfo">
 		select
 			a.id id,
-			a.`name` name,
+			a.user_name name,
 			a.tell_phone tellPhone,
 			a.role_type roleType,
 			a.role_id roleId,
@@ -268,7 +268,7 @@
 	<!-- 查询绑定机构 -->
 	<select id="selectBindingInfoInstitutionList" resultType="chinaPress.fc.binding.vo.FcBindingInfoVo">
 		select
-			a.id, b.photo, b.name, case b.sex when 1 then '男' when 2 then '女' end sexName, b.tell_phone phone,
+			a.id, b.photo, b.user_name name, case b.sex when 1 then '男' when 2 then '女' end sexName, b.tell_phone phone,
 			case a.reply_status when 1 then '等待中' when 2 then '已绑定' when 3 then '已拒绝' end statusName,
 			a.reply_status status
 		from
