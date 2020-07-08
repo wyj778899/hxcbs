@@ -24,6 +24,7 @@ public class CourseArchivesNewVo {
 	private Integer courseCount;// 视频数量
 	private List<FcCourseSectionVo> sectionList;
 	private List<FcCourseBookVo> bookList;// 推荐书籍
+	private Integer studyDay;// 学习天数
 
 	public Integer getCourseCount() {
 		return courseCount;
@@ -133,6 +134,20 @@ public class CourseArchivesNewVo {
 	 */
 	public void setBookList(List<FcCourseBookVo> bookList) {
 		this.bookList = bookList;
+	}
+
+	/**
+	 * 获取：studyDay
+	 */
+	public Integer getStudyDay() {
+		return studyDay;
+	}
+
+	/**
+	 * 设置：studyDay
+	 */
+	public void setStudyDay(Integer studyDay) {
+		this.studyDay = studyDay;
 	}
 
 }

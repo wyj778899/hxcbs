@@ -1,5 +1,6 @@
 package chinaPress.fc.order.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class FcOrderPersonService {
 				hour.setOrderPersonId(personOrderId);
 				hour.setHourId(hourId);
 				hour.setIsPass(isPass);
+				hour.setPassTime(new Date());
 				fcOrderPersonHourMapper.updateIsPass(hour);
 				return 1;
 			}

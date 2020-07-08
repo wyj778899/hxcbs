@@ -19,99 +19,109 @@ import chinaPress.fc.course.vo.PageIndexCourseVo;
 public class FcCourseArchivesController {
 	@Autowired
 	private FcCourseArchivesService fcCourseArchivesService;
-	
+
 	/**
 	 * 根据分类id查询关联课程
+	 * 
 	 * @param categoryId
 	 * @return
 	 */
 	@RequestMapping("selectCourseByCategoryId")
 	public Result selectCourseByCategoryId(Integer categoryId) {
 		List<CourseArchivesNewVo> data = fcCourseArchivesService.selectCourseByCategoryId(categoryId);
-		if(data.size()>0) {
+		if (data.size() > 0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
-	
+
 	/**
 	 * 查询课程详情
-	 * @param id
+	 * 
+	 * @author maguoliang
+	 * @param id       课程id
+	 * @param roleId   当前登录角色id
+	 * @param roleType 当前登录角色类型
 	 * @return
 	 */
 	@RequestMapping("selectCourseArchivesById")
-	public Result selectCourseArchivesById(Integer id) {
-		CourseArchivesNewVo data = fcCourseArchivesService.selectCourseArchivesById(id);
-		if(data!=null) {
+	public Result selectCourseArchivesById(Integer id, Integer roleId, Integer roleType) {
+		CourseArchivesNewVo data = fcCourseArchivesService.selectCourseArchivesById(id, roleId, roleType);
+		if (data != null) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
-	
+
 	/**
 	 * 查询首页随机5条课程
+	 * 
 	 * @return
 	 */
 	@RequestMapping("selectPageIndexCourse")
-	public List<PageIndexCourseVo> selectPageIndexCourse(){
+	public List<PageIndexCourseVo> selectPageIndexCourse() {
 		return fcCourseArchivesService.selectPageIndexCourse();
 	}
+
 	/**
 	 * 查询课程列表
+	 * 
 	 * @param record
 	 * @param pageNumber
 	 * @param pageSize
 	 * @return
 	 */
 	@RequestMapping("selectCOurseArchivesList")
-	public Result selectCOurseArchivesList(CourseArchivesParam record,Integer pageNumber,
-			Integer pageSize) {
+	public Result selectCOurseArchivesList(CourseArchivesParam record, Integer pageNumber, Integer pageSize) {
 		List<CourseArchivesVo> data = fcCourseArchivesService.selectCOurseArchivesList(record, pageNumber, pageSize);
-		if(data.size()>0) {
+		if (data.size() > 0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
-	
+
 	/**
 	 * 查询课程数量
+	 * 
 	 * @param record
 	 * @return
 	 */
 	@RequestMapping("selectCourseArchivesCount")
 	public Result selectCourseArchivesCount(CourseArchivesParam record) {
 		int count = fcCourseArchivesService.selectCourseArchivesCount(record);
-		if(count>0) {
+		if (count > 0) {
 			return ResultUtil.custom(1, "查询成功", count);
 		}
 		return ResultUtil.custom(-1, "查询失败", count);
-		
+
 	}
-	
+
 	/**
 	 * 新增课程
+	 * 
 	 * @param record
 	 * @param section
 	 * @return
 	 */
 	@RequestMapping("insertCourseArchives")
-	public Result insertCourseArchives(FcCourseArchives record,String section) {
+	public Result insertCourseArchives(FcCourseArchives record, String section) {
 		int index = fcCourseArchivesService.insertCourseArchives(record, section);
-		if(index>0) {
+		if (index > 0) {
 			return ResultUtil.custom(1, "操作成功");
 		}
 		return ResultUtil.custom(-1, "操作失败");
 	}
-	
+
 	/**
 	 * 课程上下架
+	 * 
 	 * @param record
 	 * @return
 	 */
 	@RequestMapping("updateCourseArchivesStatus")
 	public Result updateCourseArchivesStatus(FcCourseArchives record) {
 		int index = fcCourseArchivesService.updateCourseArchivesStatus(record);
-		if(index>0) {
+		if (index > 0) {
 			return ResultUtil.custom(1, "操作成功");
 		}
 		return ResultUtil.custom(-1, "操作失败");
