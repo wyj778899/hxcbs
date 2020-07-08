@@ -70,7 +70,7 @@ public class QrCodeService {
 		reqData.put("out_trade_no", orderModel.getCode());
 		reqData.put("total_fee", String.valueOf(orderModel.getPayAmount().multiply(new BigDecimal(100))));
 		reqData.put("spbill_create_ip", "127.0.0.1");
-		reqData.put("notify_url", "http://www.zryuxiang.com:8080/software/notify_url");
+		reqData.put("notify_url", "http://www.hxclass.cn/chinaPressServer/notify_url");
 		reqData.put("trade_type", "NATIVE"); // 交易类型
 
 		// 下单，返回结果
