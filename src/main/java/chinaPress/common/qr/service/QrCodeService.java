@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ import chinaPress.role.member.model.MemberInfo;
 
 @Service
 public class QrCodeService {
-
+	
 	@Autowired
 	private FcOrderService fcOrderService;
 
@@ -68,13 +70,13 @@ public class QrCodeService {
 
 		reqData.put("body", body);
 		reqData.put("out_trade_no", orderModel.getCode());
-		reqData.put("total_fee", String.valueOf(orderModel.getPayAmount().multiply(new BigDecimal(100))));
+		reqData.put("total_fee", String.valueOf(orderModel.getPayAmount().multiply(new BigDecimal(100)).stripTrailingZeros()));
 		reqData.put("spbill_create_ip", "127.0.0.1");
 		reqData.put("notify_url", "http://www.hxclass.cn/chinaPressServer/notify_url");
 		reqData.put("trade_type", "NATIVE"); // 交易类型
 
 		// 下单，返回结果
-		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);
+		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);	
 		Map<String, String> resParams = new HashMap<String, String>();
 		// 统一下单成功
 		if (resultMap.get("return_code").equals("SUCCESS")) {

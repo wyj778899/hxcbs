@@ -177,9 +177,9 @@ public class MemberInfoController {
 	@RequestMapping("/login")
 	public Result login(String userName,String password,HttpServletRequest request) {
 		Result result = memberInfoService.findNameAndPassword(userName, password);
-		if(result.getData()!=null) {
-			request.getSession().setAttribute("member", result.getData());
-		}
+//		if(result.getData()!=null) {
+//			request.getSession().setAttribute("member", result.getData());
+//		}
 		return result;
 	}
 	
