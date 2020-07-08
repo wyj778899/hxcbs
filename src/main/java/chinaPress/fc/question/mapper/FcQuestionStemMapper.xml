@@ -1,203 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chinaPress.fc.question.dao.FcQuestionStemMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.question.model.FcQuestionStem">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="course_id" jdbcType="INTEGER" property="courseId" />
-    <result column="hour_id" jdbcType="INTEGER" property="hourId" />
-    <result column="question_type" jdbcType="INTEGER" property="questionType" />
-    <result column="task_difficulty" jdbcType="INTEGER" property="taskDifficulty" />
-    <result column="question_stem" jdbcType="VARCHAR" property="questionStem" />
-    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="grade" jdbcType="VARCHAR" property="grade" />
-    <result column="analysis" jdbcType="VARCHAR" property="analysis" />
-    <result column="type" jdbcType="INTEGER" property="grade" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, course_id, hour_id, question_type, `task_difficulty`, question_stem, is_delete, 
-    `state`, create_id, create_time, update_id, update_time,grade,analysis,type
-  </sql>
-  <!-- 根据课程和课时查询关联的试题 -->
-  <select id="selectQuestionStemList" resultType="chinaPress.fc.question.vo.FcQuestionStemListVo">
-  	select
-  	id `id`,
-  	question_type questionType,
-  	task_difficulty taskDifficulty,
-  	question_stem questionStem,
-  	grade grade,
-  	analysis as analysis
-  	from fc_question_stem
-  	<where>
-  		<if test="courseId != null">
-  			course_id = #{courseId}
-  		</if>
-  		<if test="hourId != null">
-  			hour_id = #{hourId}
-  		</if>
-  		<if test="type != null">
-  			and type = #{type}
-  		</if>
-  	</where>	
-  </select>
-  
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_question_stem
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_question_stem
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.question.model.FcQuestionStem" useGeneratedKeys="true" keyProperty="id">
-    insert into fc_question_stem
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="courseId != null">
-        course_id,
-      </if>
-      <if test="hourId != null">
-        hour_id,
-      </if>
-      <if test="questionType != null">
-        question_type,
-      </if>
-      <if test="taskDifficulty != null">
-        `task_difficulty`,
-      </if>
-      <if test="questionStem != null">
-        question_stem,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
-      </if>
-      <if test="state != null">
-        `state`,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="grade != null">
-        grade,
-      </if>
-      <if test="analysis != null">
-        analysis,
-      </if>
-      <if test="type != null">
-        type,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="courseId != null">
-        #{courseId,jdbcType=INTEGER},
-      </if>
-      <if test="hourId != null">
-        #{hourId,jdbcType=INTEGER},
-      </if>
-      <if test="questionType != null">
-        #{questionType,jdbcType=INTEGER},
-      </if>
-      <if test="taskDifficulty != null">
-        #{taskDifficulty,jdbcType=INTEGER},
-      </if>
-      <if test="questionStem != null">
-        #{questionStem,jdbcType=VARCHAR},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="grade != null">
-        #{grade,jdbcType=VARCHAR},
-      </if>
-      <if test="analysis != null">
-        #{analysis,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.question.model.FcQuestionStem">
-    update fc_question_stem
-    <set>
-      <if test="courseId != null">
-        course_id = #{courseId,jdbcType=INTEGER},
-      </if>
-      <if test="hourId != null">
-        hour_id = #{hourId,jdbcType=INTEGER},
-      </if>
-      <if test="questionType != null">
-        question_type = #{questionType,jdbcType=INTEGER},
-      </if>
-      <if test="taskDifficulty != null">
-        `task_difficulty` = #{taskDifficulty,jdbcType=INTEGER},
-      </if>
-      <if test="questionStem != null">
-        question_stem = #{questionStem,jdbcType=VARCHAR},
-      </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        `state` = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="grade != null">
-        grade = #{grade,jdbcType=VARCHAR},
-      </if>
-      <if test="analysis != null">
-        analysis = #{analysis,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        type = #{type,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+<mapper
+	namespace="chinaPress.fc.question.dao.FcQuestionStemMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.question.model.FcQuestionStem">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="course_id" jdbcType="INTEGER"
+			property="courseId" />
+		<result column="hour_id" jdbcType="INTEGER" property="hourId" />
+		<result column="question_type" jdbcType="INTEGER"
+			property="questionType" />
+		<result column="task_difficulty" jdbcType="INTEGER"
+			property="taskDifficulty" />
+		<result column="question_stem" jdbcType="VARCHAR"
+			property="questionStem" />
+		<result column="is_delete" jdbcType="INTEGER"
+			property="isDelete" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+		<result column="grade" jdbcType="VARCHAR" property="grade" />
+		<result column="analysis" jdbcType="VARCHAR"
+			property="analysis" />
+		<result column="type" jdbcType="INTEGER" property="grade" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, course_id, hour_id, question_type, `task_difficulty`, question_stem,
+		is_delete,
+		`state`, create_id, create_time, update_id, update_time,grade,analysis,type
+	</sql>
+	<!-- 根据课程和课时查询关联的试题 -->
+	<select id="selectQuestionStemList"
+		resultType="chinaPress.fc.question.vo.FcQuestionStemListVo">
+		select
+			id `id`,
+			question_type questionType,
+			task_difficulty taskDifficulty,
+			question_stem questionStem,
+			grade grade,
+			analysis as analysis
+		from 
+			fc_question_stem
+		<where>
+			<if test="courseId != null">
+				course_id = #{courseId}
+			</if>
+			<if test="hourId != null">
+				hour_id = #{hourId}
+			</if>
+			<if test="type != null">
+				and type = #{type}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_question_stem
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_question_stem
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.question.model.FcQuestionStem"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_question_stem
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="courseId != null">
+				course_id,
+			</if>
+			<if test="hourId != null">
+				hour_id,
+			</if>
+			<if test="questionType != null">
+				question_type,
+			</if>
+			<if test="taskDifficulty != null">
+				`task_difficulty`,
+			</if>
+			<if test="questionStem != null">
+				question_stem,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="state != null">
+				`state`,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="analysis != null">
+				analysis,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="hourId != null">
+				#{hourId,jdbcType=INTEGER},
+			</if>
+			<if test="questionType != null">
+				#{questionType,jdbcType=INTEGER},
+			</if>
+			<if test="taskDifficulty != null">
+				#{taskDifficulty,jdbcType=INTEGER},
+			</if>
+			<if test="questionStem != null">
+				#{questionStem,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="analysis != null">
+				#{analysis,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.question.model.FcQuestionStem">
+		update fc_question_stem
+		<set>
+			<if test="courseId != null">
+				course_id = #{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="hourId != null">
+				hour_id = #{hourId,jdbcType=INTEGER},
+			</if>
+			<if test="questionType != null">
+				question_type = #{questionType,jdbcType=INTEGER},
+			</if>
+			<if test="taskDifficulty != null">
+				`task_difficulty` = #{taskDifficulty,jdbcType=INTEGER},
+			</if>
+			<if test="questionStem != null">
+				question_stem = #{questionStem,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="analysis != null">
+				analysis = #{analysis,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

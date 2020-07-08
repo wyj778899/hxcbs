@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrderPersonHour;
@@ -20,6 +21,9 @@ public class FcOrderPersonService {
 
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+
+	@Autowired
+	private FcCourseHourMapper fcCourseHourMapper;
 
 	/**
 	 * 终端 查询订单人员数据数量
@@ -62,6 +66,11 @@ public class FcOrderPersonService {
 				hour.setIsPass(isPass);
 				hour.setPassTime(new Date());
 				fcOrderPersonHourMapper.updateIsPass(hour);
+
+				FcOrderPersonHour personHour = new FcOrderPersonHour();
+				personHour.setOrderPersonId(personOrderId);
+				personHour.setHourId(fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, hourId));
+				fcOrderPersonHourMapper.insertSelective(personHour);
 				return 1;
 			}
 		}
