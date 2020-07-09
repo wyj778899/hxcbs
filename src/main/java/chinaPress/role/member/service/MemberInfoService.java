@@ -95,8 +95,8 @@ public class MemberInfoService {
 		if (value.equals(trainInstitutionInfo.getVerificationCode())) {
 			// 状态默认为有效
 			trainInstitutionInfo.setState(1);
-			// 审核状态默认为未审核
-			trainInstitutionInfo.setAuditStatus(1);
+			// 审核状态默认为已审核
+			trainInstitutionInfo.setAuditStatus(2);
 			try {
 				trainInstitutionInfo.setPassword(Md5Util.getEncryptedPwd(trainInstitutionInfo.getPassword()));
 			} catch (Exception e) {
@@ -112,7 +112,7 @@ public class MemberInfoService {
 			memberInfo.setArea(trainInstitutionInfo.getBusinessArea());
 			memberInfo.setAddress(trainInstitutionInfo.getBusinessAddress());
 			memberInfo.setUserName(trainInstitutionInfo.getUserName());
-			memberInfo.setState(1);
+			memberInfo.setState(2);
 			memberInfo.setIsStart(1);
 			memberInfo.setRoleId(trainInstitutionInfo.getId());
 			memberInfo.setRoleType(2);
