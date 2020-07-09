@@ -164,10 +164,24 @@ public class TrainInstitutionInfo {
     private String userHead;
     
     /**
+     * 20200707   wyj   add
+     * 注册人机构职位
+     */
+    private String registerPost;
+    
+	/**
      * 是否为中国残联定点机构
      */
     private Integer isFlag;
     
+    public String getRegisterPost() {
+		return registerPost;
+	}
+
+	public void setRegisterPost(String registerPost) {
+		this.registerPost = registerPost;
+	}
+	
     public Integer getIsFlag() {
 		return isFlag;
 	}

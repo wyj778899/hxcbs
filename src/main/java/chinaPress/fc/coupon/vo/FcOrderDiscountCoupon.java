@@ -8,6 +8,10 @@ public class FcOrderDiscountCoupon {
 	 */
 	private Integer id;
 	/**
+	 * 优惠券类型1.满减券2.观影券
+	 */
+	private Integer type;
+	/**
 	 * 满多少元
 	 */
 	private BigDecimal enoughMoney;
@@ -50,6 +54,20 @@ public class FcOrderDiscountCoupon {
 
 	public void setDiscountMoney(BigDecimal discountMoney) {
 		this.discountMoney = discountMoney;
+	}
+
+	/**
+	 * 获取：type
+	 */
+	public Integer getType() {
+		return type;
+	}
+
+	/**
+	 * 设置：type
+	 */
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 }

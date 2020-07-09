@@ -95,10 +95,10 @@ public class ImportController {
 							model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
 
 							// 身份账号
-							model.setCertificateNumber(ExcelUtil.formatCell4(xssfRow.getCell(4)));
+							model.setCertificateNumber(ExcelUtil.formatCell6(xssfRow.getCell(4)));
 
 							// 手机号
-							String tellPhone = ExcelUtil.formatCell4(xssfRow.getCell(5));
+							String tellPhone = ExcelUtil.formatCell6(xssfRow.getCell(5));
 							if (tellPhone != null && !tellPhone.equals("")) {
 								teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
 							}

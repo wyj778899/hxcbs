@@ -1,227 +1,251 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chinaPress.fc.order.dao.FcOrderPersonMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.order.model.FcOrderPerson">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
-    <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="role_type" jdbcType="INTEGER" property="roleType" />
-    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
-    <result column="section_count" jdbcType="INTEGER" property="sectionCount" />
-    <result column="have_count" jdbcType="INTEGER" property="haveCount" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, role_id, role_type, total_count, section_count, have_count, create_id, 
-    create_time, update_id, update_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_order_person
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_order_person
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.order.model.FcOrderPerson" 
-	useGeneratedKeys="true" keyProperty="id">
-    insert into fc_order_person
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="roleId != null">
-        role_id,
-      </if>
-      <if test="roleType != null">
-        role_type,
-      </if>
-      <if test="totalCount != null">
-        total_count,
-      </if>
-      <if test="sectionCount != null">
-        section_count,
-      </if>
-      <if test="haveCount != null">
-        have_count,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        #{roleType,jdbcType=INTEGER},
-      </if>
-      <if test="totalCount != null">
-        #{totalCount,jdbcType=INTEGER},
-      </if>
-      <if test="sectionCount != null">
-        #{sectionCount,jdbcType=INTEGER},
-      </if>
-      <if test="haveCount != null">
-        #{haveCount,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.order.model.FcOrderPerson">
-    update fc_order_person
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        role_id = #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        role_type = #{roleType,jdbcType=INTEGER},
-      </if>
-      <if test="totalCount != null">
-        total_count = #{totalCount,jdbcType=INTEGER},
-      </if>
-      <if test="sectionCount != null">
-        section_count = #{sectionCount,jdbcType=INTEGER},
-      </if>
-      <if test="haveCount != null">
-        have_count = #{haveCount,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <!-- 终端 查询订单人员数据数量 -->
-  <select id="findTerminalCount" resultType="int"
-  	parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
-  	SELECT
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.order.model.FcOrderPerson">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="role_id" jdbcType="INTEGER" property="roleId" />
+		<result column="role_type" jdbcType="INTEGER"
+			property="roleType" />
+		<result column="total_count" jdbcType="INTEGER"
+			property="totalCount" />
+		<result column="section_count" jdbcType="INTEGER"
+			property="sectionCount" />
+		<result column="have_count" jdbcType="INTEGER"
+			property="haveCount" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_id, role_id, role_type, total_count, section_count, have_count,
+		create_id,
+		create_time, update_id, update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_order_person
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_order_person
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.order.model.FcOrderPerson"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_order_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="roleType != null">
+				role_type,
+			</if>
+			<if test="totalCount != null">
+				total_count,
+			</if>
+			<if test="sectionCount != null">
+				section_count,
+			</if>
+			<if test="haveCount != null">
+				have_count,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="roleId != null">
+				#{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="totalCount != null">
+				#{totalCount,jdbcType=INTEGER},
+			</if>
+			<if test="sectionCount != null">
+				#{sectionCount,jdbcType=INTEGER},
+			</if>
+			<if test="haveCount != null">
+				#{haveCount,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.order.model.FcOrderPerson">
+		update fc_order_person
+		<set>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="roleId != null">
+				role_id = #{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				role_type = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="totalCount != null">
+				total_count = #{totalCount,jdbcType=INTEGER},
+			</if>
+			<if test="sectionCount != null">
+				section_count = #{sectionCount,jdbcType=INTEGER},
+			</if>
+			<if test="haveCount != null">
+				have_count = #{haveCount,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 终端 查询订单人员数据数量 -->
+	<select id="findTerminalCount" resultType="int"
+		parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
+		SELECT
 		count(*)
-	FROM
+		FROM
 		fc_order_person a
-	LEFT JOIN role_staff_archives b ON b.role_id = a.role_id 
-	AND b.role_type = a.role_type
-	<where>
-		<if test="orderId != null">AND a.order_id = #{orderId}</if>
-		<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
-	</where>
-  </select>
-  
-  <!-- 终端 查询订单人员数据集合 -->
-  <select id="findTerminalList" resultType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo"
-  	parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
-  	SELECT
+		LEFT JOIN role_staff_archives b ON b.role_id = a.role_id
+		AND b.role_type = a.role_type
+		<where>
+			<if test="orderId != null">AND a.order_id = #{orderId}</if>
+			<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+		</where>
+	</select>
+
+	<!-- 终端 查询订单人员数据集合 -->
+	<select id="findTerminalList"
+		resultType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo"
+		parameterType="chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam">
+		SELECT
 		a.id,
 		b.`name`,
 		b.sex,
 		b.tell_phone AS tellPhone,
-		a.total_count AS totalCount,
-		a.have_count AS haveCount 
-	FROM
+		a.total_count AS
+		totalCount,
+		a.have_count AS haveCount
+		FROM
 		fc_order_person a
-	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
-	<where>
-		<if test="orderId != null">AND a.order_id = #{orderId}</if>
-		<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
-	</where>
-	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
-  </select>
-  
-  <!-- 查询订单人员id -->
-  <select id="findOrderPersonId" resultType="java.lang.Integer">
-  	SELECT
-		b.id
-	FROM
-		fc_order a
+		LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
+		<where>
+			<if test="orderId != null">AND a.order_id = #{orderId}</if>
+			<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+		</where>
+		<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+	</select>
+
+	<!-- 查询订单人员id -->
+	<select id="findOrderPersonId" resultType="java.lang.Integer">
+		SELECT
+			b.id
+		FROM
+			fc_order a
 		INNER JOIN fc_order_person b ON b.order_id = a.id
-		INNER JOIN fc_course_archives c ON c.id = a.course_id 
-	WHERE
-		b.is_individual = 1 
-		AND a.start_time <![CDATA[ < ]]> NOW() AND a.end_time <![CDATA[ > ]]> NOW()
-		AND b.role_id = #{roleId}
-		AND b.role_type = #{roleType}
-		AND a.course_id = #{courseId} 
-	LIMIT 1
-  </select>
-  
-  <update id="updateIndividualByOrderId">
-  	UPDATE fc_order_person 
-	SET is_individual = 1 
-	WHERE
-		order_id = #{orderId}
-  </update>
-  
-  <!-- 修改已看数量 -->
-  <update id="updateHaveCount">
-  	UPDATE fc_order_person 
-	SET have_count = have_count + 1
-	where id = #{id} 
-  </update>
-  
-  <!-- 查询课时 -->
-  <select id="findPersonHour" resultType="chinaPress.fc.order.model.FcOrderPersonHour">
-  	SELECT
-		c.id,
-		c.order_person_id AS orderPersonId,
-		c.hour_id AS hourId,
-		c.is_pass AS isPass 
-	FROM
-		fc_order a
+		INNER JOIN fc_course_archives c ON c.id = a.course_id
+		WHERE
+			b.is_individual = 1
+			AND a.start_time <![CDATA[ < ]]> NOW() 
+			AND a.end_time <![CDATA[ > ]]> NOW()
+			AND b.role_id = #{roleId}
+			AND b.role_type = #{roleType}
+			AND a.course_id = #{courseId}
+		LIMIT 1
+	</select>
+
+	<update id="updateIndividualByOrderId">
+		UPDATE 
+			fc_order_person
+		SET 
+			is_individual = 1
+		WHERE
+			order_id = #{orderId}
+	</update>
+
+	<!-- 修改已看数量 -->
+	<update id="updateHaveCount">
+		UPDATE 
+			fc_order_person
+		SET 
+			have_count = have_count + 1
+		where 
+			id = #{id}
+	</update>
+
+	<!-- 查询课时 -->
+	<select id="findPersonHour"
+		resultType="chinaPress.fc.order.model.FcOrderPersonHour">
+		SELECT
+			c.id,
+			c.order_person_id AS orderPersonId,
+			c.hour_id AS hourId,
+			c.is_pass
+			AS isPass
+		FROM
+			fc_order a
 		LEFT JOIN fc_order_person b ON b.order_id = a.id
-		LEFT JOIN fc_order_person_hour c ON c.order_person_id = b.id 
-	WHERE
-		a.course_id = #{courseId}
-		AND b.role_id = #{roleId}
-		AND b.role_type = #{roleType}
-		AND c.hour_id = #{hourId}
-	ORDER BY c.id
-	LIMIT 1
-  </select>
+		LEFT JOIN fc_order_person_hour c ON c.order_person_id = b.id
+		WHERE
+			a.course_id = #{courseId}
+			AND b.role_id = #{roleId}
+			AND b.role_type = #{roleType}
+			AND c.hour_id = #{hourId}
+		ORDER BY c.id
+		LIMIT 1
+	</select>
 </mapper>

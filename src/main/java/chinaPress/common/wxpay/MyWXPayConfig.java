@@ -15,7 +15,7 @@ public class MyWXPayConfig extends WXPayConfig {
 		Properties prop = System.getProperties();
 		String os = prop.getProperty("os.name");
 		if (os != null && os.toLowerCase().indexOf("linux") > -1) {
-			certPath = "/home/ecloud_file/cert/qyys/apiclient_cert.p12";
+			certPath = "/home/ecloud_file/cert/huaxia/apiclient_cert.p12";
 		} else if (os != null && os.toLowerCase().indexOf("windows") > -1) {
 			certPath = "c:/ecloud_file/1540000301_20190703_cert/apiclient_cert.p12";
 		}
@@ -29,19 +29,19 @@ public class MyWXPayConfig extends WXPayConfig {
 	@Override
 	public String getAppID() {
 		// TODO Auto-generated method stub
-		return "wxd56a3a8312f2f288";
+		return "wx02d6411e63400822";
 	}
 
 	@Override
 	public String getMchID() {
 		// TODO Auto-generated method stub
-		return "1588677721";
+		return "1486606402";
 	}
 
 	@Override
 	public String getKey() {
 		// TODO Auto-generated method stub
-		return "HxJGzwmFgGxhM20qcEurzL1z4WkULe1L";
+		return "huaxiayuandaogongsi6466333130621";
 	}
 
 	@Override

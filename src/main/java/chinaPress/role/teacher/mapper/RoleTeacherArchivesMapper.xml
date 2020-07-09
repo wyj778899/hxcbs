@@ -86,7 +86,7 @@
 			<if test="certificateType != null">
 				and b.certificate_type = #{certificateType}
 			</if>
-			<if test="certificateCode != null">
+			<if test="certificateCode != null and certificateCode != ''">
 				and b.code like concat('%', #{certificateCode} ,'%')
 			</if>			
 		</where>

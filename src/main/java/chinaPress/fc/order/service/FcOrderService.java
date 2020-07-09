@@ -1,5 +1,6 @@
 package chinaPress.fc.order.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.util.DateUtil;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
@@ -65,7 +67,31 @@ public class FcOrderService {
 	 * @return
 	 */
 	public List<TerminalOrderListVo> findTerminalOrderList(TerminalOrderListParam param) {
-		return fcOrderMapper.findTerminalOrderList(param);
+		List<Integer> idList = new ArrayList<Integer>();
+		List<TerminalOrderListVo> list = fcOrderMapper.findTerminalOrderList(param);
+		for (TerminalOrderListVo terminalOrderListVo : list) {
+			if (terminalOrderListVo.getPayStatus().intValue() == 1
+					&& DateUtil.getLongOfTwoDate(terminalOrderListVo.getCreateTime(), new Date()) >= 2) {
+				terminalOrderListVo.setPayStatus(3);
+				idList.add(terminalOrderListVo.getId());
+			}
+		}
+		updatePayStatus(idList);
+		return list;
+	}
+
+	/**
+	 * 需要修改支付状态为已关闭的订单
+	 * @author maguoliang
+	 * @param idList
+	 */
+	private void updatePayStatus(List<Integer> idList) {
+		for (Integer id : idList) {
+			FcOrder record = new FcOrder();
+			record.setId(id);
+			record.setPayStatus(3);
+			fcOrderMapper.updateByPrimaryKeySelective(record);
+		}
 	}
 
 	/**
@@ -253,10 +279,17 @@ public class FcOrderService {
 		FcOrder order = fcOrderMapper.findMyCourseIsExist(roleId, roleType, courseId);
 		if (order != null) {
 			Date current_date = new Date();
-			if (order.getPayStatus() == 1) {
+			if (order.getPayStatus() == 1 && DateUtil.getLongOfTwoDate(order.getCreateTime(), new Date()) < 2) {
 				map.put("code", 1);
 				map.put("message", "未支付订单，请进行支付");
 				map.put("orderId", order.getId());
+			} else if (order.getPayStatus() == 1 && DateUtil.getLongOfTwoDate(order.getCreateTime(), new Date()) >= 2) {
+				FcOrder record = new FcOrder();
+				record.setId(order.getId());
+				record.setPayStatus(3);
+				fcOrderMapper.updateByPrimaryKeySelective(record);
+				map.put("code", -1);
+				map.put("message", "未有课程，可以购买");
 			} else if (order.getPayStatus() == 2) {
 				if (order.getEndTime().getTime() > current_date.getTime()) {
 					map.put("code", 0);
@@ -285,6 +318,7 @@ public class FcOrderService {
 	public TerminalPayOrderDetailVo findTerminalPayOrderDetail(Integer id) {
 		TerminalPayOrderDetailVo detail = fcOrderMapper.findTerminalPayOrderDetail(id);
 		if (detail != null) {
+			detail.setBookIds(fcOrderBookMapper.findBookIds(id));
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;
