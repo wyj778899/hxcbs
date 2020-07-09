@@ -285,6 +285,7 @@ public class MemberInfoService {
 			memberInfo.setState(2);
 			memberInfo.setRoleId(userInfo.getId());
 			memberInfo.setRoleType(5);
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			i += memberInfoMapper.insertSelective(memberInfo);
 			if (i > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
@@ -421,6 +422,7 @@ public class MemberInfoService {
 			if (2 == practitionerInfo.getType()) {
 				memberInfo.setRoleType(4);
 			}
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			i += memberInfoMapper.insertSelective(memberInfo);
 			if (i > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");

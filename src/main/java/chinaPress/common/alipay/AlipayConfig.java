@@ -27,10 +27,10 @@ public class AlipayConfig {
 	public static String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsD8Wa2lFiK7J8nfc51Ghalwi1JaSVQe0tv/i4uaFyJ3sDCXC7goR7NnROYV0jEs0u9md8hlO6tBgvt5W+kln9IKpDqHZo+wRa+9YOnBVurvz5wcj937syoyAp34aSQZbEkv0Vv9GmMouTeldm5AeFyUlHXQfXtuEyGXhgQ6Z6+rUr2tjUOo2kHcvjfwCcZNkLeZMtNlVPG58+ntS0JhXxaFlBPxoPd+jUXgDH2MsxC4Hhx1VaXqrLJj5i4bhgMtvP8A1cC/Z9HnHUWuEaHZr3Cd0vz0brKt7srfdOm4G96ZHq8IQJlakRvbAWPCW3afTQ7LXRkFNXq04zDwirsQigQIDAQAB";
 
 	// 服务器异步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-	public static String notify_url = "http://47.92.92.236.com/chinaPressServer/alipay/notify_url";
+	public static String notify_url = "http://www.hxclass.com/chinaPressServer/alipay/notify_url";
 
 	// 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-	public static String return_url = "http://47.92.92.236.com";
+	public static String return_url = "http://www.hxclass.com";
 
 	// 签名方式
 	public static String sign_type = "RSA2";

@@ -82,6 +82,7 @@ public class QrCodeService {
 
 		// 下单，返回结果
 		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);
+		WXPayUtil.getLogger().info(resultMap.toString());
 		Map<String, String> resParams = new HashMap<String, String>();
 		// 统一下单成功
 		if (resultMap.get("return_code").equals("SUCCESS")) {
