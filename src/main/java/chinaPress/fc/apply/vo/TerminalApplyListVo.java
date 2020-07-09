@@ -1,5 +1,6 @@
 package chinaPress.fc.apply.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,7 +26,7 @@ public class TerminalApplyListVo {
 	/**
 	 * 课程价格
 	 */
-	private Integer coursePrice;
+	private BigDecimal coursePrice;
 
 	/**
 	 * 学员数量
@@ -66,11 +67,11 @@ public class TerminalApplyListVo {
 		this.courseName = courseName;
 	}
 
-	public Integer getCoursePrice() {
+	public BigDecimal getCoursePrice() {
 		return coursePrice;
 	}
 
-	public void setCoursePrice(Integer coursePrice) {
+	public void setCoursePrice(BigDecimal coursePrice) {
 		this.coursePrice = coursePrice;
 	}
 
