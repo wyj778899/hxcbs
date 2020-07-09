@@ -13,11 +13,13 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import chinaPress.common.import_export.service.ImportService;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
@@ -27,7 +29,10 @@ import chinaPress.role.member.service.MemberInfoService;
 @RequestMapping("import")
 @RestController
 public class ImportController {
-	
+
+	@Autowired
+	private ImportService importService;
+
 	@Autowired
 	private MemberInfoService memberInfoService;
 
@@ -83,22 +88,17 @@ public class ImportController {
 							} else {
 								model.setSex(1);
 							}
-							// 年龄
-							String age = ExcelUtil.formatCell6(xssfRow.getCell(2));
-							if (age != null && !age.trim().equals("")) {
-								model.setAge(Integer.parseInt(age));
-							} else {
-								model.setAge(0);
-							}
+							// 民族
+							model.setEthnic(ExcelUtil.formatCell6(xssfRow.getCell(2)));
 
 							// 学历
 							model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
 
 							// 身份账号
-							model.setCertificateNumber(ExcelUtil.formatCell4(xssfRow.getCell(4)));
+							model.setCertificateNumber(ExcelUtil.formatCell6(xssfRow.getCell(4)));
 
 							// 手机号
-							String tellPhone = ExcelUtil.formatCell4(xssfRow.getCell(5));
+							String tellPhone = ExcelUtil.formatCell6(xssfRow.getCell(5));
 							if (tellPhone != null && !tellPhone.equals("")) {
 								teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
 							}
@@ -113,11 +113,14 @@ public class ImportController {
 							} else {
 								model.setWorkYear(0);
 							}
-
+							// 籍贯
+							model.setNativePlace(ExcelUtil.formatCell4(xssfRow.getCell(8)));
 							// 户籍所在省市
-							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(8)));
+							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
 							// 工作所在详细地址
-							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
+							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(10)));
+							// 邮寄地址
+							model.setMailingAddress(ExcelUtil.formatCell4(xssfRow.getCell(11)));
 							data.add(model);
 						}
 					}
@@ -138,5 +141,10 @@ public class ImportController {
 		} else {
 			return ResultUtil.custom(-1, "模版格式不正确");
 		}
+	}
+
+	@GetMapping("importExcel")
+	public Result importExcel(String path) {
+		return importService.importExcel(path);
 	}
 }

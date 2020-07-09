@@ -23,9 +23,9 @@ public class FcApplyPersonParam {
 	private Integer sex;
 
 	/**
-	 * 年龄
+	 * 民族
 	 */
-	private Integer age;
+	private String ethnic;
 
 	/**
 	 * 证件号码
@@ -41,6 +41,11 @@ public class FcApplyPersonParam {
 	 * 工作年限
 	 */
 	private Integer workYear;
+	
+	/**
+	 * 籍贯
+	 */
+	private String nativePlace;
 
 	/**
 	 * 户籍地址
@@ -51,6 +56,11 @@ public class FcApplyPersonParam {
 	 * 单位地址
 	 */
 	private String institutionAddress;
+	
+	/**
+	 * 邮寄地址
+	 */
+	private String mailingAddress;
 
 	/**
 	 * 学历
@@ -58,14 +68,14 @@ public class FcApplyPersonParam {
 	private String education;
 
 	/**
-	 * 角色类型（1.家长2.从业者）
-	 */
-	private Integer roleType;
-
-	/**
 	 * 机构名称
 	 */
 	private String institutionName;
+	
+	/**
+	 * 角色类型（1.家长2.从业者）
+	 */
+	private Integer roleType;
 
 	public Integer getRoleType() {
 		return roleType;
@@ -115,14 +125,6 @@ public class FcApplyPersonParam {
 		this.certificateNumber = certificateNumber;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public String getPost() {
 		return post;
 	}
@@ -169,5 +171,29 @@ public class FcApplyPersonParam {
 
 	public void setInstitutionName(String institutionName) {
 		this.institutionName = institutionName;
+	}
+
+	public String getEthnic() {
+		return ethnic;
+	}
+
+	public void setEthnic(String ethnic) {
+		this.ethnic = ethnic;
+	}
+
+	public String getNativePlace() {
+		return nativePlace;
+	}
+
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
+	}
+
+	public String getMailingAddress() {
+		return mailingAddress;
+	}
+
+	public void setMailingAddress(String mailingAddress) {
+		this.mailingAddress = mailingAddress;
 	}
 }

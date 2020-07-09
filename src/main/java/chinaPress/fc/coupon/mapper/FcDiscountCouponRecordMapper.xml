@@ -334,7 +334,8 @@
 	<!-- 查询我的优惠券 -->
 	<select id="selectMyCouponRecordList" resultType="chinaPress.fc.coupon.vo.FcDiscountMyCouponRecordListVo">
 		select
-			a.id, b.name, date_format(b.start_time, '%Y/%m/%d') startTime,
+			a.id, b.name, b.enough_money enoughMoney, b.discount_money discountMoney,
+			date_format(b.start_time, '%Y/%m/%d') startTime, 
 			date_format(b.end_time, '%Y/%m/%d') endTime, a.code,
 			d.name courseName
 		from
@@ -397,16 +398,20 @@
 	<!-- 根据优惠券编码，角色id，角色类型查询 -->
 	<select id="selectOrderCoupon" resultType="chinaPress.fc.coupon.vo.FcOrderDiscountCoupon">
 		select
-			b.id, b.enough_money enoughMoney, b.discount_money discountMoney
+			a.id, b.type,
+			b.enough_money enoughMoney,
+			b.discount_money discountMoney 
 		from
 			fc_discount_coupon_record a
-		inner join fc_discount_coupon b on a.coupon_id = b.id 
+			inner join fc_discount_coupon b on a.coupon_id = b.id
+			inner join fc_discount_coupon_course c on c.coupon_id = b.id
 		where
 			a.grant_role_id = #{grantRoleId}
 			and a.grant_role_type = #{grantRoleType}
 			and a.code = #{couponCode}
+			and c.course_id = #{courseId}
 			and b.start_time <![CDATA[<=]]> now()
 			and now() <![CDATA[<=]]> b.end_time
-			and b.type = 1
+			and a.status = 2
 	</select>
 </mapper>

@@ -149,7 +149,9 @@ public interface FcDiscountCouponRecordMapper {
 	 * @param grantRoleId   角色id
 	 * @param grantRoleType 角色类型
 	 * @param couponCode    优惠券编码
+	 * @param courseId      课程id
 	 */
 	FcOrderDiscountCoupon selectOrderCoupon(@Param("grantRoleId") Integer grantRoleId,
-			@Param("grantRoleType") Integer grantRoleType, @Param("couponCode") String couponCode);
+			@Param("grantRoleType") Integer grantRoleType, @Param("couponCode") String couponCode,
+			@Param("courseId") Integer courseId);
 }

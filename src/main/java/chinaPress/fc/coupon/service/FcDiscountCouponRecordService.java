@@ -142,8 +142,9 @@ public class FcDiscountCouponRecordService {
 	 * @param grantRoleId   角色id
 	 * @param grantRoleType 角色类型
 	 * @param couponCode    优惠券编码
+	 * @param courseId 		课程id
 	 */
-	public FcOrderDiscountCoupon selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode) {
-		return fcDiscountCouponRecordMapper.selectOrderCoupon(grantRoleId, grantRoleType, couponCode);
+	public FcOrderDiscountCoupon selectOrderCoupon(Integer grantRoleId, Integer grantRoleType, String couponCode, Integer courseId) {
+		return fcDiscountCouponRecordMapper.selectOrderCoupon(grantRoleId, grantRoleType, couponCode, courseId);
 	}
 }

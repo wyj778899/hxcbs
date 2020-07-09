@@ -36,12 +36,17 @@
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="birthday_time" jdbcType="TIMESTAMP" property="birthdayTime" />
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
+    
+    <result column="ethnic" jdbcType="VARCHAR" property="ethnic" />
+    <result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
+    <result column="mailing_address" jdbcType="VARCHAR" property="mailingAddress" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
     update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,user_head
     , age, certificate_type, post, work_year, census_address, institution_address, education
+    , ethnic, native_place, mailing_address
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -58,7 +63,6 @@
 		a.sex,
 		a.tell_phone AS tellPhone,
 		a.certificate_number AS certificateNumber,
-		a.age,
 		a.post,
 		a.work_year AS workYear,
 	CASE
@@ -66,7 +70,9 @@
 			WHEN 1 THEN
 			a.institution_address 
 			WHEN 2 THEN
-			CONCAT( b.business_provice, b.business_city, b.business_area, b.business_address ) 
+			(CASE WHEN a.institution_id !=NULL AND a.institution_id !=''
+            THEN CONCAT( b.business_provice, b.business_city, b.business_area, b.business_address )
+						ELSE a.institution_address END)
 		END AS institutionAddress,
 		a.education,
 		a.type,
@@ -75,8 +81,13 @@
 			WHEN 1 THEN
 			a.institution_name 
 			WHEN 2 THEN
-			b.`name` 
-		END AS institutionName 
+			(CASE WHEN a.institution_id !=NULL AND a.institution_id !=''
+            THEN b.`name`
+						ELSE a.institution_address END)
+		END AS institutionName,
+		a.ethnic AS ethnic,
+		a.native_place AS nativePlace,
+		a.mailing_address AS mailingAddress
 	FROM
 		role_practitioner_archives a
 		LEFT JOIN role_institution_archives b ON b.id = a.institution_id 
@@ -261,6 +272,15 @@
       <if test="education != null">
       	education,
       </if>
+	   	<if test="ethnic != null">
+	   		ethnic,
+	   	</if>
+	   	<if test="nativePlace != null">
+	   		native_place,
+	   	</if>
+	   	<if test="mailingAddress != null">
+	   		mailing_address,
+	   	</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -359,6 +379,15 @@
       <if test="education != null">
       	#{education},
       </if>
+      	<if test="ethnic != null">
+	   		#{ethnic},
+	   	</if>
+	   	<if test="nativePlace != null">
+	   		#{nativePlace},
+	   	</if>
+	   	<if test="mailingAddress != null">
+	   		#{mailingAddress},
+	   	</if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
           SELECT LAST_INSERT_ID()
@@ -461,6 +490,15 @@
       <if test="education != null">
       	education = #{education},
       </if>
+      <if test="ethnic != null">
+	   		ethnic = #{ethnic},
+	   	</if>
+	   	<if test="nativePlace != null">
+	   		native_place = #{nativePlace},
+	   	</if>
+	   	<if test="mailingAddress != null">
+	   		mailing_address = #{mailingAddress},
+	   	</if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

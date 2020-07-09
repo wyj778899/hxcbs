@@ -116,7 +116,7 @@
 		resultType="chinaPress.role.member.vo.MemberCouponInfo">
 		select
 		id as id,
-		name as name,
+		user_name as name,
 		tell_phone as tellPhone,
 		role_type as roleType,
 		role_id as roleId,
@@ -155,7 +155,7 @@
 		parameterType="chinaPress.role.member.model.MemberInfo"
 		resultType="java.lang.Integer">
 		select count(*)
-		from role_staff_archives a, fc_certificate_archives b
+		from role_practitioner_archives a, fc_certificate_archives b
 		where a.id = b.role_id and b.state = 1
 		<if test="name !=null and name!=''">
 			and a.name like CONCAT('%',#{name},'%')
@@ -184,7 +184,7 @@
 		b.photo,
 		b.audit_status
 		from (select id,name,tell_phone,sex,user_name
-		from role_staff_archives
+		from role_practitioner_archives
 		where 1=1
 		<if test="name !=null and name!=''">
 			and name like CONCAT('%',#{name},'%')
@@ -204,11 +204,13 @@
 		limit #{page},#{limit}
 	</select>
 
+	<!--证书查询功能，通过证书id 查看用户和证书的信息   这里只涉及家长/从业者信息不涉及培训机构信息 -->
 	<select id="selectByCerId" parameterType="java.lang.Integer"
 		resultMap="memberAndCerMap">
 		select a.id,a.certificate_type,a.audit_status,a.photo,
 		b.name,b.sex,b.tell_phone,b.user_name
-		from fc_certificate_archives a,role_staff_archives b
+		from fc_certificate_archives a,
+			 role_practitioner_archives b
 		where a.role_id = b.id
 		and a.id = #{id,jdbcType=INTEGER}
 	</select>

@@ -1,6 +1,7 @@
 package chinaPress.fc.order.vo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class TerminalPayOrderDetailVo {
 
@@ -27,6 +28,11 @@ public class TerminalPayOrderDetailVo {
 	/**
 	 * 课程名称
 	 */
+	private String coursePhoto;
+
+	/**
+	 * 课程名称
+	 */
 	private String courseName;
 
 	/**
@@ -38,6 +44,11 @@ public class TerminalPayOrderDetailVo {
 	 * 课程价格
 	 */
 	private BigDecimal coursePrice;
+
+	/**
+	 * 书籍id集合
+	 */
+	private List<Integer> bookIds;
 
 	public Integer getId() {
 		return id;
@@ -93,5 +104,27 @@ public class TerminalPayOrderDetailVo {
 
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+
+	public String getCoursePhoto() {
+		return coursePhoto;
+	}
+
+	public void setCoursePhoto(String coursePhoto) {
+		this.coursePhoto = coursePhoto;
+	}
+
+	/**
+	 * 获取：bookIds
+	 */
+	public List<Integer> getBookIds() {
+		return bookIds;
+	}
+
+	/**
+	 * 设置：bookIds
+	 */
+	public void setBookIds(List<Integer> bookIds) {
+		this.bookIds = bookIds;
 	}
 }

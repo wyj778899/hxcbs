@@ -177,9 +177,9 @@ public class MemberInfoController {
 	@RequestMapping("/login")
 	public Result login(String userName,String password,HttpServletRequest request) {
 		Result result = memberInfoService.findNameAndPassword(userName, password);
-		if(result.getData()!=null) {
-			request.getSession().setAttribute("member", result.getData());
-		}
+//		if(result.getData()!=null) {
+//			request.getSession().setAttribute("member", result.getData());
+//		}
 		return result;
 	}
 	
@@ -270,7 +270,7 @@ public class MemberInfoController {
 	 * @param type 1为培训机构   2为家长/从业者
 	 * @return
 	 */
-	@RequestMapping("/dataImport.do")
+	@RequestMapping("/dataImport")
 	@ResponseBody
 	public Result dataImport(MultipartFile file,HttpServletRequest request, HttpServletResponse response,Integer type) {
 		Result result = null;

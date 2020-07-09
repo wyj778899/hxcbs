@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 
 public class FcOrderDiscountCoupon {
 	/**
-	 * id
+	 * 优惠券记录id
 	 */
 	private Integer id;
+	/**
+	 * 优惠券类型1.满减券2.观影券
+	 */
+	private Integer type;
 	/**
 	 * 满多少元
 	 */
@@ -14,7 +18,7 @@ public class FcOrderDiscountCoupon {
 	/**
 	 * 减多少元
 	 */
-	private BigDecimal dicountMoney;
+	private BigDecimal discountMoney;
 
 	/**
 	 * 获取：id
@@ -44,17 +48,26 @@ public class FcOrderDiscountCoupon {
 		this.enoughMoney = enoughMoney;
 	}
 
-	/**
-	 * 获取：dicountMoney
-	 */
-	public BigDecimal getDicountMoney() {
-		return dicountMoney;
+	public BigDecimal getDiscountMoney() {
+		return discountMoney;
+	}
+
+	public void setDiscountMoney(BigDecimal discountMoney) {
+		this.discountMoney = discountMoney;
 	}
 
 	/**
-	 * 设置：dicountMoney
+	 * 获取：type
 	 */
-	public void setDicountMoney(BigDecimal dicountMoney) {
-		this.dicountMoney = dicountMoney;
+	public Integer getType() {
+		return type;
 	}
+
+	/**
+	 * 设置：type
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 }

@@ -13,11 +13,11 @@ public class TerminalOrderListParam extends PageParam {
 	 * 下单角色id
 	 */
 	private Integer roleId;
-
+	
 	/**
 	 * 课程名称
 	 */
-	private Integer courseName;
+	private String courseName;
 
 	/**
 	 * 支付状态（1.未支付2.已支付）
@@ -40,11 +40,11 @@ public class TerminalOrderListParam extends PageParam {
 		this.roleId = roleId;
 	}
 
-	public Integer getCourseName() {
+	public String getCourseName() {
 		return courseName;
 	}
 
-	public void setCourseName(Integer courseName) {
+	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
 

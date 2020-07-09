@@ -15,30 +15,33 @@ import chinaPress.fc.course_section.vo.FcCourseHourVo;
 
 @RestController
 public class FcCourseHourController {
-	
+
 	@Autowired
 	private FcCourseHourService fcCourseHourService;
-	
+
 	/**
-	 *  根据章节id查询关联课时
+	 * 根据章节id查询关联课时
+	 * 
 	 * @param sectionId
 	 * @return
 	 */
 	@RequestMapping("selectCourseHourListBySectionId")
-	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType,Integer type){
-		return fcCourseHourService.selectCourseHourListBySectionId(sectionId,courseId,sectionId,roleType,type);
-		
+	public Result selectCourseHourListBySectionId(Integer personId, Integer courseId, Integer sectionId,
+			Integer roleType, Integer type) {
+		return fcCourseHourService.selectCourseHourListBySectionId(personId, courseId, sectionId, roleType, type);
+
 	}
-	
+
 	/**
 	 * 根据课程id查询视频数量
+	 * 
 	 * @param sectionId
 	 * @return
 	 */
 	@RequestMapping("selectCourseHourCountByCOurseId")
-	public Result selectCourseHourCountByCOurseId(Integer courseId){
+	public Result selectCourseHourCountByCOurseId(Integer courseId) {
 		int count = fcCourseHourService.selectCourseHourCountByCOurseId(courseId);
-		if(count>0) {
+		if (count > 0) {
 			return ResultUtil.custom(1, "查询成功", count);
 		}
 		return ResultUtil.custom(-1, "查询失败", count);

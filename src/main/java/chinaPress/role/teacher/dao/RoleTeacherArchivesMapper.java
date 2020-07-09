@@ -9,27 +9,33 @@ import chinaPress.role.member.model.CertificateInfo;
 import chinaPress.role.teacher.model.RoleTeacherArchives;
 import chinaPress.role.teacher.vo.TeacherArchivesParam;
 import chinaPress.role.teacher.vo.TeacherCertificateVo;
+import io.lettuce.core.dynamic.annotation.Param;
 
 @Mapper
 @Repository
 public interface RoleTeacherArchivesMapper {
-	
+
 	/**
 	 * 根据id查询教师详情
+	 * 
 	 * @param id
 	 * @return
 	 */
 	TeacherArchivesParam selectTeacherById(Integer id);
-	
-	List<TeacherCertificateVo> selectTeacherCertificate(String name,String idCard,Integer type,Integer certificateType);
-	
-	List<CertificateInfo> selectcertificateList(Integer roleId,Integer roleType);
-	
-    int deleteByPrimaryKey(Integer id);
 
-    int insertSelective(RoleTeacherArchives record);
+	List<TeacherCertificateVo> selectTeacherCertificate(@Param("name") String name, @Param("idCard") String idCard,
+			@Param("type") Integer type, @Param("certificateType") Integer certificateType,
+			@Param("certificateCode") String certificateCode);
 
-    RoleTeacherArchives selectByPrimaryKey(Integer id);
+	List<CertificateInfo> selectcertificateList(Integer roleId, Integer roleType);
 
-    int updateByPrimaryKeySelective(RoleTeacherArchives record);
+	int deleteByPrimaryKey(Integer id);
+
+	int insertSelective(RoleTeacherArchives record);
+
+	RoleTeacherArchives selectByPrimaryKey(Integer id);
+
+	int updateByPrimaryKeySelective(RoleTeacherArchives record);
+	
+	RoleTeacherArchives selectByIdCard(String idCard);
 }

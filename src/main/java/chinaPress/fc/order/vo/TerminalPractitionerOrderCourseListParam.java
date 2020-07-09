@@ -17,10 +17,10 @@ public class TerminalPractitionerOrderCourseListParam extends PageParam {
 	/**
 	 * 课程名称
 	 */
-	private Integer courseName;
+	private String courseName;
 
 	/**
-	 * 状态：1.学习中，2.已完成
+	 * 状态：1.学习中，2.已完成，3.已过期
 	 */
 	private Integer status;
 
@@ -40,11 +40,11 @@ public class TerminalPractitionerOrderCourseListParam extends PageParam {
 		this.roleId = roleId;
 	}
 
-	public Integer getCourseName() {
+	public String getCourseName() {
 		return courseName;
 	}
 
-	public void setCourseName(Integer courseName) {
+	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
 

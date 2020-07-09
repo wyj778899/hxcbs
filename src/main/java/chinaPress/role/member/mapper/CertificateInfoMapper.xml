@@ -4,19 +4,22 @@
   <resultMap id="BaseResultMap" type="chinaPress.role.member.model.CertificateInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_type" jdbcType="INTEGER" property="roleType" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="certificate_type" jdbcType="INTEGER" property="certificateType" />
     <result column="photo" jdbcType="VARCHAR" property="photo" />
     <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="test_address" jdbcType="VARCHAR" property="testAddress" />
+    <result column="grade" jdbcType="DECIMAL" property="grade" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="create_id" jdbcType="INTEGER" property="createId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="role_type" jdbcType="INTEGER" property="roleType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, role_id, certificate_type, photo, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, role_type
+    update_id, update_time, role_type, test_address, grade, `code`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,6 +28,12 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   
+  <select id="selectByCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_certificate_archives
+    where `code` = #{code,jdbcType=INTEGER}
+  </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from fc_certificate_archives
@@ -66,6 +75,15 @@
       <if test="roleType != null">
         role_type,
       </if>
+      <if test="testAddress != null">
+      	test_address,
+      </if>
+      <if test="grade != null">
+      	grade,
+      </if>
+      <if test="code != null">
+      	`code`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -101,6 +119,15 @@
       <if test="roleType != null">
         #{roleType,jdbcType=INTEGER},
       </if>
+      <if test="testAddress != null">
+      	#{testAddress},
+      </if>
+      <if test="grade != null">
+      	#{grade},
+      </if>
+      <if test="code != null">
+      	#{code},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.member.model.CertificateInfo">
@@ -135,6 +162,15 @@
       </if>
       <if test="roleType != null">
         role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="testAddress != null">
+      	test_address = #{testAddress},
+      </if>
+      <if test="grade != null">
+      	grade = #{grade},
+      </if>
+      <if test="code != null">
+      	`code` = #{code},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
