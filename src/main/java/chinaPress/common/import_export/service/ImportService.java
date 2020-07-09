@@ -102,9 +102,6 @@ public class ImportService {
 
 						String code = row.getCell(4).getStringCellValue(); // 证书编码
 						String workAddress = row.getCell(5).getStringCellValue();// 工作单位
-						if (idCard.equals("320602199302252029")) {
-							System.out.println("aaaa");
-						}
 						String education = row.getCell(6).getStringCellValue(); // 学历
 						String position = row.getCell(7).getStringCellValue();// 职务
 						String address = row.getCell(8).getStringCellValue();// 地址
