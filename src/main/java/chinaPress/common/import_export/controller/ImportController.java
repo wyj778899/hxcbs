@@ -24,6 +24,9 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
+import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.service.FcOrderService;
+import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.service.MemberInfoService;
 
 @RequestMapping("import")
@@ -36,6 +39,9 @@ public class ImportController {
 	@Autowired
 	private MemberInfoService memberInfoService;
 
+	@Autowired
+	private FcOrderService fcOrderService;
+
 	/**
 	 * 导入机构学员读取信息
 	 * 
@@ -45,7 +51,7 @@ public class ImportController {
 	 */
 	@RequestMapping("institutionsStudents")
 	public Result institutionsStudents(HttpServletRequest request,
-			@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+			@RequestParam(value = "file", required = false) MultipartFile multipartFile, Integer courseId) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String fileName = multipartFile.getOriginalFilename();
 		File file = new File(fileName);
@@ -75,6 +81,7 @@ public class ImportController {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 						if (xssfRow != null) {
 							FcApplyPersonParam model = new FcApplyPersonParam();
+							model.setErrorType(0);
 							// 姓名
 							model.setName(ExcelUtil.formatCell4(xssfRow.getCell(0)));
 							// 性别
@@ -99,6 +106,26 @@ public class ImportController {
 
 							// 手机号
 							String tellPhone = ExcelUtil.formatCell6(xssfRow.getCell(5));
+							MemberInfo memberParam = new MemberInfo();
+							memberParam.setTellPhone(tellPhone);
+							MemberInfo memberInfo = memberInfoService.selectByPrimaryKey(memberParam);
+							// 当前报名的手机号存在了
+							if (memberInfo != null) {
+								if (memberInfo.getRoleType().intValue() == 2) {
+									model.setErrorType(2);
+								}
+								if (memberInfo.getRoleType().intValue() == 5) {
+									model.setErrorType(3);
+								}
+								if (memberInfo.getRoleType().intValue() == 3 || memberInfo.getRoleType().intValue() == 4) {
+									// 判断该手机号用户是否正在学习该课程中
+									FcOrder fcOrder = fcOrderService.selectCourseIsLearning(memberInfo.getRoleId(),
+											memberInfo.getRoleType(), courseId);
+									if (fcOrder != null) {
+										model.setErrorType(1);
+									}
+								}
+							}
 							if (tellPhone != null && !tellPhone.equals("")) {
 								teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
 							}

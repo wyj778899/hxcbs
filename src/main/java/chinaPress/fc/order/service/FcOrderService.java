@@ -82,6 +82,7 @@ public class FcOrderService {
 
 	/**
 	 * 需要修改支付状态为已关闭的订单
+	 * 
 	 * @author maguoliang
 	 * @param idList
 	 */
@@ -337,5 +338,18 @@ public class FcOrderService {
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;
+	}
+
+	/**
+	 * 判断当前这个课程当前报名人是否正在学习中
+	 * 
+	 * @author maguoliang
+	 * @param roleId   角色id
+	 * @param roleType 角色类型
+	 * @param courseId 课程id
+	 * @return
+	 */
+	public FcOrder selectCourseIsLearning(Integer roleId, Integer roleType, Integer courseId) {
+		return fcOrderMapper.selectCourseIsLearning(roleId, roleType, courseId);
 	}
 }
