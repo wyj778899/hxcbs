@@ -7,23 +7,24 @@ import org.springframework.stereotype.Service;
 
 import chinaPress.fc.question.dao.FcQuestionOptionMapper;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
+import chinaPress.fc.question.model.FcQuestionStem;
 import chinaPress.fc.question.vo.FcQuestionOptionVo;
 import chinaPress.fc.question.vo.FcQuestionStemListVo;
 
 @Service
 public class FcQuestionStemService {
-	
+
 	@Autowired
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
-	
-	public List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId,Integer hourId,Integer type){
-		List<FcQuestionStemListVo> data = fcQuestionStemMapper.selectQuestionStemList(courseId, hourId,type);
-		if(data.size()>0) {
+
+	public List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId, Integer hourId, Integer type) {
+		List<FcQuestionStemListVo> data = fcQuestionStemMapper.selectQuestionStemList(courseId, hourId, type);
+		if (data.size() > 0) {
 			for (FcQuestionStemListVo item : data) {
 				List<FcQuestionOptionVo> optionList = fcQuestionOptionMapper.selectByStemId(item.getId());
-				if(optionList.size()>0) {
+				if (optionList.size() > 0) {
 					item.setOptionList(optionList);
 				}
 			}
@@ -31,4 +32,15 @@ public class FcQuestionStemService {
 		return data;
 	}
 
+	/**
+	 * 查询该视频有没有小节题
+	 * 
+	 * @author maguoliang
+	 * @param courseId  课程id
+	 * @param sectionId 章节id
+	 * @return
+	 */
+	public List<FcQuestionStem> selectIsHaveStem(Integer courseId, Integer sectionId) {
+		return fcQuestionStemMapper.selectIsHaveStem(courseId, sectionId);
+	}
 }
