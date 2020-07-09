@@ -141,7 +141,7 @@ public class FcApplyService {
 						// 新增家长/从业者
 						PractitionerInfo practitionerInfo = new PractitionerInfo();
 						practitionerInfo.setUserName(item.getTellPhone());
-						practitionerInfo.setPassword(Md5Util.getEncryptedPwd("123456"));
+						practitionerInfo.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						practitionerInfo.setName(item.getName());
 						practitionerInfo.setTellPhone(item.getTellPhone());
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
@@ -162,11 +162,12 @@ public class FcApplyService {
 						insMemberModel.setUserName(item.getTellPhone());
 						insMemberModel.setName(item.getName());
 						insMemberModel.setTellPhone(item.getTellPhone());
-						insMemberModel.setPassword(Md5Util.getEncryptedPwd("123456"));
+						insMemberModel.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						insMemberModel.setSex(item.getSex());
 						insMemberModel.setAddress(item.getInstitutionAddress());
 						insMemberModel.setIsStart(0);
 						insMemberModel.setRoleId(practitionerInfo.getId());
+						insMemberModel.setPhoto("assets/image/userImg.jpg");
 						if (item.getRoleType().intValue() == 1) {
 							insMemberModel.setRoleType(3);
 						} else if (item.getRoleType().intValue() == 2) {
