@@ -31,6 +31,7 @@ public class FcCourseHourService {
 	public Result selectCourseHourListBySectionId(Integer personId,Integer courseId, Integer sectionId,Integer roleType,Integer type){
 		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
 		if(data.size()>0) {
+			//查询当前这个人有没有买过课
 			Map<String, Object> map = fcOrderService.findMyCourseIsExist(personId, roleType, courseId);
 			if(map.get("code").toString().equals("0")) {
 				int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId, data.get(0).getId());
@@ -41,6 +42,7 @@ public class FcCourseHourService {
 				}else {
 					return ResultUtil.custom(-1, "暂无视频");
 				}
+			//未买过
 			}else {
 				if(type == 0) {
 					return ResultUtil.custom(1, "免费试看", data);
