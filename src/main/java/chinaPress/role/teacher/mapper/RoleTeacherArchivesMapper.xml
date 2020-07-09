@@ -9,6 +9,12 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
 		<result column="grade" jdbcType="VARCHAR" property="grade" />
+		<result column="sex" jdbcType="INTEGER" property="sex" />
+		<result column="work_address" jdbcType="VARCHAR" property="workAddress" />
+		<result column="education" jdbcType="VARCHAR" property="education" />
+		<result column="position" jdbcType="VARCHAR" property="position" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
 		<result column="create_id" jdbcType="INTEGER"
 			property="createId" />
 		<result column="create_time" jdbcType="TIMESTAMP"
@@ -20,7 +26,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `name`,photo, id_card, grade, create_id, create_time, update_id,
-		update_time
+		update_time, sex, work_address, education, position, address, tell_phone
 	</sql>
 	<select id="selectTeacherById"
 		resultType="chinaPress.role.teacher.vo.TeacherArchivesParam">
@@ -33,6 +39,22 @@
 		from role_teacher_archives
 		where id = #{id}
 	</select>
+	
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from role_teacher_archives
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectByIdCard" resultMap="BaseResultMap">
+		select
+			<include refid="Base_Column_List" />
+		from role_teacher_archives
+		where id_card = #{idCard}
+	</select>
+	
 	<!-- 证书分数查询 -->
 	<select id="selectTeacherCertificate"
 		resultType="chinaPress.role.teacher.vo.TeacherCertificateVo">
@@ -76,13 +98,7 @@
 		from fc_certificate_archives
 		where role_id = #{roleId} and role_type = #{roleType}
 	</select>
-	<select id="selectByPrimaryKey"
-		parameterType="java.lang.Integer" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from role_teacher_archives
-		where id = #{id,jdbcType=INTEGER}
-	</select>
+	
 	<delete id="deleteByPrimaryKey"
 		parameterType="java.lang.Integer">
 		delete from role_teacher_archives
@@ -120,6 +136,24 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="workAddress != null">
+				work_address,
+			</if>
+			<if test="education != null">
+				education,
+			</if>
+			<if test="position != null">
+				position,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="tellPhone != null">
+				tell_phone,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -148,6 +182,24 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sex != null">
+				#{sex},
+			</if>
+			<if test="workAddress != null">
+				#{workAddress},
+			</if>
+			<if test="education != null">
+				#{education},
+			</if>
+			<if test="position != null">
+				#{position},
+			</if>
+			<if test="address != null">
+				#{address},
+			</if>
+			<if test="tellPhone != null">
+				#{tellPhone},
 			</if>
 		</trim>
 	</insert>
@@ -178,6 +230,24 @@
 			</if>
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="workAddress != null">
+				work_address = #{workAddress},
+			</if>
+			<if test="education != null">
+				education = #{education},
+			</if>
+			<if test="position != null">
+				position = #{position},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="tellPhone != null">
+				tell_phone = #{tellPhone},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
