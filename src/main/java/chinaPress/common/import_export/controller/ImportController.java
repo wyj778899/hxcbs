@@ -13,11 +13,13 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import chinaPress.common.import_export.service.ImportService;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
@@ -27,7 +29,10 @@ import chinaPress.role.member.service.MemberInfoService;
 @RequestMapping("import")
 @RestController
 public class ImportController {
-	
+
+	@Autowired
+	private ImportService importService;
+
 	@Autowired
 	private MemberInfoService memberInfoService;
 
@@ -136,5 +141,10 @@ public class ImportController {
 		} else {
 			return ResultUtil.custom(-1, "模版格式不正确");
 		}
+	}
+
+	@GetMapping("importExcel")
+	public Result importExcel(String path) {
+		return importService.importExcel(path);
 	}
 }

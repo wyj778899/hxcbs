@@ -17,4 +17,6 @@ public interface CertificateInfoMapper {
 
     int updateByPrimaryKeySelective(CertificateInfo record);
     
+    CertificateInfo selectByCode(String code);
+    
 }

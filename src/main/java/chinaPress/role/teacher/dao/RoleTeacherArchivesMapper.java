@@ -36,4 +36,6 @@ public interface RoleTeacherArchivesMapper {
 	RoleTeacherArchives selectByPrimaryKey(Integer id);
 
 	int updateByPrimaryKeySelective(RoleTeacherArchives record);
+	
+	RoleTeacherArchives selectByIdCard(String idCard);
 }
