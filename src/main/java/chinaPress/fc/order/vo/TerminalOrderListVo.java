@@ -15,7 +15,7 @@ public class TerminalOrderListVo {
 	/**
 	 * 订单日期
 	 */
-	@JsonFormat(pattern = "yyyy/MM/dd")
+	@JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")
 	private Date date;
 
 	/**
@@ -47,6 +47,11 @@ public class TerminalOrderListVo {
 	 * 订单创建时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 订单的支付金额
+	 */
+	private BigDecimal payAmount;
 
 	public Integer getId() {
 		return id;
@@ -116,5 +121,19 @@ public class TerminalOrderListVo {
 	 */
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取：payAmount
+	 */
+	public BigDecimal getPayAmount() {
+		return payAmount;
+	}
+
+	/**
+	 * 设置：payAmount
+	 */
+	public void setPayAmount(BigDecimal payAmount) {
+		this.payAmount = payAmount;
 	}
 }
