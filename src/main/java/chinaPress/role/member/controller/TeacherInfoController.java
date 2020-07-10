@@ -24,18 +24,20 @@ public class TeacherInfoController {
 	 * @param name
 	 * @param certificateNumber
 	 * @param verificationCode
+	 * @param enterpriseCode
 	 * @param page
 	 * @param limit
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCert")
-	public Result queryTeacherAndCert(String name,String certificateNumber,String verificationCode,Integer page,Integer limit,HttpServletRequest request) {
+	public Result queryTeacherAndCert(String name,String certificateNumber,String enterpriseCode,String verificationCode,Integer page,Integer limit,HttpServletRequest request) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
 		practitionerInfo.setPage((page-1)*limit);
 		practitionerInfo.setLimit(limit);
+		practitionerInfo.setEnterpriseCode(enterpriseCode);
 		//判断验证码是否正确
 		HttpSession session = request.getSession();
 		String code = (String) session.getAttribute("code");
@@ -58,9 +60,10 @@ public class TeacherInfoController {
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCertCount")
-	public Result queryTeacherAndCertCount(String name,String certificateNumber) {
+	public Result queryTeacherAndCertCount(String name,String certificateNumber,String enterpriseCode) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
+		practitionerInfo.setEnterpriseCode(enterpriseCode);
 		practitionerInfo.setCertificateNumber(certificateNumber);
 		return teacherInfoService.findTeacherAndCertCount(practitionerInfo);
 	}
@@ -158,6 +161,18 @@ public class TeacherInfoController {
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
 		return teacherInfoService.findTeacherAndCertInfosCount(practitionerInfo);
+	}
+	
+	
+	/**
+	 * 教师id和证书id查询用户信息
+	 * @param teaId
+	 * @param cerId
+	 * @return
+	 */
+	@RequestMapping("/queryTeacherByIdAndCerId")
+	public Result queryTeacherByIdAndCerId(Integer teaId,Integer cerId) {
+		return teacherInfoService.findTeacherByIdAndCerId(teaId, cerId);
 	}
 	
 }
