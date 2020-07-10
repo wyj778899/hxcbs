@@ -220,6 +220,7 @@ public class FcOrderService {
 		}
 		int index = fcOrderMapper.updateByPrimaryKeySelective(record);
 		if (index > 0) {
+			fcOrderBookMapper.deleteByOrderId(record.getId()); 
 			if (bookIdsStr != null && !bookIdsStr.equals("")) {
 				String[] bookIds = bookIdsStr.split(",");
 				for (String bookId : bookIds) {
