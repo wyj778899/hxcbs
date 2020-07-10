@@ -3,9 +3,11 @@ package chinaPress.role.member.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.PractitionerInfo;
+import chinaPress.role.member.vo.CertVo;
 import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
@@ -94,5 +96,14 @@ public interface PractitionerInfoMapper {
      * @return
      */
     int selectTeacherAndCertInfosCount(PractitionerInfo practitioner);
+    
+    
+    /**
+     * 通过教师id和证书id查询教师信息
+     * @param teaId
+     * @param cerId
+     * @return
+     */
+    CertVo selectTeacherByIdAndCerId(@Param("teaId")Integer teaId,@Param("cerId")Integer cerId);
     
 }

@@ -1,7 +1,5 @@
 package chinaPress.role.member.vo;
 
-import java.util.List;
-
 /**
  * 20200709   教师的证书信息
  * @author wyj
@@ -9,6 +7,16 @@ import java.util.List;
  */
 public class TeacherAndCertVo {
 
+	/**
+	 * 教师编号
+	 */
+	private Integer teaId;
+	
+	/**
+	 * 证书id
+	 */
+	private Integer cerId;
+	
 	/**
 	 * 姓名
 	 */
@@ -25,23 +33,35 @@ public class TeacherAndCertVo {
 	private String certificateNumber;
 	
 	/**
-	 * 分数
+	 * 证书编号
 	 */
-	private String srouce;
-	
-	/**
-	 * 证书信息
-	 */
-	private List<CertVo> certs;
+	private String certCode;
 	
 	
-
-	public String getSrouce() {
-		return srouce;
+	public String getCertCode() {
+		return certCode;
 	}
 
-	public void setSrouce(String srouce) {
-		this.srouce = srouce;
+	public void setCertCode(String certCode) {
+		this.certCode = certCode;
+	}
+
+	
+
+	public Integer getTeaId() {
+		return teaId;
+	}
+
+	public void setTeaId(Integer teaId) {
+		this.teaId = teaId;
+	}
+
+	public Integer getCerId() {
+		return cerId;
+	}
+
+	public void setCerId(Integer cerId) {
+		this.cerId = cerId;
 	}
 
 	public String getName() {
@@ -68,15 +88,5 @@ public class TeacherAndCertVo {
 		this.certificateNumber = certificateNumber;
 	}
 
-	public List<CertVo> getCerts() {
-		return certs;
-	}
-
-	public void setCerts(List<CertVo> certs) {
-		this.certs = certs;
-	}
-	
-	
-	
 	
 }

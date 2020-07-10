@@ -8,6 +8,16 @@ package chinaPress.role.member.vo;
 public class TeacherCertVo {
 
 	/**
+	 * 教师的id
+	 */
+	private Integer teaId;
+	
+	/**
+	 * 证书id
+	 */
+	private Integer cerId;
+	
+	/**
 	 * 教师名称
 	 */
 	private String name;
@@ -23,10 +33,26 @@ public class TeacherCertVo {
 	private String certCode;
 	
 	/**
-	 * 证书图片
+	 * 证书名称
 	 */
-	private String certPhoto;
+	private String typeName;
 	
+	public Integer getTeaId() {
+		return teaId;
+	}
+
+	public void setTeaId(Integer teaId) {
+		this.teaId = teaId;
+	}
+
+	public Integer getCerId() {
+		return cerId;
+	}
+
+	public void setCerId(Integer cerId) {
+		this.cerId = cerId;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -51,14 +77,13 @@ public class TeacherCertVo {
 		this.certCode = certCode;
 	}
 
-	public String getCertPhoto() {
-		return certPhoto;
+	public String getTypeName() {
+		return typeName;
 	}
 
-	public void setCertPhoto(String certPhoto) {
-		this.certPhoto = certPhoto;
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
-
 		
 
 }
