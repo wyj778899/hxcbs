@@ -198,6 +198,21 @@ public class PractitionerInfo {
 	 * 邮寄地址
 	 */
 	private String mailingAddress;
+	
+	/**
+	 * 分数
+	 */
+	private String grade;
+
+	
+	
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
 
 	public String getRealName() {
 		return realName;
