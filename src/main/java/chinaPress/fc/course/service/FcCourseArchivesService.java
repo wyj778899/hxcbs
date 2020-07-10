@@ -86,6 +86,14 @@ public class FcCourseArchivesService {
 			}
 			List<FcCourseSectionVo> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
 			if (list.size() > 0) {
+				for (FcCourseSectionVo fcCourseSectionVo : list) {
+					List<FcQuestionStem> fcQuestionStemList = fcQuestionStemMapper.selectIsHaveStem(id, fcCourseSectionVo.getId());
+					if (fcQuestionStemList.size() > 0) {
+						fcCourseSectionVo.setIsHaveQuestion(1);
+					} else {
+						fcCourseSectionVo.setIsHaveQuestion(0);
+					}
+				}
 				data.setSectionList(FcCourseSectionTreeUtil.buildByRecursive(list));
 			}
 			// 查询相关推荐书籍
