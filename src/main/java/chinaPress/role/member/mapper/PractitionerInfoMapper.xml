@@ -615,7 +615,7 @@
 		b.grade as grade
 	from 
 		(select id,name,type,certificate_number,sex,grade from role_practitioner_archives
-		 where 1=1
+		 where type = 2
 		 	 <if test="name !=null and name !=''">
 	   			and name like CONCAT('%',#{name},'%')
 		    </if>
@@ -625,7 +625,7 @@
 		 limit #{page} , #{limit}  
 		 )a,
 		fc_certificate_archives b
-	where a.id = b.role_id and a.type = 2    <!-- 只查询从业者 -->
+	where a.id = b.role_id   
 	     <if test="type !=null and type !=''">
 	   		and b.type = #{type}
 	    </if>
@@ -642,6 +642,8 @@
 		    <if test="certificateNumber !=null and certificateNumber !=''">
 		   		and certificate_number like CONCAT('%',#{certificateNumber},'%')
 		    </if>
+		    <!-- 教师的个数返回的必须是有证书的教师 -->
+		    and id in (select DISTINCT(role_id) from fc_certificate_archives where role_type = 3)
   </select>
   
 </mapper>
