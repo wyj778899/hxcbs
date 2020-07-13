@@ -499,6 +499,7 @@
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
 			AND a.course_id = #{courseId}
+		ORDER BY update_time DESC
 		LIMIT 1
 	</select>
 
