@@ -40,6 +40,7 @@
     <result column="ethnic" jdbcType="VARCHAR" property="ethnic" />
     <result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
     <result column="mailing_address" jdbcType="VARCHAR" property="mailingAddress" />
+    <result column="grade" jdbcType="DECIMAL" property="grade" />
   </resultMap>
   
   <!--教师对应多个证书信息返回  -->
@@ -64,7 +65,7 @@
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
     update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,user_head
     , age, certificate_type, post, work_year, census_address, institution_address, education
-    , ethnic, native_place, mailing_address
+    , ethnic, native_place, mailing_address,grade
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -299,6 +300,9 @@
 	   	<if test="mailingAddress != null">
 	   		mailing_address,
 	   	</if>
+	   	<if test="grade != null">
+	   		grade,
+	   	</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -405,6 +409,9 @@
    	  </if>
    	  <if test="mailingAddress != null">
    		    #{mailingAddress},
+   	  </if>
+   	  <if test="grade != null">
+   		    #{grade},
    	  </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -516,6 +523,9 @@
 	  </if>
 	  <if test="mailingAddress != null">
 	   		mailing_address = #{mailingAddress},
+	  </if>
+	  <if test="grade != null">
+	   		grade = #{grade},
 	  </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

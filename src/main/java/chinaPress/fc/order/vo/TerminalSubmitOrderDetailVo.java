@@ -114,6 +114,26 @@ public class TerminalSubmitOrderDetailVo {
 	 * 收获电话
 	 */
 	private String consigneePhone;
+	
+	/**
+	 * 开户银行
+	 */
+	private String bankDeposit;
+	
+	/**
+	 * 银行账号
+	 */
+	private String bankNumber;
+	
+	/**
+	 * 备注说明
+	 */
+	private String remarks;
+	
+	/**
+	 * 邮箱
+	 */
+	private String email;
 
 	/**
 	 * 书籍id集合
@@ -303,4 +323,38 @@ public class TerminalSubmitOrderDetailVo {
 	public void setBookIds(List<Integer> bookIds) {
 		this.bookIds = bookIds;
 	}
+
+	public String getBankDeposit() {
+		return bankDeposit;
+	}
+
+	public void setBankDeposit(String bankDeposit) {
+		this.bankDeposit = bankDeposit;
+	}
+
+	public String getBankNumber() {
+		return bankNumber;
+	}
+
+	public void setBankNumber(String bankNumber) {
+		this.bankNumber = bankNumber;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 }
