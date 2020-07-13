@@ -104,6 +104,6 @@ public interface PractitionerInfoMapper {
      * @param cerId
      * @return
      */
-    CertVo selectTeacherByIdAndCerId(@Param("teaId")Integer teaId,@Param("cerId")Integer cerId);
+    CertVo selectTeacherByIdAndCerId(@Param("cerId")Integer cerId);
     
 }

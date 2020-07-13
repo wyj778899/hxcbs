@@ -659,9 +659,6 @@
 	where     a.id = b.role_id 
 	      and a.type = 2
 	      and b.grade is not null
-	    <if test="teaId !=null">
-	   		and a.id = #{teaId}
-	    </if>
 	    <if test="cerId !=null">
 	   		and b.id = #{cerId}
 	    </if>

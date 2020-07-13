@@ -125,14 +125,13 @@ public class TeacherInfoController {
 	
 	
 	/**
-	 * 教师id和证书id查询用户信息
-	 * @param teaId
+	 * 证书id查询用户信息
 	 * @param cerId
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherByIdAndCerId")
-	public Result queryTeacherByIdAndCerId(Integer teaId,Integer cerId) {
-		return teacherInfoService.findTeacherByIdAndCerId(teaId, cerId);
+	public Result queryTeacherByIdAndCerId(Integer cerId) {
+		return teacherInfoService.findTeacherByIdAndCerId(cerId);
 	}
 	
 }

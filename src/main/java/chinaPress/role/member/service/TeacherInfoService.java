@@ -129,8 +129,8 @@ public class TeacherInfoService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-	public Result findTeacherByIdAndCerId(Integer teaId,Integer cerId) {
-		CertVo certVo= practitionerInfoMapper.selectTeacherByIdAndCerId(teaId, cerId);
+	public Result findTeacherByIdAndCerId(Integer cerId) {
+		CertVo certVo= practitionerInfoMapper.selectTeacherByIdAndCerId(cerId);
 		if(certVo!=null) {
 			return new Result(0,"查询成功",certVo);
 		}else {
