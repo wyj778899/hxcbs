@@ -644,7 +644,7 @@
   </select>
   
   <!-- 教师详情信息 -->
-  <select id="selectTeacherByIdAndCerId" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.CertVo">
+  <select id="selectTeacherByIdAndCerId" parameterType="java.lang.Integer" resultType="chinaPress.role.member.vo.CertVo">
 	select
 	  a.user_head as head,
 		a.name as name,
