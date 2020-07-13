@@ -7,11 +7,11 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.PractitionerInfo;
-import chinaPress.role.member.vo.CertVo;
 import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 import chinaPress.role.member.vo.TeacherAndCertVo;
+import chinaPress.role.member.vo.TeacherCerInfos;
 import chinaPress.role.member.vo.TeacherCertVo;
 import chinaPress.role.member.vo.TeacherScoreVo;
 
@@ -99,11 +99,9 @@ public interface PractitionerInfoMapper {
     
     
     /**
-     * 通过教师id和证书id查询教师信息
+     * 通过教师id查询教师信息
      * @param teaId
-     * @param cerId
      * @return
      */
-    CertVo selectTeacherByIdAndCerId(@Param("cerId")Integer cerId);
-    
+    TeacherCerInfos selectTeacherByCers(@Param("teaId")Integer teaId);
 }

@@ -42,6 +42,23 @@
     <result column="mailing_address" jdbcType="VARCHAR" property="mailingAddress" />
   </resultMap>
   
+  <!--教师对应多个证书信息返回  -->
+  <resultMap id="teaCerMap" type="chinaPress.role.member.vo.TeacherCerInfos">
+	    <result column="name" jdbcType="VARCHAR" property="teaName" />
+	    <result column="head" jdbcType="VARCHAR" property="head" />
+	    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+	    <result column="source" jdbcType="DECIMAL" property="source"/>
+	    <collection property="certs" ofType="chinaPress.role.member.vo.CertInfo">
+	    	<id column="id" jdbcType="INTEGER" property="certId"/>
+	    	<result column="cert_photo" jdbcType="VARCHAR" property="certPhoto" />
+		    <result column="cert_name" jdbcType="VARCHAR" property="certName" />
+		    <result column="grade" jdbcType="VARCHAR" property="grade" />
+		    <result column="code" jdbcType="VARCHAR" property="code" />
+		    <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
+		    <result column="test_address" jdbcType="VARCHAR" property="tetsAddress" />
+	    </collection>
+  </resultMap>
+  
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
@@ -517,12 +534,11 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
-	      and b.grade is not null
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name} 
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
 	limit #{page} , #{limit}   
   </select>
@@ -536,12 +552,11 @@
 		fc_certificate_archives b
 	where 	  a.id = b.role_id 
 		  and a.type = 2
-		  and b.grade is not null    
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
   </select>
   
@@ -561,15 +576,14 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
-	      and b.grade is not null
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
 	     <if test="enterpriseCode !=null and enterpriseCode !=''">
-	   		and b.code like CONCAT('%',#{enterpriseCode},'%')
+	   		and b.code = #{enterpriseCode}
 	    </if>
 	limit #{page} , #{limit}    
   </select>
@@ -583,15 +597,14 @@
 		fc_certificate_archives b
 	where 	  a.id = b.role_id 
 		  and a.type = 2
-		  and b.grade is not null    
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
 	     <if test="enterpriseCode !=null and enterpriseCode !=''">
-	   		and b.code like CONCAT('%',#{enterpriseCode},'%')
+	   		and b.code = #{enterpriseCode}
 	    </if>
   </select>
   
@@ -603,21 +616,21 @@
 		a.certificate_number as certificateNumber,
 		a.sex as sex,
 		b.id as cerId,
-		b.code as certCode
+		b.code as certCode,
+		b.certificate_time as certificateTime
 	from 
 		role_practitioner_archives a,
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
-	      and b.grade is not null
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name}
 	    </if>
-	    <if test="type !=null and type !=''">
-	   		and b.type = #{type}
+	    <if test="type !=null">
+	   		and b.certificate_type = #{type}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
 	limit #{page} , #{limit}  
   </select>
@@ -631,36 +644,40 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
-	      and b.grade is not null
 		<if test="name !=null and name !=''">
-	   		and a.name like CONCAT('%',#{name},'%')
+	   		and a.name = #{name}
 	    </if>
-	    <if test="type !=null and type !=''">
-	   		and b.type = #{type}
+	    <if test="type !=null">
+	   		and b.certificate_type = #{type}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
   </select>
   
-  <!-- 教师详情信息 -->
-  <select id="selectTeacherByIdAndCerId" parameterType="java.lang.Integer" resultType="chinaPress.role.member.vo.CertVo">
+  <!-- 教师详情信息   展示所有的证书 考试地址，分数，发证日期,证书名称-->
+  <select id="selectTeacherByCers" parameterType="java.lang.Integer" resultMap="teaCerMap">
 	select
 	  a.user_head as head,
-		a.name as name,
-		a.certificate_number as certificateNumber,
-		a.sex as sex,
-		b.code as certCode,
-    b.grade as grade,
-    b.photo as photo
+	  a.name as name,
+	  a.certificate_number as certificate_number,
+	  a.grade as source,
+	  b.id as id,
+	  b.certificate_time as certificate_time,
+	  case when b.certificate_type=1 then '教师资格证'
+		when b.certificate_type=2 then '学历证书'
+		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as cert_name,
+	  b.photo as cert_photo,
+	  b.grade as grade,
+	  b.test_address as test_address
 	from 
-		role_practitioner_archives a,
-		fc_certificate_archives b
+	    role_practitioner_archives a,
+		fc_certificate_archives b 
 	where     a.id = b.role_id 
 	      and a.type = 2
-	      and b.grade is not null
-	    <if test="cerId !=null">
-	   		and b.id = #{cerId}
+	    <if test="teaId !=null">
+	   		and a.id = #{teaId}
 	    </if>
   </select>
+  
 </mapper>

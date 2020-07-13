@@ -161,6 +161,47 @@ public class FcOrder {
 	private String thirdPartyNo;
 
 	private Integer isIndividual;
+	
+	/**
+	 * 开户银行
+	 */
+	private String bankDeposit;
+	
+	/**
+	 * 银行账号
+	 */
+	private String bankNumber;
+	
+	/**
+	 * 备注
+	 */
+	private String remarks;
+	
+	
+
+	public String getBankDeposit() {
+		return bankDeposit;
+	}
+
+	public void setBankDeposit(String bankDeposit) {
+		this.bankDeposit = bankDeposit;
+	}
+
+	public String getBankNumber() {
+		return bankNumber;
+	}
+
+	public void setBankNumber(String bankNumber) {
+		this.bankNumber = bankNumber;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 
 	public Integer getIsIndividual() {
 		return isIndividual;

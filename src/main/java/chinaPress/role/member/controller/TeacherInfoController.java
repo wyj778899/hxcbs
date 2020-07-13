@@ -116,22 +116,22 @@ public class TeacherInfoController {
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCertInfosCount")
-	public Result queryTeacherAndCertInfosCount(String name,String certificateNumber) {
+	public Result queryTeacherAndCertInfosCount(String name,String certificateNumber,Integer type) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
+		practitionerInfo.setType(type);
 		return teacherInfoService.findTeacherAndCertInfosCount(practitionerInfo);
 	}
 	
 	
 	/**
-	 * 证书id查询用户信息
+	 * 教师id查询证书信息    证书信息展示，发证机构，发证时间，证书图片，证书编号
 	 * @param cerId
 	 * @return
 	 */
-	@RequestMapping("/queryTeacherByIdAndCerId")
-	public Result queryTeacherByIdAndCerId(Integer cerId) {
-		return teacherInfoService.findTeacherByIdAndCerId(cerId);
+	@RequestMapping("/queryTeacherByCers")
+	public Result queryTeacherByCers(Integer teaId) {
+		return teacherInfoService.findTeacherByCers(teaId);
 	}
-	
 }

@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.model.PractitionerInfo;
-import chinaPress.role.member.vo.CertVo;
 import chinaPress.role.member.vo.TeacherAndCertVo;
+import chinaPress.role.member.vo.TeacherCerInfos;
 import chinaPress.role.member.vo.TeacherCertVo;
 import chinaPress.role.member.vo.TeacherScoreVo;
 
@@ -129,10 +129,10 @@ public class TeacherInfoService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-	public Result findTeacherByIdAndCerId(Integer cerId) {
-		CertVo certVo= practitionerInfoMapper.selectTeacherByIdAndCerId(cerId);
-		if(certVo!=null) {
-			return new Result(0,"查询成功",certVo);
+	public Result findTeacherByCers(Integer teaId) {
+		TeacherCerInfos teacherCerInfos= practitionerInfoMapper.selectTeacherByCers(teaId);
+		if(teacherCerInfos!=null) {
+			return new Result(0,"查询成功",teacherCerInfos);
 		}else {
 			return new Result(-1,"查询失败","");
 		}
