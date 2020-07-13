@@ -21,6 +21,11 @@ public class FcApplyPersonParam {
 	 * 性别（1.男2.女）
 	 */
 	private Integer sex;
+	
+	/**
+	 * 年龄
+	 */
+	private Integer age;
 
 	/**
 	 * 民族
@@ -214,5 +219,19 @@ public class FcApplyPersonParam {
 	 */
 	public void setErrorType(Integer errorType) {
 		this.errorType = errorType;
+	}
+
+	/**
+	 * 获取：age
+	 */
+	public Integer getAge() {
+		return age;
+	}
+
+	/**
+	 * 设置：age
+	 */
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 }

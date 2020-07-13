@@ -17,6 +17,7 @@
 			property="renewPrice" />
 		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
 		<result column="photo" jdbcType="VARCHAR" property="photo" />
+		<result column="speaker" jdbcType="VARCHAR" property="speaker" />
 		<result column="is_putaway" jdbcType="INTEGER"
 			property="isPutaway" />
 		<result column="state" jdbcType="INTEGER" property="state" />
@@ -33,7 +34,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `name`, `type`, category_id, course_price, course_number,
-		renew_price, remarks,
+		renew_price, remarks, speaker,
 		photo, is_putaway, `state`, create_id, create_time, update_id,
 		update_time,is_delete
 	</sql>
@@ -42,17 +43,18 @@
 		resultType="chinaPress.fc.course.vo.CourseArchivesNewVo"
 		parameterType="java.lang.Integer">
 		select
-		a.id,
-		a.name courseName,
-		a.name as courseName,
-		a.type as courseType,
-		b.`name` as categoryName,
-		a.course_price as coursePrice,
-		a.course_number as courseNumber,
-		a.renew_price as renewPrice,
-		a.remarks as remarks,
-		a.photo as photo,
-		a.update_time as updateTime
+			a.id,
+			a.name courseName,
+			a.name as courseName,
+			a.type as courseType,
+			b.`name` as categoryName,
+			a.course_price as coursePrice,
+			a.course_number as courseNumber,
+			a.renew_price as renewPrice,
+			a.remarks as remarks,
+			a.photo as photo,
+			a.update_time as updateTime,
+			a.speaker
 		from fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
 		<where>
@@ -67,16 +69,17 @@
 		resultType="chinaPress.fc.course.vo.CourseArchivesNewVo"
 		parameterType="java.lang.Integer">
 		select
-		a.id as `id`,
-		a.name as courseName,
-		a.type as courseType,
-		b.`name` as categoryName,
-		a.course_price as coursePrice,
-		a.course_number as courseNumber,
-		a.renew_price as renewPrice,
-		a.remarks as remarks,
-		a.photo as photo,
-		a.update_time as updateTime
+			a.id as `id`,
+			a.name as courseName,
+			a.type as courseType,
+			b.`name` as categoryName,
+			a.course_price as coursePrice,
+			a.course_number as courseNumber,
+			a.renew_price as renewPrice,
+			a.remarks as remarks,
+			a.photo as photo,
+			a.update_time as updateTime,
+			a.speaker
 		from fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
 		where a.id = #{id}

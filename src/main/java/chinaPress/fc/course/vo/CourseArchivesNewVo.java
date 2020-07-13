@@ -25,6 +25,7 @@ public class CourseArchivesNewVo {
 	private List<FcCourseSectionVo> sectionList;
 	private List<FcCourseBookVo> bookList;// 推荐书籍
 	private Integer studyDay;// 学习天数
+	private String speaker;// 讲师
 
 	public Integer getCourseCount() {
 		return courseCount;
@@ -148,6 +149,20 @@ public class CourseArchivesNewVo {
 	 */
 	public void setStudyDay(Integer studyDay) {
 		this.studyDay = studyDay;
+	}
+
+	/**
+	 * 获取：speaker
+	 */
+	public String getSpeaker() {
+		return speaker;
+	}
+
+	/**
+	 * 设置：speaker
+	 */
+	public void setSpeaker(String speaker) {
+		this.speaker = speaker;
 	}
 
 }
