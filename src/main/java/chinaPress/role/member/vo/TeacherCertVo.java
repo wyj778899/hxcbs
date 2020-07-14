@@ -1,5 +1,7 @@
 package chinaPress.role.member.vo;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -43,14 +45,14 @@ public class TeacherCertVo {
 	 * 发证时间
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private String certificateTime;
+	private Date certificateTime;
 	
 	
-	public String getCertificateTime() {
+	public Date getCertificateTime() {
 		return certificateTime;
 	}
 
-	public void setCertificateTime(String certificateTime) {
+	public void setCertificateTime(Date certificateTime) {
 		this.certificateTime = certificateTime;
 	}
 
