@@ -44,17 +44,28 @@ public class FcCourseHourService {
 				// 查询 当前角色  针对于当前课程的选择的课时是否看过/考过
 				int index = fcOrderPersonService.findPersonHourIsPass(personId, roleType, courseId,
 						data.get(0).getId());
-				if (index == 1) {// 通过
+				// 看过视频且通过小节测试了
+				if (index == 1) {
 					return ResultUtil.custom(1, "可以观看", data);
-				} else if (index == 0) {
+				}
+				// 看过视频单位通过小节测试
+				else if (index == 2) {
 					return ResultUtil.custom(2, "看过未考过", data);
-				} else {
+				}
+				// 看过视频从未考过小节测试
+				else if (index == 0) {
+					return ResultUtil.custom(4, "从未考过小节测试", data);
+				}
+				else {
 					return ResultUtil.custom(0, "暂未学习到该视频");
 				}
 			} else {
+				// 免费试看
 				if (type == 0) {
 					return ResultUtil.custom(3, "免费试看", data);
-				} else {
+				} 
+				// 没有购买课程
+				else {
 					return ResultUtil.custom(-1, "暂无购买课程");
 				}
 			}

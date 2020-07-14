@@ -76,6 +76,28 @@ public class FcOrderPersonService {
 		}
 		return 0;
 	}
+	
+	/**
+	 * 修改课时的通过状态（即未全部答对小节题）
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型（1.家长2.从业者）
+	 * @param courseId 课程id
+	 * @param hourId   课时id
+	 * @param isPass   是否通过
+	 * @return
+	 */
+	public int setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+		Integer personOrderId = fcOrderPersonMapper.findOrderPersonId(roleId, roleType, courseId);
+		if (personOrderId != null) {
+			FcOrderPersonHour hour = new FcOrderPersonHour();
+			hour.setOrderPersonId(personOrderId);
+			hour.setHourId(hourId);
+			hour.setIsPass(2);
+			fcOrderPersonHourMapper.updateIsPass(hour);
+		}
+		return 0;
+	}
 
 	/**
 	 * 查询课时是否通过

@@ -46,7 +46,7 @@ public class FcOrderPersonController {
 	}
 
 	/**
-	 * 修改已看数量
+	 * 修改已看数量（即小节测试全部通过）
 	 * 
 	 * @param roleId   角色id
 	 * @param roleType 角色类型（1.家长2.从业者）
@@ -58,6 +58,26 @@ public class FcOrderPersonController {
 	@PostMapping("setHaveCount")
 	public Result setHaveCount(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
 		int index = fcOrderPersonService.setHaveCount(roleId, roleType, courseId, hourId, isPass);
+		if (index > 0) {
+			return ResultUtil.ok();
+		} else {
+			return ResultUtil.error();
+		}
+	}
+
+	/**
+	 * 修改课时的通过状态（即未全部答对小节题）
+	 * 
+	 * @author maguoliang
+	 * @param roleId
+	 * @param roleType
+	 * @param courseId
+	 * @param hourId
+	 * @return
+	 */
+	@RequestMapping("setHourIsPass")
+	public Result setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+		int index = fcOrderPersonService.setHourIsPass(roleId, roleType, courseId, hourId);
 		if (index > 0) {
 			return ResultUtil.ok();
 		} else {
