@@ -133,6 +133,12 @@ public class FcOrderService {
 			if (item.getEndTime().getTime() < current_date.getTime()) {
 				item.setStatus(3);
 			}
+			// 判断当前这个课程当前报名人正在学习中的课时id
+			FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(),
+					param.getRoleId(), param.getRoleType());
+			if (fcOrderPersonHour != null) {
+				item.setLearningHourId(fcOrderPersonHour.getHourId());
+			}
 		}
 		return data;
 	}
@@ -220,7 +226,7 @@ public class FcOrderService {
 		}
 		int index = fcOrderMapper.updateByPrimaryKeySelective(record);
 		if (index > 0) {
-			fcOrderBookMapper.deleteByOrderId(record.getId()); 
+			fcOrderBookMapper.deleteByOrderId(record.getId());
 			if (bookIdsStr != null && !bookIdsStr.equals("")) {
 				String[] bookIds = bookIdsStr.split(",");
 				for (String bookId : bookIds) {
