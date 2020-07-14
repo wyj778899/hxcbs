@@ -124,7 +124,8 @@ public class TeacherInfoController {
 	
 	/**
 	 * 教师id查询证书信息    证书信息展示，发证机构，发证时间，证书图片，证书编号
-	 * @param cerId
+	 * @param teaId
+	 * @param type   状态标识符，排除【孤独症康复教育人员上岗培训合格证】
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherByCers")

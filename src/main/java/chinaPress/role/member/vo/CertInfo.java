@@ -38,9 +38,14 @@ public class CertInfo {
 	private String grade;
 	
 	/**
+	 * 证书类型
+	 */
+	private Integer certType;
+	
+	/**
 	 * 发证时间
 	 */
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date certificateTime;
 	
 	/**
@@ -48,6 +53,14 @@ public class CertInfo {
 	 */
 	private String tetsAddress;
 
+
+	public Integer getCertType() {
+		return certType;
+	}
+
+	public void setCertType(Integer certType) {
+		this.certType = certType;
+	}
 
 	public String getGrade() {
 		return grade;

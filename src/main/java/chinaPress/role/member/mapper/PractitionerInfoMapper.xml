@@ -54,7 +54,8 @@
 	    	<result column="cert_photo" jdbcType="VARCHAR" property="certPhoto" />
 		    <result column="cert_name" jdbcType="VARCHAR" property="certName" />
 		    <result column="grade" jdbcType="VARCHAR" property="grade" />
-		    <result column="code" jdbcType="VARCHAR" property="code" />
+		    <result column="cert_code" jdbcType="VARCHAR" property="certCode" />
+		    <result column="cert_type" jdbcType="VARCHAR" property="certType" />
 		    <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
 		    <result column="test_address" jdbcType="VARCHAR" property="tetsAddress" />
 	    </collection>
@@ -580,7 +581,8 @@
              when b.certificate_type = 2 then '学历证书'
 			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as typeName,
 	    b.id as cerId,
-		b.code as certCode
+		b.code as certCode,
+		b.certificate_time as certificateTime
 	from 
 		role_practitioner_archives a,
 		fc_certificate_archives b
@@ -679,7 +681,9 @@
 	  case when b.certificate_type=1 then '教师资格证'
 		when b.certificate_type=2 then '学历证书'
 		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as cert_name,
+	  b.certificate_type as cert_type,
 	  b.photo as cert_photo,
+	  b.code as cert_code,
 	  b.grade as grade,
 	  b.test_address as test_address
 	from 

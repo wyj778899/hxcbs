@@ -1,5 +1,7 @@
 package chinaPress.role.member.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 教师证书显示字段    20200709  add
  * @author wyj
@@ -37,6 +39,21 @@ public class TeacherCertVo {
 	 */
 	private String typeName;
 	
+	/**
+	 * 发证时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private String certificateTime;
+	
+	
+	public String getCertificateTime() {
+		return certificateTime;
+	}
+
+	public void setCertificateTime(String certificateTime) {
+		this.certificateTime = certificateTime;
+	}
+
 	public Integer getTeaId() {
 		return teaId;
 	}

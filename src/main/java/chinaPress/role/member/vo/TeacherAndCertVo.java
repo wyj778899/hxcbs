@@ -44,7 +44,7 @@ public class TeacherAndCertVo {
 	/**
 	 * 发证时间      20200713   添加发证日期字段
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date certificateTime;
 	
 	public Date getCertificateTime() {
