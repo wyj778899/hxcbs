@@ -590,10 +590,11 @@
 	   		and a.name = #{name}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number = #{certificateNumber}
-	    </if>
-	     <if test="enterpriseCode !=null and enterpriseCode !=''">
-	   		and b.code = #{enterpriseCode}
+	   		and (
+		   			a.certificate_number = #{certificateNumber}
+		   			or
+		   			b.code = #{certificateNumber}
+	   			)
 	    </if>
 	limit #{page} , #{limit}    
   </select>
@@ -611,10 +612,11 @@
 	   		and a.name = #{name}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number = #{certificateNumber}
-	    </if>
-	     <if test="enterpriseCode !=null and enterpriseCode !=''">
-	   		and b.code = #{enterpriseCode}
+	   		and (
+		   			a.certificate_number = #{certificateNumber}
+		   			or
+		   			b.code = #{certificateNumber}
+	   			)
 	    </if>
   </select>
   

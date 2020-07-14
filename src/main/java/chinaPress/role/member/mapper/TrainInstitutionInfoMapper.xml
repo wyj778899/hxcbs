@@ -32,13 +32,21 @@
     <result column="user_head" jdbcType="VARCHAR" property="userHead" />
     <result column="is_flag" jdbcType="INTEGER" property="isFlag" />
     <result column="register_post" jdbcType="VARCHAR" property="registerPost" />
+    <!-- 20200714  wyj   add 机构详情字段 -->
+    <result column="scope_business" jdbcType="VARCHAR" property="scopeBusiness" />
+    <result column="org_profile" jdbcType="VARCHAR" property="orgProfile" />
+    <result column="service_content" jdbcType="VARCHAR" property="serviceContent" />
+    <result column="school_style" jdbcType="VARCHAR" property="schoolStyle" />
+    <result column="teacher_ranks" jdbcType="VARCHAR" property="teacherRanks" />
+    <result column="other_reveal" jdbcType="VARCHAR" property="otherReveal" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
     register_certificate, register_provice, register_city, register_area, register_address, 
     business_provice, business_city, business_area, business_address, business_photo, 
     practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, enterprise_code,user_head,is_flag,register_post
+    update_id, update_time, enterprise_code,user_head,is_flag,register_post,scope_business,
+    org_profile,service_content,school_style,teacher_ranks,other_reveal
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -226,6 +234,24 @@
       <if test="isFlag != null">
         is_flag,
       </if>
+      <if test="scopeBusiness != null">
+        scope_business,
+      </if>
+      <if test="orgProfile != null">
+        org_profile,
+      </if>
+      <if test="serviceContent != null">
+        service_content,
+      </if>
+      <if test="schoolStyle != null">
+        school_style,
+      </if>
+      <if test="teacherRanks != null">
+        teacher_ranks,
+      </if>
+      <if test="otherReveal != null">
+        other_reveal,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -317,6 +343,25 @@
       </if>
       <if test="isFlag != null">
         #{isFlag,jdbcType=INTEGER},
+      </if>
+       
+      <if test="scopeBusiness != null">
+        #{scopeBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="orgProfile != null">
+        #{orgProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceContent != null">
+        #{serviceContent,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolStyle != null">
+        #{schoolStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherRanks != null">
+        #{teacherRanks,jdbcType=VARCHAR},
+      </if>
+      <if test="otherReveal != null">
+        #{otherReveal,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -412,6 +457,24 @@
       </if>
       <if test="isFlag != null">
         is_flag = #{isFlag,jdbcType=INTEGER},
+      </if>
+      <if test="scopeBusiness != null">
+        scope_business = #{scopeBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="orgProfile != null">
+        org_profile = #{orgProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceContent != null">
+        service_content = #{serviceContent,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolStyle != null">
+        school_style = #{schoolStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherRanks != null">
+        teacher_ranks = #{teacherRanks,jdbcType=VARCHAR},
+      </if>
+      <if test="otherReveal != null">
+        other_reveal = #{otherReveal,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

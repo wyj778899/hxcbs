@@ -22,20 +22,18 @@ public class TeacherInfoController {
 	 * 查询教师证书信息
 	 * @param name
 	 * @param certificateNumber
-	 * @param enterpriseCode
 	 * @param page
 	 * @param limit
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCert")
-	public Result queryTeacherAndCert(String name,String certificateNumber,String enterpriseCode,Integer page,Integer limit,HttpServletRequest request) {
+	public Result queryTeacherAndCert(String name,String certificateNumber,Integer page,Integer limit,HttpServletRequest request) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
 		practitionerInfo.setPage((page-1)*limit);
 		practitionerInfo.setLimit(limit);
-		practitionerInfo.setEnterpriseCode(enterpriseCode);
 		return teacherInfoService.findTeacherAndCert(practitionerInfo);
 	}
 	
@@ -46,10 +44,9 @@ public class TeacherInfoController {
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCertCount")
-	public Result queryTeacherAndCertCount(String name,String certificateNumber,String enterpriseCode) {
+	public Result queryTeacherAndCertCount(String name,String certificateNumber) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
-		practitionerInfo.setEnterpriseCode(enterpriseCode);
 		practitionerInfo.setCertificateNumber(certificateNumber);
 		return teacherInfoService.findTeacherAndCertCount(practitionerInfo);
 	}
