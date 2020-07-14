@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.Md5Util;
+import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.model.FcApply;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.dao.TrainInstitutionInfoMapper;
@@ -57,6 +59,12 @@ public class MemberInfoService {
 	 */
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+
+	/**
+	 * 申请
+	 */
+	@Autowired
+	private FcApplyMapper fcApplyMapper;
 
 	/**
 	 * 注入jedisPool 用户验证redis中的验证码
@@ -458,11 +466,31 @@ public class MemberInfoService {
 	/**
 	 * 通过id查询家长/从业者报名信息
 	 * 
-	 * @param id
+	 * @author maguoliang
+	 * @param id       家长/从业者id
+	 * @param courseId 课程id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @param roleId   角色id
 	 * @return
 	 */
-	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id) {
-		return practitionerInfoMapper.findApplyInfo(id);
+	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id, Integer courseId, Integer roleId,
+			Integer roleType) {
+		PractitionerApplyInfoVo data = practitionerInfoMapper.findApplyInfo(id);
+		if (data != null) {
+			// 查询是否为第二次报名
+			if (courseId != null && roleId != null && roleType != null) {
+				FcApply fcApply = fcApplyMapper.selectIsSecondApply(courseId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), roleId);
+				if (fcApply != null) {
+					data.setIsSecondApply(1);
+				} else {
+					data.setIsSecondApply(0);
+				}
+			} else {
+				data.setIsSecondApply(0);
+			}
+		}
+		return data;
 	}
 
 	/**

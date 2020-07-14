@@ -22,8 +22,13 @@ import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.course_section.model.FcCourseSection;
+import chinaPress.fc.course_section.vo.FcCourseHourVo;
 import chinaPress.fc.course_section.vo.FcCourseSectionVo;
+import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
+import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.model.FcOrderPersonHour;
+import chinaPress.fc.order.service.FcOrderPersonService;
 import chinaPress.fc.question.dao.FcQuestionOptionMapper;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
 import chinaPress.fc.question.model.FcQuestionOption;
@@ -45,14 +50,20 @@ public class FcCourseArchivesService {
 	private FcCourseBookMapper fcCourseBookMapper;
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+	@Autowired
+	private FcOrderMapper fcOrderMapper;
+	@Autowired
+	private FcOrderPersonService fcOrderPersonService;
 
 	/**
 	 * 根据分类id查询关联课程
 	 * 
-	 * @param categoryId
+	 * @param categoryId 课程分类id
+	 * @param roleId     角色id
+	 * @param roleType   角色类型
 	 * @return
 	 */
-	public List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId) {
+	public List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId, Integer roleId, Integer roleType) {
 		List<CourseArchivesNewVo> data = fcCourseArchivesMapper.selectCourseByCategoryId(categoryId);
 		if (data.size() > 0) {
 			for (CourseArchivesNewVo item : data) {
@@ -61,6 +72,20 @@ public class FcCourseArchivesService {
 					item.setCourseCount(count);
 				} else {
 					item.setCourseCount(0);
+				}
+				// 判断当前这个课程当前报名人是否正在学习中
+				FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), item.getId());
+				if (fcOrder != null) {
+					item.setIsLearning(1);
+				} else {
+					item.setIsLearning(0);
+				}
+				// 判断当前这个课程当前报名人正在学习中的课时id
+				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(), roleId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+				if (fcOrderPersonHour != null) {
+					item.setLearningHourId(fcOrderPersonHour.getHourId());
 				}
 			}
 		}
@@ -87,7 +112,42 @@ public class FcCourseArchivesService {
 			List<FcCourseSectionVo> list = fcCourseSectionMapper.selectCourseSectionList(data.getId());
 			if (list.size() > 0) {
 				for (FcCourseSectionVo fcCourseSectionVo : list) {
-					List<FcQuestionStem> fcQuestionStemList = fcQuestionStemMapper.selectIsHaveStem(id, fcCourseSectionVo.getId());
+					// 该章节视频是否看过
+					if (roleId != null && roleType != null) {
+						List<FcCourseHourVo> courseSectionHourList = fcCourseHourMapper
+								.selectCourseHourListBySectionId(fcCourseSectionVo.getId());
+						if (courseSectionHourList.size() > 0) {
+							// 查询 当前角色 针对于当前课程的选择的课时是否看过/考过
+							int index = fcOrderPersonService.findPersonHourIsPass(roleId,
+									roleType == 3 ? 1 : (roleType == 4 ? 2 : null), id,
+									courseSectionHourList.get(0).getId());
+							// 看完视频且通过小节测试了
+							if (index == 1) {
+								fcCourseSectionVo.setIsWatch(1);
+							}
+							// 看完视频但未通过小节测试
+							else if (index == 2) {
+								fcCourseSectionVo.setIsWatch(1);
+							}
+							// 视频还未看完，正在学习
+							else if (index == 0) {
+								fcCourseSectionVo.setIsWatch(0);
+							}
+							// 看完视频从未考过小节测试
+							else if (index == 3) {
+								fcCourseSectionVo.setIsWatch(1);
+							}
+							// 暂无视频
+							else {
+								fcCourseSectionVo.setIsWatch(0);
+							}
+						} else {
+							fcCourseSectionVo.setIsWatch(0);
+						}
+					}
+					// 该章节视频是否有小节题目
+					List<FcQuestionStem> fcQuestionStemList = fcQuestionStemMapper.selectIsHaveStem(id,
+							fcCourseSectionVo.getId());
 					if (fcQuestionStemList.size() > 0) {
 						fcCourseSectionVo.setIsHaveQuestion(1);
 					} else {
@@ -105,6 +165,24 @@ public class FcCourseArchivesService {
 				data.setStudyDay(0);
 			} else {
 				data.setStudyDay(DateUtil.getLongOfTwoDate(firstPassTime, new Date()));
+			}
+			// 判断当前这个课程当前报名人是否正在学习中
+			if (roleId != null && roleType != null) {
+				FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), id);
+				if (fcOrder != null) {
+					data.setIsLearning(1);
+				} else {
+					data.setIsLearning(0);
+				}
+			} else {
+				data.setIsLearning(0);
+			}
+			// 判断当前这个课程当前报名人正在学习中的课时id
+			FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId,
+					roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+			if (fcOrderPersonHour != null) {
+				data.setLearningHourId(fcOrderPersonHour.getHourId());
 			}
 		}
 		return data;

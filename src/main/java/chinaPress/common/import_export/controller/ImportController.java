@@ -179,7 +179,7 @@ public class ImportController {
 												|| memberInfo.getRoleType().intValue() == 4) {
 											// 判断该手机号用户是否正在学习该课程中
 											FcOrder fcOrder = fcOrderService.selectCourseIsLearning(memberInfo.getRoleId(),
-													memberInfo.getRoleType(), courseId);
+													memberInfo.getRoleType() == 3 ? 1 : (memberInfo.getRoleType() == 4 ? 2 : 0), courseId);
 											if (fcOrder != null) {
 												model.setErrorType(1);
 											}

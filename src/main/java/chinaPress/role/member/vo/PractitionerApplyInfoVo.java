@@ -71,6 +71,10 @@ public class PractitionerApplyInfoVo {
 	 * 邮寄地址
 	 */
 	private String mailingAddress;
+	/**
+	 * 是否为第二次报名
+	 */
+	private Integer isSecondApply;
 
 	public String getUserName() {
 		return userName;
@@ -182,5 +186,19 @@ public class PractitionerApplyInfoVo {
 
 	public void setMailingAddress(String mailingAddress) {
 		this.mailingAddress = mailingAddress;
+	}
+
+	/**
+	 * 获取：isSecondApply
+	 */
+	public Integer getIsSecondApply() {
+		return isSecondApply;
+	}
+
+	/**
+	 * 设置：isSecondApply
+	 */
+	public void setIsSecondApply(Integer isSecondApply) {
+		this.isSecondApply = isSecondApply;
 	}
 }

@@ -3,6 +3,7 @@ package chinaPress.fc.apply.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.apply.model.FcApply;
@@ -51,4 +52,15 @@ public interface FcApplyMapper {
 	 */
 	TerminalPractitionerApplyDetailVo findTerminalPractitionerDetail(Integer id);
 
+	/**
+	 * 查询是否为第二次报名
+	 * 
+	 * @author maguoliang
+	 * @param courseId 课程id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @param roleId   角色id
+	 * @return
+	 */
+	FcApply selectIsSecondApply(@Param("courseId") Integer courseId, @Param("roleType") Integer roleType,
+			@Param("id") Integer roleId);
 }

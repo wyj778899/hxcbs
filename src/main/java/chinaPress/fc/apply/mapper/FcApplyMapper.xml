@@ -1,244 +1,279 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chinaPress.fc.apply.dao.FcApplyMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.apply.model.FcApply">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
-    <result column="apply_type" jdbcType="INTEGER" property="applyType" />
-    <result column="course_id" jdbcType="INTEGER" property="courseId" />
-    <result column="apply_count" jdbcType="INTEGER" property="applyCount" />
-    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
-    <result column="apply_schedule" jdbcType="INTEGER" property="applySchedule" />
-    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="reason_message" jdbcType="VARCHAR" property="reasonMessage" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, apply_id, apply_type, course_id, apply_count, apply_time, apply_schedule, audit_status, 
-    `state`, create_id, create_time, update_id, update_time, reason_message
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_apply
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <insert id="insertSelective" parameterType="chinaPress.fc.apply.model.FcApply"
-  	useGeneratedKeys="true" keyProperty="id">
-    insert into fc_apply
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="applyId != null">
-        apply_id,
-      </if>
-      <if test="applyType != null">
-        apply_type,
-      </if>
-      <if test="courseId != null">
-        course_id,
-      </if>
-      <if test="applyCount != null">
-        apply_count,
-      </if>
-      <if test="applyTime != null">
-        apply_time,
-      </if>
-      <if test="applySchedule != null">
-        apply_schedule,
-      </if>
-      <if test="auditStatus != null">
-        audit_status,
-      </if>
-      <if test="state != null">
-        `state`,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="reasonMessage != null">
-      	reason_message,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="applyId != null">
-        #{applyId,jdbcType=INTEGER},
-      </if>
-      <if test="applyType != null">
-        #{applyType,jdbcType=INTEGER},
-      </if>
-      <if test="courseId != null">
-        #{courseId,jdbcType=INTEGER},
-      </if>
-      <if test="applyCount != null">
-        #{applyCount,jdbcType=INTEGER},
-      </if>
-      <if test="applyTime != null">
-        #{applyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applySchedule != null">
-        #{applySchedule,jdbcType=INTEGER},
-      </if>
-      <if test="auditStatus != null">
-        #{auditStatus,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="reasonMessage != null">
-      	#{reasonMessage},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.apply.model.FcApply">
-    update fc_apply
-    <set>
-      <if test="applyId != null">
-        apply_id = #{applyId,jdbcType=INTEGER},
-      </if>
-      <if test="applyType != null">
-        apply_type = #{applyType,jdbcType=INTEGER},
-      </if>
-      <if test="courseId != null">
-        course_id = #{courseId,jdbcType=INTEGER},
-      </if>
-      <if test="applyCount != null">
-        apply_count = #{applyCount,jdbcType=INTEGER},
-      </if>
-      <if test="applyTime != null">
-        apply_time = #{applyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applySchedule != null">
-        apply_schedule = #{applySchedule,jdbcType=INTEGER},
-      </if>
-      <if test="auditStatus != null">
-        audit_status = #{auditStatus,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        `state` = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="reasonMessage != null">
-      	reason_message = #{reasonMessage},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <!-- 终端 报名申请数据数量 -->
-  <select id="findTerminalApplyCount" resultType="int"
-  	parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
-  	SELECT
-		count(*)
-	FROM
-		fc_apply a
-	INNER JOIN fc_course_archives b ON b.id = a.course_id
-	<where>
-		<if test="roleId != null">AND a.apply_id = #{roleId} </if>
-		<if test="roleType != null">AND a.apply_type = #{roleType} </if>
-		<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
-	</where>
-  </select>
-  
-  <!-- 终端 报名申请数据集合 -->
-  <select id="findTerminalApplyList" resultType="chinaPress.fc.apply.vo.TerminalApplyListVo"
-  	parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
-  	SELECT
-		a.id,
-		a.apply_time AS applyTime,
-		b.`name` AS courseName,
-		b.course_price AS coursePrice,
-		a.audit_status AS auditStatus,
-		b.course_number AS courseNumber,
-		( SELECT count(*) FROM fc_apply_person WHERE apply_id = a.id ) AS studentsNumber 
-	FROM
-		fc_apply a
-	INNER JOIN fc_course_archives b ON b.id = a.course_id
-	<where>
-		<if test="roleId != null">AND a.apply_id = #{roleId} </if>
-		<if test="roleType != null">AND a.apply_type = #{roleType} </if>
-		<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
-	</where>
-	ORDER BY a.apply_time DESC
-	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
-  </select>
-  
-  <!-- 终端机构 详情 -->
-  <select id="findTerminalInstitutionDetail" resultType="chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo">
-  	SELECT
-		a.id,
-		a.apply_time AS applyTime,
-		b.id AS courseId,
-		b.`name` AS courseName,
-		a.apply_count AS applyCount,
-		b.course_price AS coursePrice,
-		a.audit_status AS auditStatus,
-		a.reason_message AS reasonMessage,
-		b.course_number AS courseNumber 
-	FROM
-		fc_apply a
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.apply.model.FcApply">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="apply_id" jdbcType="INTEGER" property="applyId" />
+		<result column="apply_type" jdbcType="INTEGER"
+			property="applyType" />
+		<result column="course_id" jdbcType="INTEGER"
+			property="courseId" />
+		<result column="apply_count" jdbcType="INTEGER"
+			property="applyCount" />
+		<result column="apply_time" jdbcType="TIMESTAMP"
+			property="applyTime" />
+		<result column="apply_schedule" jdbcType="INTEGER"
+			property="applySchedule" />
+		<result column="audit_status" jdbcType="INTEGER"
+			property="auditStatus" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+		<result column="reason_message" jdbcType="VARCHAR"
+			property="reasonMessage" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, apply_id, apply_type, course_id, apply_count, apply_time,
+		apply_schedule, audit_status,
+		`state`, create_id, create_time, update_id, update_time, reason_message
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_apply
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.apply.model.FcApply"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="applyId != null">
+				apply_id,
+			</if>
+			<if test="applyType != null">
+				apply_type,
+			</if>
+			<if test="courseId != null">
+				course_id,
+			</if>
+			<if test="applyCount != null">
+				apply_count,
+			</if>
+			<if test="applyTime != null">
+				apply_time,
+			</if>
+			<if test="applySchedule != null">
+				apply_schedule,
+			</if>
+			<if test="auditStatus != null">
+				audit_status,
+			</if>
+			<if test="state != null">
+				`state`,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="reasonMessage != null">
+				reason_message,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="applyId != null">
+				#{applyId,jdbcType=INTEGER},
+			</if>
+			<if test="applyType != null">
+				#{applyType,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="applyCount != null">
+				#{applyCount,jdbcType=INTEGER},
+			</if>
+			<if test="applyTime != null">
+				#{applyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applySchedule != null">
+				#{applySchedule,jdbcType=INTEGER},
+			</if>
+			<if test="auditStatus != null">
+				#{auditStatus,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reasonMessage != null">
+				#{reasonMessage},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.apply.model.FcApply">
+		update fc_apply
+		<set>
+			<if test="applyId != null">
+				apply_id = #{applyId,jdbcType=INTEGER},
+			</if>
+			<if test="applyType != null">
+				apply_type = #{applyType,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				course_id = #{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="applyCount != null">
+				apply_count = #{applyCount,jdbcType=INTEGER},
+			</if>
+			<if test="applyTime != null">
+				apply_time = #{applyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applySchedule != null">
+				apply_schedule = #{applySchedule,jdbcType=INTEGER},
+			</if>
+			<if test="auditStatus != null">
+				audit_status = #{auditStatus,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reasonMessage != null">
+				reason_message = #{reasonMessage},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 终端 报名申请数据数量 -->
+	<select id="findTerminalApplyCount" resultType="int"
+		parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
+		SELECT
+			count(*)
+		FROM
+			fc_apply a
+		INNER JOIN fc_course_archives b ON b.id = a.course_id
+		<where>
+			<if test="roleId != null">AND a.apply_id = #{roleId} </if>
+			<if test="roleType != null">AND a.apply_type = #{roleType} </if>
+			<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
+		</where>
+	</select>
+
+	<!-- 终端 报名申请数据集合 -->
+	<select id="findTerminalApplyList"
+		resultType="chinaPress.fc.apply.vo.TerminalApplyListVo"
+		parameterType="chinaPress.fc.apply.vo.TerminalApplyListParam">
+		SELECT
+			a.id,
+			a.apply_time AS applyTime,
+			b.`name` AS courseName,
+			b.course_price AS coursePrice,
+			a.audit_status AS auditStatus,
+			b.course_number AS courseNumber,
+			( SELECT count(*) FROM fc_apply_person
+			WHERE apply_id = a.id ) AS studentsNumber
+		FROM
+			fc_apply a
+		INNER JOIN fc_course_archives b ON b.id = a.course_id
+		<where>
+			<if test="roleId != null">AND a.apply_id = #{roleId} </if>
+			<if test="roleType != null">AND a.apply_type = #{roleType} </if>
+			<if test="courseName != null">AND b.`name` LIKE CONCAT('%', #{courseName}, '%') </if>
+		</where>
+		ORDER BY a.apply_time DESC
+		<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+	</select>
+
+	<!-- 终端机构 详情 -->
+	<select id="findTerminalInstitutionDetail"
+		resultType="chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo">
+		SELECT
+			a.id,
+			a.apply_time AS applyTime,
+			b.id AS courseId,
+			b.`name` AS
+			courseName,
+			a.apply_count AS applyCount,
+			b.course_price AS coursePrice,
+			a.audit_status AS auditStatus,
+			a.reason_message AS reasonMessage,
+			b.course_number AS courseNumber
+		FROM
+			fc_apply a
 		LEFT JOIN fc_course_archives b ON b.id = a.course_id
-	WHERE a.id = #{id}
-  </select>
-  
-  <!-- 终端家长 详情 -->
-  <select id="findTerminalPractitionerDetail" resultType="chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo">
-  	SELECT
-		a.id,
-		a.apply_time AS applyTime,
-		c.course_number AS courseNumber,
-		c.`name` AS courseName,
-		c.course_price AS coursePrice,
-		b.`name`,
-		b.sex,
-		b.tell_phone AS tellPhone,
-		b.certificate_number AS certificateNumber,
-		a.audit_status AS auditStatus,
-		a.reason_message AS reasonMessage 
-	FROM
-		fc_apply a
+		WHERE a.id = #{id}
+	</select>
+
+	<!-- 终端家长 详情 -->
+	<select id="findTerminalPractitionerDetail"
+		resultType="chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo">
+		SELECT
+			a.id,
+			a.apply_time AS applyTime,
+			c.course_number AS courseNumber,
+			c.`name` AS courseName,
+			c.course_price AS coursePrice,
+			b.`name`,
+			b.sex,
+			b.tell_phone AS tellPhone,
+			b.certificate_number AS certificateNumber,
+			a.audit_status AS auditStatus,
+			a.reason_message AS reasonMessage
+		FROM
+			fc_apply a
 		LEFT JOIN role_practitioner_archives b ON b.id = a.apply_id
 		LEFT JOIN fc_course_archives c ON c.id = a.course_id
-	WHERE a.id = #{id}
-  </select>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 查询是否为第二次报名 -->
+	<select id="selectIsSecondApply" resultMap="BaseResultMap">
+		select
+			*
+		from
+			fc_apply a
+		inner join fc_apply_person b on a.id = b.apply_id
+		where
+			a.course_id = #{courseId}
+			and a.apply_type in (2, 3)
+			and b.role_type = #{roleType}
+			and b.role_id = #{roleId}
+	</select>
 </mapper>

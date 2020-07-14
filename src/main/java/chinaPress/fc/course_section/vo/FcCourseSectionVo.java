@@ -31,6 +31,10 @@ public class FcCourseSectionVo {
 	 * 有没有小节题
 	 */
 	private Integer isHaveQuestion;
+	/**
+	 * 该章节视频是否看过，无论考试是否通过
+	 */
+	private Integer isWatch;
 
 	private List<FcCourseSectionVo> children;
 
@@ -130,6 +134,20 @@ public class FcCourseSectionVo {
 	 */
 	public void setIsHaveQuestion(Integer isHaveQuestion) {
 		this.isHaveQuestion = isHaveQuestion;
+	}
+
+	/**
+	 * 获取：isWatch
+	 */
+	public Integer getIsWatch() {
+		return isWatch;
+	}
+
+	/**
+	 * 设置：isWatch
+	 */
+	public void setIsWatch(Integer isWatch) {
+		this.isWatch = isWatch;
 	}
 
 	/**

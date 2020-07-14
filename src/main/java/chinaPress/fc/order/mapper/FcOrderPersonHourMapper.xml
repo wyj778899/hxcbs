@@ -105,4 +105,32 @@
 			c.id
 		limit 1
 	</select>
+	
+	<!-- 根据orderPersonId和hourId查询 -->
+	<select id="selectByOrderPersonAndHour" resultMap="BaseResultMap">
+		select
+			*
+		from 
+			fc_order_person_hour
+		where
+			order_person_id = #{orderPersonId}
+			and hour_id = #{hourId}
+	</select>
+	
+	<!-- 查询某个人正在学习某课程的最新进度 -->
+	<select id="selectTheNewestHour" resultMap="BaseResultMap">
+		select
+			c.*
+		from
+			fc_order a
+		inner join fc_order_person b on a.id = b.order_id
+		inner join fc_order_person_hour c on c.order_person_id = b.id
+		where
+			a.course_id = #{courseId}
+			and a.start_time <![CDATA[<=]]> now()
+			and now() <![CDATA[<=]]> a.end_time
+			and b.role_type = #{roleType}
+			and b.role_id = #{roleId}
+			and ( c.is_pass = 0 or c.is_pass = 3)
+	</select>
 </mapper>

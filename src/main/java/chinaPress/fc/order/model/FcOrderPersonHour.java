@@ -24,7 +24,7 @@ public class FcOrderPersonHour {
 	private Integer hourId;
 
 	/**
-	 * 小结是否通过：1.是，2.否
+	 * 小结是否通过：1.已观看完且通过测试，2.已观看完未通过测试，0.只有观看权限，3.已观看完还未考试
 	 */
 	private Integer isPass;
 
@@ -84,7 +84,7 @@ public class FcOrderPersonHour {
 	}
 
 	/**
-	 * 小结是否通过：1.是，2.否
+	 * 小结是否通过：1.已观看完且通过测试，2.已观看完未通过测试，0.只有观看权限，3.已观看完还未考试
 	 * 
 	 * @return isPass
 	 */
@@ -93,7 +93,7 @@ public class FcOrderPersonHour {
 	}
 
 	/**
-	 * 小结是否通过：1.是，2.否
+	 * 小结是否通过：1.已观看完且通过测试，2.已观看完未通过测试，0.只有观看权限，3.已观看完还未考试
 	 * 
 	 * @param isPass
 	 */

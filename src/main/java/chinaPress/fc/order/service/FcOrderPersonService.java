@@ -76,9 +76,9 @@ public class FcOrderPersonService {
 		}
 		return 0;
 	}
-	
+
 	/**
-	 * 修改课时的通过状态（即未全部答对小节题）
+	 * 修改课时的通过状态
 	 * 
 	 * @param roleId   角色id
 	 * @param roleType 角色类型（1.家长2.从业者）
@@ -87,14 +87,27 @@ public class FcOrderPersonService {
 	 * @param isPass   是否通过
 	 * @return
 	 */
-	public int setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId) {
+	public int setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
 		Integer personOrderId = fcOrderPersonMapper.findOrderPersonId(roleId, roleType, courseId);
 		if (personOrderId != null) {
-			FcOrderPersonHour hour = new FcOrderPersonHour();
-			hour.setOrderPersonId(personOrderId);
-			hour.setHourId(hourId);
-			hour.setIsPass(2);
-			fcOrderPersonHourMapper.updateIsPass(hour);
+			// 如果看完了，且当前角色进度没有该章节视频记录则修改
+			if (isPass.intValue() == 3) {
+				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+						hourId);
+				if (fcOrderPersonHour == null) {
+					FcOrderPersonHour hour = new FcOrderPersonHour();
+					hour.setOrderPersonId(personOrderId);
+					hour.setHourId(hourId);
+					hour.setIsPass(isPass);
+					return fcOrderPersonHourMapper.updateIsPass(hour);
+				}
+			} else {
+				FcOrderPersonHour hour = new FcOrderPersonHour();
+				hour.setOrderPersonId(personOrderId);
+				hour.setHourId(hourId);
+				hour.setIsPass(isPass);
+				return fcOrderPersonHourMapper.updateIsPass(hour);
+			}
 		}
 		return 0;
 	}
@@ -115,5 +128,18 @@ public class FcOrderPersonService {
 		} else {
 			return -1;
 		}
+	}
+
+	/**
+	 * 查询某个人正在学习某课程的最新进度
+	 * 
+	 * @author maguoliang
+	 * @param courseId 课程id
+	 * @param roleId   角色id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @return
+	 */
+	public FcOrderPersonHour selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
+		return fcOrderPersonHourMapper.selectTheNewestHour(courseId, roleId, roleType);
 	}
 }
