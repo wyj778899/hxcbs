@@ -25,6 +25,9 @@ public class CourseArchivesNewVo {
 	private List<FcCourseSectionVo> sectionList;
 	private List<FcCourseBookVo> bookList;// 推荐书籍
 	private Integer studyDay;// 学习天数
+	private String speaker;// 讲师
+	private Integer isLearning;// 当前课程是正在学习中1.是0.不是
+	private Integer learningHourId;// 当前课程正在学习的最新课时id
 
 	public Integer getCourseCount() {
 		return courseCount;
@@ -148,6 +151,48 @@ public class CourseArchivesNewVo {
 	 */
 	public void setStudyDay(Integer studyDay) {
 		this.studyDay = studyDay;
+	}
+
+	/**
+	 * 获取：speaker
+	 */
+	public String getSpeaker() {
+		return speaker;
+	}
+
+	/**
+	 * 设置：speaker
+	 */
+	public void setSpeaker(String speaker) {
+		this.speaker = speaker;
+	}
+
+	/**
+	 * 获取：isLearning
+	 */
+	public Integer getIsLearning() {
+		return isLearning;
+	}
+
+	/**
+	 * 设置：isLearning
+	 */
+	public void setIsLearning(Integer isLearning) {
+		this.isLearning = isLearning;
+	}
+
+	/**
+	 * 获取：learningHourId
+	 */
+	public Integer getLearningHourId() {
+		return learningHourId;
+	}
+
+	/**
+	 * 设置：learningHourId
+	 */
+	public void setLearningHourId(Integer learningHourId) {
+		this.learningHourId = learningHourId;
 	}
 
 }

@@ -103,28 +103,28 @@ public class FcApplyService {
 						}
 
 						// 修改员工
-						MemberInfo updMember = new MemberInfo();
-						updMember.setId(memberInfo.getId());
-						updMember.setName(item.getName());
-						updMember.setSex(item.getSex());
-						memberInfoMapper.updateByPrimaryKeySelective(updMember);
+//						MemberInfo updMember = new MemberInfo();
+//						updMember.setId(memberInfo.getId());
+//						updMember.setName(item.getName());
+//						updMember.setSex(item.getSex());
+//						memberInfoMapper.updateByPrimaryKeySelective(updMember);
 
 						// 修改家长/从业者
-						PractitionerInfo updPractitioner = new PractitionerInfo();
-						updPractitioner.setId(memberInfo.getRoleId());
-						updPractitioner.setName(item.getName());
-						updPractitioner.setSex(item.getSex());
-						updPractitioner.setCertificateNumber(item.getCertificateNumber());
-						updPractitioner.setPost(item.getPost());
-						updPractitioner.setWorkYear(item.getWorkYear());
-						updPractitioner.setCensusAddress(item.getCensusAddress());
-						updPractitioner.setInstitutionName(item.getInstitutionName());
-						updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
-						updPractitioner.setEducation(item.getEducation());
-						updPractitioner.setEthnic(item.getEthnic());
-						updPractitioner.setNativePlace(item.getNativePlace());
-						updPractitioner.setMailingAddress(item.getMailingAddress());
-						practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
+//						PractitionerInfo updPractitioner = new PractitionerInfo();
+//						updPractitioner.setId(memberInfo.getRoleId());
+//						updPractitioner.setName(item.getName());
+//						updPractitioner.setSex(item.getSex());
+//						updPractitioner.setCertificateNumber(item.getCertificateNumber());
+//						updPractitioner.setPost(item.getPost());
+//						updPractitioner.setWorkYear(item.getWorkYear());
+//						updPractitioner.setCensusAddress(item.getCensusAddress());
+//						updPractitioner.setInstitutionName(item.getInstitutionName());
+//						updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
+//						updPractitioner.setEducation(item.getEducation());
+//						updPractitioner.setEthnic(item.getEthnic());
+//						updPractitioner.setNativePlace(item.getNativePlace());
+//						updPractitioner.setMailingAddress(item.getMailingAddress());
+//						practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 
 						FcApplyPerson applyPerson = new FcApplyPerson();
 						applyPerson.setApplyId(record.getId());
@@ -141,7 +141,7 @@ public class FcApplyService {
 						// 新增家长/从业者
 						PractitionerInfo practitionerInfo = new PractitionerInfo();
 						practitionerInfo.setUserName(item.getTellPhone());
-						practitionerInfo.setPassword(Md5Util.getEncryptedPwd("123456"));
+						practitionerInfo.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						practitionerInfo.setName(item.getName());
 						practitionerInfo.setTellPhone(item.getTellPhone());
 						practitionerInfo.setCertificateNumber(item.getCertificateNumber());
@@ -156,17 +156,19 @@ public class FcApplyService {
 						practitionerInfo.setEthnic(item.getEthnic());
 						practitionerInfo.setNativePlace(item.getNativePlace());
 						practitionerInfo.setMailingAddress(item.getMailingAddress());
+						practitionerInfo.setRealName(item.getName());
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
 						MemberInfo insMemberModel = new MemberInfo();
 						insMemberModel.setUserName(item.getTellPhone());
 						insMemberModel.setName(item.getName());
 						insMemberModel.setTellPhone(item.getTellPhone());
-						insMemberModel.setPassword(Md5Util.getEncryptedPwd("123456"));
+						insMemberModel.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						insMemberModel.setSex(item.getSex());
 						insMemberModel.setAddress(item.getInstitutionAddress());
 						insMemberModel.setIsStart(0);
 						insMemberModel.setRoleId(practitionerInfo.getId());
+						insMemberModel.setPhoto("assets/image/userImg.jpg");
 						if (item.getRoleType().intValue() == 1) {
 							insMemberModel.setRoleType(3);
 						} else if (item.getRoleType().intValue() == 2) {

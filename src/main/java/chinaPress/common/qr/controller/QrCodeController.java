@@ -190,6 +190,7 @@ public class QrCodeController {
 		reqData.put("nonce_str", WXPayUtil.generateNonceStr());
 		reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey()));
 		Map<String, String> queryResult = wxPay.orderQuery(reqData, 100000, 100000);
+		WXPayUtil.getLogger().info(queryResult.toString());
 		if (queryResult.get("return_code").equals("SUCCESS")) {
 			if (queryResult.get("result_code").equals("SUCCESS")) {
 				map.put("code", 1);

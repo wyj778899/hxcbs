@@ -220,4 +220,18 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	<!-- 查询该视频有没有题 -->
+	<select id="selectIsHaveStem" resultMap="BaseResultMap">
+		select
+			a.*
+		from
+			fc_question_stem a
+		inner join fc_course_hour b on a.hour_id = b.id
+		inner join fc_course_section c on b.section_id = c.id
+		where
+			a.course_id = #{courseId}
+			and c.id = #{sectionId}
+			and a.type = 1
+	</select>
 </mapper>

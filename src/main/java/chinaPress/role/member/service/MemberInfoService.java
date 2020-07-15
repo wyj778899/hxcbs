@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.Md5Util;
+import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.model.FcApply;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.dao.TrainInstitutionInfoMapper;
@@ -59,10 +61,20 @@ public class MemberInfoService {
 	private UserInfoMapper userInfoMapper;
 
 	/**
+	 * 申请
+	 */
+	@Autowired
+	private FcApplyMapper fcApplyMapper;
+
+	/**
 	 * 注入jedisPool 用户验证redis中的验证码
 	 */
 	@Autowired
 	private JedisPool jedisPool;
+
+	public MemberInfo selectByPrimaryKey(MemberInfo memberInfo) {
+		return memberInfoMapper.selectByPrimaryKey(memberInfo);
+	}
 
 	/**
 	 * 添加培训机构信息
@@ -88,15 +100,15 @@ public class MemberInfoService {
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
 		jedis.close();
-		if(value=="" || value == null) {
+		if (value == "" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
 		// 校验验证码是否正确
 		if (value.equals(trainInstitutionInfo.getVerificationCode())) {
 			// 状态默认为有效
 			trainInstitutionInfo.setState(1);
-			// 审核状态默认为未审核
-			trainInstitutionInfo.setAuditStatus(1);
+			// 审核状态默认为已审核
+			trainInstitutionInfo.setAuditStatus(2);
 			try {
 				trainInstitutionInfo.setPassword(Md5Util.getEncryptedPwd(trainInstitutionInfo.getPassword()));
 			} catch (Exception e) {
@@ -112,10 +124,11 @@ public class MemberInfoService {
 			memberInfo.setArea(trainInstitutionInfo.getBusinessArea());
 			memberInfo.setAddress(trainInstitutionInfo.getBusinessAddress());
 			memberInfo.setUserName(trainInstitutionInfo.getUserName());
-			memberInfo.setState(1);
+			memberInfo.setState(2);
 			memberInfo.setIsStart(1);
 			memberInfo.setRoleId(trainInstitutionInfo.getId());
 			memberInfo.setRoleType(2);
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			count += memberInfoMapper.insertSelective(memberInfo);
 			if (count > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
@@ -138,8 +151,7 @@ public class MemberInfoService {
 	public int findPractitionerByTellPhone(String tellPhone) {
 		return memberInfoMapper.findPractitionerByTellPhone(tellPhone);
 	}
-	
-	
+
 	/**
 	 * 通过id查询培训机构信息
 	 * 
@@ -163,7 +175,7 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setInstitution(TrainInstitutionInfo trainInstitutionInfo) {
-		
+
 		// 通过用户名和密码到员工表查询用户信息 获取员工id更新员工操作
 		MemberInfo param = new MemberInfo();
 		param.setUserName(trainInstitutionInfo.getUserName());
@@ -206,7 +218,7 @@ public class MemberInfoService {
 				Jedis jedis = jedisPool.getResource();
 				String value = jedis.get("forget_password_".concat(trainInstitutionInfo.getUserName()));
 				jedis.close();
-				if(value=="" || value == null) {
+				if (value == "" || value == null) {
 					return new Result(-4, "系统错误", "");
 				}
 				if (value.equals(trainInstitutionInfo.getVerificationCode())) {
@@ -266,7 +278,7 @@ public class MemberInfoService {
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
 		jedis.close();
-		if(value=="" || value == null) {
+		if (value == "" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
 		if (value.equals(userInfo.getVerificationCode())) {
@@ -285,6 +297,7 @@ public class MemberInfoService {
 			memberInfo.setState(2);
 			memberInfo.setRoleId(userInfo.getId());
 			memberInfo.setRoleType(5);
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			i += memberInfoMapper.insertSelective(memberInfo);
 			if (i > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
@@ -315,8 +328,8 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 更新用户信息 ，更新成功后同时更新员工信息表对应的数据
-	 *   密码不做更新操作
+	 * 更新用户信息 ，更新成功后同时更新员工信息表对应的数据 密码不做更新操作
+	 * 
 	 * @param userInfo
 	 * @return
 	 */
@@ -387,7 +400,7 @@ public class MemberInfoService {
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
 		jedis.close();
-		if(value=="" || value == null) {
+		if (value == "" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
 		if (value.equals(practitionerInfo.getVerificationCode())) {
@@ -421,6 +434,7 @@ public class MemberInfoService {
 			if (2 == practitionerInfo.getType()) {
 				memberInfo.setRoleType(4);
 			}
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			i += memberInfoMapper.insertSelective(memberInfo);
 			if (i > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
@@ -453,15 +467,35 @@ public class MemberInfoService {
 	/**
 	 * 通过id查询家长/从业者报名信息
 	 * 
-	 * @param id
+	 * @author maguoliang
+	 * @param id       家长/从业者id
+	 * @param courseId 课程id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @param roleId   角色id
 	 * @return
 	 */
-	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id) {
-		return practitionerInfoMapper.findApplyInfo(id);
+	public PractitionerApplyInfoVo findPractitionerApplyInfo(Integer id, Integer courseId, Integer roleId,
+			Integer roleType) {
+		PractitionerApplyInfoVo data = practitionerInfoMapper.findApplyInfo(id);
+		if (data != null) {
+			// 查询是否为第二次报名
+			if (courseId != null && roleId != null && roleType != null) {
+				FcApply fcApply = fcApplyMapper.selectIsSecondApply(courseId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), roleId);
+				if (fcApply != null) {
+					data.setIsSecondApply(1);
+				} else {
+					data.setIsSecondApply(0);
+				}
+			} else {
+				data.setIsSecondApply(0);
+			}
+		}
+		return data;
 	}
 
 	/**
-	 * 家长/从业者修改信息    不做密码更新操作
+	 * 家长/从业者修改信息 不做密码更新操作
 	 * 
 	 * @param practitionerInfo
 	 * @return
@@ -557,7 +591,7 @@ public class MemberInfoService {
 				memberInfo.setPhoto(m.getPhoto());
 				memberInfo.setRoleType(m.getRoleType());
 				memberInfo.setTellPhone(m.getTellPhone());
-				return new Result(0, "登陆成功", memberInfo);
+				return new Result(0, "登录成功", memberInfo);
 			} else {
 				return new Result(-3, "用户或密码错误", "");
 			}
@@ -567,7 +601,7 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 更新员工信息   不做密码更新操作
+	 * 更新员工信息 不做密码更新操作
 	 * 
 	 * @param memberInfo
 	 * @return
@@ -631,7 +665,7 @@ public class MemberInfoService {
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(memberInfo.getUserName()));
 		jedis.close();
-		if(value=="" || value == null) {
+		if (value == "" || value == null) {
 			return new Result(-4, "系统错误", "");
 		}
 		if (value.equals(memberInfo.getVerificationCode())) {
@@ -750,9 +784,9 @@ public class MemberInfoService {
 		int firstRowNum = 0;
 		// 最后一行
 		int lastRowNum = 0;
-		// 参数对象  校验用户名
+		// 参数对象 校验用户名
 		MemberInfo paramUserName = new MemberInfo();
-		// 参数对象  校验手机号
+		// 参数对象 校验手机号
 		MemberInfo paramPhone = new MemberInfo();
 		// 返回信息
 		String result = "";
@@ -820,7 +854,7 @@ public class MemberInfoService {
 						if (m != null) {
 							sb.append("第" + (j + 1) + "行信息出错：手机号已存在,");
 							continue;
-						}else {
+						} else {
 							trainInstitutionInfo.setRegisterTell(registerTell);
 							memberInfo.setTellPhone(registerTell);
 						}
@@ -945,15 +979,15 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写是否为中国残联定点机构信息,");
 						continue;
 					} else {
-						if("是".equals(flag)) {
+						if ("是".equals(flag)) {
 							trainInstitutionInfo.setIsFlag(1);
-						}else if("否".equals(flag)) {
+						} else if ("否".equals(flag)) {
 							trainInstitutionInfo.setIsFlag(0);
-						}else {
+						} else {
 							sb.append("第" + (j + 1) + "行信息出错：是否为中国残联定点机构不合法,");
 							continue;
 						}
-						
+
 					}
 					// 审核状态和状态excel导入都赋值为有效
 					trainInstitutionInfo.setState(1);
@@ -1017,7 +1051,7 @@ public class MemberInfoService {
 						if (m != null) {
 							sb.append("第" + (j + 1) + "行信息出错：手机号已存在,");
 							continue;
-						}else {
+						} else {
 							practitionerInfo.setTellPhone(tellPhone);
 							memberInfo.setTellPhone(tellPhone);
 						}
@@ -1045,13 +1079,13 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写性别信息,");
 						continue;
 					} else {
-						if("男".equals(sex)) {
+						if ("男".equals(sex)) {
 							practitionerInfo.setSex(1);
 							memberInfo.setSex(1);
-						}else if("女".equals(sex)) {
+						} else if ("女".equals(sex)) {
 							practitionerInfo.setSex(0);
 							memberInfo.setSex(0);
-						}else{
+						} else {
 							sb.append("第" + (j + 1) + "行信息出错：性别填写不合法,");
 							continue;
 						}
@@ -1104,7 +1138,7 @@ public class MemberInfoService {
 						} else if ("从业者".equals(state)) {
 							practitionerInfo.setType(2);
 							memberInfo.setRoleType(4);
-						}else {
+						} else {
 							sb.append("第" + (j + 1) + "行信息出错：家长/从业者信息填写不合法,");
 							continue;
 						}
@@ -1115,11 +1149,11 @@ public class MemberInfoService {
 						sb.append("第" + (j + 1) + "行信息出错：请填写是否是个人信息,");
 						continue;
 					} else {
-						if("是".equals(isIndividual)) {
+						if ("是".equals(isIndividual)) {
 							practitionerInfo.setIsIndividual(1);
-						}else if("否".equals(isIndividual)) {
+						} else if ("否".equals(isIndividual)) {
 							practitionerInfo.setIsIndividual(0);
-						}else {
+						} else {
 							sb.append("第" + (j + 1) + "行信息出错：是否是个人信息填写不合法,");
 							continue;
 						}
@@ -1197,22 +1231,24 @@ public class MemberInfoService {
 
 	/**
 	 * 用户证书信息
+	 * 
 	 * @param roleId
 	 * @param roleId
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Result findUserAndCers(Integer roleId, Integer roleType,Integer page,Integer limit) {
-		List<UserAndCerVo> list = memberInfoMapper.selectUserAndCers(roleId, roleType,(page-1)*limit,limit);
+	public Result findUserAndCers(Integer roleId, Integer roleType, Integer page, Integer limit) {
+		List<UserAndCerVo> list = memberInfoMapper.selectUserAndCers(roleId, roleType, (page - 1) * limit, limit);
 		if (list.size() > 0) {
 			return new Result(0, "查询成功", list);
 		} else {
 			return new Result(-1, "查询失败", 0);
 		}
 	}
-	
+
 	/**
 	 * 用户证书信息个数
+	 * 
 	 * @param roleId
 	 * @param roleType
 	 * @return
@@ -1228,7 +1264,8 @@ public class MemberInfoService {
 	}
 
 	/**
-	 * 修改密码 
+	 * 修改密码
+	 * 
 	 * @param memberInfo
 	 * @return
 	 */
@@ -1236,128 +1273,125 @@ public class MemberInfoService {
 		MemberInfo param = new MemberInfo();
 		param.setTellPhone(memberInfo.getTellPhone());
 		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
-		//加密后的password
+		// 加密后的password
 		String password = "";
-		if(m!=null) {
+		if (m != null) {
 			Jedis jedis = jedisPool.getResource();
 			String value = jedis.get("forget_password_".concat(memberInfo.getTellPhone()));
 			jedis.close();
-			if(value==null || value=="") {
+			if (value == null || value == "") {
 				return new Result(-1, "用户不存在", "");
 			}
-			if(!value.equals(memberInfo.getVerificationCode())) {
-				return new Result(-4,"验证码错误","");
+			if (!value.equals(memberInfo.getVerificationCode())) {
+				return new Result(-4, "验证码错误", "");
 			}
 			try {
-				password=Md5Util.getEncryptedPwd(memberInfo.getPassword());
+				password = Md5Util.getEncryptedPwd(memberInfo.getPassword());
 				memberInfo.setPassword(password);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new Result(-2,"密码不合法","");
+				return new Result(-2, "密码不合法", "");
 			}
 			memberInfo.setId(m.getId());
-			//修改员工信息
+			// 修改员工信息
 			memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
-			//1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
+			// 1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
 			int type = m.getRoleType();
 			int id = m.getRoleId();
-			if(2==type) {
-				//创建培训机构对象更新密码   只赋值主键和密码的值
+			if (2 == type) {
+				// 创建培训机构对象更新密码 只赋值主键和密码的值
 				TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
 				trainInstitutionInfo.setId(id);
 				trainInstitutionInfo.setPassword(password);
 				trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
 			}
-			if(3==type || 4==type) {
+			if (3 == type || 4 == type) {
 				PractitionerInfo practitionerInfo = new PractitionerInfo();
 				practitionerInfo.setId(id);
 				practitionerInfo.setPassword(password);
 				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
 			}
-			if(5==type) {
+			if (5 == type) {
 				UserInfo userInfo = new UserInfo();
 				userInfo.setId(id);
 				userInfo.setPassword(password);
 				userInfoMapper.updateByPrimaryKeySelective(userInfo);
 			}
 			return new Result(0, "修改成功", "");
-		}else {
+		} else {
 			return new Result(-2, "系统错误", "");
 		}
 	}
-	
+
 	/**
 	 * 不发送验证码修改密码
+	 * 
 	 * @param tellPhone   手机号
 	 * @param passwordOld 原始密码
 	 * @param passwordNew 修改的新密码
 	 * @param password    输入的原始密码
 	 * @return
 	 */
-	public Result updateUserPwd(String tellPhone,String passwordOld,String passwordNew,String password) {
+	public Result updateUserPwd(String tellPhone, String passwordOld, String passwordNew, String password) {
 		try {
-			if(!Md5Util.validPassword(password, passwordOld)) {
-				return new Result(-1,"原始密码不正确","");
+			if (!Md5Util.validPassword(password, passwordOld)) {
+				return new Result(-1, "原始密码不正确", "");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 		MemberInfo memberInfo = new MemberInfo();
 		MemberInfo param = new MemberInfo();
 		param.setTellPhone(tellPhone);
 		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
 		String pwd = "";
-		if(m!=null) {
+		if (m != null) {
 			try {
-				pwd=Md5Util.getEncryptedPwd(passwordNew);
+				pwd = Md5Util.getEncryptedPwd(passwordNew);
 				memberInfo.setPassword(pwd);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new Result(-2,"密码不合法","");
+				return new Result(-2, "密码不合法", "");
 			}
 			memberInfo.setId(m.getId());
-			//修改员工信息
+			// 修改员工信息
 			memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
-			//1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
+			// 1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
 			int type = m.getRoleType();
 			int id = m.getRoleId();
-			if(2==type) {
-				//创建培训机构对象更新密码   只赋值主键和密码的值
+			if (2 == type) {
+				// 创建培训机构对象更新密码 只赋值主键和密码的值
 				TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
 				trainInstitutionInfo.setId(id);
 				trainInstitutionInfo.setPassword(pwd);
 				trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
 			}
-			if(3==type || 4==type) {
+			if (3 == type || 4 == type) {
 				PractitionerInfo practitionerInfo = new PractitionerInfo();
 				practitionerInfo.setId(id);
 				practitionerInfo.setPassword(pwd);
 				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
 			}
-			if(5==type) {
+			if (5 == type) {
 				UserInfo userInfo = new UserInfo();
 				userInfo.setId(id);
 				userInfo.setPassword(pwd);
 				userInfoMapper.updateByPrimaryKeySelective(userInfo);
 			}
 			return new Result(0, "修改成功", "");
-		}else {
+		} else {
 			return new Result(-2, "系统错误", "");
 		}
 	}
-	
-	
+
 	/**
-	 * wyj add   20200630
-	 * 普通用户更换为家长/从业者
-	 * 1：添加家长从业者
-	 * 2：更新员工表记录
-	 * 3：删除普通用户表信息
+	 * wyj add 20200630 普通用户更换为家长/从业者 1：添加家长从业者 2：更新员工表记录 3：删除普通用户表信息
+	 * 
 	 * @param practitionerInfo
 	 * @return
 	 */
 	public Result setRoleUserToPra(PractitionerInfo practitionerInfo) {
-		//用户名和手机号
+		// 用户名和手机号
 		String tellPhone = practitionerInfo.getTellPhone();
 		String userName = practitionerInfo.getUserName();
 		// 通过用户名和手机号获取用户信息
@@ -1372,18 +1406,18 @@ public class MemberInfoService {
 		if (m == null) {
 			return new Result(-1, "此用户信息不存在，无法更换注册身份", "");
 		}
-		//普通员工的id     查询普通员工的信息
+		// 普通员工的id 查询普通员工的信息
 		Integer id = m.getRoleId();
-		UserInfo userInfo=userInfoMapper.selectByPrimaryKey(id);
-		if(userInfo==null) {
+		UserInfo userInfo = userInfoMapper.selectByPrimaryKey(id);
+		if (userInfo == null) {
 			return new Result(-1, "此用户信息不存在，无法更换注册身份", "");
 		}
-		//首次注册状态为有效
+		// 首次注册状态为有效
 		practitionerInfo.setState(1);
-		//密码获取员工表的用户密码
+		// 密码获取员工表的用户密码
 		practitionerInfo.setPassword(userInfo.getPassword());
-		//添加家长/从业者操作
-		int i= practitionerInfoMapper.insertSelective(practitionerInfo);
+		// 添加家长/从业者操作
+		int i = practitionerInfoMapper.insertSelective(practitionerInfo);
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setUserName(practitionerInfo.getUserName());
 		memberInfo.setPassword(practitionerInfo.getPassword());
@@ -1407,20 +1441,20 @@ public class MemberInfoService {
 		if (2 == practitionerInfo.getType()) {
 			memberInfo.setRoleType(4);
 		}
-		//添加员工档案操作
+		// 添加员工档案操作
 		i += memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
-		//删除普通用户操作
-		i +=userInfoMapper.deleteByPrimaryKey(id);
-		//返回一个session里面的用户信息
+		// 删除普通用户操作
+		i += userInfoMapper.deleteByPrimaryKey(id);
+		// 返回一个session里面的用户信息
 		MemberInfoVo memberVo = new MemberInfoVo();
-		memberVo.setRoleId(memberInfo.getRoleId());//角色id
-		memberVo.setName(memberInfo.getUserName());//用户名
-		memberVo.setPhoto(memberInfo.getPhoto());//头像
-		memberVo.setRoleType(memberInfo.getRoleType());//角色类型
-		memberVo.setTellPhone(memberInfo.getTellPhone());//手机号
-		if(i>2) {
+		memberVo.setRoleId(memberInfo.getRoleId());// 角色id
+		memberVo.setName(memberInfo.getUserName());// 用户名
+		memberVo.setPhoto(memberInfo.getPhoto());// 头像
+		memberVo.setRoleType(memberInfo.getRoleType());// 角色类型
+		memberVo.setTellPhone(memberInfo.getTellPhone());// 手机号
+		if (i > 2) {
 			return new Result(0, "更换成功", memberVo);
-		}else {
+		} else {
 			return new Result(-1, "更换失败", "");
 		}
 	}

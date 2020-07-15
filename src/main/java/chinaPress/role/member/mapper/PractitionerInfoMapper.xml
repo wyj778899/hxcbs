@@ -40,13 +40,33 @@
     <result column="ethnic" jdbcType="VARCHAR" property="ethnic" />
     <result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
     <result column="mailing_address" jdbcType="VARCHAR" property="mailingAddress" />
+    <result column="grade" jdbcType="DECIMAL" property="grade" />
   </resultMap>
+  
+  <!--教师对应多个证书信息返回  -->
+  <resultMap id="teaCerMap" type="chinaPress.role.member.vo.TeacherCerInfos">
+	    <result column="name" jdbcType="VARCHAR" property="teaName" />
+	    <result column="head" jdbcType="VARCHAR" property="head" />
+	    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+	    <result column="source" jdbcType="DECIMAL" property="source"/>
+	    <collection property="certs" ofType="chinaPress.role.member.vo.CertInfo">
+	    	<id column="id" jdbcType="INTEGER" property="certId"/>
+	    	<result column="cert_photo" jdbcType="VARCHAR" property="certPhoto" />
+		    <result column="cert_name" jdbcType="VARCHAR" property="certName" />
+		    <result column="grade" jdbcType="VARCHAR" property="grade" />
+		    <result column="cert_code" jdbcType="VARCHAR" property="certCode" />
+		    <result column="cert_type" jdbcType="VARCHAR" property="certType" />
+		    <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
+		    <result column="test_address" jdbcType="VARCHAR" property="tetsAddress" />
+	    </collection>
+  </resultMap>
+  
   <sql id="Base_Column_List">
     id, user_name, `password`, `name`, tell_phone, email, certificate_number, sex, provice, 
     city, area, address, `type`, is_individual, institution_id, `state`, create_id, create_time, 
     update_id, update_time, enterprise_code,institution_name,real_name,birthday_time,user_head
     , age, certificate_type, post, work_year, census_address, institution_address, education
-    , ethnic, native_place, mailing_address
+    , ethnic, native_place, mailing_address,grade
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -288,6 +308,9 @@
 	   	<if test="mailingAddress != null">
 	   		mailing_address,
 	   	</if>
+	   	<if test="grade != null">
+	   		grade,
+	   	</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -386,15 +409,18 @@
       <if test="education != null">
       	#{education},
       </if>
-      	<if test="ethnic != null">
+      <if test="ethnic != null">
 	   		#{ethnic},
-	   	</if>
-	   	<if test="nativePlace != null">
-	   		#{nativePlace},
-	   	</if>
-	   	<if test="mailingAddress != null">
-	   		#{mailingAddress},
-	   	</if>
+   	  </if>
+   	  <if test="nativePlace != null">
+   		    #{nativePlace},
+   	  </if>
+   	  <if test="mailingAddress != null">
+   		    #{mailingAddress},
+   	  </if>
+   	  <if test="grade != null">
+   		    #{grade},
+   	  </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
           SELECT LAST_INSERT_ID()
@@ -499,14 +525,182 @@
       </if>
       <if test="ethnic != null">
 	   		ethnic = #{ethnic},
-	   	</if>
-	   	<if test="nativePlace != null">
+	  </if>
+	  <if test="nativePlace != null">
 	   		native_place = #{nativePlace},
-	   	</if>
-	   	<if test="mailingAddress != null">
+	  </if>
+	  <if test="mailingAddress != null">
 	   		mailing_address = #{mailingAddress},
-	   	</if>
+	  </if>
+	  <if test="grade != null">
+	   		grade = #{grade},
+	  </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 项目查询-教师成绩信息 -->
+  <select id="selectTeacherAndScore" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherScoreVo">
+	select
+	    a.id as teaId,
+		a.name as name,
+		a.certificate_number as certificateNumber,
+		b.id as cerId,
+		b.grade as grade
+	from 
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where     a.id = b.role_id 
+	      and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name} 
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and a.certificate_number = #{certificateNumber}
+	    </if>
+	limit #{page} , #{limit}   
+  </select>
+  
+  <!-- 项目查询-教师成绩信息个数 -->
+  <select id="selectTeacherAndScoreCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
+	select
+		count(*)
+	from
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where 	  a.id = b.role_id 
+		  and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name}
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and a.certificate_number = #{certificateNumber}
+	    </if>
+  </select>
+  
+  <!-- 项目查询-教师证书信息-->
+  <select id="selectTeacherAndCert" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherCertVo">
+	select
+	    a.id as teaId,
+		a.name as name,
+		a.certificate_number as certificateNumber,
+		case when b.certificate_type = 1 then '教师资格证'
+             when b.certificate_type = 2 then '学历证书'
+			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as typeName,
+	    b.id as cerId,
+		b.code as certCode,
+		b.certificate_time as certificateTime
+	from 
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where     a.id = b.role_id 
+	      and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name}
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and (
+		   			a.certificate_number = #{certificateNumber}
+		   			or
+		   			b.code = #{certificateNumber}
+	   			)
+	    </if>
+	limit #{page} , #{limit}    
+  </select>
+  
+  <!-- 项目查询-教师证书信息个数 -->
+  <select id="selectTeacherAndCertCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
+	select
+		count(*)
+	from
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where 	  a.id = b.role_id 
+		  and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name}
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and (
+		   			a.certificate_number = #{certificateNumber}
+		   			or
+		   			b.code = #{certificateNumber}
+	   			)
+	    </if>
+  </select>
+  
+  <!-- 认证教师  查询教师信息 -->
+  <select id="selectTeacherAndCertInfos" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherAndCertVo">
+	select
+	    a.id as teaId,
+		a.name as name,
+		a.certificate_number as certificateNumber,
+		a.sex as sex,
+		b.id as cerId,
+		b.code as certCode,
+		b.certificate_time as certificateTime
+	from 
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where     a.id = b.role_id 
+	      and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name}
+	    </if>
+	    <if test="type !=null">
+	   		and b.certificate_type = #{type}
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and a.certificate_number = #{certificateNumber}
+	    </if>
+	limit #{page} , #{limit}  
+  </select>
+  
+  <!-- 认证教师 查询教师个数 -->
+  <select id="selectTeacherAndCertInfosCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
+	select
+	    count(*)
+	from 
+		role_practitioner_archives a,
+		fc_certificate_archives b
+	where     a.id = b.role_id 
+	      and a.type = 2
+		<if test="name !=null and name !=''">
+	   		and a.name = #{name}
+	    </if>
+	    <if test="type !=null">
+	   		and b.certificate_type = #{type}
+	    </if>
+	    <if test="certificateNumber !=null and certificateNumber !=''">
+	   		and a.certificate_number = #{certificateNumber}
+	    </if>
+  </select>
+  
+  <!-- 教师详情信息   展示所有的证书 考试地址，分数，发证日期,证书名称-->
+  <select id="selectTeacherByCers" parameterType="java.lang.Integer" resultMap="teaCerMap">
+	select
+	  a.user_head as head,
+	  a.name as name,
+	  a.certificate_number as certificate_number,
+	  a.grade as source,
+	  b.id as id,
+	  b.certificate_time as certificate_time,
+	  case when b.certificate_type=1 then '教师资格证'
+		when b.certificate_type=2 then '学历证书'
+		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as cert_name,
+	  b.certificate_type as cert_type,
+	  b.photo as cert_photo,
+	  b.code as cert_code,
+	  b.grade as grade,
+	  b.test_address as test_address
+	from 
+	    role_practitioner_archives a,
+		fc_certificate_archives b 
+	where     a.id = b.role_id 
+	      and a.type = 2
+	    <if test="teaId !=null">
+	   		and a.id = #{teaId}
+	    </if>
+  </select>
+  
 </mapper>

@@ -1,5 +1,6 @@
 package chinaPress.role.member.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -93,6 +94,11 @@ public class PractitionerInfo {
 	 * 详细地址
 	 */
 	private String address;
+	
+	/**
+	 * 分数
+	 */
+	private BigDecimal grade;
 
 	/**
 	 * 1.家长2.从业者
@@ -198,6 +204,15 @@ public class PractitionerInfo {
 	 * 邮寄地址
 	 */
 	private String mailingAddress;
+	
+
+	public BigDecimal getGrade() {
+		return grade;
+	}
+
+	public void setGrade(BigDecimal grade) {
+		this.grade = grade;
+	}
 
 	public String getRealName() {
 		return realName;

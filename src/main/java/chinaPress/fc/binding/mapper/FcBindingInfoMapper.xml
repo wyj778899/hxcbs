@@ -158,7 +158,7 @@
 			a.institution_id = #{institutionId}
 			and a.binding_role_type = #{bindingRoleType}
 			and a.reply_status in (1, 2, 3)
-			<if test="name != null">
+			<if test="name != null and name != ''">
 				and b.name like concat('%', #{name} ,'%')
 			</if>
 	</select>
@@ -176,7 +176,7 @@
 			a.institution_id = #{institutionId}
 			and a.binding_role_type = #{bindingRoleType}
 			and a.reply_status in (1, 2, 3)
-			<if test="name != null">
+			<if test="name != null and name != ''">
 				and b.name like concat('%', #{name} ,'%')
 			</if>
 		limit

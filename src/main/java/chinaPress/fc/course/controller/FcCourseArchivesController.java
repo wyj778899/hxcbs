@@ -23,12 +23,14 @@ public class FcCourseArchivesController {
 	/**
 	 * 根据分类id查询关联课程
 	 * 
-	 * @param categoryId
+	 * @param categoryId 课程分类id
+	 * @param roleId     角色id
+	 * @param roleType   角色类型
 	 * @return
 	 */
 	@RequestMapping("selectCourseByCategoryId")
-	public Result selectCourseByCategoryId(Integer categoryId) {
-		List<CourseArchivesNewVo> data = fcCourseArchivesService.selectCourseByCategoryId(categoryId);
+	public Result selectCourseByCategoryId(Integer categoryId, Integer roleId, Integer roleType) {
+		List<CourseArchivesNewVo> data = fcCourseArchivesService.selectCourseByCategoryId(categoryId, roleId, roleType);
 		if (data.size() > 0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}

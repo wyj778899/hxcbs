@@ -169,12 +169,93 @@ public class TrainInstitutionInfo {
      */
     private String registerPost;
     
+    /**
+     * 业务范围
+     */
+    private String scopeBusiness;
+    
+    /**
+     * 机构简介
+     */
+    private String orgProfile;
+    
+    /**
+     * 服务内容
+     */
+    private String serviceContent;
+    
+    /**
+     * 办学特色
+     */
+    private String schoolStyle;
+    
+    /**
+     * 教师队伍
+     */
+    private String teacherRanks;
+    
+    /**
+     * 其他展示
+     */
+    private String otherReveal;
+    
+    
 	/**
      * 是否为中国残联定点机构
      */
     private Integer isFlag;
     
-    public String getRegisterPost() {
+    
+    
+    public String getScopeBusiness() {
+		return scopeBusiness;
+	}
+
+	public void setScopeBusiness(String scopeBusiness) {
+		this.scopeBusiness = scopeBusiness;
+	}
+
+	public String getOrgProfile() {
+		return orgProfile;
+	}
+
+	public void setOrgProfile(String orgProfile) {
+		this.orgProfile = orgProfile;
+	}
+
+	public String getServiceContent() {
+		return serviceContent;
+	}
+
+	public void setServiceContent(String serviceContent) {
+		this.serviceContent = serviceContent;
+	}
+
+	public String getSchoolStyle() {
+		return schoolStyle;
+	}
+
+	public void setSchoolStyle(String schoolStyle) {
+		this.schoolStyle = schoolStyle;
+	}
+
+	public String getTeacherRanks() {
+		return teacherRanks;
+	}
+
+	public void setTeacherRanks(String teacherRanks) {
+		this.teacherRanks = teacherRanks;
+	}
+
+	public String getOtherReveal() {
+		return otherReveal;
+	}
+
+	public void setOtherReveal(String otherReveal) {
+		this.otherReveal = otherReveal;
+	}
+
+	public String getRegisterPost() {
 		return registerPost;
 	}
 

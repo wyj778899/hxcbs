@@ -3,6 +3,7 @@ package chinaPress.fc.order.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.order.model.FcOrder;
@@ -92,4 +93,16 @@ public interface FcOrderMapper {
 	 * @return
 	 */
 	TerminalSubmitOrderDetailVo findTerminalSubmitOrderDetail(Integer id);
+
+	/**
+	 * 判断当前这个课程当前报名人是否正在学习中
+	 * 
+	 * @author maguoliang
+	 * @param roleId   角色id
+	 * @param roleType 角色类型
+	 * @param courseId 课程id
+	 * @return
+	 */
+	FcOrder selectCourseIsLearning(@Param("roleId") Integer roleId, @Param("roleType") Integer roleType,
+			@Param("courseId") Integer courseId);
 }

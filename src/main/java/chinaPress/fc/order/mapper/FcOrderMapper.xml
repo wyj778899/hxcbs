@@ -61,6 +61,15 @@
 			property="paymentMode" />
 		<result column="third_party_no" jdbcType="VARCHAR"
 			property="thirdPartyNo" />
+		<!-- 20200713  wyj add -->
+		<result column="bank_deposit" jdbcType="VARCHAR"
+			property="bankDeposit" />
+		<result column="bank_number" jdbcType="VARCHAR"
+			property="bankNumber" />
+		<result column="remarks" jdbcType="VARCHAR"
+			property="remarks" />
+		<result column="email" jdbcType="VARCHAR"
+		property="email" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `date`, code, role_type, role_id, course_id, start_time, end_time,
@@ -71,7 +80,7 @@
 		, invoice_type , invoice_title, invoice_number, invoice_details,
 		consignee_name
 		, consignee_area, consignee_address, consignee_phone, payment_mode,
-		third_party_no
+		third_party_no,bank_deposit,bank_number,remarks,email
 	</sql>
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -166,6 +175,10 @@
 			<if test="consigneePhone != null">consignee_phone,</if>
 			<if test="paymentMode != null">payment_mode,</if>
 			<if test="thirdPartyNo != null">third_party_no,</if>
+			<if test="bankDeposit != null">bank_deposit,</if>
+			<if test="bankNumber != null">bank_number,</if>
+			<if test="remarks != null">remarks,</if>
+			<if test="email != null">email,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -241,6 +254,10 @@
 			<if test="consigneePhone != null">#{consigneePhone},</if>
 			<if test="paymentMode != null">#{paymentMode},</if>
 			<if test="thirdPartyNo != null">#{thirdPartyNo},</if>
+			<if test="bankDeposit != null">#{bankDeposit},</if>
+			<if test="bankNumber != null">#{bankNumber},</if>
+			<if test="remarks != null">#{remarks},</if>
+			<if test="email != null">#{email},</if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -317,6 +334,10 @@
 			<if test="consigneePhone != null">consignee_phone = #{consigneePhone},</if>
 			<if test="paymentMode != null">payment_mode = #{paymentMode},</if>
 			<if test="thirdPartyNo != null">third_party_no = #{thirdPartyNo},</if>
+			<if test="bankDeposit != null">bank_deposit = #{bankDeposit},</if>
+			<if test="bankNumber != null">bank_number = #{bankNumber},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+			<if test="email != null">email = #{email},</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -349,7 +370,8 @@
 			b.course_price AS coursePrice,
 			b.course_number AS courseNumber,
 			a.pay_status AS payStatus,
-			a.create_time createTime
+			a.create_time createTime,
+			a.pay_amount payAmount
 		FROM
 			fc_order a
 		LEFT JOIN fc_course_archives b ON b.id = a.course_id
@@ -477,6 +499,7 @@
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
 			AND a.course_id = #{courseId}
+		ORDER BY update_time DESC
 		LIMIT 1
 	</select>
 
@@ -524,13 +547,31 @@
 			a.consignee_name AS consigneeName,
 			a.consignee_area AS consigneeArea,
 			a.consignee_address AS consigneeAddress,
-			a.consignee_phone AS
-			consigneePhone
+			a.consignee_phone AS consigneePhone,
+			a.bank_deposit AS bankDeposit,
+			a.bank_number AS bankNumber,
+			a.remarks AS remarks,
+			a.email AS email
 		FROM
 			fc_order a
 		INNER JOIN fc_course_archives b ON b.id = a.course_id
 		LEFT JOIN fc_discount_coupon_record c ON c.id = a.coupon_id
 		WHERE
 			a.id = #{id}
+	</select>
+	
+	<!-- 判断当前这个课程当前报名人是否正在学习中 -->
+	<select id="selectCourseIsLearning" resultMap="BaseResultMap">
+		select
+			a.*
+		from
+			fc_order a
+		inner join fc_order_person b on a.id = b.order_id
+		where
+			a.course_id = #{courseId}
+			and a.start_time <![CDATA[<=]]> now()
+			and now() <![CDATA[<=]]> a.end_time
+			and b.role_type = #{roleType}
+			and b.role_id = #{roleId}
 	</select>
 </mapper>

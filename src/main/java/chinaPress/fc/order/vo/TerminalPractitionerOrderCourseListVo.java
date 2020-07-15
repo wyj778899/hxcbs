@@ -16,7 +16,7 @@ public class TerminalPractitionerOrderCourseListVo {
 	 * 课程封面
 	 */
 	private String photo;
-	
+
 	/**
 	 * 课程名称
 	 */
@@ -53,6 +53,11 @@ public class TerminalPractitionerOrderCourseListVo {
 	 * 状态：1.学习中，2.已完成
 	 */
 	private Integer status;
+
+	/**
+	 * 正在学习的课时id
+	 */
+	private Integer learningHourId;
 
 	public Integer getId() {
 		return id;
@@ -124,5 +129,19 @@ public class TerminalPractitionerOrderCourseListVo {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	/**
+	 * 获取：learningHourId
+	 */
+	public Integer getLearningHourId() {
+		return learningHourId;
+	}
+
+	/**
+	 * 设置：learningHourId
+	 */
+	public void setLearningHourId(Integer learningHourId) {
+		this.learningHourId = learningHourId;
 	}
 }

@@ -21,6 +21,11 @@ public class FcApplyPersonParam {
 	 * 性别（1.男2.女）
 	 */
 	private Integer sex;
+	
+	/**
+	 * 年龄
+	 */
+	private Integer age;
 
 	/**
 	 * 民族
@@ -41,7 +46,7 @@ public class FcApplyPersonParam {
 	 * 工作年限
 	 */
 	private Integer workYear;
-	
+
 	/**
 	 * 籍贯
 	 */
@@ -56,7 +61,7 @@ public class FcApplyPersonParam {
 	 * 单位地址
 	 */
 	private String institutionAddress;
-	
+
 	/**
 	 * 邮寄地址
 	 */
@@ -71,11 +76,16 @@ public class FcApplyPersonParam {
 	 * 机构名称
 	 */
 	private String institutionName;
-	
+
 	/**
 	 * 角色类型（1.家长2.从业者）
 	 */
 	private Integer roleType;
+
+	/**
+	 * 数据错误类型0.正确1.课程正在学习中，不可报名2.该手机号用户为机构角色，不可报名3.该手机号为注册用户角色，不可报名
+	 */
+	private Integer errorType;
 
 	public Integer getRoleType() {
 		return roleType;
@@ -195,5 +205,33 @@ public class FcApplyPersonParam {
 
 	public void setMailingAddress(String mailingAddress) {
 		this.mailingAddress = mailingAddress;
+	}
+
+	/**
+	 * 获取：errorType
+	 */
+	public Integer getErrorType() {
+		return errorType;
+	}
+
+	/**
+	 * 设置：errorType
+	 */
+	public void setErrorType(Integer errorType) {
+		this.errorType = errorType;
+	}
+
+	/**
+	 * 获取：age
+	 */
+	public Integer getAge() {
+		return age;
+	}
+
+	/**
+	 * 设置：age
+	 */
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 }

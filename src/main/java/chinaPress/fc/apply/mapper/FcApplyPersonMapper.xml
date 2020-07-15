@@ -1,151 +1,168 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chinaPress.fc.apply.dao.FcApplyPersonMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.apply.model.FcApplyPerson">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
-    <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="role_type" jdbcType="INTEGER" property="roleType" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, apply_id, role_id, role_type, create_id, create_time, update_id, update_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_apply_person
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  
-  <select id="findByApplyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_apply_person
-    where apply_id = #{applyId,jdbcType=INTEGER}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_apply_person
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.apply.model.FcApplyPerson">
-    insert into fc_apply_person
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="applyId != null">
-        apply_id,
-      </if>
-      <if test="roleId != null">
-        role_id,
-      </if>
-      <if test="roleType != null">
-        role_type,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="applyId != null">
-        #{applyId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        #{roleType,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.apply.model.FcApplyPerson">
-    update fc_apply_person
-    <set>
-      <if test="applyId != null">
-        apply_id = #{applyId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        role_id = #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        role_type = #{roleType,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <!-- 终端 数据数量 -->
-  <select id="findTerminalCount" resultType="int"
-  	parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
-  	SELECT
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.apply.model.FcApplyPerson">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="apply_id" jdbcType="INTEGER" property="applyId" />
+		<result column="role_id" jdbcType="INTEGER" property="roleId" />
+		<result column="role_type" jdbcType="INTEGER"
+			property="roleType" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, apply_id, role_id, role_type, create_id, create_time, update_id,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_apply_person
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByApplyId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_apply_person
+		where apply_id = #{applyId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_apply_person
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.apply.model.FcApplyPerson">
+		insert into fc_apply_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="applyId != null">
+				apply_id,
+			</if>
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="roleType != null">
+				role_type,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="applyId != null">
+				#{applyId,jdbcType=INTEGER},
+			</if>
+			<if test="roleId != null">
+				#{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.apply.model.FcApplyPerson">
+		update fc_apply_person
+		<set>
+			<if test="applyId != null">
+				apply_id = #{applyId,jdbcType=INTEGER},
+			</if>
+			<if test="roleId != null">
+				role_id = #{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				role_type = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 终端 数据数量 -->
+	<select id="findTerminalCount" resultType="int"
+		parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
+		SELECT
 		count(*)
-	FROM
+		FROM
 		fc_apply_person a
-	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
-	WHERE a.apply_id = #{applyId}
-	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
-  </select>
-  
-  <!-- 终端 数据集合 -->
-  <select id="findTerminalList" resultType="chinaPress.fc.apply.vo.TerminalApplyPersonListVo"
-  	parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
-  	SELECT
-		a.id,
-		b.`name`,
-		b.tell_phone AS tellPhone,
-		b.sex AS sex,
-		b.certificate_number AS certificateNumber,
-		b.age as age,
-		b.work_year as workYear,
-		b.census_address as censusAddress,
-		b.post as post,
-		b.education AS education
-	FROM
-		fc_apply_person a
-	LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
-	WHERE a.apply_id = #{applyId}
-	<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
-	<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
-  </select>
+		LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
+		WHERE a.apply_id = #{applyId}
+		<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+	</select>
+
+	<!-- 终端 数据集合 -->
+	<select id="findTerminalList"
+		resultType="chinaPress.fc.apply.vo.TerminalApplyPersonListVo"
+		parameterType="chinaPress.fc.apply.vo.TerminalApplyPersonListParam">
+		SELECT
+			a.id,
+			b.`name`,
+			b.sex AS sex,
+			b.ethnic,
+			b.education AS education,
+			b.certificate_number AS certificateNumber,
+			b.tell_phone AS tellPhone,
+			b.post as post,
+			b.work_year as workYear,
+			b.native_place nativePlace,
+			b.census_address as censusAddress,
+			b.institution_address institutionAddress,
+			b.mailing_address mailingAddress
+		FROM
+			fc_apply_person a
+		LEFT JOIN role_practitioner_archives b ON b.id = a.role_id
+		WHERE
+			a.apply_id = #{applyId}
+			<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
+			<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
+	</select>
 </mapper>

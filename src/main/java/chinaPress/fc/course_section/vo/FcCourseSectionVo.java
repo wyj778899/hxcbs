@@ -27,6 +27,14 @@ public class FcCourseSectionVo {
 	 * 时长
 	 */
 	private String duration;
+	/**
+	 * 有没有小节题
+	 */
+	private Integer isHaveQuestion;
+	/**
+	 * 该章节视频是否看过，无论考试是否通过
+	 */
+	private Integer isWatch;
 
 	private List<FcCourseSectionVo> children;
 
@@ -112,6 +120,34 @@ public class FcCourseSectionVo {
 	 */
 	public void setDuration(String duration) {
 		this.duration = duration;
+	}
+
+	/**
+	 * 获取：isHaveQuestion
+	 */
+	public Integer getIsHaveQuestion() {
+		return isHaveQuestion;
+	}
+
+	/**
+	 * 设置：isHaveQuestion
+	 */
+	public void setIsHaveQuestion(Integer isHaveQuestion) {
+		this.isHaveQuestion = isHaveQuestion;
+	}
+
+	/**
+	 * 获取：isWatch
+	 */
+	public Integer getIsWatch() {
+		return isWatch;
+	}
+
+	/**
+	 * 设置：isWatch
+	 */
+	public void setIsWatch(Integer isWatch) {
+		this.isWatch = isWatch;
 	}
 
 	/**

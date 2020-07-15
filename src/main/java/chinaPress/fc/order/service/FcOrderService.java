@@ -13,6 +13,7 @@ import chinaPress.common.util.DateUtil;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.order.dao.FcOrderBookMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
@@ -82,6 +83,7 @@ public class FcOrderService {
 
 	/**
 	 * 需要修改支付状态为已关闭的订单
+	 * 
 	 * @author maguoliang
 	 * @param idList
 	 */
@@ -132,6 +134,10 @@ public class FcOrderService {
 			if (item.getEndTime().getTime() < current_date.getTime()) {
 				item.setStatus(3);
 			}
+			// 判断当前这个课程当前报名人正在学习中的课时id
+			Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(),
+					param.getRoleId(), param.getRoleType());
+			item.setLearningHourId(fcOrderPersonHour);
 		}
 		return data;
 	}
@@ -219,6 +225,7 @@ public class FcOrderService {
 		}
 		int index = fcOrderMapper.updateByPrimaryKeySelective(record);
 		if (index > 0) {
+			fcOrderBookMapper.deleteByOrderId(record.getId());
 			if (bookIdsStr != null && !bookIdsStr.equals("")) {
 				String[] bookIds = bookIdsStr.split(",");
 				for (String bookId : bookIds) {
@@ -337,5 +344,18 @@ public class FcOrderService {
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
 		}
 		return detail;
+	}
+
+	/**
+	 * 判断当前这个课程当前报名人是否正在学习中
+	 * 
+	 * @author maguoliang
+	 * @param roleId   角色id
+	 * @param roleType 角色类型
+	 * @param courseId 课程id
+	 * @return
+	 */
+	public FcOrder selectCourseIsLearning(Integer roleId, Integer roleType, Integer courseId) {
+		return fcOrderMapper.selectCourseIsLearning(roleId, roleType, courseId);
 	}
 }

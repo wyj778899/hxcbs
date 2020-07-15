@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,6 +26,9 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
+import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.service.FcOrderService;
+import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.service.MemberInfoService;
 
 @RequestMapping("import")
@@ -36,6 +41,9 @@ public class ImportController {
 	@Autowired
 	private MemberInfoService memberInfoService;
 
+	@Autowired
+	private FcOrderService fcOrderService;
+
 	/**
 	 * 导入机构学员读取信息
 	 * 
@@ -45,7 +53,7 @@ public class ImportController {
 	 */
 	@RequestMapping("institutionsStudents")
 	public Result institutionsStudents(HttpServletRequest request,
-			@RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+			@RequestParam(value = "file", required = false) MultipartFile multipartFile, Integer courseId) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String fileName = multipartFile.getOriginalFilename();
 		File file = new File(fileName);
@@ -56,6 +64,12 @@ public class ImportController {
 		if (prefix.equals("xlsx")) {
 			// 老师数量
 			Integer teacherNumber = 0;
+			// 机构名称
+			String name = "";
+			// 申请数量
+			Integer applyNumber = 0;
+			// 错误信息
+			String errorMsg = "";
 			try {
 				InputStream is = multipartFile.getInputStream();
 				@SuppressWarnings("resource")
@@ -73,74 +87,189 @@ public class ImportController {
 
 					for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
+//						if (!isAllRowEmpty(xssfRow, xssfSheet.getRow(0))) {
 						if (xssfRow != null) {
-							FcApplyPersonParam model = new FcApplyPersonParam();
-							// 姓名
-							model.setName(ExcelUtil.formatCell4(xssfRow.getCell(0)));
-							// 性别
-							String sex = ExcelUtil.formatCell6(xssfRow.getCell(1));
-							if (sex != null && !sex.trim().equals("")) {
-								if (sex.trim().equals("女")) {
-									model.setSex(2);
-								} else {
-									model.setSex(1);
+							// 报名机构信息
+							if (rowNum < 4) {
+								// 机构名称
+								if (rowNum == 1) {
+									if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(4)))) {
+										errorMsg += "机构名称不能为空；";
+									} else {
+										name = ExcelUtil.formatCell4(xssfRow.getCell(4));
+									}
 								}
-							} else {
-								model.setSex(1);
+								// 机构教师总人数，申请报名总人数
+								if (rowNum == 2) {
+									if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(4)))) {
+										errorMsg += "机构教师总人数不能为空；";
+									} else {
+										teacherNumber = Integer.parseInt(ExcelUtil.formatCell6(xssfRow.getCell(4)));
+									}
+									if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(8)))) {
+										errorMsg += "申请报名总人数不能为空；";
+									} else {
+										applyNumber = Integer.parseInt(ExcelUtil.formatCell6(xssfRow.getCell(8)));
+									}
+								}
 							}
-							// 民族
-							model.setEthnic(ExcelUtil.formatCell6(xssfRow.getCell(2)));
+							if (rowNum >= 4) {
+								FcApplyPersonParam model = new FcApplyPersonParam();
+								model.setErrorType(0);
+								// 姓名
+								if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(0)))) {
+									errorMsg += "第"+(rowNum+1)+"行姓名不能为空；";
+								} else {
+									model.setName(ExcelUtil.formatCell4(xssfRow.getCell(0)));
+								}
+								
+								// 性别
+								if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(1)))) {
+									errorMsg += "第"+(rowNum+1)+"行性别不能为空；";
+								} else {
+									String sex = ExcelUtil.formatCell6(xssfRow.getCell(1));
+									if (sex != null && !sex.trim().equals("")) {
+										if (sex.trim().equals("女")) {
+											model.setSex(2);
+										} else {
+											model.setSex(1);
+										}
+									} else {
+										model.setSex(1);
+									}
+								}
+								// 年龄
+								if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(2)))) {
+									errorMsg += "第"+(rowNum+1)+"行年龄不能为空；";
+								} else {
+									model.setAge(Integer.parseInt(ExcelUtil.formatCell6(xssfRow.getCell(2))));
+								}
 
-							// 学历
-							model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
+								// 学历
+								if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(3)))) {
+									errorMsg += "第"+(rowNum+1)+"行学历不能为空；";
+								} else {
+									model.setEducation(ExcelUtil.formatCell4(xssfRow.getCell(3)));
+								}
 
-							// 身份账号
-							model.setCertificateNumber(ExcelUtil.formatCell6(xssfRow.getCell(4)));
+								// 身份账号
+								if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(4)))) {
+									errorMsg += "第"+(rowNum+1)+"行身份证号不能为空；";
+								} else {
+									model.setCertificateNumber(ExcelUtil.formatCell6(xssfRow.getCell(4)));
+								}
 
-							// 手机号
-							String tellPhone = ExcelUtil.formatCell6(xssfRow.getCell(5));
-							if (tellPhone != null && !tellPhone.equals("")) {
-								teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
+								// 手机号
+								if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(5)))) {
+									errorMsg += "第"+(rowNum+1)+"行手机号不能为空；";
+								} else {
+									String tellPhone = ExcelUtil.formatCell6(xssfRow.getCell(5));
+									MemberInfo memberParam = new MemberInfo();
+									memberParam.setTellPhone(tellPhone);
+									MemberInfo memberInfo = memberInfoService.selectByPrimaryKey(memberParam);
+									// 当前报名的手机号存在了
+									if (memberInfo != null) {
+										if (memberInfo.getRoleType().intValue() == 2) {
+											model.setErrorType(2);
+										}
+										if (memberInfo.getRoleType().intValue() == 5) {
+											model.setErrorType(3);
+										}
+										if (memberInfo.getRoleType().intValue() == 3
+												|| memberInfo.getRoleType().intValue() == 4) {
+											// 判断该手机号用户是否正在学习该课程中
+											FcOrder fcOrder = fcOrderService.selectCourseIsLearning(memberInfo.getRoleId(),
+													memberInfo.getRoleType() == 3 ? 1 : (memberInfo.getRoleType() == 4 ? 2 : 0), courseId);
+											if (fcOrder != null) {
+												model.setErrorType(1);
+											}
+										}
+									}
+									if (tellPhone != null && !tellPhone.equals("")) {
+										teacherNumber += memberInfoService.findPractitionerByTellPhone(tellPhone.trim());
+									}
+									model.setTellPhone(tellPhone);
+								}
+								// 岗位
+								if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(6)))) {
+									errorMsg += "第"+(rowNum+1)+"行岗位不能为空；";
+								} else {
+									model.setPost(ExcelUtil.formatCell4(xssfRow.getCell(6)));
+								}
+
+								// 工作年限
+								if (StringUtils.isBlank(ExcelUtil.formatCell6(xssfRow.getCell(7)))) {
+									errorMsg += "第"+(rowNum+1)+"行工作年限不能为空；";
+								} else {
+									String workYear = ExcelUtil.formatCell6(xssfRow.getCell(7));
+									if (workYear != null && !workYear.trim().equals("")) {
+										model.setWorkYear(Integer.parseInt(workYear));
+									} else {
+										model.setWorkYear(0);
+									}
+								}
+								// 户籍所在省市
+								if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(8)))) {
+									errorMsg += "第"+(rowNum+1)+"行户籍所在省市不能为空；";
+								} else {
+									model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(8)));
+								}
+								// 工作所在详细地址
+								if (StringUtils.isBlank(ExcelUtil.formatCell4(xssfRow.getCell(9)))) {
+									errorMsg += "第"+(rowNum+1)+"行工作所在详细地址不能为空；";
+								} else {
+									model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
+								}
+								data.add(model);
 							}
-							model.setTellPhone(tellPhone);
-							// 岗位
-							model.setPost(ExcelUtil.formatCell4(xssfRow.getCell(6)));
-
-							// 工作年限
-							String workYear = ExcelUtil.formatCell6(xssfRow.getCell(7));
-							if (workYear != null && !workYear.trim().equals("")) {
-								model.setWorkYear(Integer.parseInt(workYear));
-							} else {
-								model.setWorkYear(0);
-							}
-							// 籍贯
-							model.setNativePlace(ExcelUtil.formatCell4(xssfRow.getCell(8)));
-							// 户籍所在省市
-							model.setCensusAddress(ExcelUtil.formatCell4(xssfRow.getCell(9)));
-							// 工作所在详细地址
-							model.setInstitutionAddress(ExcelUtil.formatCell4(xssfRow.getCell(10)));
-							// 邮寄地址
-							model.setMailingAddress(ExcelUtil.formatCell4(xssfRow.getCell(11)));
-							data.add(model);
 						}
 					}
-
 				}
 			} catch (Exception e) {
 				return ResultUtil.custom(-1, "模板导入异常，请检查档案模板");
 			}
-
-			// 机构名称
-			resultMap.put("institutionName", "机构名称");
-			// 老师数量
-			resultMap.put("teacherNumber", teacherNumber);
-			// 申请数量
-			resultMap.put("applyNumber", data.size());
-			resultMap.put("data", data);
-			return ResultUtil.ok(resultMap);
+			if (errorMsg != "") {
+				return ResultUtil.custom(-2, errorMsg);
+			} else {
+				// 机构名称
+				resultMap.put("institutionName", name);
+				// 老师数量
+				resultMap.put("teacherNumber", teacherNumber);
+				// 申请数量
+				resultMap.put("applyNumber", applyNumber);
+				resultMap.put("data", data);
+				return ResultUtil.ok(resultMap);
+			}
 		} else {
-			return ResultUtil.custom(-1, "模版格式不正确");
+			return ResultUtil.custom(0, "模版格式不正确，请下载导入模板");
 		}
+	}
+
+	/**
+	 * 判断行为空
+	 * 
+	 * @author maguoliang
+	 * @param row
+	 * @param firstRow
+	 * @return
+	 */
+	private boolean isAllRowEmpty(XSSFRow row, XSSFRow firstRow) {
+		int count = 0;
+		// 单元格数量
+		int rowCount = firstRow.getLastCellNum() - firstRow.getFirstCellNum();
+		// 判断多少个单元格为空
+		for (int c = 0; c < rowCount; c++) {
+			Cell cell = row.getCell(c);
+			if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+				count += 1;
+			}
+		}
+
+		if (count == rowCount) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@GetMapping("importExcel")
