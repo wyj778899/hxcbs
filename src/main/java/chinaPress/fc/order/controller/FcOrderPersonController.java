@@ -111,7 +111,7 @@ public class FcOrderPersonController {
 	 */
 	@RequestMapping("selectTheNewestHour")
 	public Result selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
-		FcOrderPersonHour fcOrderPersonHour = fcOrderPersonService.selectTheNewestHour(courseId, roleId, roleType);
+		Integer fcOrderPersonHour = fcOrderPersonService.selectTheNewestHour(courseId, roleId, roleType);
 		if (fcOrderPersonHour != null) {
 			return ResultUtil.ok(fcOrderPersonHour);
 		} else {

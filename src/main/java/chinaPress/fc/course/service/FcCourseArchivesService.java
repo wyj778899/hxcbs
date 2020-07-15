@@ -83,11 +83,9 @@ public class FcCourseArchivesService {
 						item.setIsLearning(0);
 					}
 					// 判断当前这个课程当前报名人正在学习中的课时id
-					FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(), roleId,
+					Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(), roleId,
 							roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
-					if (fcOrderPersonHour != null) {
-						item.setLearningHourId(fcOrderPersonHour.getHourId());
-					}
+					item.setLearningHourId(fcOrderPersonHour);
 				} else {
 					item.setIsLearning(0);
 				}
@@ -184,11 +182,9 @@ public class FcCourseArchivesService {
 			}
 			// 判断当前这个课程当前报名人正在学习中的课时id
 			if (roleId != null && roleType != null) {
-				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId,
+				Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId,
 						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
-				if (fcOrderPersonHour != null) {
-					data.setLearningHourId(fcOrderPersonHour.getHourId());
-				}
+				data.setLearningHourId(fcOrderPersonHour);
 			}
 		}
 		return data;

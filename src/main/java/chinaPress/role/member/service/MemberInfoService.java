@@ -128,6 +128,7 @@ public class MemberInfoService {
 			memberInfo.setIsStart(1);
 			memberInfo.setRoleId(trainInstitutionInfo.getId());
 			memberInfo.setRoleType(2);
+			memberInfo.setPhoto("assets/image/userImg.jpg");
 			count += memberInfoMapper.insertSelective(memberInfo);
 			if (count > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
