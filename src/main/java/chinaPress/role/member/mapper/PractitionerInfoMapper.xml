@@ -651,7 +651,7 @@
 	   		and b.certificate_type = #{type}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number = #{certificateNumber}
+	   		and b.code = #{certificateNumber}
 	    </if>
 	limit #{page} , #{limit}  
   </select>
@@ -672,7 +672,7 @@
 	   		and b.certificate_type = #{type}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number = #{certificateNumber}
+	   		and b.code = #{certificateNumber}
 	    </if>
   </select>
   
