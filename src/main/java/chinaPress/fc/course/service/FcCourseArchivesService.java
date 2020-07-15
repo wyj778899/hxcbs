@@ -74,7 +74,7 @@ public class FcCourseArchivesService {
 					item.setCourseCount(0);
 				}
 				// 判断当前这个课程当前报名人是否正在学习中
-				if (roleId != null && roleType != null) {
+				if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
 					FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId,
 							roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), item.getId());
 					if (fcOrder != null) {
@@ -115,7 +115,7 @@ public class FcCourseArchivesService {
 			if (list.size() > 0) {
 				for (FcCourseSectionVo fcCourseSectionVo : list) {
 					// 该章节视频是否看过
-					if (roleId != null && roleType != null) {
+					if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
 						List<FcCourseHourVo> courseSectionHourList = fcCourseHourMapper
 								.selectCourseHourListBySectionId(fcCourseSectionVo.getId());
 						if (courseSectionHourList.size() > 0) {
@@ -169,7 +169,7 @@ public class FcCourseArchivesService {
 				data.setStudyDay(DateUtil.getLongOfTwoDate(firstPassTime, new Date()));
 			}
 			// 判断当前这个课程当前报名人是否正在学习中
-			if (roleId != null && roleType != null) {
+			if (roleId != null && roleType != null  && (roleType == 3 || roleType == 4)) {
 				FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId,
 						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), id);
 				if (fcOrder != null) {
@@ -181,7 +181,7 @@ public class FcCourseArchivesService {
 				data.setIsLearning(0);
 			}
 			// 判断当前这个课程当前报名人正在学习中的课时id
-			if (roleId != null && roleType != null) {
+			if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
 				Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId,
 						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
 				data.setLearningHourId(fcOrderPersonHour);
