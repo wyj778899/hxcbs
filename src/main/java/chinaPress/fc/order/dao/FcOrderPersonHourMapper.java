@@ -58,6 +58,6 @@ public interface FcOrderPersonHourMapper {
 	 * @param roleType 角色类型1.家长2.从业者
 	 * @return
 	 */
-	FcOrderPersonHour selectTheNewestHour(@Param("courseId") Integer courseId, @Param("roleId") Integer roleId,
+	Integer selectTheNewestHour(@Param("courseId") Integer courseId, @Param("roleId") Integer roleId,
 			@Param("roleType") Integer roleType);
 }

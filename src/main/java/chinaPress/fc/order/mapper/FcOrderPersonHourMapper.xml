@@ -118,13 +118,14 @@
 	</select>
 	
 	<!-- 查询某个人正在学习某课程的最新进度 -->
-	<select id="selectTheNewestHour" resultMap="BaseResultMap">
+	<select id="selectTheNewestHour" resultType="java.lang.Integer">
 		select
-			c.*
+			d.section_id
 		from
 			fc_order a
 		inner join fc_order_person b on a.id = b.order_id
 		inner join fc_order_person_hour c on c.order_person_id = b.id
+		inner join fc_course_hour d on c.hour_id = d.id
 		where
 			a.course_id = #{courseId}
 			and a.start_time <![CDATA[<=]]> now()

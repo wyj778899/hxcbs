@@ -13,6 +13,7 @@ import chinaPress.common.util.DateUtil;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.order.dao.FcOrderBookMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
@@ -134,11 +135,9 @@ public class FcOrderService {
 				item.setStatus(3);
 			}
 			// 判断当前这个课程当前报名人正在学习中的课时id
-			FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(),
+			Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(),
 					param.getRoleId(), param.getRoleType());
-			if (fcOrderPersonHour != null) {
-				item.setLearningHourId(fcOrderPersonHour.getHourId());
-			}
+			item.setLearningHourId(fcOrderPersonHour);
 		}
 		return data;
 	}

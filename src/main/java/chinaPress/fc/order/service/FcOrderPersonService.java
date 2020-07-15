@@ -90,18 +90,27 @@ public class FcOrderPersonService {
 	public int setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
 		Integer personOrderId = fcOrderPersonMapper.findOrderPersonId(roleId, roleType, courseId);
 		if (personOrderId != null) {
-			// 如果看完了，且当前角色进度没有该章节视频记录则修改
-			if (isPass.intValue() == 3) {
-				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
-						hourId);
-				if (fcOrderPersonHour == null) {
-					FcOrderPersonHour hour = new FcOrderPersonHour();
-					hour.setOrderPersonId(personOrderId);
-					hour.setHourId(hourId);
-					hour.setIsPass(isPass);
-					return fcOrderPersonHourMapper.updateIsPass(hour);
-				}
-			} else {
+//			// 如果看完了，且当前角色进度没有该章节视频记录则修改
+//			if (isPass.intValue() == 3) {
+//				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+//						hourId);
+//				if (fcOrderPersonHour != null) {
+//					FcOrderPersonHour hour = new FcOrderPersonHour();
+//					hour.setOrderPersonId(personOrderId);
+//					hour.setHourId(hourId);
+//					hour.setIsPass(isPass);
+//					return fcOrderPersonHourMapper.updateIsPass(hour);
+//				} 
+//			} else {
+//				FcOrderPersonHour hour = new FcOrderPersonHour();
+//				hour.setOrderPersonId(personOrderId);
+//				hour.setHourId(hourId);
+//				hour.setIsPass(isPass);
+//				return fcOrderPersonHourMapper.updateIsPass(hour);
+//			}
+			FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+					hourId);
+			if (fcOrderPersonHour != null) {
 				FcOrderPersonHour hour = new FcOrderPersonHour();
 				hour.setOrderPersonId(personOrderId);
 				hour.setHourId(hourId);
@@ -139,7 +148,7 @@ public class FcOrderPersonService {
 	 * @param roleType 角色类型1.家长2.从业者
 	 * @return
 	 */
-	public FcOrderPersonHour selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
+	public Integer selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
 		return fcOrderPersonHourMapper.selectTheNewestHour(courseId, roleId, roleType);
 	}
 }
