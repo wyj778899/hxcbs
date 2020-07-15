@@ -132,6 +132,6 @@
 			and now() <![CDATA[<=]]> a.end_time
 			and b.role_type = #{roleType}
 			and b.role_id = #{roleId}
-			and ( c.is_pass = 0 or c.is_pass = 3)
+			and c.is_pass != 1
 	</select>
 </mapper>
