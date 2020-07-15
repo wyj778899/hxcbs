@@ -55,6 +55,13 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   
+  <select id="selectByCertificate" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role_practitioner_archives
+    where certificate_type = 1 AND certificate_number = #{certificateNumber,jdbcType=INTEGER}
+  </select>
+  
   <!-- 查询报名人员信息 -->
   <select id="findApplyInfo" resultType="chinaPress.role.member.vo.PractitionerApplyInfoVo">
   	SELECT

@@ -6,15 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,11 +24,15 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ExcelUtil;
+import chinaPress.common.util.Md5Util;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.role.member.dao.CertificateInfoMapper;
+import chinaPress.role.member.dao.MemberInfoMapper;
+import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.model.CertificateInfo;
+import chinaPress.role.member.model.MemberInfo;
+import chinaPress.role.member.model.PractitionerInfo;
 import chinaPress.role.teacher.dao.RoleTeacherArchivesMapper;
-import chinaPress.role.teacher.model.RoleTeacherArchives;
 
 @Service
 public class ImportService {
@@ -41,6 +42,12 @@ public class ImportService {
 
 	@Autowired
 	private CertificateInfoMapper certificateInfoMapper;
+	
+	@Autowired
+	private PractitionerInfoMapper practitionerInfoMapper;
+	
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
 
 	@Transactional
 	public Result importExcel(String path) {
@@ -108,77 +115,112 @@ public class ImportService {
 						String tellPhone = ExcelUtil.formatCell6((XSSFCell) row.getCell(9)); // 电话
 						String grade = ExcelUtil.formatCell6((XSSFCell) row.getCell(12));  // 分数
 
-						// 教师参数类
-						RoleTeacherArchives teacher = new RoleTeacherArchives();
-						Integer teacherIndex = 0;
-						// 教书数据类
-						RoleTeacherArchives teacharModel = roleTeacherArchivesMapper.selectByIdCard(idCard);
-						if (teacharModel == null) {
+						PractitionerInfo info = new PractitionerInfo();
+						int infoIndex = 0;
+						
+						PractitionerInfo infoModel = practitionerInfoMapper.selectByCertificate(idCard);
+						if (infoModel == null) {
 							if (name != null && !name.equals("")) {
-								teacher.setName(name); // 姓名
+								info.setName(name); // 姓名
+								info.setUserName(name);
 							}
 							if (idCard != null && !idCard.equals("")) {
-								teacher.setIdCard(idCard); // 身份证
+								info.setCertificateNumber(idCard); // 身份证
 							}
-							teacher.setSex(sex); // 性别
+							info.setSex(sex); // 性别
 							if (workAddress != null && !workAddress.equals("")) {
-								teacher.setWorkAddress(workAddress);// 工作单位
+								info.setInstitutionAddress(workAddress);// 工作单位
 							}
 							if (education != null && !education.equals("")) {
-								teacher.setEducation(education); // 学历
+								info.setEducation(education); // 学历
 							}
 							if (position != null && !position.equals("")) {
-								teacher.setPosition(position); // 职务
+								info.setPost(position); // 职务
 							}
 							if (address != null && !address.equals("")) {
-								teacher.setAddress(address); // 地址
+								info.setAddress(address); // 地址
 							}
 							if (tellPhone != null && !tellPhone.equals("")) {
-								teacher.setTellPhone(tellPhone); // 电话
+								info.setTellPhone(tellPhone); // 电话
 							}
-							if (grade != null && !grade.equals("")) {
-								teacher.setGrade(grade);
-							}
-							teacherIndex = roleTeacherArchivesMapper.insertSelective(teacher);
+							info.setPassword(Md5Util.getEncryptedPwd("123456"));
+							infoIndex = practitionerInfoMapper.insertSelective(info);
 						} else {
-							teacher.setId(teacharModel.getId());
+							info.setId(infoModel.getId());
 							if (name != null && !name.equals("")) {
-								teacher.setName(name); // 姓名
+								info.setName(name); // 姓名
+								info.setUserName(name);
 							}
 							if (idCard != null && !idCard.equals("")) {
-								teacher.setIdCard(idCard); // 身份证
+								info.setCertificateNumber(idCard); // 身份证
 							}
-							teacher.setSex(sex); // 性别
+							info.setSex(sex); // 性别
 							if (workAddress != null && !workAddress.equals("")) {
-								teacher.setWorkAddress(workAddress);// 工作单位
+								info.setInstitutionAddress(workAddress);// 工作单位
 							}
 							if (education != null && !education.equals("")) {
-								teacher.setEducation(education); // 学历
+								info.setEducation(education); // 学历
 							}
 							if (position != null && !position.equals("")) {
-								teacher.setPosition(position); // 职务
+								info.setPost(position); // 职务
 							}
 							if (address != null && !address.equals("")) {
-								teacher.setAddress(address); // 地址
+								info.setAddress(address); // 地址
 							}
 							if (tellPhone != null && !tellPhone.equals("")) {
-								teacher.setTellPhone(tellPhone); // 电话
+								info.setTellPhone(tellPhone); // 电话
 							}
-							if (grade != null && !grade.equals("")) {
-								teacher.setGrade(grade);
-							}
-							teacherIndex = roleTeacherArchivesMapper.updateByPrimaryKeySelective(teacher);
+							infoIndex = practitionerInfoMapper.updateByPrimaryKeySelective(info);
 						}
-						if (teacherIndex > 0) {
+						if (infoIndex > 0) {
+							// 员工操作
+							MemberInfo memberModel = memberInfoMapper.selectByPrimaryKey(new MemberInfo(info.getId(), 4));
+							MemberInfo member = new MemberInfo();
+							if (memberModel == null) {
+								if (name != null && !name.equals("")) {
+									member.setName(name); // 姓名
+									member.setUserName(name); // 用户名
+								}
+								member.setSex(sex); // 性别
+								if (address != null && !address.equals("")) {
+									member.setAddress(address); // 地址
+								}
+								if (tellPhone != null && !tellPhone.equals("")) {
+									member.setTellPhone(tellPhone); // 电话
+								}
+								member.setPassword(Md5Util.getEncryptedPwd("123456"));
+								member.setState(2);
+								member.setIsStart(1);
+								member.setRoleType(4);
+								member.setRoleId(info.getId());
+								memberInfoMapper.insertSelective(member);
+							} else {
+								member.setId(memberModel.getId());
+								if (name != null && !name.equals("")) {
+									member.setName(name); // 姓名
+									member.setUserName(name); // 用户名
+								}
+								member.setSex(sex); // 性别
+								if (address != null && !address.equals("")) {
+									member.setAddress(address); // 地址
+								}
+								if (tellPhone != null && !tellPhone.equals("")) {
+									member.setTellPhone(tellPhone); // 电话
+								}
+								member.setRoleType(4);
+								memberInfoMapper.updateByPrimaryKeySelective(member);
+							}
+							
 							if (code == null || code.equals("")) {
 								continue;
 							}
+							// 证书操作
 							CertificateInfo cert = new CertificateInfo();
 							CertificateInfo certModel = certificateInfoMapper.selectByCode(code);
 							if (certModel == null) {
-								cert.setRoleType(4);
+								cert.setRoleType(3);
 								cert.setCertificateType(1);
-								cert.setRoleId(teacher.getId());
+								cert.setRoleId(info.getId());
 								cert.setCode(code);
 								cert.setAuditStatus(2);
 								if (workAddress != null && !workAddress.equals("")) {
@@ -190,9 +232,9 @@ public class ImportService {
 								certificateInfoMapper.insertSelective(cert);
 							} else {
 								cert.setId(certModel.getId());
-								cert.setRoleType(4);
+								cert.setRoleType(3);
 								cert.setCertificateType(1);
-								cert.setRoleId(teacher.getId());
+								cert.setRoleId(info.getId());
 								cert.setCode(code);
 								cert.setAuditStatus(2);
 								if (workAddress != null && !workAddress.equals("")) {

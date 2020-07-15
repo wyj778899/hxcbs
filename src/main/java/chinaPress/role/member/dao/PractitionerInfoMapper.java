@@ -18,6 +18,13 @@ public interface PractitionerInfoMapper {
     int insertSelective(PractitionerInfo record);
 
     PractitionerInfo selectByPrimaryKey(Integer id);
+    
+    /**
+     * 根据身份证号查询
+     * @param record
+     * @return
+     */
+    PractitionerInfo selectByCertificate(String certificateNumber);
 
     int updateByPrimaryKeySelective(PractitionerInfo record);
     
