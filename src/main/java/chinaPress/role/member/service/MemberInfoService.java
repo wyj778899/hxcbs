@@ -697,22 +697,25 @@ public class MemberInfoService {
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Result findPractitionerAll(PractitionerInfo practitioner) {
+		if(practitioner.getType() == null) {
+			return new Result(0, "请选择家长或者从业者", "");
+		}
 		if (1 == practitioner.getType()) {
 			List<PractitionerParent> list = practitionerInfoMapper.selectPractitionerParents(practitioner);
 			if (list != null) {
-				return new Result(0, "查询成功", list);
+				return new Result(1, "查询成功", list);
 			} else {
-				return new Result(-1, "查询失败", "");
+				return new Result(0, "查询失败", "");
 			}
 		} else if (2 == practitioner.getType()) {
 			List<PractitionerEmps> list = practitionerInfoMapper.selectPractitionerEmps(practitioner);
 			if (list != null) {
-				return new Result(0, "查询成功", list);
+				return new Result(1, "查询成功", list);
 			} else {
-				return new Result(-1, "查询失败", "");
+				return new Result(0, "查询失败", "");
 			}
 		}
-		return new Result(-1, "请选择家长或者从业者", "");
+		return new Result(0, "请选择家长或者从业者", "");
 	}
 
 	/**
@@ -726,9 +729,9 @@ public class MemberInfoService {
 	public Result findPractitionerCount(PractitionerInfo practitioner) {
 		int count = practitionerInfoMapper.selectCount(practitioner);
 		if (count > 0) {
-			return new Result(0, "查询成功", count);
+			return new Result(1, "查询成功", count);
 		} else {
-			return new Result(-1, "查询失败", "");
+			return new Result(0, "查询失败", "");
 		}
 	}
 
@@ -742,9 +745,9 @@ public class MemberInfoService {
 	public Result findTrainInstitutionAll(TrainInstitutionInfo trainInstitutionInfo) {
 		List<TrainInstitutionInfo> list = trainInstitutionInfoMapper.selectTrainInstitutionAll(trainInstitutionInfo);
 		if (list != null) {
-			return new Result(0, "查询成功", list);
+			return new Result(1, "查询成功", list);
 		} else {
-			return new Result(-1, "查询失败", "");
+			return new Result(0, "查询失败", "");
 		}
 	}
 
@@ -758,9 +761,9 @@ public class MemberInfoService {
 	public Result findTrainInstitutionCount(TrainInstitutionInfo trainInstitutionInfo) {
 		int count = trainInstitutionInfoMapper.selectCount(trainInstitutionInfo);
 		if (count > 0) {
-			return new Result(0, "查询成功", count);
+			return new Result(1, "查询成功", count);
 		} else {
-			return new Result(-1, "查询失败", 0);
+			return new Result(0, "查询失败", 0);
 		}
 	}
 

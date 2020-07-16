@@ -57,7 +57,7 @@
    
    <select id="selectTrainInstitutionAll" parameterType="chinaPress.role.member.model.TrainInstitutionInfo" resultType="chinaPress.role.member.vo.InstitutionVo">
     select 
-        b.id as id,
+        a.id as id,
     	a.name as name,
     	a.code as code,
     	a.legal_person as legalPerson,
@@ -65,9 +65,8 @@
     	a.register_name as registerName,
     	a.register_tell as registerTell,
     	a.audit_status as auditStatus
-    from role_institution_archives a,
-         role_staff_archives b
-    where a.state = 1 and b.role_type = 2 and a.id = b.role_id
+    from role_institution_archives a
+    where a.state = 1 
 	    <if test="name!=null and name!=''">
 	    	and a.name like CONCAT('%',#{name},'%')
 	    </if>
@@ -80,7 +79,7 @@
 	    <if test="registerTell!=null and registerTell!=''">
 	    	and a.register_tell like CONCAT('%',#{registerTell},'%')
 	    </if>
-	order by b.create_time desc
+	order by a.create_time desc
 	limit #{page} , #{limit}
   </select>
   

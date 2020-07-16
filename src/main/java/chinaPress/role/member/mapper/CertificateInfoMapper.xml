@@ -16,10 +16,11 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="course_type" jdbcType="INTEGER" property="courseType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, role_id, certificate_type, photo, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, role_type, test_address, grade, `code`
+    update_id, update_time, role_type, test_address, grade, `code`,course_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -84,6 +85,9 @@
       <if test="code != null">
       	`code`,
       </if>
+       <if test="courseType != null">
+      	course_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -128,6 +132,9 @@
       <if test="code != null">
       	#{code},
       </if>
+      <if test="courseType != null">
+      	#{courseType},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.member.model.CertificateInfo">
@@ -171,6 +178,9 @@
       </if>
       <if test="code != null">
       	`code` = #{code},
+      </if>
+      <if test="courseType != null">
+      	course_type = #{courseType},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

@@ -349,7 +349,7 @@ public class MemberInfoController {
 	}
 
 	/**
-	 * 用过角色id和角色类型查询用户证书信息
+	 * 用过角色id和角色类型查询用户证书信息     个人信息信息证书展示
 	 * 
 	 * @param roleTd
 	 * @param roleType

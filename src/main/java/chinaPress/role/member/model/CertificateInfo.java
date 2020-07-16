@@ -81,6 +81,20 @@ public class CertificateInfo {
 	private Date updateTime;
 
 	/**
+	 * 资格证课程分类
+	 */
+	private Integer courseType;
+	
+	
+	public Integer getCourseType() {
+		return courseType;
+	}
+
+	public void setCourseType(Integer courseType) {
+		this.courseType = courseType;
+	}
+
+	/**
 	 * 证书
 	 * 
 	 * @return id

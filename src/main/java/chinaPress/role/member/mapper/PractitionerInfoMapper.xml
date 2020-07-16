@@ -124,17 +124,15 @@
   
   <select id="selectPractitionerParents" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerParent">
     select 
-     	b.id as id,
+     	a.id as id,
      	a.name as name,
      	a.tell_phone as tellPhone,
      	a.email as email,
      	a.certificate_number as certificateNumber,
      	a.sex as sex
-    from role_practitioner_archives a,
-         role_staff_archives b
+    from role_practitioner_archives a
     where a.state = 1 and 				<!-- 家长/从业者状态 -->
-          a.type = 1 and  				<!-- 1代表家长，2代表从业者 -->
-          a.id = b.role_id 				<!-- 连接条件 --> 
+          a.type = 1   				<!-- 1代表家长，2代表从业者 -->
 	     <if test="name !=null and name !=''">
 	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
@@ -144,23 +142,21 @@
       	 <if test="tellPhone !=null and tellPhone !=''">
         	and a.tell_phone like CONCAT('%',#{tellPhone},'%')
       	 </if>
-     order by b.create_time desc
+     order by a.create_time desc
      limit #{page} , #{limit}
   </select>
   
   <select id="selectPractitionerEmps" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerEmps">
     select 
-     	b.id as id,
+     	a.id as id,
      	a.name as name,
      	a.tell_phone as tellPhone,
      	a.email as email,
      	a.certificate_number as certificateNumber,
      	a.address as address
-    from role_practitioner_archives a,
-         role_staff_archives b
+    from role_practitioner_archives a
     where a.state = 1 and 				<!-- 家长/从业者状态 -->
-          a.type = 2 and  				<!-- 1代表家长，2代表从业者 -->
-          a.id = b.role_id 				<!-- 连接条件 --> 
+          a.type = 2   				<!-- 1代表家长，2代表从业者 -->
 	     <if test="name !=null and name !=''">
 	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
@@ -170,16 +166,14 @@
       	 <if test="tellPhone !=null and tellPhone !=''">
         	and a.tell_phone like CONCAT('%',#{tellPhone},'%')
       	 </if>
-     order by b.create_time desc
+     order by a.create_time desc
      limit #{page} , #{limit}
   </select>
   
   <select id="selectCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
     select count(*)
-    from role_practitioner_archives a,
-    	 role_staff_archives b
-    where a.state = 1 and
-          a.id = b.role_id
+    from role_practitioner_archives
+    where a.state = 1 
     	 <if test="name !=null and name !=''">
 	        and a.name like CONCAT('%',#{name},'%')
 	     </if>
@@ -539,7 +533,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!-- 项目查询-教师成绩信息 -->
+  <!-- 项目查询-教师成绩信息   必须条件  角色为从业者，证书类型为教师资格证书-->
   <select id="selectTeacherAndScore" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherScoreVo">
 	select
 	    a.id as teaId,
@@ -552,33 +546,18 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
+	      and b.certificate_type=1
 		<if test="name !=null and name !=''">
 	   		and a.name = #{name} 
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
 	   		and a.certificate_number = #{certificateNumber}
 	    </if>
-	limit #{page} , #{limit}   
+	limit 1 
   </select>
   
-  <!-- 项目查询-教师成绩信息个数 -->
-  <select id="selectTeacherAndScoreCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
-	select
-		count(*)
-	from
-		role_practitioner_archives a,
-		fc_certificate_archives b
-	where 	  a.id = b.role_id 
-		  and a.type = 2
-		<if test="name !=null and name !=''">
-	   		and a.name = #{name}
-	    </if>
-	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and a.certificate_number = #{certificateNumber}
-	    </if>
-  </select>
   
-  <!-- 项目查询-教师证书信息-->
+  <!-- 项目查询-教师证书信息   必须条件  角色为从业者，证书类型为教师资格证书-->
   <select id="selectTeacherAndCert" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherCertVo">
 	select
 	    a.id as teaId,
@@ -595,6 +574,7 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
+	      and b.certificate_type = 1
 		<if test="name !=null and name !=''">
 	   		and a.name = #{name}
 	    </if>
@@ -605,29 +585,9 @@
 		   			b.code = #{certificateNumber}
 	   			)
 	    </if>
-	limit #{page} , #{limit}    
+	 limit 1
   </select>
   
-  <!-- 项目查询-教师证书信息个数 -->
-  <select id="selectTeacherAndCertCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
-	select
-		count(*)
-	from
-		role_practitioner_archives a,
-		fc_certificate_archives b
-	where 	  a.id = b.role_id 
-		  and a.type = 2
-		<if test="name !=null and name !=''">
-	   		and a.name = #{name}
-	    </if>
-	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and (
-		   			a.certificate_number = #{certificateNumber}
-		   			or
-		   			b.code = #{certificateNumber}
-	   			)
-	    </if>
-  </select>
   
   <!-- 认证教师  查询教师信息 -->
   <select id="selectTeacherAndCertInfos" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.TeacherAndCertVo">
@@ -644,37 +604,20 @@
 		fc_certificate_archives b
 	where     a.id = b.role_id 
 	      and a.type = 2
+	      and b.certificate_type = 1
 		<if test="name !=null and name !=''">
 	   		and a.name = #{name}
 	    </if>
+	    <!-- 匹配上岗课程和评估课程培训     资格证课程分类-->
 	    <if test="type !=null">
-	   		and b.certificate_type = #{type}
+	   		and b.course_type = #{type}
 	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
 	   		and b.code = #{certificateNumber}
 	    </if>
-	limit #{page} , #{limit}  
+	limit 1
   </select>
   
-  <!-- 认证教师 查询教师个数 -->
-  <select id="selectTeacherAndCertInfosCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
-	select
-	    count(*)
-	from 
-		role_practitioner_archives a,
-		fc_certificate_archives b
-	where     a.id = b.role_id 
-	      and a.type = 2
-		<if test="name !=null and name !=''">
-	   		and a.name = #{name}
-	    </if>
-	    <if test="type !=null">
-	   		and b.certificate_type = #{type}
-	    </if>
-	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and b.code = #{certificateNumber}
-	    </if>
-  </select>
   
   <!-- 教师详情信息   展示所有的证书 考试地址，分数，发证日期,证书名称-->
   <select id="selectTeacherByCers" parameterType="java.lang.Integer" resultMap="teaCerMap">
@@ -698,6 +641,10 @@
 		fc_certificate_archives b 
 	where     a.id = b.role_id 
 	      and a.type = 2
+	      <!-- 如果type字段有值代表只查询教师资格证书，为null查所有证书 -->
+	     <if test="type !=null">
+	   		and b.certificate_type = 1
+	    </if>
 	    <if test="teaId !=null">
 	   		and a.id = #{teaId}
 	    </if>

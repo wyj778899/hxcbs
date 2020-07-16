@@ -54,9 +54,9 @@ public class CertificateInfoService {
 	public Result setCertificate(CertificateInfo certificateInfo) {
 		int i = certificateInfoMapper.updateByPrimaryKeySelective(certificateInfo);
 		if (i > 0) {
-			return new Result(0, "更新成功", "");
+			return new Result(1, "更新成功", "");
 		} else {
-			return new Result(-1, "数据库错误", "");
+			return new Result(0, "数据库错误", "");
 		}
 	}
 	
@@ -114,9 +114,9 @@ public class CertificateInfoService {
 	 public Result findCertificates(MemberInfo memberInfo) { 
 		 List<MemberAndCer> list = memberInfoMapper.selectMemberAndCertificate(memberInfo);
 		 if (list.size()>0) { 
-			 return new Result(0, "查询成功", list); 
+			 return new Result(1, "查询成功", list); 
 		 } else { 
-			 return new Result(-1, "数据库错误", ""); 
+			 return new Result(0, "数据库错误", ""); 
 		 } 
 	}
 	 
@@ -130,9 +130,9 @@ public class CertificateInfoService {
 	 public Result findCertificateCount(MemberInfo memberInfo) {
 		 int count = memberInfoMapper.queryCerCount(memberInfo);
 		 if(count>0) {
-			 return new Result(0, "查询成功", count); 
+			 return new Result(1, "查询成功", count); 
 		 }else {
-			 return new Result(-1, "查询失败", 0); 
+			 return new Result(0, "查询失败", 0); 
 		 }
 	 }
 	 
