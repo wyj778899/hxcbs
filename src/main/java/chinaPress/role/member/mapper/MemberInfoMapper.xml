@@ -455,4 +455,34 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	<select id="selectMembersAll" resultType="chinaPress.role.member.vo.UserInfoVo">
+	    select 
+	    id,
+	    user_name as name,
+	    tell_phone as tellPhone,
+	    is_start as state 
+	    from role_staff_archives
+	    where role_type = 1 
+	      <if test="name != null and name!=''">
+	        and user_name like concat('%',#{name},'%')
+	      </if>
+	      <if test="tellPhone != null and tellPhone!=''">
+	        and tell_phone like concat('%',#{tellPhone},'%')
+	      </if>
+	    limit #{page} , #{limit}
+  </select>
+  
+  <select id="selectMembersAllCount" resultType="java.lang.Integer">
+	    select count(*)
+	    from role_staff_archives
+	    where role_type = 1
+	      <if test="name != null and name!=''">
+	        and user_name like concat('%',#{name},'%')
+	      </if>
+	      <if test="tellPhone != null and tellPhone!=''">
+	        and tell_phone like concat('%',#{tellPhone},'%')
+	      </if>
+  </select>
+	
 </mapper>

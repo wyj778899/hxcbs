@@ -3,12 +3,14 @@ package chinaPress.role.member.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.vo.MemberAndCer;
 import chinaPress.role.member.vo.MemberCouponInfo;
 import chinaPress.role.member.vo.UserAndCerVo;
+import chinaPress.role.member.vo.UserInfoVo;
 
 @Mapper
 @Repository
@@ -87,4 +89,21 @@ public interface MemberInfoMapper {
      * @return
      */
     int selectUserAndTellPhone(MemberInfo memberInfo);
+    
+    
+    /**
+     * 通过用户名和手机号查询注册员工信息
+     * @param name
+     * @param tellPhoto
+     * @return
+     */
+    List<UserInfoVo> selectMembersAll(@Param("name") String name,@Param("tellPhone") String tellPhone,@Param("page") Integer page,@Param("limit") Integer limit); 
+    
+    /**
+     * 通过用户名和手机号查询注册员工信息个数
+     * @param name
+     * @param tellPhoto
+     * @return
+     */
+    int selectMembersAllCount(@Param("name") String name,@Param("tellPhone") String tellPhone);
 }

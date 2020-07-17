@@ -29,6 +29,7 @@ import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
 import chinaPress.role.member.vo.UserAndCerVo;
+import chinaPress.role.member.vo.UserInfoVo;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -652,7 +653,7 @@ public class MemberInfoService {
 
 	/**
 	 * 添加员工信息
-	 * 
+	 * 内部员工不需要验证码
 	 * @param memberInfo
 	 * @return
 	 */
@@ -660,32 +661,27 @@ public class MemberInfoService {
 		MemberInfo param = new MemberInfo();
 		param.setUserName(memberInfo.getUserName());
 		if (memberInfoMapper.selectByPrimaryKey(param) != null) {
+			return new Result(-1, "用户名已注册", "");
+		}
+		MemberInfo param1 = new MemberInfo();
+		param1.setTellPhone(memberInfo.getTellPhone());
+		if (memberInfoMapper.selectByPrimaryKey(param1) != null) {
 			return new Result(-1, "手机号已注册", "");
 		}
-		Jedis jedis = jedisPool.getResource();
-		String value = jedis.get("register_".concat(memberInfo.getUserName()));
-		jedis.close();
-		if (value == "" || value == null) {
-			return new Result(-4, "系统错误", "");
+		try {
+			memberInfo.setPassword(Md5Util.getEncryptedPwd(memberInfo.getPassword()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(-2, "密码不合法", "");
 		}
-		if (value.equals(memberInfo.getVerificationCode())) {
-			try {
-				memberInfo.setPassword(Md5Util.getEncryptedPwd(memberInfo.getPassword()));
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new Result(-2, "密码不合法", "");
-			}
-			memberInfo.setIsStart(1);
-			memberInfo.setState(2);
-			memberInfo.setRoleType(1);
-			int i = memberInfoMapper.insertSelective(memberInfo);
-			if (i > 0) {
-				return new Result(0, "添加成功", "");
-			} else {
-				return new Result(-3, "数据库错误", "");
-			}
+		memberInfo.setIsStart(1);
+		memberInfo.setState(2);
+		memberInfo.setRoleType(1);
+		int i = memberInfoMapper.insertSelective(memberInfo);
+		if (i > 0) {
+			return new Result(0, "添加成功", "");
 		} else {
-			return new Result(-4, "验证码错误", "");
+			return new Result(-3, "数据库错误", "");
 		}
 	}
 
@@ -1459,6 +1455,39 @@ public class MemberInfoService {
 			return new Result(0, "更换成功", memberVo);
 		} else {
 			return new Result(-1, "更换失败", "");
+		}
+	}
+	
+	/**
+	 * 通过用户名和手机号查询注册用户信息
+	 * @param name
+	 * @param tellPhoto
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findMembersAll(String name,String tellPhone,Integer page,Integer limit) {
+		List<UserInfoVo> list = memberInfoMapper.selectMembersAll(name,tellPhone,page,limit);
+		if(list.size()>0) {
+			return new Result(1,"查询成功",list);
+		}else {
+			return new Result(0,"查询失败","");
+		}
+	}
+	
+	
+	/**
+	 * 通过用户名和手机查询注册用户信息的个数
+	 * @param name
+	 * @param tellPhoto
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findMembersAllCount(String name,String tellPhone) {
+		int count = memberInfoMapper.selectMembersAllCount(name, tellPhone);
+		if(count>0) {
+			return new Result(1,"查询成功",count);
+		}else {
+			return new Result(0,"查询失败","");
 		}
 	}
 }

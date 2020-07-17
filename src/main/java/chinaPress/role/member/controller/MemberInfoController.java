@@ -413,4 +413,27 @@ public class MemberInfoController {
 	public Result modifyUserUpgrade(PractitionerInfo practitionerInfo) {
 		return memberInfoService.setRoleUserToPra(practitionerInfo);
 	}
+	
+	/**
+	 * 用户名和密码查询用户信息
+	 * @param name
+	 * @param tellPhone
+	 * @return
+	 */
+	@RequestMapping("/queryMembersAll")
+	public Result queryMembersAll(String name,String tellPhone,Integer page,Integer limit) {
+		return memberInfoService.findMembersAll(name, tellPhone,(page-1)*limit,limit);
+	}
+	
+	
+	/**
+	 * 用户名和密码查询用户信息个数
+	 * @param name
+	 * @param tellPhone
+	 * @return
+	 */
+	@RequestMapping("/queryMembersAllCount")
+	public Result queryMembersAllCount(String name,String tellPhone) {
+		return memberInfoService.findMembersAllCount(name, tellPhone);
+	}
 }
