@@ -161,15 +161,15 @@ public class FcCourseArchivesService {
 			// 查询相关推荐书籍
 			List<FcCourseBookVo> bookList = fcCourseBookMapper.selectFcCourseAboutBook(id);
 			data.setBookList(bookList);
-			// 查询该课程学习进度
-			Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId, roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
-			if (firstPassTime == null) {
-				data.setStudyDay(0);
-			} else {
-				data.setStudyDay(DateUtil.getLongOfTwoDate(firstPassTime, new Date()));
-			}
-			// 判断当前这个课程当前报名人是否正在学习中
 			if (roleId != null && roleType != null  && (roleType == 3 || roleType == 4)) {
+				// 查询该课程学习进度
+				Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId, roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+				if (firstPassTime == null) {
+					data.setStudyDay(0);
+				} else {
+					data.setStudyDay(DateUtil.getLongOfTwoDate(firstPassTime, new Date()));
+				}
+				// 判断当前这个课程当前报名人是否正在学习中
 				FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId,
 						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0), id);
 				if (fcOrder != null) {
@@ -177,14 +177,13 @@ public class FcCourseArchivesService {
 				} else {
 					data.setIsLearning(0);
 				}
-			} else {
-				data.setIsLearning(0);
-			}
-			// 判断当前这个课程当前报名人正在学习中的课时id
-			if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
+				// 判断当前这个课程当前报名人正在学习中的课时id
 				Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId,
 						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
 				data.setLearningHourId(fcOrderPersonHour);
+			} else {
+				data.setStudyDay(0);
+				data.setIsLearning(0);
 			}
 		}
 		return data;

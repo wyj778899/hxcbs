@@ -10,6 +10,7 @@ import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.model.PractitionerInfo;
+import chinaPress.role.member.vo.MemberInfoVo;
 
 
 /**
@@ -101,7 +102,7 @@ public class MemberInfoEQService {
 
 		try {
 			practitionerInfo.setSource(2);
-			practitionerInfo.setState(2);
+			practitionerInfo.setState(1);
 			practitionerInfo.setPassword(Md5Util.getEncryptedPwd("12345678"));
 			//添加家长从业者信息
 			practitionerInfoMapper.insertSelective(practitionerInfo);
@@ -130,10 +131,16 @@ public class MemberInfoEQService {
 			m.setPhoto("assets/image/userImg.jpg");
 			//添加员工档案信息
 			memberInfoMapper.insertSelective(m);
-			return new Result(1,"ok",1);
+			MemberInfoVo memberInfoVo = new MemberInfoVo();
+			memberInfoVo.setName(userName);
+			memberInfoVo.setPhoto(m.getPhoto());
+			memberInfoVo.setRoleId(m.getRoleId());
+			memberInfoVo.setRoleType(m.getRoleType());
+			memberInfoVo.setTellPhone(tellPhone);
+			return new Result(1,"ok",memberInfoVo);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(0,"error",0);
+			return new Result(0,"error",null);
 		}
 	}
 }
