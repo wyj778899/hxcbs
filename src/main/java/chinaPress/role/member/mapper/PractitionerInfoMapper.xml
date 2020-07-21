@@ -123,19 +123,21 @@
 		a.id = #{id,jdbcType=INTEGER}
   </select>
   
+  <!-- 家长查询 -->
   <select id="selectPractitionerParents" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerParent">
     select 
      	a.id as id,
-     	a.name as name,
+     	a.user_name as name,
      	a.tell_phone as tellPhone,
      	a.email as email,
      	a.certificate_number as certificateNumber,
-     	a.sex as sex
+     	a.sex as sex,
+     	a.birthday_time as birthdayTime
     from role_practitioner_archives a
-    where a.state = 1 and 				<!-- 家长/从业者状态 -->
+    where a.state = 1 and 				
           a.type = 1   				<!-- 1代表家长，2代表从业者 -->
 	     <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',#{name},'%')
+	        and a.user_name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
         	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
@@ -147,19 +149,21 @@
      limit #{page} , #{limit}
   </select>
   
+  <!-- 从业者 -->
   <select id="selectPractitionerEmps" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="chinaPress.role.member.vo.PractitionerEmps">
     select 
      	a.id as id,
-     	a.name as name,
+     	a.user_name as name,
      	a.tell_phone as tellPhone,
      	a.email as email,
      	a.certificate_number as certificateNumber,
-     	a.address as address
+     	a.address as address,
+     	a.real_name as realName
     from role_practitioner_archives a
     where a.state = 1 and 				<!-- 家长/从业者状态 -->
           a.type = 2   				<!-- 1代表家长，2代表从业者 -->
 	     <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',#{name},'%')
+	        and a.user_name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
         	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
@@ -171,9 +175,10 @@
      limit #{page} , #{limit}
   </select>
   
+  <!-- 家长/从业者分页个数 -->
   <select id="selectCount" parameterType="chinaPress.role.member.model.PractitionerInfo" resultType="java.lang.Integer">
     select count(*)
-    from role_practitioner_archives
+    from role_practitioner_archives a
     where a.state = 1 
     	 <if test="name !=null and name !=''">
 	        and a.name like CONCAT('%',#{name},'%')

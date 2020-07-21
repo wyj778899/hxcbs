@@ -1,5 +1,9 @@
 package chinaPress.role.member.vo;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 家长信息展示
  * @author Administrator
@@ -38,6 +42,20 @@ public class PractitionerParent {
 	 * 性别
 	 */
 	private Integer sex;
+	
+	/**
+	 * 孩子生日
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date birthdayTime;
+
+	public Date getBirthdayTime() {
+		return birthdayTime;
+	}
+
+	public void setBirthdayTime(Date birthdayTime) {
+		this.birthdayTime = birthdayTime;
+	}
 
 	public Integer getId() {
 		return id;

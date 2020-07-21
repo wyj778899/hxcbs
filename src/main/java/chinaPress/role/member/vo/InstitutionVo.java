@@ -46,15 +46,15 @@ public class InstitutionVo {
 	/**
 	 * 审核状态
 	 */
-	private Integer auditStatus;
+	private String auditStatus;
 	
 	
 
-	public Integer getAuditStatus() {
+	public String getAuditStatus() {
 		return auditStatus;
 	}
 
-	public void setAuditStatus(Integer auditStatus) {
+	public void setAuditStatus(String auditStatus) {
 		this.auditStatus = auditStatus;
 	}
 
