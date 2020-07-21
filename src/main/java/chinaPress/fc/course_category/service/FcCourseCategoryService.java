@@ -17,21 +17,23 @@ import chinaPress.fc.course_category.vo.PageIndexCategoryVo;
 public class FcCourseCategoryService {
 	@Autowired
 	private FcCourseCategoryMapper fcCourseCategoryMapper;
-	
+
 	/**
-	 *   查询首页点击更多分类
+	 * 查询首页点击更多分类
+	 * 
 	 * @return
 	 */
-	public List<PageIndexCategoryVo> selectPageIndexCategory(){
+	public List<PageIndexCategoryVo> selectPageIndexCategory() {
 		return fcCourseCategoryMapper.selectPageIndexCategory();
 	}
-	
+
 	/**
 	 * 查询服务分类树
+	 * 
 	 * @param record
 	 * @return
 	 */
-	public List<TreeNode> tree(CourseCategoryParam record){
+	public List<TreeNode> tree(CourseCategoryParam record) {
 		List<TreeNode> data = new ArrayList<>();
 		if (record.getName() != null && !record.getName().equals("")) {
 			List<String> codeList = fcCourseCategoryMapper.selectCourseCategoryByNames(record.getName());
@@ -43,57 +45,61 @@ public class FcCourseCategoryService {
 			}
 		}
 		List<TreeNode> data2 = fcCourseCategoryMapper.selectCourseCategoryAll(record);
-		if(data2.size()>0) {
+		if (data2.size() > 0) {
 			data.addAll(data2);
 		}
 		return TreeUtil.buildByRecursive(data2);
 	}
-	
+
 	/**
 	 * 查询全部
+	 * 
 	 * @param courseCategoryParam
 	 * @return
 	 */
-	public List<TreeNode> selectCourseCategoryAll(CourseCategoryParam courseCategoryParam){
+	public List<TreeNode> selectCourseCategoryAll(CourseCategoryParam courseCategoryParam) {
 		List<TreeNode> list = fcCourseCategoryMapper.selectCourseCategoryAll(courseCategoryParam);
 		return TreeUtil.buildByRecursive(list);
 	}
-	
+
 	/**
 	 * 根据id查询详情
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public FcCourseCategory selectById(Integer id) {
 		return fcCourseCategoryMapper.selectById(id);
 	}
-	
+
 	/**
 	 * 根据名字模糊查询
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public List<TreeNode> selectCourseCategoryByNames(String name){
+	public List<TreeNode> selectCourseCategoryByNames(String name) {
 		List<String> codeList = fcCourseCategoryMapper.selectCourseCategoryByNames(name);
 		List<TreeNode> lists = new ArrayList<TreeNode>();
-		if(codeList.size()>0) {
+		if (codeList.size() > 0) {
 			CourseCategoryParam model = new CourseCategoryParam();
 			model.setCodeList(codeList);
 			List<TreeNode> list = fcCourseCategoryMapper.selectCourseCategoryAll(model);
 			return TreeUtil.buildByRecursive(list);
-		}else {
+		} else {
 			return lists;
 		}
 	}
-	
+
 	/**
 	 * 新增
+	 * 
 	 * @param record
 	 * @return
 	 */
 	public int inserCourseCategory(FcCourseCategory record) {
 		Integer nameCount = fcCourseCategoryMapper.selectCourseCategoryByName(record.getName());
-		if(nameCount>0)	{
+		if (nameCount > 0) {
 			return -2;
 		}
 		// 固定编码长度
@@ -106,8 +112,8 @@ public class FcCourseCategoryService {
 		}
 		if (record.getPid() == 0) {
 			List<FcCourseCategory> list = fcCourseCategoryMapper.selectByPid(record.getPid());
-			if(list.size()>0) {
-				FcCourseCategory model = list.get(list.size() -1);
+			if (list.size() > 0) {
+				FcCourseCategory model = list.get(list.size() - 1);
 				String code = String.valueOf(Integer.parseInt(model.getCode()) + 1);
 				for (int i = code.length(); i < codeLength; i++) {
 					code = "0" + code;
@@ -118,7 +124,7 @@ public class FcCourseCategoryService {
 			}
 		} else {
 			List<FcCourseCategory> list = fcCourseCategoryMapper.selectByPid(record.getPid());
-			if(list.size()>0) {
+			if (list.size() > 0) {
 				FcCourseCategory model = list.get(list.size() - 1);
 				String code = model.getCode();
 				String prefix = code.substring(0, code.length() - 3);
@@ -128,15 +134,16 @@ public class FcCourseCategoryService {
 					code = "0" + code;
 				}
 				record.setCode(prefix + code);
-			}else {
+			} else {
 				record.setCode(parentCode + initialCode);
 			}
 		}
 		return fcCourseCategoryMapper.insertSelective(record);
 	}
-	
+
 	/**
 	 * 修改服务分类
+	 * 
 	 * @param record
 	 * @return
 	 */
@@ -147,7 +154,7 @@ public class FcCourseCategoryService {
 		model.setName(record.getName());
 		model.setCode(record.getCode());
 		List<TreeNode> list = fcCourseCategoryMapper.selectCourseCategoryAll(model);
-		if(list.size()>0) {
+		if (list.size() > 0) {
 			return -2;
 		}
 		return fcCourseCategoryMapper.updateByPrimaryKeySelective(record);

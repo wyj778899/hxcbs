@@ -113,9 +113,9 @@ public class UploadController {
 		String fileName = multipartFile.getOriginalFilename();
 
 		// 检查文件大小
-		if (multipartFile.getSize() > maxSize * 2) {
-			return ResultUtil.custom(-5, "上传文件大小不得超过5MB");
-		}
+//		if (multipartFile.getSize() > maxSize * 2) {
+//			return ResultUtil.custom(-5, "上传文件大小不得超过5MB");
+//		}
 		// 检查扩展名
 		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 		if (!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)) {
