@@ -162,7 +162,7 @@ public class FcCourseArchivesService {
 			List<FcCourseBookVo> bookList = fcCourseBookMapper.selectFcCourseAboutBook(id);
 			data.setBookList(bookList);
 			// 查询该课程学习进度
-			Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId, roleType);
+			Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId, roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
 			if (firstPassTime == null) {
 				data.setStudyDay(0);
 			} else {
