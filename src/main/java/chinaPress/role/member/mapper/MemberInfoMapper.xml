@@ -31,6 +31,8 @@
 			property="userName" />
 		<result column="password" jdbcType="VARCHAR"
 			property="password" />
+		<result column="source" jdbcType="INTEGER"
+			property="source" />
 	</resultMap>
 
 	<!-- 员工对应证书信息封装 -->
@@ -55,7 +57,7 @@
 		is_start,
 		`state`, create_id, create_time, update_id, update_time, role_id, role_type,
 		user_name,
-		`password`
+		`password`,source
 	</sql>
 
 
@@ -326,6 +328,9 @@
 			<if test="password != null">
 				`password`,
 			</if>
+			<if test="source!= null">
+				source,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -387,6 +392,9 @@
 			</if>
 			<if test="password != null">
 				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				#{source,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -451,6 +459,9 @@
 			</if>
 			<if test="password != null">
 				`password` = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=INTEGER},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

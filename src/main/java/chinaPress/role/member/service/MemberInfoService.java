@@ -115,6 +115,7 @@ public class MemberInfoService {
 			} catch (Exception e) {
 				return new Result(-2, "密码不合法", "");
 			}
+			trainInstitutionInfo.setSource(1);
 			int count = trainInstitutionInfoMapper.insertSelective(trainInstitutionInfo);
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setPassword(trainInstitutionInfo.getPassword());
@@ -130,6 +131,7 @@ public class MemberInfoService {
 			memberInfo.setRoleId(trainInstitutionInfo.getId());
 			memberInfo.setRoleType(2);
 			memberInfo.setPhoto("assets/image/userImg.jpg");
+			memberInfo.setSource(1);
 			count += memberInfoMapper.insertSelective(memberInfo);
 			if (count > 1) {
 //				smsService.sendFinishSMS(tellPhone,"恭喜您注册华夏云课堂！！！");
@@ -293,11 +295,13 @@ public class MemberInfoService {
 				return new Result(-2, "密码不合法", "");
 			}
 			userInfo.setState(1);
+			userInfo.setSource(1);
 			int i = userInfoMapper.insertSelective(userInfo);
 			memberInfo.setIsStart(1);
 			memberInfo.setState(2);
 			memberInfo.setRoleId(userInfo.getId());
 			memberInfo.setRoleType(5);
+			memberInfo.setSource(1);
 			memberInfo.setPhoto("assets/image/userImg.jpg");
 			i += memberInfoMapper.insertSelective(memberInfo);
 			if (i > 1) {
@@ -411,6 +415,7 @@ public class MemberInfoService {
 				e.printStackTrace();
 				return new Result(-2, "密码不合法", "");
 			}
+			practitionerInfo.setSource(1);
 			practitionerInfo.setState(1);
 			int i = practitionerInfoMapper.insertSelective(practitionerInfo);
 			MemberInfo memberInfo = new MemberInfo();
@@ -428,6 +433,7 @@ public class MemberInfoService {
 			memberInfo.setIsStart(1);
 			memberInfo.setState(2);
 			memberInfo.setRoleId(practitionerInfo.getId());
+			memberInfo.setSource(1);
 			// 状态有值进行操作
 			if (1 == practitionerInfo.getType()) {
 				memberInfo.setRoleType(3);
@@ -674,6 +680,7 @@ public class MemberInfoService {
 			e.printStackTrace();
 			return new Result(-2, "密码不合法", "");
 		}
+		memberInfo.setSource(1);
 		memberInfo.setIsStart(1);
 		memberInfo.setState(2);
 		memberInfo.setRoleType(1);

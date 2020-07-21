@@ -63,7 +63,20 @@ public class UserInfo {
      */
     private String tellPhone;
 
-    
+    /** 
+	 * 注册来源   1华夏      2恩起
+	 */
+	private Integer source;
+
+	
+	public Integer getSource() {
+		return source;
+	}
+
+	public void setSource(Integer source) {
+		this.source = source;
+	}
+
     
     
     public String getTellPhone() {

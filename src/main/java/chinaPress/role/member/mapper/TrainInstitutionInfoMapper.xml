@@ -39,6 +39,7 @@
     <result column="school_style" jdbcType="VARCHAR" property="schoolStyle" />
     <result column="teacher_ranks" jdbcType="VARCHAR" property="teacherRanks" />
     <result column="other_reveal" jdbcType="VARCHAR" property="otherReveal" />
+     <result column="source" jdbcType="INTEGER" property="source" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, code, legal_person, certificate_number, register_name, register_tell, 
@@ -46,7 +47,7 @@
     business_provice, business_city, business_area, business_address, business_photo, 
     practitioner_photo, user_name, `password`, audit_status, `state`, create_id, create_time, 
     update_id, update_time, enterprise_code,user_head,is_flag,register_post,scope_business,
-    org_profile,service_content,school_style,teacher_ranks,other_reveal
+    org_profile,service_content,school_style,teacher_ranks,other_reveal,source
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -251,6 +252,9 @@
       <if test="otherReveal != null">
         other_reveal,
       </if>
+       <if test="source != null">
+        source,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -361,6 +365,9 @@
       </if>
       <if test="otherReveal != null">
         #{otherReveal,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
       </if>
     </trim>
     <selectKey resultType="java.lang.Integer" keyProperty="id">
@@ -474,6 +481,9 @@
       </if>
       <if test="otherReveal != null">
         other_reveal = #{otherReveal,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

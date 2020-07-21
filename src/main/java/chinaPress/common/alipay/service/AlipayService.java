@@ -25,7 +25,9 @@ import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.service.FcOrderService;
 import chinaPress.role.member.dao.MemberInfoMapper;
+import chinaPress.role.member.dao.PractitionerInfoMapper;
 import chinaPress.role.member.model.MemberInfo;
+import chinaPress.role.member.model.PractitionerInfo;
 
 @Service
 public class AlipayService {
@@ -41,7 +43,8 @@ public class AlipayService {
 	private FcApplyMapper fcApplyMapper;
 	@Autowired
 	private SMSService smsService;
-
+	@Autowired
+	private PractitionerInfoMapper practitionerInfoMapper;
 	/**
 	 * 支付宝支付回调
 	 * 
@@ -171,6 +174,13 @@ public class AlipayService {
 								if (orderModel.getRoleType().intValue() == 1) {
 									// 机构
 								} else {
+									//如果是恩起用户回调给恩起
+									Integer roleId = orderModel.getRoleId();
+									PractitionerInfo practitionerInfo  = practitionerInfoMapper.selectByPrimaryKey(roleId);
+									Integer source = practitionerInfo.getSource();
+									if(source!=null && source==2) {
+										//回传用户接口
+									}
 									// 家长/从业者
 									message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
 									smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
