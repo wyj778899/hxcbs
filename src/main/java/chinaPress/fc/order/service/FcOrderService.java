@@ -9,11 +9,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
-import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.order.dao.FcOrderBookMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
@@ -22,6 +22,7 @@ import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.model.FcOrderBook;
 import chinaPress.fc.order.model.FcOrderPerson;
 import chinaPress.fc.order.model.FcOrderPersonHour;
+import chinaPress.fc.order.vo.OrderInvoiceInfo;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
@@ -156,6 +157,10 @@ public class FcOrderService {
 			record.setIsCoupon(0);
 		}
 		record.setPayStatus(1);
+		//需要开发票的时候给发票状态赋值
+		if(record.getInvoiceType()!=null && (record.getInvoiceType()==2 || record.getInvoiceType()==3)) {
+			record.setInvoiceState(0);
+		}
 		Date current_date = new Date();
 		record.setCode(String.valueOf(current_date.getTime()));
 		record.setDate(current_date);
@@ -357,5 +362,50 @@ public class FcOrderService {
 	 */
 	public FcOrder selectCourseIsLearning(Integer roleId, Integer roleType, Integer courseId) {
 		return fcOrderMapper.selectCourseIsLearning(roleId, roleType, courseId);
+	}
+	
+	/**
+	 * 通过订单id和发票状态查询当前订单是否已开发票信息
+	 * @return
+	 */
+	public Result findInvoiceInfo(FcOrder record) {
+		try {
+			List<OrderInvoiceInfo> list = fcOrderMapper.selectInvoiceInfo(record);
+			return new Result(1,"查询成功",list);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	
+	/**
+	 * 通过订单id和发票状态查询当前订单是否已开发票信息个数
+	 * @param id
+	 * @param invoiceState
+	 * @return
+	 */
+	public Result findInvoiceInfoCount(FcOrder record) {
+		try {
+			int count = fcOrderMapper.selectInvoiceInfoCount(record);
+			return new Result(1,"查询成功",count);
+		}catch(Exception e) {
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	
+	/**
+	 * 更新订单的发票信息
+	 * @param record
+	 * @return
+	 */
+	public Result setInvoiceInfoCount(FcOrder record) {
+		try {
+		    int count = fcOrderMapper.updateByPrimaryKeySelective(record);
+			return new Result(1,"更新成功",count);
+		}catch(Exception e) {
+			return new Result(0,"系统错误","");
+		}
 	}
 }

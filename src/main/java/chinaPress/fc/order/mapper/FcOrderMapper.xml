@@ -70,6 +70,8 @@
 			property="remarks" />
 		<result column="email" jdbcType="VARCHAR"
 		property="email" />
+		<result column="invoice_state" jdbcType="INTEGER"
+		property="invoiceState" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `date`, code, role_type, role_id, course_id, start_time, end_time,
@@ -80,7 +82,7 @@
 		, invoice_type , invoice_title, invoice_number, invoice_details,
 		consignee_name
 		, consignee_area, consignee_address, consignee_phone, payment_mode,
-		third_party_no,bank_deposit,bank_number,remarks,email
+		third_party_no,bank_deposit,bank_number,remarks,email,invoice_state
 	</sql>
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -179,6 +181,7 @@
 			<if test="bankNumber != null">bank_number,</if>
 			<if test="remarks != null">remarks,</if>
 			<if test="email != null">email,</if>
+			<if test="invoiceState !=null">invoice_state,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -258,6 +261,7 @@
 			<if test="bankNumber != null">#{bankNumber},</if>
 			<if test="remarks != null">#{remarks},</if>
 			<if test="email != null">#{email},</if>
+			<if test="invoiceState != null">#{invoiceState},</if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -338,6 +342,7 @@
 			<if test="bankNumber != null">bank_number = #{bankNumber},</if>
 			<if test="remarks != null">remarks = #{remarks},</if>
 			<if test="email != null">email = #{email},</if>
+			<if test="invoiceState != null">invoice_state = #{invoiceState},</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -573,5 +578,82 @@
 			and now() <![CDATA[<=]]> a.end_time
 			and b.role_type = #{roleType}
 			and b.role_id = #{roleId}
+	</select>
+	
+	<!-- 终端审核和个人信息展示 查询条件：订单id，发票类型，是否已申请开发票，用户的角色id，用户的id-->
+	<select id="selectInvoiceInfo" resultType="chinaPress.fc.order.vo.OrderInvoiceInfo">
+	SELECT
+		a.id,
+		a.date,
+		a. CODE,
+		b. NAME,
+		a.pay_amount as payAmount,
+		(
+			CASE
+			WHEN a.invoice_type = 2 THEN
+			'个人'
+			WHEN a.invoice_type = 3 THEN
+			'公司'
+			ELSE
+			''
+			END
+		) invoiceType,
+		a.invoice_title as invoiceTitle,
+		a.invoice_number as invoiceNumber,
+		a.bank_deposit as bankDeposit,
+		a.bank_number as bankNumber,
+		a.remarks,
+		a.email
+	FROM
+	fc_order a
+	LEFT JOIN fc_course_archives b ON a.course_id = b.id
+	WHERE
+		a.pay_status = 2
+		AND (a.invoice_type = 2 OR a.invoice_type = 3)
+		<if test="invoiceState != null">
+			AND a.invoice_state = #{invoiceState}
+	    </if>
+		<if test="id != null">
+			AND a.id = #{id}
+	    </if>
+	    <if test="invoiceType != null">
+			AND a.invoice_type = #{invoiceType}
+	    </if>
+	    <if test="roleType != null">
+			AND a.role_type = #{roleType}
+	    </if>
+	    <if test="roleId != null">
+			AND a.role_id = #{roleId}
+	    </if>
+	ORDER BY a.create_time
+	<if test="page != null and limit !=null">
+		limit ${(page-1) * limit} , #{limit}
+	</if>
+	</select>
+	
+	<select id="selectInvoiceInfoCount" resultType="java.lang.Integer">
+	SELECT
+		count(*)
+	FROM
+	fc_order a
+	LEFT JOIN fc_course_archives b ON a.course_id = b.id
+	WHERE
+		a.pay_status = 2
+		AND (a.invoice_type = 2 OR a.invoice_type = 3)
+		<if test="invoiceState != null">
+			AND a.invoice_state = #{invoiceState}
+	    </if>
+		<if test="id != null">
+			AND a.id = #{id}
+	    </if>
+	    <if test="invoiceType != null">
+			AND a.invoice_type = #{invoiceType}
+	    </if>
+	    <if test="roleType != null">
+			AND a.role_type = #{roleType}
+	    </if>
+	    <if test="roleId != null">
+			AND a.role_id = #{roleId}
+	    </if>
 	</select>
 </mapper>

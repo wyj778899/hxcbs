@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.book_content.dao.FcBookContentMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.fc.book_content.model.FcBookContent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="book_id" jdbcType="INTEGER" property="bookId" />
+    <result column="content_photo" jdbcType="VARCHAR" property="contentPhoto" />
+    <result column="photo_sort" jdbcType="VARCHAR" property="photoSort" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, book_id, content_photo, photo_sort
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_book_content
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fc_book_content
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="chinaPress.fc.book_content.model.FcBookContent">
+    insert into fc_book_content (id, book_id, content_photo, 
+      photo_sort)
+    values (#{id,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, #{contentPhoto,jdbcType=VARCHAR}, 
+      #{photoSort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="chinaPress.fc.book_content.model.FcBookContent">
+    insert into fc_book_content
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="contentPhoto != null">
+        content_photo,
+      </if>
+      <if test="photoSort != null">
+        photo_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null">
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="contentPhoto != null">
+        #{contentPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="photoSort != null">
+        #{photoSort,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.book_content.model.FcBookContent">
+    update fc_book_content
+    <set>
+      <if test="bookId != null">
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="contentPhoto != null">
+        content_photo = #{contentPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="photoSort != null">
+        photo_sort = #{photoSort,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chinaPress.fc.book_content.model.FcBookContent">
+    update fc_book_content
+    set book_id = #{bookId,jdbcType=INTEGER},
+      content_photo = #{contentPhoto,jdbcType=VARCHAR},
+      photo_sort = #{photoSort,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 20200717  删除书籍内容 -->
+  <delete id="deleteByBookId" parameterType="java.lang.Integer">
+    delete from fc_book_content
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </delete>
+</mapper>

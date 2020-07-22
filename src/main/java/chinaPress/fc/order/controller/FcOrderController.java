@@ -249,4 +249,46 @@ public class FcOrderController {
 			return ResultUtil.custom(0, "该订单不存在");
 		}
 	}
+	
+	
+	/**
+	 * 查询订单发票信息终端和后台管理端
+	 * @param record     
+	 * 接收的参数为  
+	 * 订单编号:id,
+	 * 是否已申请发票:invoiceState(0未申请1已申请),
+	 * 发票类型:invoiceType(2个人3公司),
+	 * 用于查询个人的订单信息0
+	 * roleId:角色id            
+	 * roleType:角色类型
+	 * page:分页页数
+	 * limit:分页个数
+	 * @return
+	 */
+	@RequestMapping("/findInvoiceInfo")
+	public Result findInvoiceInfo(FcOrder record) {
+		return fcOrderService.findInvoiceInfo(record);
+	}
+	
+	
+	/**
+	 * 查询订单发票信息终端和后台管理端个数
+	 * @return
+	 */
+	@RequestMapping("/findInvoiceInfoCount")
+	public Result findInvoiceInfoCount(FcOrder record) {
+		return fcOrderService.findInvoiceInfoCount(record);
+	}
+	
+	/**
+	 * 更新发票信息
+	 * @param record
+	 * @return
+	 */
+	@RequestMapping("/modifyInvoiceInfo")
+	public Result modifyInvoiceInfo(FcOrder record) {
+		//当用户申请开发票的时候将法装申请状态改成已申请
+		record.setInvoiceState(1);
+		return fcOrderService.setInvoiceInfoCount(record);
+	}
 }

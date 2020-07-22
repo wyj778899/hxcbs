@@ -30,13 +30,13 @@ public class MemberAndCer {
 	/**
 	 * 性别
 	 */
-	private Integer sex;
+	private String sex;
 	
 	
 	/**
 	 * 证书类型
 	 */
-	private Integer certificateType;
+	private String certificateType;
 	
 	
 	/**
@@ -47,7 +47,7 @@ public class MemberAndCer {
 	/**
 	 * 审核状态
 	 */
-	private Integer auditStatus;
+	private String auditStatus;
 
 	
 	/**
@@ -118,7 +118,7 @@ public class MemberAndCer {
      * 性别
      * @return sex
      */
-	public Integer getSex() {
+	public String getSex() {
 		return sex;
 	}
 
@@ -126,7 +126,7 @@ public class MemberAndCer {
      * 性别
      * @param sex
      */
-	public void setSex(Integer sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 
@@ -134,7 +134,7 @@ public class MemberAndCer {
      * 证书类型
      * @return certificateType
      */
-	public Integer getCertificateType() {
+	public String getCertificateType() {
 		return certificateType;
 	}
 
@@ -142,7 +142,7 @@ public class MemberAndCer {
      * 证书类型
      * @param certificateType
      */
-	public void setCertificateType(Integer certificateType) {
+	public void setCertificateType(String certificateType) {
 		this.certificateType = certificateType;
 	}
 
@@ -166,7 +166,7 @@ public class MemberAndCer {
      * 审核状态
      * @return auditStatus
      */
-	public Integer getAuditStatus() {
+	public String getAuditStatus() {
 		return auditStatus;
 	}
 
@@ -174,7 +174,7 @@ public class MemberAndCer {
      * 审核状态
      * @param auditStatus
      */
-	public void setAuditStatus(Integer auditStatus) {
+	public void setAuditStatus(String auditStatus) {
 		this.auditStatus = auditStatus;
 	}
 	

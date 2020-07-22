@@ -27,7 +27,7 @@ public class UserInfoVo {
 	/**
 	 * 是否有效
 	 */
-	private Integer state;
+	private String state;
 
 	public Integer getId() {
 		return id;
@@ -53,11 +53,11 @@ public class UserInfoVo {
 		this.tellPhone = tellPhone;
 	}
 
-	public Integer getState() {
+	public String getState() {
 		return state;
 	}
 
-	public void setState(Integer state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 

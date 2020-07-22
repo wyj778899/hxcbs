@@ -40,13 +40,13 @@
 		type="chinaPress.role.member.vo.MemberAndCer">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="certificate_type" jdbcType="INTEGER"
+		<result column="certificate_type" jdbcType="VARCHAR"
 			property="certificateType" />
 		<result column="tell_phone" jdbcType="VARCHAR"
 			property="tellPhone" />
 		<result column="user_name" jdbcType="VARCHAR"
 			property="userName" />
-		<result column="audit_status" jdbcType="INTEGER"
+		<result column="audit_status" jdbcType="VARCHAR"
 			property="auditStatus" />
 		<result column="sex" jdbcType="VARCHAR" property="sex" />
 		<result column="photo" jdbcType="VARCHAR" property="photo" />
@@ -160,7 +160,7 @@
 		from role_practitioner_archives a, fc_certificate_archives b
 		where a.id = b.role_id and b.state = 1
 		<if test="name !=null and name!=''">
-			and a.name like CONCAT('%',#{name},'%')
+			and a.user_name like CONCAT('%',#{name},'%')
 		</if>
 		<if test="tellPhone !=null and tellPhone!=''">
 			and a.tell_phone like CONCAT('%',#{tellPhone},'%')
@@ -179,29 +179,32 @@
 		select
 		a.name,
 		a.tell_phone,
-		a.sex,
+		case when a.sex = 1 then '男'
+		     when a.sex = 2 then '女'
+		     else '' end as sex,
 		a.user_name,
 		b.id,
-		b.certificate_type,
+		case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
+             when b.certificate_type = 2 then '学历证书'
+			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as certificate_type,
 		b.photo,
-		b.audit_status
-		from (select id,name,tell_phone,sex,user_name
-		from role_practitioner_archives
-		where 1=1
-		<if test="name !=null and name!=''">
-			and name like CONCAT('%',#{name},'%')
-		</if>
-		<if test="tellPhone !=null and tellPhone!=''">
-			and tell_phone like CONCAT('%',#{tellPhone},'%')
-		</if>
-		)a , fc_certificate_archives b
+		case when b.audit_status = 1 then '待审核'
+             when b.audit_status = 2 then '已审核'
+			 when b.audit_status = 3 then '已驳回' else '' end as audit_status
+		from role_practitioner_archives a , fc_certificate_archives b
 		where a.id = b.role_id and b.state = 1
-		<if test="auditStatus != null">
-			and b.audit_status = #{auditStatus}
-		</if>
-		<if test="certificateType != null">
-			and b.certificate_type = #{certificateType}
-		</if>
+			<if test="name !=null and name!=''">
+				and a.user_name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="tellPhone !=null and tellPhone!=''">
+				and a.tell_phone like CONCAT('%',#{tellPhone},'%')
+			</if>
+			<if test="auditStatus != null">
+				and b.audit_status = #{auditStatus}
+			</if>
+			<if test="certificateType != null">
+				and b.certificate_type = #{certificateType}
+			</if>
 		order by b.create_time desc
 		limit #{page},#{limit}
 	</select>
@@ -209,10 +212,23 @@
 	<!--证书查询功能，通过证书id 查看用户和证书的信息   这里只涉及家长/从业者信息不涉及培训机构信息 -->
 	<select id="selectByCerId" parameterType="java.lang.Integer"
 		resultMap="memberAndCerMap">
-		select a.id,a.certificate_type,a.audit_status,a.photo,
-		b.name,b.sex,b.tell_phone,b.user_name
+		select 
+			a.id,
+			case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
+	             when b.certificate_type = 2 then '学历证书'
+				 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as certificate_type,
+			case when b.audit_status = 1 then '待审核'
+	             when b.audit_status = 2 then '已审核'
+				 when b.audit_status = 3 then '已驳回' else '' end as audit_status,
+			a.photo,
+			b.name,
+			case when a.sex = 1 then '男'
+		  	     when a.sex = 2 then '女'
+		         else '' end as sex,
+			b.tell_phone,
+			b.user_name
 		from fc_certificate_archives a,
-			 role_practitioner_archives b
+		role_practitioner_archives b
 		where a.role_id = b.id
 		and a.id = #{id,jdbcType=INTEGER}
 	</select>
@@ -472,7 +488,8 @@
 	    id,
 	    user_name as name,
 	    tell_phone as tellPhone,
-	    is_start as state 
+	    case when is_start = 0 then '未启用'
+	         when is_start = 1 then '已启用' as state 
 	    from role_staff_archives
 	    where role_type = 1 
 	      <if test="name != null and name!=''">

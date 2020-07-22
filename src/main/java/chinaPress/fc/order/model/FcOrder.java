@@ -182,7 +182,45 @@ public class FcOrder {
 	 */
 	private String email;
 	
+	/**
+	 * 是否已申请开票
+	 */
+	private Integer invoiceState;
 	
+	/**
+	 * 页数
+	 */
+	private Integer page;
+	
+	/**
+	 * 每页的个数
+	 */
+	private Integer limit;
+	
+	
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	public Integer getInvoiceState() {
+		return invoiceState;
+	}
+
+	public void setInvoiceState(Integer invoiceState) {
+		this.invoiceState = invoiceState;
+	}
 
 	public String getEmail() {
 		return email;

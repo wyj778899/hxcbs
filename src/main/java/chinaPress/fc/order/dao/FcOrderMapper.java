@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.order.model.FcOrder;
+import chinaPress.fc.order.vo.OrderInvoiceInfo;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalOrderListParam;
 import chinaPress.fc.order.vo.TerminalOrderListVo;
@@ -105,4 +106,22 @@ public interface FcOrderMapper {
 	 */
 	FcOrder selectCourseIsLearning(@Param("roleId") Integer roleId, @Param("roleType") Integer roleType,
 			@Param("courseId") Integer courseId);
+	
+	
+	
+	/**
+	 * 查询订单发票信息
+	 * record   订单对象
+	 * @return
+	 */
+	List<OrderInvoiceInfo> selectInvoiceInfo(FcOrder record);
+	
+	
+	/**
+	 * 查询订单发票信息个数
+	 * record   订单对象
+	 * @return
+	 */
+	int selectInvoiceInfoCount(FcOrder record);
+		
 }
