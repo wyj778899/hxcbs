@@ -27,7 +27,6 @@ import chinaPress.fc.course_section.vo.FcCourseSectionVo;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.model.FcOrder;
-import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.service.FcOrderPersonService;
 import chinaPress.fc.question.dao.FcQuestionOptionMapper;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
@@ -161,9 +160,10 @@ public class FcCourseArchivesService {
 			// 查询相关推荐书籍
 			List<FcCourseBookVo> bookList = fcCourseBookMapper.selectFcCourseAboutBook(id);
 			data.setBookList(bookList);
-			if (roleId != null && roleType != null  && (roleType == 3 || roleType == 4)) {
+			if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
 				// 查询该课程学习进度
-				Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId, roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+				Date firstPassTime = fcOrderPersonHourMapper.selectCourseFirstPassTime(id, roleId,
+						roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
 				if (firstPassTime == null) {
 					data.setStudyDay(0);
 				} else {
@@ -201,20 +201,20 @@ public class FcCourseArchivesService {
 	/**
 	 * 查询课程列表
 	 * 
-	 * @param record
-	 * @param pageNumber
-	 * @param pageSize
+	 * @param record     表头查询条件
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条
 	 * @return
 	 */
-	public List<CourseArchivesVo> selectCOurseArchivesList(CourseArchivesParam record, Integer pageNumber,
+	public List<CourseArchivesVo> selectCourseArchivesList(CourseArchivesParam record, Integer pageNumber,
 			Integer pageSize) {
-		return fcCourseArchivesMapper.selectCOurseArchivesList(record, pageNumber * pageSize - pageSize, pageSize);
+		return fcCourseArchivesMapper.selectCourseArchivesList(record, pageNumber * pageSize - pageSize, pageSize);
 	}
 
 	/**
 	 * 查询课程数量
 	 * 
-	 * @param record
+	 * @param record 表头查询条件
 	 * @return
 	 */
 	public int selectCourseArchivesCount(CourseArchivesParam record) {
@@ -288,10 +288,14 @@ public class FcCourseArchivesService {
 	/**
 	 * 上下架
 	 * 
-	 * @param record
+	 * @param id        课程id
+	 * @param isPutaway 是否上下架
 	 * @return
 	 */
-	public int updateCourseArchivesStatus(FcCourseArchives record) {
+	public int updateCourseArchivesStatus(Integer id, Integer isPutaway) {
+		FcCourseArchives record = new FcCourseArchives();
+		record.setId(id);
+		record.setIsPutaway(isPutaway);
 		return fcCourseArchivesMapper.updateByPrimaryKeySelective(record);
 	}
 

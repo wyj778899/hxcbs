@@ -38,6 +38,7 @@
 		photo, is_putaway, `state`, create_id, create_time, update_id,
 		update_time,is_delete
 	</sql>
+	
 	<!-- 根据分类id查询关联课程 -->
 	<select id="selectCourseByCategoryId"
 		resultType="chinaPress.fc.course.vo.CourseArchivesNewVo"
@@ -64,6 +65,7 @@
 			</if>
 		</where>
 	</select>
+	
 	<!-- 查询课程详情 -->
 	<select id="selectCourseArchivesById"
 		resultType="chinaPress.fc.course.vo.CourseArchivesNewVo"
@@ -84,6 +86,7 @@
 		left join fc_course_category b on a.category_id = b.id
 		where a.id = #{id}
 	</select>
+	
 	<!-- 查询首页随机5条课程 -->
 	<select id="selectPageIndexCourse"
 		resultType="chinaPress.fc.course.vo.PageIndexCourseVo">
@@ -101,37 +104,7 @@
 		a.category_id = 2
 		order by rand() limit 2
 	</select>
-	<!-- 课程列表 -->
-	<select id="selectCOurseArchivesList"
-		resultType="chinaPress.fc.course.vo.CourseArchivesVo"
-		parameterType="chinaPress.fc.course.vo.CourseArchivesParam">
-		select
-		a.id as `id`,
-		a.name as courseName,
-		case a.type
-		when 1 then '免费'
-		when 2 then '付费'
-		when 3 then '认证课程'
-		else '' end as type,
-		b.name as categoryName,
-		a.is_putaway as isPutaway
-		from fc_course_archives a
-		left join fc_course_category b on a.category_id = b.id
-		<where>
-			<if test="name != null and name != ''">
-				and a.name like concat('%',#{name},'%')
-			</if>
-			<if test="type != null">
-				and a.type = #{type}
-			</if>
-			<if test="categoryId != null">
-				and a.category_id = #{categoryId}
-			</if>
-		</where>
-		<if test="pageNumber != null and pageSize != null">
-			limit #{pageNumber},#{pageSize}
-		</if>
-	</select>
+	
 	<!-- 课程数量 -->
 	<select id="selectCourseArchivesCount"
 		resultType="java.lang.Integer"
@@ -141,17 +114,50 @@
 		from fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
 		<where>
-			<if test="name != null and name != ''">
-				and a.name like concat('%',#{name},'%')
+			<if test="record.name != null and record.name != ''">
+				and a.name like concat('%',#{record.name},'%')
 			</if>
-			<if test="type != null">
-				and a.type = #{type}
+			<if test="record.type != null">
+				and a.type = #{record.type}
 			</if>
-			<if test="categoryId != null">
-				and a.category_id = #{categoryId}
+			<if test="record.categoryId != null">
+				and a.category_id = #{record.categoryId}
 			</if>
 		</where>
 	</select>
+	
+	<!-- 课程列表 -->
+	<select id="selectCourseArchivesList"
+		resultType="chinaPress.fc.course.vo.CourseArchivesVo"
+		parameterType="chinaPress.fc.course.vo.CourseArchivesParam">
+		select
+			a.id as `id`,
+			a.name as courseName,
+			case a.type
+			when 1 then '免费'
+			when 2 then '付费'
+			when 3 then '认证课程'
+			else '' end as type,
+			b.name as categoryName,
+			a.is_putaway as isPutaway
+		from fc_course_archives a
+		left join fc_course_category b on a.category_id = b.id
+		<where>
+			<if test="record.name != null and record.name != ''">
+				and a.name like concat('%',#{record.name},'%')
+			</if>
+			<if test="record.type != null">
+				and a.type = #{record.type}
+			</if>
+			<if test="record.categoryId != null">
+				and a.category_id = #{record.categoryId}
+			</if>
+		</where>
+		<if test="offset != null and rows != null">
+			limit #{offset}, #{rows}
+		</if>
+	</select>
+	
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select

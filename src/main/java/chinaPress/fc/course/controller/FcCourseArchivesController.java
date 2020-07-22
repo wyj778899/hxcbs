@@ -68,14 +68,14 @@ public class FcCourseArchivesController {
 	/**
 	 * 查询课程列表
 	 * 
-	 * @param record
-	 * @param pageNumber
-	 * @param pageSize
+	 * @param record     表头查询条件
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条
 	 * @return
 	 */
-	@RequestMapping("selectCOurseArchivesList")
-	public Result selectCOurseArchivesList(CourseArchivesParam record, Integer pageNumber, Integer pageSize) {
-		List<CourseArchivesVo> data = fcCourseArchivesService.selectCOurseArchivesList(record, pageNumber, pageSize);
+	@RequestMapping("manage/courseList")
+	public Result selectCourseArchivesList(CourseArchivesParam record, Integer pageNumber, Integer pageSize) {
+		List<CourseArchivesVo> data = fcCourseArchivesService.selectCourseArchivesList(record, pageNumber, pageSize);
 		if (data.size() > 0) {
 			return ResultUtil.custom(1, "查询成功", data);
 		}
@@ -85,10 +85,10 @@ public class FcCourseArchivesController {
 	/**
 	 * 查询课程数量
 	 * 
-	 * @param record
+	 * @param record 表头查询条件
 	 * @return
 	 */
-	@RequestMapping("selectCourseArchivesCount")
+	@RequestMapping("manage/courseCount")
 	public Result selectCourseArchivesCount(CourseArchivesParam record) {
 		int count = fcCourseArchivesService.selectCourseArchivesCount(record);
 		if (count > 0) {
@@ -117,12 +117,13 @@ public class FcCourseArchivesController {
 	/**
 	 * 课程上下架
 	 * 
-	 * @param record
+	 * @param id        课程id
+	 * @param isPutaway 是否上下架
 	 * @return
 	 */
-	@RequestMapping("updateCourseArchivesStatus")
-	public Result updateCourseArchivesStatus(FcCourseArchives record) {
-		int index = fcCourseArchivesService.updateCourseArchivesStatus(record);
+	@RequestMapping("manage/updateCoursePutWay")
+	public Result updateCourseArchivesStatus(Integer id, Integer isPutaway) {
+		int index = fcCourseArchivesService.updateCourseArchivesStatus(id, isPutaway);
 		if (index > 0) {
 			return ResultUtil.custom(1, "操作成功");
 		}
