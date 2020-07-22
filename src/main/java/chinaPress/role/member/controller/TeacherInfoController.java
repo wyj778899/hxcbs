@@ -64,11 +64,10 @@ public class TeacherInfoController {
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCertInfos")
-	public Result queryTeacherAndCertInfos(String name,String certificateNumber,Integer type) {
+	public Result queryTeacherAndCertInfos(String name,String certificateNumber) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
-		practitionerInfo.setType(type);
 		return teacherInfoService.findTeacherAndCertInfos(practitionerInfo);
 	}
 	

@@ -27,6 +27,11 @@ public class TeacherAndCertVo {
 	private String name;
 	
 	/**
+	 * 证书名称
+	 */
+	private String typeName;
+	
+	/**
 	 * 性别
 	 */
 	private Integer sex;
@@ -103,6 +108,14 @@ public class TeacherAndCertVo {
 
 	public void setCertificateNumber(String certificateNumber) {
 		this.certificateNumber = certificateNumber;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	

@@ -23,6 +23,11 @@ public class TeacherCerInfos {
 	private String head;
 	
 	/**
+	 * 机构名称
+	 */
+	private String institutionName;
+	
+	/**
 	 * 身份证号
 	 */
 	private String certificateNumber;
@@ -77,6 +82,14 @@ public class TeacherCerInfos {
 
 	public void setCerts(List<CertInfo> certs) {
 		this.certs = certs;
+	}
+
+	public String getInstitutionName() {
+		return institutionName;
+	}
+
+	public void setInstitutionName(String institutionName) {
+		this.institutionName = institutionName;
 	}
 	
 	

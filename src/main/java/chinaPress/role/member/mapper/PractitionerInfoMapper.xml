@@ -50,6 +50,7 @@
 	    <result column="head" jdbcType="VARCHAR" property="head" />
 	    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
 	    <result column="source" jdbcType="DECIMAL" property="source"/>
+	    <result column="institution_address" jdbcType="VARCHAR" property="institutionName" />
 	    <collection property="certs" ofType="chinaPress.role.member.vo.CertInfo">
 	    	<id column="id" jdbcType="INTEGER" property="certId"/>
 	    	<result column="cert_photo" jdbcType="VARCHAR" property="certPhoto" />
@@ -612,6 +613,9 @@
 	    a.id as teaId,
 		a.name as name,
 		a.certificate_number as certificateNumber,
+		case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
+             when b.certificate_type = 2 then '学历证书'
+			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as typeName,
 		a.sex as sex,
 		b.id as cerId,
 		b.code as certCode,
@@ -625,12 +629,8 @@
 		<if test="name !=null and name !=''">
 	   		and a.name = #{name}
 	    </if>
-	    <!-- 匹配上岗课程和评估课程培训     资格证课程分类-->
-	    <if test="type !=null">
-	   		and b.course_type = #{type}
-	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
-	   		and b.code = #{certificateNumber}
+	   		and a.certificate_number = #{certificateNumber}
 	    </if>
 	limit 1
   </select>
@@ -643,6 +643,8 @@
 	  a.name as name,
 	  a.certificate_number as certificate_number,
 	  a.grade as source,
+	  case when a.institution_address ='个人报考' then ''
+	       else a.institution_address end as institution_address,
 	  b.id as id,
 	  b.certificate_time as certificate_time,
 	  case when b.certificate_type=1 then '孤独症康复教育上岗培训合格证书'
