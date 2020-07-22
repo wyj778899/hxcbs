@@ -131,7 +131,9 @@
      	a.tell_phone as tellPhone,
      	a.email as email,
      	a.certificate_number as certificateNumber,
-     	a.sex as sex,
+     	(case when a.sex = 1 then '男'
+     	      when a.sex = 2 then '女'
+     	      else '' end) as sex,
      	a.birthday_time as birthdayTime
     from role_practitioner_archives a
     where a.state = 1 and 				
@@ -578,7 +580,7 @@
 	    a.id as teaId,
 		a.name as name,
 		a.certificate_number as certificateNumber,
-		case when b.certificate_type = 1 then '教师资格证'
+		case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
              when b.certificate_type = 2 then '学历证书'
 			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as typeName,
 	    b.id as cerId,
@@ -643,14 +645,15 @@
 	  a.grade as source,
 	  b.id as id,
 	  b.certificate_time as certificate_time,
-	  case when b.certificate_type=1 then '教师资格证'
+	  case when b.certificate_type=1 then '孤独症康复教育上岗培训合格证书'
 		when b.certificate_type=2 then '学历证书'
 		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as cert_name,
 	  b.certificate_type as cert_type,
 	  b.photo as cert_photo,
 	  b.code as cert_code,
 	  b.grade as grade,
-	  b.test_address as test_address
+	  case when b.certificate_type=1 then '中国残疾人康复协会'
+	       else b.test_address end as test_address
 	from 
 	    role_practitioner_archives a,
 		fc_certificate_archives b 

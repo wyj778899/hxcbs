@@ -41,7 +41,7 @@ public class PractitionerParent {
 	/**
 	 * 性别
 	 */
-	private Integer sex;
+	private String sex;
 	
 	/**
 	 * 孩子生日
@@ -97,15 +97,11 @@ public class PractitionerParent {
 		this.certificateNumber = certificateNumber;
 	}
 
-	public Integer getSex() {
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(Integer sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	
-	
-	
-	
 }
