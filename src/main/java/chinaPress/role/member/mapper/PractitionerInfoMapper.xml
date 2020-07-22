@@ -184,7 +184,7 @@
     from role_practitioner_archives a
     where a.state = 1 
     	 <if test="name !=null and name !=''">
-	        and a.name like CONCAT('%',#{name},'%')
+	        and a.user_name like CONCAT('%',#{name},'%')
 	     </if>
       	 <if test="certificateNumber !=null and certificateNumber !=''">
         	and a.certificate_number like CONCAT('%',#{certificateNumber},'%')
