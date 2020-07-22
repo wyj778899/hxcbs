@@ -1,328 +1,366 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chinaPress.fc.book.dao.FcBookArchivesMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.book.model.FcBookArchives">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="picture" jdbcType="VARCHAR" property="picture" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
-    <result column="sets" jdbcType="VARCHAR" property="sets" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-   <!-- 20200717  新增字段 -->
-    <result column="author" jdbcType="VARCHAR" property="author" />
-    <result column="size" jdbcType="INTEGER" property="size" />
-    <result column="page" jdbcType="INTEGER" property="page" />
-    <result column="isbn" jdbcType="VARCHAR" property="isbn" />
-    <result column="edition" jdbcType="VARCHAR" property="edition" />
-    <result column="press" jdbcType="VARCHAR" property="press" />
-    <result column="edit_recommend" jdbcType="VARCHAR" property="editRecommend" />
-    <result column="content_introduce" jdbcType="VARCHAR" property="contentIntroduce" />
-    <result column="author_introduce" jdbcType="VARCHAR" property="authorIntroduce" />
-    <result column="introduce" jdbcType="VARCHAR" property="introduce" />
-    <!-- 书籍目录 -->
-    <collection property="catalogs" ofType="chinaPress.fc.book_catalog.model.FcBookCatalog">
-	    	<id column="bId" jdbcType="INTEGER" property="id"/>
-	    	<result column="catalog_photo" jdbcType="VARCHAR" property="catalogPhoto" />
-		    <result column="bSort" jdbcType="VARCHAR" property="photoSort" />
-    </collection>
-    <!-- 书籍内容  -->
-    <collection property="contents" ofType="chinaPress.fc.book_content.model.FcBookContent">
-	    	<id column="cId" jdbcType="INTEGER" property="id"/>
-	    	<result column="content_photo" jdbcType="VARCHAR" property="contentPhoto" />
-		    <result column="cSort" jdbcType="VARCHAR" property="photoSort" />
-    </collection>
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, `name`, picture, price, qrcode, `sets`, create_id, create_time, update_id, update_time,
-    author,size,page,isbn,edition,press,edit_recommend,content_introduce,author_introduce,introduce
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_book_archives
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_book_archives
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="chinaPress.fc.book.model.FcBookArchives">
-    insert into fc_book_archives (id, `name`, picture, 
-      price, qrcode, `sets`,author,size,page,isbn,edition,press,
-      edit_recommend,content_introduce,author_introduce,introduce,
-      create_id, create_time, update_id, 
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
-      #{price,jdbcType=DECIMAL}, #{qrcode,jdbcType=VARCHAR}, #{sets,jdbcType=VARCHAR}, 
-      #{author,jdbcType=VARCHAR},#{size,jdbcType=INTEGER},#{page,jdbcType=INTEGER},
-      #{isbn,jdbcType=VARCHAR},#{edition,jdbcType=VARCHAR},#{press,jdbcType=VARCHAR},
-      #{editRecommend,jdbcType=VARCHAR},#{contentIntroduce,jdbcType=VARCHAR},#{authorIntroduce,jdbcType=VARCHAR},#{introduce,jdbcType=VARCHAR},
-      #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP})
-      <!-- 返回主键给对象id -->
-     <selectKey resultType="java.lang.Integer" keyProperty="id">
-          SELECT LAST_INSERT_ID()
-     </selectKey>
-  </insert>
-  <insert id="insertSelective" parameterType="chinaPress.fc.book.model.FcBookArchives">
-    insert into fc_book_archives
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="picture != null">
-        picture,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="qrcode != null">
-        qrcode,
-      </if>
-      <if test="sets != null">
-        `sets`,
-      </if>
-      <if test="author != null">
-        author,
-      </if>
-      <if test="size != null">
-        size,
-      </if>
-      <if test="page != null">
-        page,
-      </if>
-      <if test="isbn != null">
-        isbn,
-      </if>
-      <if test="edition != null">
-        edition,
-      </if>
-      <if test="press != null">
-        press,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="editRecommend != null">
-        edit_recommend,
-      </if>
-      <if test="contentIntroduce != null">
-        content_introduce,
-      </if>
-      <if test="authorIntroduce != null">
-        author_introduce,
-      </if>
-      <if test="introduce != null">
-        introduce,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="picture != null">
-        #{picture,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="qrcode != null">
-        #{qrcode,jdbcType=VARCHAR},
-      </if>
-      <if test="sets != null">
-        #{sets,jdbcType=VARCHAR},
-      </if>
-      <!-- 20200717  新增字段 -->
-      <if test="author != null">
-        #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="size != null">
-        #{size,jdbcType=INTEGER},
-      </if>
-      <if test="page != null">
-        #{page,jdbcType=INTEGER},
-      </if>
-      <if test="isbn != null">
-        #{isbn,jdbcType=VARCHAR},
-      </if>
-      <if test="edition != null">
-        #{edition,jdbcType=VARCHAR},
-      </if>
-      <if test="press != null">
-        #{press,jdbcType=VARCHAR},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      
-      <if test="editRecommend != null">
-        #{editRecommend,jdbcType=VARCHAR},
-      </if>
-      <if test="contentIntroduce != null">
-        #{contentIntroduce,jdbcType=VARCHAR},
-      </if>
-      <if test="authorIntroduce != null">
-        #{authorIntroduce,jdbcType=VARCHAR},
-      </if>
-      <if test="introduce != null">
-        #{introduce,jdbcType=VARCHAR},
-      </if>
-    </trim>
-      <!-- 返回主键给对象id -->
-      <selectKey resultType="java.lang.Integer" keyProperty="id">
-          SELECT LAST_INSERT_ID()
-      </selectKey>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.book.model.FcBookArchives">
-    update fc_book_archives
-    <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="picture != null">
-        picture = #{picture,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="qrcode != null">
-        qrcode = #{qrcode,jdbcType=VARCHAR},
-      </if>
-      <if test="sets != null">
-        `sets` = #{sets,jdbcType=VARCHAR},
-      </if>
-      <!-- 20200717  新增字段 -->
-      <if test="author != null">
-        author = #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="size != null">
-        size = #{size,jdbcType=INTEGER},
-      </if>
-      <if test="page != null">
-        page = #{page,jdbcType=INTEGER},
-      </if>
-      <if test="isbn != null">
-        isbn = #{isbn,jdbcType=VARCHAR},
-      </if>
-      <if test="edition != null">
-        edition = #{edition,jdbcType=VARCHAR},
-      </if>
-      <if test="press != null">
-        press = #{press,jdbcType=VARCHAR},
-      </if>
-      
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      
-      <if test="editRecommend != null">
-        edit_recommend = #{editRecommend,jdbcType=VARCHAR},
-      </if>
-      <if test="contentIntroduce != null">
-        content_introduce = #{contentIntroduce,jdbcType=VARCHAR},
-      </if>
-      <if test="authorIntroduce != null">
-        author_introduce = #{authorIntroduce,jdbcType=VARCHAR},
-      </if>
-      <if test="introduce != null">
-        introduce = #{introduce,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="chinaPress.fc.book.model.FcBookArchives">
-    update fc_book_archives
-    set `name` = #{name,jdbcType=VARCHAR},
-      picture = #{picture,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      qrcode = #{qrcode,jdbcType=VARCHAR},
-      `sets` = #{sets,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      size = #{size,jdbcType=INTEGER},
-      page = #{page,jdbcType=INTEGER},
-      isbn = #{isbn,jdbcType=VARCHAR},
-      edition = #{edition,jdbcType=VARCHAR},
-      press = #{press,jdbcType=VARCHAR},
-      edit_recommend = #{editRecommend,jdbcType=VARCHAR},
-      content_introduce = #{contentIntroduce,jdbcType=VARCHAR},
-      author_introduce = #{authorIntroduce,jdbcType=VARCHAR},
-      introduce = #{introduce,jdbcType=VARCHAR}
-      create_id = #{createId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_id = #{updateId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <select id="selectBookInfos" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-	SELECT
-		a.id,
-		a. NAME,
-		a.picture,
-		a.price,
-		a.qrcode,
-		a.sets,
-		a.author,
-		a.size,
-		a.page,
-		a.isbn,
-		a.edition,
-		a.press,
-		a.edit_recommend,
-		a.content_introduce,
-		a.author_introduce,
-		a.introduce,
-		b.id AS bId,
-		b.catalog_photo,
-		b.photo_sort AS bSort,
-		c.id AS cId,
-		c.content_photo,
-		c.photo_sort AS cSort
-	FROM
-		fc_book_archives a
-	LEFT JOIN fc_book_catalog b ON a.id = b.book_id
-	LEFT JOIN fc_book_content c ON a.id = c.book_id
-	where 1 = 1 
-	<if test="id!=null">
-	and a.id = #{id,jdbcType=INTEGER}
-	</if>
-	order by b.photo_sort,c.photo_sort
-  </select>
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.book.model.FcBookArchives">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="picture" jdbcType="VARCHAR" property="picture" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+		<result column="sets" jdbcType="VARCHAR" property="sets" />
+		<result column="create_id" jdbcType="INTEGER" property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_id" jdbcType="INTEGER" property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<!-- 20200717 新增字段 -->
+		<result column="author" jdbcType="VARCHAR" property="author" />
+		<result column="size" jdbcType="INTEGER" property="size" />
+		<result column="page" jdbcType="INTEGER" property="page" />
+		<result column="isbn" jdbcType="VARCHAR" property="isbn" />
+		<result column="edition" jdbcType="VARCHAR" property="edition" />
+		<result column="press" jdbcType="VARCHAR" property="press" />
+		<result column="edit_recommend" jdbcType="VARCHAR" property="editRecommend" />
+		<result column="content_introduce" jdbcType="VARCHAR" property="contentIntroduce" />
+		<result column="author_introduce" jdbcType="VARCHAR" property="authorIntroduce" />
+		<result column="introduce" jdbcType="VARCHAR" property="introduce" />
+		<!-- 书籍目录 -->
+		<collection property="catalogs" ofType="chinaPress.fc.book_catalog.model.FcBookCatalog">
+			<id column="bId" jdbcType="INTEGER" property="id" />
+			<result column="catalog_photo" jdbcType="VARCHAR" property="catalogPhoto" />
+			<result column="bSort" jdbcType="VARCHAR" property="photoSort" />
+		</collection>
+		<!-- 书籍内容 -->
+		<collection property="contents" ofType="chinaPress.fc.book_content.model.FcBookContent">
+			<id column="cId" jdbcType="INTEGER" property="id" />
+			<result column="content_photo" jdbcType="VARCHAR" property="contentPhoto" />
+			<result column="cSort" jdbcType="VARCHAR" property="photoSort" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, `name`, picture, price, qrcode, `sets`, create_id, create_time,
+		update_id, update_time,
+		author,size,page,isbn,edition,press,edit_recommend,content_introduce,author_introduce,introduce
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_book_archives
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_book_archives
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.fc.book.model.FcBookArchives">
+		insert into fc_book_archives (id, `name`, picture,
+		price, qrcode, `sets`,author,size,page,isbn,edition,press,
+		edit_recommend,content_introduce,author_introduce,introduce,
+		create_id, create_time, update_id,
+		update_time)
+		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+		#{picture,jdbcType=VARCHAR},
+		#{price,jdbcType=DECIMAL}, #{qrcode,jdbcType=VARCHAR}, #{sets,jdbcType=VARCHAR},
+		#{author,jdbcType=VARCHAR},#{size,jdbcType=INTEGER},#{page,jdbcType=INTEGER},
+		#{isbn,jdbcType=VARCHAR},#{edition,jdbcType=VARCHAR},#{press,jdbcType=VARCHAR},
+		#{editRecommend,jdbcType=VARCHAR},#{contentIntroduce,jdbcType=VARCHAR},#{authorIntroduce,jdbcType=VARCHAR},#{introduce,jdbcType=VARCHAR},
+		#{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateId,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP})
+		<!-- 返回主键给对象id -->
+		<selectKey resultType="java.lang.Integer" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.book.model.FcBookArchives">
+		insert into fc_book_archives
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="picture != null">
+				picture,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="qrcode != null">
+				qrcode,
+			</if>
+			<if test="sets != null">
+				`sets`,
+			</if>
+			<if test="author != null">
+				author,
+			</if>
+			<if test="size != null">
+				size,
+			</if>
+			<if test="page != null">
+				page,
+			</if>
+			<if test="isbn != null">
+				isbn,
+			</if>
+			<if test="edition != null">
+				edition,
+			</if>
+			<if test="press != null">
+				press,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="editRecommend != null">
+				edit_recommend,
+			</if>
+			<if test="contentIntroduce != null">
+				content_introduce,
+			</if>
+			<if test="authorIntroduce != null">
+				author_introduce,
+			</if>
+			<if test="introduce != null">
+				introduce,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="picture != null">
+				#{picture,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="qrcode != null">
+				#{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="sets != null">
+				#{sets,jdbcType=VARCHAR},
+			</if>
+			<!-- 20200717 新增字段 -->
+			<if test="author != null">
+				#{author,jdbcType=VARCHAR},
+			</if>
+			<if test="size != null">
+				#{size,jdbcType=INTEGER},
+			</if>
+			<if test="page != null">
+				#{page,jdbcType=INTEGER},
+			</if>
+			<if test="isbn != null">
+				#{isbn,jdbcType=VARCHAR},
+			</if>
+			<if test="edition != null">
+				#{edition,jdbcType=VARCHAR},
+			</if>
+			<if test="press != null">
+				#{press,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+
+			<if test="editRecommend != null">
+				#{editRecommend,jdbcType=VARCHAR},
+			</if>
+			<if test="contentIntroduce != null">
+				#{contentIntroduce,jdbcType=VARCHAR},
+			</if>
+			<if test="authorIntroduce != null">
+				#{authorIntroduce,jdbcType=VARCHAR},
+			</if>
+			<if test="introduce != null">
+				#{introduce,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		<!-- 返回主键给对象id -->
+		<selectKey resultType="java.lang.Integer" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.book.model.FcBookArchives">
+		update fc_book_archives
+		<set>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="picture != null">
+				picture = #{picture,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="qrcode != null">
+				qrcode = #{qrcode,jdbcType=VARCHAR},
+			</if>
+			<if test="sets != null">
+				`sets` = #{sets,jdbcType=VARCHAR},
+			</if>
+			<!-- 20200717 新增字段 -->
+			<if test="author != null">
+				author = #{author,jdbcType=VARCHAR},
+			</if>
+			<if test="size != null">
+				size = #{size,jdbcType=INTEGER},
+			</if>
+			<if test="page != null">
+				page = #{page,jdbcType=INTEGER},
+			</if>
+			<if test="isbn != null">
+				isbn = #{isbn,jdbcType=VARCHAR},
+			</if>
+			<if test="edition != null">
+				edition = #{edition,jdbcType=VARCHAR},
+			</if>
+			<if test="press != null">
+				press = #{press,jdbcType=VARCHAR},
+			</if>
+
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+
+			<if test="editRecommend != null">
+				edit_recommend = #{editRecommend,jdbcType=VARCHAR},
+			</if>
+			<if test="contentIntroduce != null">
+				content_introduce = #{contentIntroduce,jdbcType=VARCHAR},
+			</if>
+			<if test="authorIntroduce != null">
+				author_introduce = #{authorIntroduce,jdbcType=VARCHAR},
+			</if>
+			<if test="introduce != null">
+				introduce = #{introduce,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.fc.book.model.FcBookArchives">
+		update fc_book_archives
+		set `name` = #{name,jdbcType=VARCHAR},
+		picture = #{picture,jdbcType=VARCHAR},
+		price = #{price,jdbcType=DECIMAL},
+		qrcode = #{qrcode,jdbcType=VARCHAR},
+		`sets` = #{sets,jdbcType=VARCHAR},
+		author = #{author,jdbcType=VARCHAR},
+		size = #{size,jdbcType=INTEGER},
+		page = #{page,jdbcType=INTEGER},
+		isbn = #{isbn,jdbcType=VARCHAR},
+		edition = #{edition,jdbcType=VARCHAR},
+		press = #{press,jdbcType=VARCHAR},
+		edit_recommend = #{editRecommend,jdbcType=VARCHAR},
+		content_introduce = #{contentIntroduce,jdbcType=VARCHAR},
+		author_introduce = #{authorIntroduce,jdbcType=VARCHAR},
+		introduce = #{introduce,jdbcType=VARCHAR}
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_id = #{updateId,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectBookInfos" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+			a.id,
+			a. NAME,
+			a.picture,
+			a.price,
+			a.qrcode,
+			a.sets,
+			a.author,
+			a.size,
+			a.page,
+			a.isbn,
+			a.edition,
+			a.press,
+			a.edit_recommend,
+			a.content_introduce,
+			a.author_introduce,
+			a.introduce,
+			b.id AS bId,
+			b.catalog_photo,
+			b.photo_sort AS bSort,
+			c.id AS cId,
+			c.content_photo,
+			c.photo_sort AS
+			cSort
+		FROM
+			fc_book_archives a
+		LEFT JOIN fc_book_catalog b ON a.id = b.book_id
+		LEFT JOIN fc_book_content c ON a.id = c.book_id
+		where 1 = 1
+		<if test="id!=null">
+			and a.id = #{id,jdbcType=INTEGER}
+		</if>
+		order by b.photo_sort,c.photo_sort
+	</select>
+	
+	<!-- 查询书籍档案个数 -->
+	<select id="selectBookArchivesCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_book_archives
+		where
+			1 = 1
+			<if test="name != null and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+	</select>
+	
+	<!-- 查询书籍档案列表 -->
+	<select id="selectBookArchivesList" resultType="chinaPress.fc.book.vo.FcBookArchivesManageListVo">
+		select
+			id, picture, name, author, size, page, isbn, edition, press, price 
+		from
+			fc_book_archives
+		where
+			1 = 1
+			<if test="name != null and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+	</select>
 </mapper>
