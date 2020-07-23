@@ -15,6 +15,7 @@ import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 import chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo;
+import chinaPress.fc.order.vo.UserInvoiceInfo;
 
 @Mapper
 @Repository
@@ -123,5 +124,19 @@ public interface FcOrderMapper {
 	 * @return
 	 */
 	int selectInvoiceInfoCount(FcOrder record);
+	
+	/**
+	 * 根据发票类型查询用户的发票信息   家长/从业者，培训机构
+	 * @param type
+	 * @return
+	 */
+	List<UserInvoiceInfo> selectUserInvoices(@Param("type")Integer type,@Param("page")Integer page,@Param("limit")Integer limit);
+	
+	/**
+	 * 根据发票类型查询用户的发票信息个数   家长/从业者，培训机构
+	 * @param type
+	 * @return
+	 */
+	int selectUserInvoicesCount(@Param("type")Integer type);
 		
 }
