@@ -252,31 +252,34 @@ public class FcOrderController {
 	
 	
 	/**
-	 * 查询订单发票信息终端和后台管理端
+	 * 查询订单发票信息终端
 	 * @param record     
 	 * 接收的参数为  
-	 * 订单编号:id,
 	 * 是否已申请发票:invoiceState(0未申请1已申请),
-	 * 发票类型:invoiceType(2个人3公司),
-	 * 用于查询个人的订单信息0
 	 * roleId:角色id            
 	 * roleType:角色类型
 	 * page:分页页数
 	 * limit:分页个数
 	 * @return
 	 */
-	@RequestMapping("/findInvoiceInfo")
-	public Result findInvoiceInfo(FcOrder record) {
+	@RequestMapping("/queryInvoiceInfo")
+	public Result queryInvoiceInfo(Integer invoiceState,Integer roleId,Integer roleType,Integer page,Integer limit) {
+		FcOrder record = new FcOrder();
+		record.setInvoiceState(invoiceState);
+		record.setRoleId(roleId);
+		record.setRoleType(roleType);
+		record.setPage((page-1) * limit);
+		record.setLimit(limit);
 		return fcOrderService.findInvoiceInfo(record);
 	}
 	
 	
 	/**
-	 * 查询订单发票信息终端和后台管理端个数
+	 * 查询订单发票信息终端个数
 	 * @return
 	 */
-	@RequestMapping("/findInvoiceInfoCount")
-	public Result findInvoiceInfoCount(FcOrder record) {
+	@RequestMapping("/queryInvoiceInfoCount")
+	public Result queryInvoiceInfoCount(FcOrder record) {
 		return fcOrderService.findInvoiceInfoCount(record);
 	}
 	
@@ -291,4 +294,34 @@ public class FcOrderController {
 		record.setInvoiceState(1);
 		return fcOrderService.setInvoiceInfoCount(record);
 	}
+	
+	/**
+	 * 查询订单发票信息后台管理端
+	 * @return
+	 */
+	@RequestMapping("/queryUserInvoices")
+	public Result queryUserInvoices(Integer type,Integer page,Integer limit) {
+		return fcOrderService.findUserInvoices(type,(page-1)*limit,limit);
+	}
+	
+	
+	/**
+	 * 查询订单发票信息后台管理端个数
+	 * @return
+	 */
+	@RequestMapping("/queryUserInvoicesCount")
+	public Result queryUserInvoicesCount(Integer type) {
+		return fcOrderService.findUserInvoicesCount(type);
+	}
+	
+	
+	/**
+	 * 发票详情信息
+	 * @return
+	 */
+	@RequestMapping("/queryInvoicePage")
+	public Result queryInvoicePage(Integer id) {
+		return fcOrderService.findInvoicePage(id);
+	}
+	
 }

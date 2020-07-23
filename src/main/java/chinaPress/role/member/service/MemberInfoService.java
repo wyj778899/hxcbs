@@ -627,7 +627,7 @@ public class MemberInfoService {
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = memberInfo.getTellPhone();
 		tellParam.setTellPhone(tellPhone);
-		nameParam.setId(id);
+		tellParam.setId(id);
 		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 			return new Result(-1, "手机号已注册", "");
 		}

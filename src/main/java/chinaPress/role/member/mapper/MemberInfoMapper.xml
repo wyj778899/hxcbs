@@ -489,7 +489,8 @@
 	    user_name as name,
 	    tell_phone as tellPhone,
 	    case when is_start = 0 then '未启用'
-	         when is_start = 1 then '已启用' as state 
+	         when is_start = 1 then '已启用' 
+	         else '' end as state 
 	    from role_staff_archives
 	    where role_type = 1 
 	      <if test="name != null and name!=''">

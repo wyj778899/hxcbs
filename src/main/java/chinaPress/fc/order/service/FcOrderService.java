@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
@@ -30,6 +31,7 @@ import chinaPress.fc.order.vo.TerminalPayOrderDetailVo;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListParam;
 import chinaPress.fc.order.vo.TerminalPractitionerOrderCourseListVo;
 import chinaPress.fc.order.vo.TerminalSubmitOrderDetailVo;
+import chinaPress.fc.order.vo.UserInvoiceInfo;
 
 @Service
 public class FcOrderService {
@@ -222,7 +224,7 @@ public class FcOrderService {
 		} else {
 			record.setIsCoupon(0);
 		}
-		if (orderModel.getIsCoupon().intValue() == 1) {
+		if (orderModel.getIsCoupon()!=null && orderModel.getIsCoupon().intValue() == 1) {
 			FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
 			couponRecord.setId(orderModel.getCouponId());
 			couponRecord.setStatus(2);
@@ -405,6 +407,54 @@ public class FcOrderService {
 		    int count = fcOrderMapper.updateByPrimaryKeySelective(record);
 			return new Result(1,"更新成功",count);
 		}catch(Exception e) {
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	/**
+	 * 查询用户的发票信息
+	 * @param type
+	 * @return
+	 */
+	@Transactional
+	public Result findUserInvoices(Integer type,Integer page,Integer limit) {
+		try {
+			List<UserInvoiceInfo> list = fcOrderMapper.selectUserInvoices(type,page,limit);
+			return new Result(1,"查询成功",list);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	/**
+	 * 查询用户的发票信息个数
+	 * @param type
+	 * @return
+	 */
+	@Transactional
+	public Result findUserInvoicesCount(Integer type) {
+		try {
+			int count = fcOrderMapper.selectUserInvoicesCount(type);
+			return new Result(1,"查询成功",count);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	/**
+	 * 发票详情信息
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	public Result findInvoicePage(Integer id) {
+		try {
+			OrderInvoiceInfo orderInvoiceInfo = fcOrderMapper.selectInvoicePage(id);
+			return new Result(1,"查询成功",orderInvoiceInfo);
+		}catch(Exception e) {
+			e.printStackTrace();
 			return new Result(0,"系统错误","");
 		}
 	}
