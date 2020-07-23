@@ -170,7 +170,7 @@
 	<!-- 查询导师档案列表 -->
 	<select id="selectFcTutorArchivesList" resultType="chinaPress.fc.tutor.vo.FcTurorArchivesManageListVo">
 		select
-			a.id, a.name, a.picture, IFNULL(b.name, '-')
+			a.id, a.name, a.picture, IFNULL(b.name, '-') parent
 		from
 			fc_tutor_archives a
 		left join fc_tutor_archives b on a.pId = b.id
