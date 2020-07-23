@@ -12,7 +12,12 @@ import chinaPress.fc.book.model.FcBookArchives;
 import chinaPress.fc.book.service.FcBookArchivesService;
 import chinaPress.fc.book.vo.FcBookArchivesManageListVo;
 
-
+/**
+ * 20200717 终端书籍查询添加功能
+ * 
+ * @author wyj
+ *
+ */
 @RestController
 @RequestMapping("/book")
 public class FcBookArchivesController {
