@@ -138,5 +138,13 @@ public interface FcOrderMapper {
 	 * @return
 	 */
 	int selectUserInvoicesCount(@Param("type")Integer type);
+	
+	
+	/**
+	 * 发票详情信息   终端和管理端公用
+	 * @param id
+	 * @return
+	 */
+	OrderInvoiceInfo selectInvoicePage(@Param("id")Integer id);
 		
 }

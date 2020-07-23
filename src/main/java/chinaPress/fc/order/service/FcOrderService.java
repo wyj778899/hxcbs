@@ -442,4 +442,20 @@ public class FcOrderService {
 			return new Result(0,"系统错误","");
 		}
 	}
+	
+	/**
+	 * 发票详情信息
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	public Result findInvoicePage(Integer id) {
+		try {
+			OrderInvoiceInfo orderInvoiceInfo = fcOrderMapper.selectInvoicePage(id);
+			return new Result(1,"查询成功",orderInvoiceInfo);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
 }

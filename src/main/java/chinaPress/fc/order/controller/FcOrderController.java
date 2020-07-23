@@ -255,7 +255,6 @@ public class FcOrderController {
 	 * 查询订单发票信息终端
 	 * @param record     
 	 * 接收的参数为  
-	 * 订单编号:id,
 	 * 是否已申请发票:invoiceState(0未申请1已申请),
 	 * roleId:角色id            
 	 * roleType:角色类型
@@ -264,7 +263,13 @@ public class FcOrderController {
 	 * @return
 	 */
 	@RequestMapping("/queryInvoiceInfo")
-	public Result queryInvoiceInfo(FcOrder record) {
+	public Result queryInvoiceInfo(Integer invoiceState,Integer roleId,Integer roleType,Integer page,Integer limit) {
+		FcOrder record = new FcOrder();
+		record.setInvoiceState(invoiceState);
+		record.setRoleId(roleId);
+		record.setRoleType(roleType);
+		record.setPage((page-1) * limit);
+		record.setLimit(limit);
 		return fcOrderService.findInvoiceInfo(record);
 	}
 	
@@ -296,7 +301,7 @@ public class FcOrderController {
 	 */
 	@RequestMapping("/queryUserInvoices")
 	public Result queryUserInvoices(Integer type,Integer page,Integer limit) {
-		return fcOrderService.findUserInvoices(type,page,limit);
+		return fcOrderService.findUserInvoices(type,(page-1)*limit,limit);
 	}
 	
 	
@@ -307,6 +312,16 @@ public class FcOrderController {
 	@RequestMapping("/queryUserInvoicesCount")
 	public Result queryUserInvoicesCount(Integer type) {
 		return fcOrderService.findUserInvoicesCount(type);
+	}
+	
+	
+	/**
+	 * 发票详情信息
+	 * @return
+	 */
+	@RequestMapping("/queryInvoicePage")
+	public Result queryInvoicePage(Integer id) {
+		return fcOrderService.findInvoicePage(id);
 	}
 	
 }

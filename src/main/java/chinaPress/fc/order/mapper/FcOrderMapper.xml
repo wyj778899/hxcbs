@@ -627,7 +627,7 @@
 	    </if>
 	ORDER BY a.create_time
 	<if test="page != null and limit !=null">
-		limit ${(page-1) * limit} , #{limit}
+		limit #{page} , #{limit}
 	</if>
 	</select>
 	
@@ -659,97 +659,135 @@
 	
 	<!-- 查询用户的发票信息用于管理端展示 -->
 	<select id="selectUserInvoices" parameterType="java.lang.Integer" resultType="chinaPress.fc.order.vo.UserInvoiceInfo">
-	SELECT
-		a.id as id,
-		a.update_time as updateTime,
-		b. user_name as userName,
-		a.pay_amount as payAmount,
-		(
-		CASE
-		WHEN a.invoice_type = 2 THEN
-		'个人'
-		WHEN a.invoice_type = 3 THEN
-		'公司'
-		ELSE
-		''
-		END
-		) invoiceType
-	FROM
-		fc_order a,
-		role_institution_archives b
-	WHERE
-		a.pay_status = 2
-		and a.role_type = 1
-		and a.role_id = b.id
-		and a.invoice_state = 1
-		AND (a.invoice_type = 2 OR a.invoice_type = 3)
-		<if test="type != null">
-			AND a.invoice_type = #{type}
-	    </if>
-	union ALL
-	SELECT
-		a.id as id,
-		a.update_time as updateTime,
-		b. user_name as userName,
-		a.pay_amount as payAmount,
-		(
-		CASE
-		WHEN a.invoice_type = 2 THEN
-		'个人'
-		WHEN a.invoice_type = 3 THEN
-		'公司'
-		ELSE
-		''
-		END
-		) invoiceType
-	FROM
-		fc_order a,
-		role_practitioner_archives b
-	WHERE
-		a.pay_status = 2
-		and (a.role_type = 2 or a.role_type = 3)
-		and a.role_id = b.id
-		and a.invoice_state = 1
-		AND (a.invoice_type = 2 OR a.invoice_type = 3)
-		<if test="type != null">
-			AND a.invoice_type = #{type}
-	    </if>
-	LIMIT ${(page-1) * limit} ,#{limit}    
+		SELECT A.* FROM
+			(SELECT
+				a.id as id,
+				a.update_time as updateTime,
+				b. user_name as userName,
+				a.pay_amount as payAmount,
+				(
+				CASE
+				WHEN a.invoice_type = 2 THEN
+				'个人'
+				WHEN a.invoice_type = 3 THEN
+				'公司'
+				ELSE
+				''
+				END
+				) invoiceType
+			FROM
+				fc_order a
+			LEFT JOIN
+				role_institution_archives b
+			ON a.role_id = b.id
+			WHERE
+				a.pay_status = 2
+				and a.role_type = 1
+				and a.invoice_state = 1
+				AND (a.invoice_type = 2 OR a.invoice_type = 3)
+				<if test="type != null">
+					AND a.invoice_type = #{type}
+			    </if>
+			union ALL
+			SELECT
+				a.id as id,
+				a.update_time as updateTime,
+				b. user_name as userName,
+				a.pay_amount as payAmount,
+				(
+				CASE
+				WHEN a.invoice_type = 2 THEN
+				'个人'
+				WHEN a.invoice_type = 3 THEN
+				'公司'
+				ELSE
+				''
+				END
+				) invoiceType
+			FROM
+				fc_order a
+			LEFT JOIN	
+				role_practitioner_archives b
+			ON a.role_id = b.id
+			WHERE
+				a.pay_status = 2
+				and (a.role_type = 2 or a.role_type = 3)
+				and a.invoice_state = 1
+				AND (a.invoice_type = 2 OR a.invoice_type = 3)
+				<if test="type != null">
+					AND a.invoice_type = #{type}
+			    </if>
+		) AS A
+		ORDER BY A.updateTime DESC
+		LIMIT #{page} ,#{limit}    
 	</select>
 	
 	<select id="selectUserInvoicesCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-	select sum(a.count) from (
+		select sum(a.count) from (
+		SELECT
+			count(*) AS count
+		FROM
+			fc_order a,
+			role_institution_archives b
+		WHERE
+			a.pay_status = 2
+			and a.role_type = 1
+			and a.role_id = b.id
+			and a.invoice_state = 1
+			AND (a.invoice_type = 2 OR a.invoice_type = 3)
+			<if test="type != null">
+				AND a.invoice_type = #{type}
+		    </if>
+		union ALL
+		SELECT
+			count(*) as count
+		FROM
+			fc_order a,
+			role_practitioner_archives b
+		WHERE
+			a.pay_status = 2
+			and (a.role_type = 2 or a.role_type = 3)
+			and a.role_id = b.id
+			and a.invoice_state = 1
+			AND (a.invoice_type = 2 OR a.invoice_type = 3)
+			<if test="type != null">
+				AND a.invoice_type = #{type}
+		    </if>
+		) as a
+	</select>
+	
+	<!-- 发票详情信息  终端和管理端公用-->
+	<select id="selectInvoicePage" resultType="chinaPress.fc.order.vo.OrderInvoiceInfo">
 	SELECT
-		count(*) AS count
+		a.id,
+		a.date,
+		a. CODE,
+		b. NAME,
+		a.pay_amount as payAmount,
+		(
+			CASE
+			WHEN a.invoice_type = 2 THEN
+			'个人'
+			WHEN a.invoice_type = 3 THEN
+			'公司'
+			ELSE
+			''
+			END
+		) invoiceType,
+		a.invoice_title as invoiceTitle,
+		a.invoice_number as invoiceNumber,
+		a.bank_deposit as bankDeposit,
+		a.bank_number as bankNumber,
+		a.remarks,
+		a.email
 	FROM
-		fc_order a,
-		role_institution_archives b
+	fc_order a
+	LEFT JOIN fc_course_archives b ON a.course_id = b.id
 	WHERE
 		a.pay_status = 2
-		and a.role_type = 1
-		and a.role_id = b.id
-		and a.invoice_state = 1
 		AND (a.invoice_type = 2 OR a.invoice_type = 3)
-		<if test="type != null">
-			AND a.invoice_type = #{type}
+		<if test="id != null">
+			AND a.id = #{id}
 	    </if>
-	union ALL
-	SELECT
-		count(*) as count
-	FROM
-		fc_order a,
-		role_practitioner_archives b
-	WHERE
-		a.pay_status = 2
-		and (a.role_type = 2 or a.role_type = 3)
-		and a.role_id = b.id
-		and a.invoice_state = 1
-		AND (a.invoice_type = 2 OR a.invoice_type = 3)
-		<if test="type != null">
-			AND a.invoice_type = #{type}
-	    </if>
-	) as a
-
-
 	</select>
 </mapper>
