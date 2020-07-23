@@ -94,7 +94,6 @@ public class FcBookArchives {
      */
     private Date updateTime;
     
-    
     /**
      * 编辑推荐
      */
@@ -114,6 +113,7 @@ public class FcBookArchives {
      * 介绍
      */
     private String introduce;
+    
     /**
      * 书籍目录
      */

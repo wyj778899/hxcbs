@@ -43,37 +43,27 @@ public class FcBookArchivesService {
 	 * @param fcBookArchives
 	 * @return
 	 */
-	public Result addFcBookArchives(FcBookArchives fcBookArchives) {
-		try {
-			// 添加书籍
-			fcBookArchivesMapper.insertSelective(fcBookArchives);
-			// 获取刚刚添加证书的id
-			Integer id = fcBookArchives.getId();
-			// id不等于null 代表添加成功
-			if (id != null) {
-				// 添加书籍目录
-				for (FcBookCatalog catalog : fcBookArchives.getCatalogs()) {
-					// 避免空操作
-					if (catalog.getCatalogPhoto() != null && catalog.getCatalogPhoto() != "") {
-						catalog.setBookId(id);
-						fcBookCatalogMapper.insertSelective(catalog);
-					}
-				}
-				// 添加书籍内容
-				for (FcBookContent content : fcBookArchives.getContents()) {
-					// 避免空操作
-					if (content.getContentPhoto() != null && content.getContentPhoto() != "") {
-						content.setBookId(id);
-						fcBookContentMapper.insertSelective(content);
-					}
-				}
-				return new Result(1, "添加成功", "");
-			} else {
-				return new Result(0, "系统错误", "");
+	@Transactional
+	public void addFcBookArchives(FcBookArchives fcBookArchives) {
+		// 添加书籍
+		fcBookArchivesMapper.insertSelective(fcBookArchives);
+		// 获取刚刚添加证书的id
+		Integer id = fcBookArchives.getId();
+		// 添加书籍目录
+		for (FcBookCatalog catalog : fcBookArchives.getCatalogs()) {
+			// 避免空操作
+			if (catalog.getCatalogPhoto() != null && catalog.getCatalogPhoto() != "") {
+				catalog.setBookId(id);
+				fcBookCatalogMapper.insertSelective(catalog);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Result(0, "系统错误", "");
+		}
+		// 添加书籍内容
+		for (FcBookContent content : fcBookArchives.getContents()) {
+			// 避免空操作
+			if (content.getContentPhoto() != null && content.getContentPhoto() != "") {
+				content.setBookId(id);
+				fcBookContentMapper.insertSelective(content);
+			}
 		}
 	}
 
@@ -83,38 +73,30 @@ public class FcBookArchivesService {
 	 * @param fcBookArchives
 	 * @return
 	 */
-	public Result setFcBookArchives(FcBookArchives fcBookArchives) {
-		try {
-			Integer id = fcBookArchives.getId();
-			if (id == null) {
-				return new Result(0, "系统错误", "");
+	@Transactional
+	public void setFcBookArchives(FcBookArchives fcBookArchives) {
+		Integer id = fcBookArchives.getId();
+		// 更新书籍信息
+		fcBookArchivesMapper.updateByPrimaryKeySelective(fcBookArchives);
+		// 删除书籍内容
+		fcBookContentMapper.deleteByBookId(id);
+		// 删除书籍目录
+		fcBookCatalogMapper.deleteByBookId(id);
+		// 添加书籍目录
+		for (FcBookCatalog catalog : fcBookArchives.getCatalogs()) {
+			// 避免空操作
+			if (catalog.getCatalogPhoto() != null && catalog.getCatalogPhoto() != "") {
+				catalog.setBookId(id);
+				fcBookCatalogMapper.insertSelective(catalog);
 			}
-			// 更新书籍信息
-			fcBookArchivesMapper.updateByPrimaryKeySelective(fcBookArchives);
-			// 删除书籍内容
-			fcBookContentMapper.deleteByBookId(id);
-			// 删除书籍目录
-			fcBookCatalogMapper.deleteByBookId(id);
-			// 添加书籍目录
-			for (FcBookCatalog catalog : fcBookArchives.getCatalogs()) {
-				// 避免空操作
-				if (catalog.getCatalogPhoto() != null && catalog.getCatalogPhoto() != "") {
-					catalog.setBookId(id);
-					fcBookCatalogMapper.insertSelective(catalog);
-				}
+		}
+		// 添加书籍内容
+		for (FcBookContent content : fcBookArchives.getContents()) {
+			// 避免空操作
+			if (content.getContentPhoto() != null && content.getContentPhoto() != "") {
+				content.setBookId(id);
+				fcBookContentMapper.insertSelective(content);
 			}
-			// 添加书籍内容
-			for (FcBookContent content : fcBookArchives.getContents()) {
-				// 避免空操作
-				if (content.getContentPhoto() != null && content.getContentPhoto() != "") {
-					content.setBookId(id);
-					fcBookContentMapper.insertSelective(content);
-				}
-			}
-			return new Result(1, "更新成功", "");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Result(0, "系统错误", "");
 		}
 	}
 

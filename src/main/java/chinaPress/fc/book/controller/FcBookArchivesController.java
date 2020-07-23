@@ -32,9 +32,15 @@ public class FcBookArchivesController {
 	 * @param fcBookArchives
 	 * @return
 	 */
-	@RequestMapping("/registerBookArchives")
+	@RequestMapping("manage/add")
 	public Result registerBookArchives(FcBookArchives fcBookArchives) {
-		return fcBookArchivesService.addFcBookArchives(fcBookArchives);
+		try {
+			fcBookArchivesService.addFcBookArchives(fcBookArchives);
+			return ResultUtil.custom(1, "操作成功", 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultUtil.custom(0, "操作失败", 0);
+		}
 	}
 
 	/**
@@ -43,9 +49,15 @@ public class FcBookArchivesController {
 	 * @param fcBookArchives
 	 * @return
 	 */
-	@RequestMapping("/modifyBookArchives")
+	@RequestMapping("manage/update")
 	public Result modifyBookArchives(FcBookArchives fcBookArchives) {
-		return fcBookArchivesService.setFcBookArchives(fcBookArchives);
+		try {
+			fcBookArchivesService.setFcBookArchives(fcBookArchives);
+			return ResultUtil.custom(1, "操作成功", 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultUtil.custom(0, "操作失败", 0);
+		}
 	}
 
 	/**
