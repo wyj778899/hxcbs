@@ -28,12 +28,13 @@
 		<result column="grade" jdbcType="VARCHAR" property="grade" />
 		<result column="analysis" jdbcType="VARCHAR"
 			property="analysis" />
-		<result column="type" jdbcType="INTEGER" property="grade" />
+		<result column="grade" jdbcType="INTEGER" property="grade" />
+		<result column="catalog_id" jdbcType="INTEGER" property="catalogId" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, course_id, hour_id, question_type, `task_difficulty`, question_stem,
 		is_delete,
-		`state`, create_id, create_time, update_id, update_time,grade,analysis,type
+		`state`, create_id, create_time, update_id, update_time,grade,analysis,type,catalog_id
 	</sql>
 	<!-- 根据课程和课时查询关联的试题 -->
 	<select id="selectQuestionStemList"
@@ -122,6 +123,9 @@
 			<if test="type != null">
 				type,
 			</if>
+			<if test="catalogId != null">
+				catalog_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -168,6 +172,9 @@
 			</if>
 			<if test="type != null">
 				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="catalogId != null">
+				#{catalogId,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -216,6 +223,9 @@
 			</if>
 			<if test="type != null">
 				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="catalogId != null">
+				catalog_id = #{catalogId,jdbcType=INTEGER},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

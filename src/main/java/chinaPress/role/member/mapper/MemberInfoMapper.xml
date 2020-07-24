@@ -176,37 +176,44 @@
 	<select id="selectMemberAndCertificate"
 		parameterType="chinaPress.role.member.model.MemberInfo"
 		resultMap="memberAndCerMap">
-		select
-		a.name,
-		a.tell_phone,
-		case when a.sex = 1 then '男'
-		     when a.sex = 2 then '女'
-		     else '' end as sex,
-		a.user_name,
-		b.id,
-		case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
-             when b.certificate_type = 2 then '学历证书'
-			 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as certificate_type,
-		b.photo,
-		case when b.audit_status = 1 then '待审核'
-             when b.audit_status = 2 then '已审核'
-			 when b.audit_status = 3 then '已驳回' else '' end as audit_status
-		from role_practitioner_archives a , fc_certificate_archives b
-		where a.id = b.role_id and b.state = 1
-			<if test="name !=null and name!=''">
-				and a.user_name like CONCAT('%',#{name},'%')
-			</if>
-			<if test="tellPhone !=null and tellPhone!=''">
-				and a.tell_phone like CONCAT('%',#{tellPhone},'%')
-			</if>
-			<if test="auditStatus != null">
-				and b.audit_status = #{auditStatus}
-			</if>
-			<if test="certificateType != null">
-				and b.certificate_type = #{certificateType}
-			</if>
-		order by b.create_time desc
-		limit #{page},#{limit}
+				select
+					a.user_name as name,
+					a.tell_phone,
+					case when a.sex = 1 then '男'
+					     when a.sex = 2 then '女'
+					     else '' end as sex,
+					c.user_name as user_name,
+					b.id,
+					case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
+			             when b.certificate_type = 2 then '学历证书'
+						 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as certificate_type,
+					b.photo,
+					case when b.audit_status = 1 then '待审核'
+			             when b.audit_status = 2 then '已审核'
+						 when b.audit_status = 3 then '已驳回' else '' end as audit_status
+				from 
+						role_practitioner_archives a 
+				left join 
+						fc_certificate_archives b 
+				on a.id = b.role_id
+				left join 
+						role_staff_archives c
+				on b.update_id = c.id
+				where b.state = 1
+					<if test="name !=null and name!=''">
+						and a.user_name like CONCAT('%',#{name},'%')
+					</if>
+					<if test="tellPhone !=null and tellPhone!=''">
+						and a.tell_phone like CONCAT('%',#{tellPhone},'%')
+					</if>
+					<if test="auditStatus != null">
+						and b.audit_status = #{auditStatus}
+					</if>
+					<if test="certificateType != null">
+						and b.certificate_type = #{certificateType}
+					</if>
+				order by b.create_time desc
+				limit #{page},#{limit}
 	</select>
 
 	<!--证书查询功能，通过证书id 查看用户和证书的信息   这里只涉及家长/从业者信息不涉及培训机构信息 -->
@@ -217,13 +224,13 @@
 			case when b.certificate_type = 1 then '孤独症康复教育上岗培训合格证书'
 	             when b.certificate_type = 2 then '学历证书'
 				 when b.certificate_type = 3 then '认证行为分析治疗室' else '' end as certificate_type,
-			case when b.audit_status = 1 then '待审核'
-	             when b.audit_status = 2 then '已审核'
-				 when b.audit_status = 3 then '已驳回' else '' end as audit_status,
+			case when a.audit_status = 1 then '待审核'
+	             when a.audit_status = 2 then '已审核'
+				 when a.audit_status = 3 then '已驳回' else '' end as audit_status,
 			a.photo,
 			b.name,
-			case when a.sex = 1 then '男'
-		  	     when a.sex = 2 then '女'
+			case when b.sex = 1 then '男'
+		  	     when b.sex = 2 then '女'
 		         else '' end as sex,
 			b.tell_phone,
 			b.user_name
@@ -488,9 +495,7 @@
 	    id,
 	    user_name as name,
 	    tell_phone as tellPhone,
-	    case when is_start = 0 then '未启用'
-	         when is_start = 1 then '已启用' 
-	         else '' end as state 
+	    is_start as state 
 	    from role_staff_archives
 	    where role_type = 1 
 	      <if test="name != null and name!=''">

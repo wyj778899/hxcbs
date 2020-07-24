@@ -75,8 +75,9 @@ public class CertificateInfoController {
 	 * @return
 	 */
 	@RequestMapping("/modifyCertificateState")
-	public Result modifyCertificateState(Integer auditStatus,Integer id) {
+	public Result modifyCertificateState(Integer auditStatus,Integer id,Integer updateId) {
 		CertificateInfo certificateInfo = new CertificateInfo();
+		certificateInfo.setUpdateId(updateId);
 		certificateInfo.setId(id);
 		certificateInfo.setAuditStatus(auditStatus);
 		return certificateInfoService.setCertificate(certificateInfo);

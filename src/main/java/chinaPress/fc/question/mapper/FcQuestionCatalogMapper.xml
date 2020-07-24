@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.fc.question.dao.FcQuestionCatalogMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.fc.question.model.FcQuestionCatalog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="catalog_name" jdbcType="VARCHAR" property="catalogName" />
+    <result column="catalog_sort" jdbcType="INTEGER" property="catalogSort" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `catalog_name`, catalog_sort, `state`, create_id, create_time, update_id, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_question_catalog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fc_question_catalog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="chinaPress.fc.question.model.FcQuestionCatalog">
+    insert into fc_question_catalog (id, `catalog_name`, catalog_sort, 
+      `state`, create_id, create_time, 
+      update_id, update_time)
+    values (#{id,jdbcType=INTEGER}, #{catalogName,jdbcType=VARCHAR}, #{catalogSort,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER}, #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="chinaPress.fc.question.model.FcQuestionCatalog">
+    insert into fc_question_catalog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="catalogName != null">
+        `catalog_name`,
+      </if>
+      <if test="catalogSort != null">
+        catalog_sort,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="catalogName != null">
+        #{catalogName,jdbcType=VARCHAR},
+      </if>
+      <if test="catalogSort != null">
+        #{catalogSort,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.question.model.FcQuestionCatalog">
+    update fc_question_catalog
+    <set>
+      <if test="catalogName != null">
+        `catalog_name` = #{catalogName,jdbcType=VARCHAR},
+      </if>
+      <if test="catalogSort != null">
+        catalog_sort = #{catalogSort,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chinaPress.fc.question.model.FcQuestionCatalog">
+    update fc_question_catalog
+    set `catalog_name` = #{catalogName,jdbcType=VARCHAR},
+      catalog_sort = #{catalogSort,jdbcType=INTEGER},
+      `state` = #{state,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectBySortAndName" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select 
+  		count(*) 
+  	from fc_question_catalog 
+  	where 1=1
+  		<if test="sort!=null">
+  			and catalog_sort = #{sort}
+  		</if>
+  		<if test="name!=null">
+  			and catalog_name = #{name}
+  		</if>
+  		<if test="id!=null">
+  			and id != #{id}
+  		</if>
+  </select>
+  
+  <select id="selectAll" resultType="chinaPress.fc.question.vo.FcQuestionCatalogVo">
+  	select 
+  		id,
+		catalog_name as name
+  	from fc_question_catalog
+  	order by catalog_sort 
+  </select>
+  
+  
+  <select id="selectByCatalogId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select 
+  		count(*)
+  	from fc_question_stem
+  	where catalog_id = #{id}
+  </select>
+  
+</mapper>
