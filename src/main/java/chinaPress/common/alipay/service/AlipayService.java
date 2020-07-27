@@ -15,6 +15,8 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 
 import chinaPress.common.alipay.AlipayConfig;
+import chinaPress.common.httpclient.HttpClient;
+import chinaPress.common.httpclient.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.wxpay.WXPayUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
@@ -180,6 +182,18 @@ public class AlipayService {
 									Integer source = practitionerInfo.getSource();
 									if(source!=null && source==2) {
 										//回传用户接口
+										Map<String, String> enqiparams = new HashMap<String, String>();
+										enqiparams.put("tellPhone", practitionerInfo.getTellPhone());
+										enqiparams.put("certificateNumber", practitionerInfo.getCertificateNumber());
+										try {
+											Result result = HttpClient.doPost("http://www.ingclass.org/hx/status/update.do", params);
+											if (result.getCode() == 200) {
+												WXPayUtil.getLogger().info("恩起发送成功");
+											}
+										} catch (Exception e) {
+											e.printStackTrace();
+											WXPayUtil.getLogger().info("恩起发送异常");
+										}
 									}
 									// 家长/从业者
 									message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";

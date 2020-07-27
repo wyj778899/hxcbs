@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import chinaPress.common.httpclient.HttpClient;
+import chinaPress.common.httpclient.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
@@ -182,6 +184,18 @@ public class QrCodeService {
 								Integer source = practitionerInfo.getSource();
 								if(source!=null && source==2) {
 									//回传用户接口
+									Map<String, String> params = new HashMap<String, String>();
+									params.put("tellPhone", practitionerInfo.getTellPhone());
+									params.put("certificateNumber", practitionerInfo.getCertificateNumber());
+									try {
+										Result result = HttpClient.doPost("http://www.ingclass.org/hx/status/update.do", params);
+										if (result.getCode() == 200) {
+											WXPayUtil.getLogger().info("恩起发送成功");
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+										WXPayUtil.getLogger().info("恩起发送异常");
+									}
 								}
 								// 家长/从业者
 								message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
