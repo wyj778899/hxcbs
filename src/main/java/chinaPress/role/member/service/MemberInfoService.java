@@ -681,7 +681,10 @@ public class MemberInfoService {
 			return new Result(-2, "密码不合法", "");
 		}
 		memberInfo.setSource(1);
-		memberInfo.setIsStart(1);
+		//后台注册可能设置用户状态
+		if(memberInfo.getIsStart()==null) {
+			memberInfo.setIsStart(1);
+		}
 		memberInfo.setState(2);
 		memberInfo.setRoleType(1);
 		int i = memberInfoMapper.insertSelective(memberInfo);
@@ -1497,4 +1500,6 @@ public class MemberInfoService {
 			return new Result(0,"查询失败","");
 		}
 	}
+	
+	
 }

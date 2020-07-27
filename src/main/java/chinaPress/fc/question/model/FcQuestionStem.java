@@ -70,6 +70,12 @@ public class FcQuestionStem {
     private Date updateTime;
     
     /**
+     * 书籍分类id
+     */
+    private Integer catalogId;
+    
+    
+    /**
      * 分数
      */
     private String grade;
@@ -283,4 +289,14 @@ public class FcQuestionStem {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Integer getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(Integer catalogId) {
+		this.catalogId = catalogId;
+	}
+    
+    
 }
