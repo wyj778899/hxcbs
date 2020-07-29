@@ -3,6 +3,8 @@ package chinaPress.role.member.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * fc_certificate_archives
  * 
@@ -84,6 +86,12 @@ public class CertificateInfo {
 	 * 资格证课程分类
 	 */
 	private Integer courseType;
+	
+	/**
+	 * 发证时间
+	 */
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date certificateTime;
 	
 	
 	public Integer getCourseType() {
@@ -315,4 +323,13 @@ public class CertificateInfo {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+	public Date getCertificateTime() {
+		return certificateTime;
+	}
+
+	public void setCertificateTime(Date certificateTime) {
+		this.certificateTime = certificateTime;
+	}
+	
 }
