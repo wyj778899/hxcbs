@@ -28,6 +28,13 @@ public abstract class WXPayConfig {
      * @return API密钥
      */
     abstract String getKey();
+    
+    /**
+     * 获取APISecret
+     * 
+     * @return
+     */
+    abstract String getAppSecret();
 
 
     /**

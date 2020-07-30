@@ -29,6 +29,11 @@ public class TerminalOrderListVo {
 	private String courseName;
 
 	/**
+	 * 课程封面
+	 */
+	private String courseCover;
+
+	/**
 	 * 课程价格
 	 */
 	private BigDecimal coursePrice;
@@ -135,5 +140,19 @@ public class TerminalOrderListVo {
 	 */
 	public void setPayAmount(BigDecimal payAmount) {
 		this.payAmount = payAmount;
+	}
+
+	/**
+	 * 获取：courseCover
+	 */
+	public String getCourseCover() {
+		return courseCover;
+	}
+
+	/**
+	 * 设置：courseCover
+	 */
+	public void setCourseCover(String courseCover) {
+		this.courseCover = courseCover;
 	}
 }

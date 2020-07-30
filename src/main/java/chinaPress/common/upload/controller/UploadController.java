@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -29,6 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -662,6 +667,71 @@ public class UploadController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResultUtil.custom(0, "上传文件失败");
+		}
+	}
+
+	private static String FILENAME = "";
+
+	@Value("${xdja.upload.file.path}")
+	private String decryptFilePath;
+
+	@Value("${xdja.upload.file.path.temp}")
+	private String decryptFilePathTemp;
+
+	/**
+	 * 上传文件
+	 *
+	 * @param param
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	@PostMapping(value = "/fileUpload")
+	public Result fileUpload(HttpServletRequest request,
+			@RequestParam(value = "file", required = false) MultipartFile file, Integer chunks, Integer chunk,
+			String name, String guid) throws IOException {
+		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (isMultipart) {
+			if (file == null) {
+				ResultUtil.error();
+			}
+			System.out.println("guid:" + guid);
+			if (chunks == null && chunk == null) {
+				chunk = 0;
+			}
+			File outFile = new File(decryptFilePathTemp + File.separator + guid, chunk + ".part");
+			if ("".equals(FILENAME)) {
+				FILENAME = name;
+			}
+			InputStream inputStream = file.getInputStream();
+			FileUtils.copyInputStreamToFile(inputStream, outFile);
+		}
+		return ResultUtil.ok();
+	}
+
+	/**
+	 * 合并所有分片
+	 *
+	 * @throws Exception Exception
+	 */
+	@GetMapping("/merge")
+	public void byteMergeAll(String guid) throws Exception {
+		System.out.println("merge:" + guid);
+		File file = new File(decryptFilePathTemp + File.separator + guid);
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files != null && files.length > 0) {
+				File partFile = new File(decryptFilePath + File.separator + FILENAME);
+				for (int i = 0; i < files.length; i++) {
+					File s = new File(decryptFilePathTemp + File.separator + guid, i + ".part");
+					FileOutputStream destTempfos = new FileOutputStream(partFile, true);
+					FileUtils.copyFile(s, destTempfos);
+					destTempfos.close();
+				}
+				FileUtils.deleteDirectory(file);
+				FILENAME = "";
+			}
 		}
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.AlipayResponse;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 
@@ -69,7 +70,7 @@ public class AliPayController {
 
 		// 请求
 		String result = alipayClient.pageExecute(alipayRequest).getBody();
-
+		WXPayUtil.getLogger().info(result);
 		// 输出
 //		out.println(result);
 		return result;

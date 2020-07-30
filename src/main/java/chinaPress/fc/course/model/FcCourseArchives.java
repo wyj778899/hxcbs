@@ -26,6 +26,11 @@ public class FcCourseArchives {
 	private Integer type;
 
 	/**
+	 * 课程属性
+	 */
+	private String attribute;
+
+	/**
 	 * 分类id
 	 */
 	private Integer categoryId;
@@ -382,5 +387,19 @@ public class FcCourseArchives {
 	 */
 	public void setSpeaker(String speaker) {
 		this.speaker = speaker;
+	}
+
+	/**
+	 * 获取：attribute
+	 */
+	public String getAttribute() {
+		return attribute;
+	}
+
+	/**
+	 * 设置：attribute
+	 */
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
 	}
 }

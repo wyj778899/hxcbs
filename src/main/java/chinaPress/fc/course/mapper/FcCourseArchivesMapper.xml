@@ -7,6 +7,7 @@
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="attribute" jdbcType="VARCHAR" property="attribute" />
 		<result column="category_id" jdbcType="INTEGER"
 			property="categoryId" />
 		<result column="course_price" jdbcType="DECIMAL"
@@ -34,7 +35,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `name`, `type`, category_id, course_price, course_number,
-		renew_price, remarks, speaker,
+		renew_price, remarks, speaker, attribute,
 		photo, is_putaway, `state`, create_id, create_time, update_id,
 		update_time,is_delete
 	</sql>
@@ -55,7 +56,8 @@
 			a.remarks as remarks,
 			a.photo as photo,
 			a.update_time as updateTime,
-			a.speaker
+			a.speaker,
+			a.attribute
 		from fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
 		<where>
@@ -81,7 +83,8 @@
 			a.remarks as remarks,
 			a.photo as photo,
 			a.update_time as updateTime,
-			a.speaker
+			a.speaker,
+			a.attribute
 		from fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
 		where a.id = #{id}
@@ -91,18 +94,26 @@
 	<select id="selectPageIndexCourse"
 		resultType="chinaPress.fc.course.vo.PageIndexCourseVo">
 		select
-		a.id,
-		a.name as courseName,
-		a.type as courseType,
-		a.course_price as coursePrice,
-		a.remarks as remarks,
-		a.photo as photo,
-		b.name as categoryName
-		from fc_course_archives a
+			a.id,
+			a.name as courseName,
+			a.type as courseType,
+			a.course_price as coursePrice,
+			a.remarks as remarks,
+			a.photo as photo,
+			b.name as categoryName,
+			a.attribute
+		from 
+			fc_course_archives a
 		left join fc_course_category b on a.category_id = b.id
-		where a.is_putaway = 1 and a.state = 1 and a.is_delete = 0 and
-		a.category_id = 2
-		order by rand() limit 2
+		where 
+			a.is_putaway = 1 
+			and a.state = 1 
+			and a.is_delete = 0 
+			and a.category_id = 2
+		order by 
+			rand() 
+		limit 
+			2
 	</select>
 	
 	<!-- 课程数量 -->

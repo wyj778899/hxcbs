@@ -1,48 +1,65 @@
 package chinaPress.fc.course_category.vo;
 
-import java.util.List;
-
 public class CourseCategoryParam {
-	private Integer notId;
 	private Integer pId;
 	private String code;
 	private String name;
-	private String checkedCode;
-	private List<String> codeList;
-	public String getCheckedCode() {
-		return checkedCode;
-	}
-	public void setCheckedCode(String checkedCode) {
-		this.checkedCode = checkedCode;
-	}
-	public Integer getNotId() {
-		return notId;
-	}
-	public void setNotId(Integer notId) {
-		this.notId = notId;
-	}
+	private String nameAndCode;
+
+	/**
+	 * 获取：pId
+	 */
 	public Integer getpId() {
 		return pId;
 	}
+
+	/**
+	 * 设置：pId
+	 */
 	public void setpId(Integer pId) {
 		this.pId = pId;
 	}
+
+	/**
+	 * 获取：code
+	 */
 	public String getCode() {
 		return code;
 	}
+
+	/**
+	 * 设置：code
+	 */
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+	/**
+	 * 获取：name
+	 */
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * 设置：name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<String> getCodeList() {
-		return codeList;
+
+	/**
+	 * 获取：nameAndCode
+	 */
+	public String getNameAndCode() {
+		return nameAndCode;
 	}
-	public void setCodeList(List<String> codeList) {
-		this.codeList = codeList;
+
+	/**
+	 * 设置：nameAndCode
+	 */
+	public void setNameAndCode(String nameAndCode) {
+		this.nameAndCode = nameAndCode;
 	}
+
 }

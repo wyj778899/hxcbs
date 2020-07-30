@@ -245,6 +245,7 @@
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
 			AND c.hour_id = #{hourId}
+			AND a.pay_status = 2
 		ORDER BY c.id
 		LIMIT 1
 	</select>

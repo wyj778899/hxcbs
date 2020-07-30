@@ -133,14 +133,17 @@ public class MemberInfo {
 	 * 验证码 用于添加注册
 	 */
 	private String verificationCode;
-	
-	
-	/** 
-	 * 注册来源   1华夏      2恩起
+
+	/**
+	 * 机构id
+	 */
+	private Integer institutionId;
+
+	/**
+	 * 注册来源 1华夏 2恩起
 	 */
 	private Integer source;
 
-	
 	public Integer getSource() {
 		return source;
 	}
@@ -597,6 +600,20 @@ public class MemberInfo {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * 获取：institutionId
+	 */
+	public Integer getInstitutionId() {
+		return institutionId;
+	}
+
+	/**
+	 * 设置：institutionId
+	 */
+	public void setInstitutionId(Integer institutionId) {
+		this.institutionId = institutionId;
 	}
 
 	public MemberInfo() {

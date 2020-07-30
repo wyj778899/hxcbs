@@ -117,21 +117,25 @@
 		parameterType="chinaPress.role.member.model.MemberInfo"
 		resultType="chinaPress.role.member.vo.MemberCouponInfo">
 		select
-		id as id,
-		user_name as name,
-		tell_phone as tellPhone,
-		role_type as roleType,
-		role_id as roleId,
-		case when role_type=3 then '家长' when role_type=4 then '从业者' else '' end as
-		roleName
-		from role_staff_archives
+			a.id as id,
+			a.user_name as name,
+			a.tell_phone as tellPhone,
+			a.role_type as roleType,
+			a.role_id as roleId,
+			case when a.role_type=3 then '家长' when a.role_type=4 then '从业者' else '' end as
+			roleName
+		from 
+			role_staff_archives a
+		inner join fc_binding_info b on a.role_id = b.binding_role_id and a.role_type = b.binding_role_type
 		where
-			role_type in (3, 4)
+			a.role_type in (3, 4)
+			and b.institution_id = #{institutionId}
+			and b.reply_status = 2
 			<if test="name !=null and name !='' ">
 				and (
-					name like CONCAT('%',#{name},'%')
+					a.name like CONCAT('%',#{name},'%')
 					or 
-					tell_phone like CONCAT('%',#{name},'%')
+					a.tell_phone like CONCAT('%',#{name},'%')
 				)
 			</if>
 		limit #{page} , #{limit}
@@ -140,15 +144,20 @@
 	<select id="selectNameAndTellCount"
 		parameterType="chinaPress.role.member.model.MemberInfo"
 		resultType="java.lang.Integer">
-		select count(*)
-		from role_staff_archives
+		select 
+			count(*)
+		from 
+			role_staff_archives a
+		inner join fc_binding_info b on a.role_id = b.binding_role_id and a.role_type = b.binding_role_type
 		where
-			role_type in (3, 4)
+			a.role_type in (3, 4)
+			and b.institution_id = #{institutionId}
+			and b.reply_status = 2
 			<if test="name !=null and name !='' ">
 				and (
-					name like CONCAT('%',#{name},'%')
+					a.name like CONCAT('%',#{name},'%')
 					or 
-					tell_phone like CONCAT('%',#{name},'%')
+					a.tell_phone like CONCAT('%',#{name},'%')
 				)
 			</if>
 	</select>

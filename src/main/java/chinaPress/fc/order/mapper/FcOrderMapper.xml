@@ -376,7 +376,8 @@
 			b.course_number AS courseNumber,
 			a.pay_status AS payStatus,
 			a.create_time createTime,
-			a.pay_amount payAmount
+			a.pay_amount payAmount,
+			b.photo courseCover
 		FROM
 			fc_order a
 		LEFT JOIN fc_course_archives b ON b.id = a.course_id

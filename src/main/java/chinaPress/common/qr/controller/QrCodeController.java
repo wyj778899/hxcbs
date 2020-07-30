@@ -3,6 +3,7 @@ package chinaPress.common.qr.controller;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.zxing.BarcodeFormat;
@@ -25,7 +27,9 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import chinaPress.common.httpclient.Result;
 import chinaPress.common.qr.service.QrCodeService;
+import chinaPress.common.util.ResultUtil;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayUtil;
@@ -33,7 +37,7 @@ import chinaPress.fc.order.service.FcOrderService;
 
 @RestController
 public class QrCodeController {
-	
+
 	@Autowired
 	private QrCodeService qrCodeService;
 
@@ -75,8 +79,7 @@ public class QrCodeController {
 	 * @throws Exception
 	 */
 	@GetMapping("qrcode")
-	public void getBarCodeImage(HttpServletResponse response, String orderId)
-			throws Exception {
+	public void getBarCodeImage(HttpServletResponse response, String orderId) throws Exception {
 		// 设置页面不缓存
 		assert response != null;
 		response.setHeader("Pragma", "no-cache");
@@ -174,6 +177,7 @@ public class QrCodeController {
 
 	/**
 	 * 查询微信支付结果
+	 * 
 	 * @author maguoliang
 	 * @param buyData
 	 * @return
@@ -203,5 +207,47 @@ public class QrCodeController {
 			map.put("msg", "支付失败，请联系管理员");
 		}
 		return map;
+	}
+
+	/**
+	 * 微信授权
+	 * 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "wxH5Authorization")
+	public String authorization() throws IOException {
+		return qrCodeService.authorization();
+	}
+
+	/**
+	 * 通过微信网页授权码获取openId
+	 * 
+	 * @author maguoliang
+	 * @param code
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "getWxOpenId")
+	public chinaPress.common.result.model.Result getWxOpenId(String code) throws IOException {
+		String openId = qrCodeService.getWxOpenId(code);
+		if (openId != "") {
+			return ResultUtil.custom(1, "获取成功", openId);
+		} else {
+			return ResultUtil.custom(0, "获取失败", openId);
+		}
+	}
+
+	/**
+	 * h5唤起支付
+	 * 
+	 * @author maguoliang
+	 * @param openId
+	 * @param orderId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "h5CallPay")
+	public chinaPress.common.result.model.Result h5CallPay(String openId, Integer orderId) throws Exception {
+		return qrCodeService.h5CallPay(openId, orderId);
 	}
 }

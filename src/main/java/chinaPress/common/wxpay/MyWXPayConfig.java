@@ -57,4 +57,9 @@ public class MyWXPayConfig extends WXPayConfig {
 		return WXPayDomainSimpleImpl.instance();
 	}
 
+	@Override
+	public String getAppSecret() {
+		return "3f9fa505cabfce49b3642ee93f45b0b5";
+	}
+
 }

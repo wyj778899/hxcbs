@@ -95,17 +95,32 @@ public class FcOrderPersonService {
 				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
 						hourId);
 				if (fcOrderPersonHour != null) {
-					FcOrderPersonHour hour = new FcOrderPersonHour();
-					hour.setOrderPersonId(personOrderId);
-					hour.setHourId(hourId);
-					hour.setIsPass(isPass);
-					return fcOrderPersonHourMapper.updateIsPass(hour);
+					// 0.只有观看权限，
+					if (fcOrderPersonHour.getIsPass().intValue() == 0) {
+						FcOrderPersonHour hour = new FcOrderPersonHour();
+						hour.setOrderPersonId(personOrderId);
+						hour.setHourId(hourId);
+						hour.setIsPass(isPass);
+						return fcOrderPersonHourMapper.updateIsPass(hour);
+					} 
+					// 1.已观看完且通过测试，
+					else if (fcOrderPersonHour.getIsPass().intValue() == 1) {
+						
+					} 
+					// 2.已观看完未通过测试，
+					else if (fcOrderPersonHour.getIsPass().intValue() == 2) {
+						
+					} 
+					// 3.已观看完还未考试
+					else if (fcOrderPersonHour.getIsPass().intValue() == 3) {
+						
+					}
 				} else {
-					FcOrderPersonHour hour = new FcOrderPersonHour();
-					hour.setOrderPersonId(personOrderId);
-					hour.setHourId(hourId);
-					hour.setIsPass(1);
-					return fcOrderPersonHourMapper.updateIsPass(hour);
+					FcOrderPersonHour record = new FcOrderPersonHour();
+					record.setHourId(hourId);
+					record.setOrderPersonId(personOrderId);
+					record.setIsPass(isPass);
+					fcOrderPersonHourMapper.insertSelective(record);
 				}
 			} else {
 				FcOrderPersonHour hour = new FcOrderPersonHour();

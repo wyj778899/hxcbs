@@ -329,6 +329,10 @@
 			<if test="status == 2">
 				and now() <![CDATA[>]]> b.end_time
 			</if>
+			<!-- 已使用 -->
+			<if test="status == 3">
+				and a.status = 3
+			</if>
 	</select>
 	
 	<!-- 查询我的优惠券 -->
@@ -373,6 +377,10 @@
 			<!-- 已过期 -->
 			<if test="status == 2">
 				and now() <![CDATA[>]]> b.end_time
+			</if>
+			<!-- 已使用 -->
+			<if test="status == 3">
+				and a.status = 3
 			</if>
 		limit
 			#{offset}, #{rows}

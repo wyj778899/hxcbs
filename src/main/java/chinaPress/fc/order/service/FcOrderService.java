@@ -176,12 +176,12 @@ public class FcOrderService {
 			}
 
 			// 如果使用优惠券，修改优惠券状态为已核销
-			if (record.getIsCoupon().intValue() == 1) {
-				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
-				couponRecord.setId(record.getCouponId());
-				couponRecord.setStatus(3);
-				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
-			}
+//			if (record.getIsCoupon().intValue() == 1) {
+//				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+//				couponRecord.setId(record.getCouponId());
+//				couponRecord.setStatus(3);
+//				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
+//			}
 
 			FcOrderPerson person = new FcOrderPerson();
 			person.setOrderId(record.getId());
@@ -239,12 +239,12 @@ public class FcOrderService {
 					fcOrderBookMapper.insertSelective(new FcOrderBook(record.getId(), Integer.parseInt(bookId)));
 				}
 			}
-			if (record.getIsCoupon().intValue() == 1) {
-				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
-				couponRecord.setId(record.getCouponId());
-				couponRecord.setStatus(3);
-				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
-			}
+//			if (record.getIsCoupon().intValue() == 1) {
+//				FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+//				couponRecord.setId(record.getCouponId());
+//				couponRecord.setStatus(3);
+//				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
+//			}
 			return record.getId();
 		}
 		return 0;

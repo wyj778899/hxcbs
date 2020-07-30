@@ -81,10 +81,14 @@ public class FcCourseArchivesService {
 					} else {
 						item.setIsLearning(0);
 					}
-					// 判断当前这个课程当前报名人正在学习中的课时id
-					Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(), roleId,
-							roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
-					item.setLearningHourId(fcOrderPersonHour);
+					try {
+						// 判断当前这个课程当前报名人正在学习中的课时id
+						Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(item.getId(), roleId,
+								roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+						item.setLearningHourId(fcOrderPersonHour);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					item.setIsLearning(0);
 				}

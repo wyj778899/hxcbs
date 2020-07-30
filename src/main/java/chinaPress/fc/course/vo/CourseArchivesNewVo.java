@@ -28,6 +28,7 @@ public class CourseArchivesNewVo {
 	private String speaker;// 讲师
 	private Integer isLearning;// 当前课程是正在学习中1.是0.不是
 	private Integer learningHourId;// 当前课程正在学习的最新课时id
+	private String attribute;// 课程属性
 
 	public Integer getCourseCount() {
 		return courseCount;
@@ -193,6 +194,20 @@ public class CourseArchivesNewVo {
 	 */
 	public void setLearningHourId(Integer learningHourId) {
 		this.learningHourId = learningHourId;
+	}
+
+	/**
+	 * 获取：attribute
+	 */
+	public String getAttribute() {
+		return attribute;
+	}
+
+	/**
+	 * 设置：attribute
+	 */
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
 	}
 
 }

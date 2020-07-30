@@ -3,6 +3,8 @@ package chinaPress.common.wxpay;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -297,5 +299,22 @@ public class WXPayUtil {
     public static long getCurrentTimestampMs() {
         return System.currentTimeMillis();
     }
+    
+    /**
+	 * 进行UrlEncode
+	 * 
+	 * @param source 内容
+	 * @param encode 编码
+	 * @return
+	 */
+	public static String urlEncode(String source, String encode) {
+		String result = source;
+		try {
+			result = URLEncoder.encode(source, encode);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

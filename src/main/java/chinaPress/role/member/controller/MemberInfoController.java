@@ -321,35 +321,39 @@ public class MemberInfoController {
 	/**
 	 * 通过用户名/手机号和姓名查询员工信息，用于发放优惠券
 	 * 
-	 * @param name 用户名/手机号
-	 * @param page 页数
-	 * @param name 每页显示的条数
+	 * @param name          用户名/手机号
+	 * @param institutionId 机构角色id
+	 * @param page          页数
+	 * @param name          每页显示的条数
 	 * @return
 	 */
 	@RequestMapping("/queryMembers")
-	public Result queryMembers(String name, Integer page, Integer limit) {
+	public Result queryMembers(String name, Integer institutionId, Integer page, Integer limit) {
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setName(name);
 		memberInfo.setPage((page - 1) * limit);
 		memberInfo.setLimit(limit);
+		memberInfo.setInstitutionId(institutionId);
 		return memberInfoService.findMemberNameAndTell(memberInfo);
 	}
 
 	/**
 	 * 通过用户名/手机号和姓名查询员工信息，用于发放优惠券 返回查询数据的个数
 	 * 
-	 * @param name
+	 * @param name          用户名/手机号
+	 * @param institutionId 机构角色id
 	 * @return
 	 */
 	@RequestMapping("/queryMemberCount")
-	public Result queryMemberCount(String name) {
+	public Result queryMemberCount(String name, Integer institutionId) {
 		MemberInfo memberInfo = new MemberInfo();
 		memberInfo.setName(name);
+		memberInfo.setInstitutionId(institutionId);
 		return memberInfoService.findMemberCount(memberInfo);
 	}
 
 	/**
-	 * 用过角色id和角色类型查询用户证书信息     个人信息信息证书展示
+	 * 用过角色id和角色类型查询用户证书信息 个人信息信息证书展示
 	 * 
 	 * @param roleTd
 	 * @param roleType
@@ -413,27 +417,28 @@ public class MemberInfoController {
 	public Result modifyUserUpgrade(PractitionerInfo practitionerInfo) {
 		return memberInfoService.setRoleUserToPra(practitionerInfo);
 	}
-	
+
 	/**
 	 * 用户名和密码查询用户信息
+	 * 
 	 * @param name
 	 * @param tellPhone
 	 * @return
 	 */
 	@RequestMapping("/queryMembersAll")
-	public Result queryMembersAll(String name,String tellPhone,Integer page,Integer limit) {
-		return memberInfoService.findMembersAll(name, tellPhone,(page-1)*limit,limit);
+	public Result queryMembersAll(String name, String tellPhone, Integer page, Integer limit) {
+		return memberInfoService.findMembersAll(name, tellPhone, (page - 1) * limit, limit);
 	}
-	
-	
+
 	/**
 	 * 用户名和密码查询用户信息个数
+	 * 
 	 * @param name
 	 * @param tellPhone
 	 * @return
 	 */
 	@RequestMapping("/queryMembersAllCount")
-	public Result queryMembersAllCount(String name,String tellPhone) {
+	public Result queryMembersAllCount(String name, String tellPhone) {
 		return memberInfoService.findMembersAllCount(name, tellPhone);
 	}
 }

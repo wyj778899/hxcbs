@@ -1,211 +1,234 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chinaPress.fc.course_category.dao.FcCourseCategoryMapper">
-  <resultMap id="BaseResultMap" type="chinaPress.fc.course_category.model.FcCourseCategory">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="pId" jdbcType="INTEGER" property="pid" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-    <result column="is_last" jdbcType="INTEGER" property="isLast" />
-    <result column="is_level" jdbcType="INTEGER" property="isLevel" />
-    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="create_id" jdbcType="INTEGER" property="createId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_id" jdbcType="INTEGER" property="updateId" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, pId, `name`, code, remarks, is_last, is_level, is_delete, `state`, create_id, 
-    create_time, update_id, update_time
-  </sql>
-  <!-- 查询首页点击更多分类 -->
-  <select id="selectPageIndexCategory" resultType="chinaPress.fc.course_category.vo.PageIndexCategoryVo">
-  	select
-	a.category_id as categoryId,b.`name` categoryName,count(*) as count
-	from fc_course_archives a
-	left join fc_course_category b on a.category_id = b.id
-	GROUP BY a.category_id
-  </select>
-  <!-- 查询分类 -->
-  <select id="selectCourseCategoryAll" resultType="chinaPress.common.tree.model.TreeNode"
-  parameterType="chinaPress.fc.course_category.vo.CourseCategoryParam">
-  	select
-	id, pId AS pid, name, code
-	from fc_course_category
-	<where>
-		<if test="notId != null">and id != #{notId}</if>
-		<if test="pid != null">and pId = #{pid}</if>
-		<if test="code != null">AND code like CONCAT(#{code},'%')</if>
-		<if test="name != null and name != ''">and `name` like CONCAT('%', #{name},'%')</if>
-		<if test="codeList != null and codeList.size() > 0">
-			and
-			<foreach collection="codeList" item="item" open="(" close=")"
-				separator="or">
-				code like CONCAT(#{item},'%')
-			</foreach>
-		</if>
-	</where>
-  </select>
-  <!-- 查询分类名称是否存在 -->
-  <select id="selectCourseCategoryByName" resultType="java.lang.Integer">
-  	select
-  	count(*)
-  	from fc_course_category
-  	where name = #{name}
-  </select>
-  <!-- 根据名称模糊查 -->
-  <select id="selectCourseCategoryByNames" resultType="java.lang.String"
-  parameterType="java.lang.String">
-  	select
-  	`code`
-  	from fc_course_category
-  	where `name` like CONCAT('%',#{name},'%')
-  </select>
-  <!-- 根据父级id查询 -->
-  <select id="selectByPid" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_course_category
-    where pId = #{id,jdbcType=INTEGER}
-  </select>
-  <!-- 根据id查询 -->
-  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from fc_course_category
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from fc_course_category
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insertSelective" parameterType="chinaPress.fc.course_category.model.FcCourseCategory">
-    insert into fc_course_category
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="pid != null">
-        pId,
-      </if>
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="code != null">
-        code,
-      </if>
-      <if test="remarks != null">
-        remarks,
-      </if>
-      <if test="isLast != null">
-        is_last,
-      </if>
-      <if test="isLevel != null">
-        is_level,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
-      </if>
-      <if test="state != null">
-        `state`,
-      </if>
-      <if test="createId != null">
-        create_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateId != null">
-        update_id,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="pid != null">
-        #{pid,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null">
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="isLast != null">
-        #{isLast,jdbcType=INTEGER},
-      </if>
-      <if test="isLevel != null">
-        #{isLevel,jdbcType=INTEGER},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.fc.course_category.model.FcCourseCategory">
-    update fc_course_category
-    <set>
-      <if test="pid != null">
-        pId = #{pid,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null">
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="isLast != null">
-        is_last = #{isLast,jdbcType=INTEGER},
-      </if>
-      <if test="isLevel != null">
-        is_level = #{isLevel,jdbcType=INTEGER},
-      </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=INTEGER},
-      </if>
-      <if test="state != null">
-        `state` = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="createId != null">
-        create_id = #{createId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateId != null">
-        update_id = #{updateId,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+<mapper
+	namespace="chinaPress.fc.course_category.dao.FcCourseCategoryMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.fc.course_category.model.FcCourseCategory">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="pId" jdbcType="INTEGER" property="pid" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="is_last" jdbcType="INTEGER" property="isLast" />
+		<result column="level" jdbcType="INTEGER" property="level" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="create_id" jdbcType="INTEGER" property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_id" jdbcType="INTEGER" property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, pId, `name`, code, remarks, is_last, level, `state`,
+		create_id,
+		create_time, update_id, update_time
+	</sql>
+	
+	<!-- 查询首页点击更多分类 -->
+	<select id="selectPageIndexCategory"
+		resultType="chinaPress.fc.course_category.vo.PageIndexCategoryVo">
+		select
+			a.category_id as categoryId, b.`name` categoryName, count(*) as count
+		from 
+			fc_course_archives a
+		left join fc_course_category b on a.category_id = b.id
+		GROUP BY 
+			a.category_id
+	</select>
+	
+	<!-- 查询分类 -->
+	<select id="selectCourseCategoryAll"
+		resultType="chinaPress.common.tree.model.TreeNode"
+		parameterType="chinaPress.fc.course_category.vo.CourseCategoryParam">
+		select
+			id, pId, name, code, level
+		from 
+			fc_course_category
+		<where>
+			<if test="code != null and code != ''">
+				and code like concat('%', #{code}, '%')
+			</if>
+			<if test="nameAndCode != null and nameAndCode != ''">
+				and (
+					name like concat('%', #{nameAndCode}, '%')
+				)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询分类名称是否存在 -->
+	<select id="selectCourseCategoryByName"
+		resultType="chinaPress.fc.course_category.model.FcCourseCategory">
+		select
+			count(*)
+		from 
+			fc_course_category
+		where 
+			name = #{name}
+			<if test="pId != null">
+				and pId = #{pId}
+			</if>
+	</select>
+	
+	<!-- 根据父级id查询 -->
+	<select id="selectByPid" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_course_category
+		where pId = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据id查询 -->
+	<select id="selectById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_course_category
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_course_category
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective"
+		parameterType="chinaPress.fc.course_category.model.FcCourseCategory">
+		insert into fc_course_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="pid != null">
+				pId,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="isLast != null">
+				is_last,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="state != null">
+				`state`,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="pid != null">
+				#{pid,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="isLast != null">
+				#{isLast,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.fc.course_category.model.FcCourseCategory">
+		update fc_course_category
+		<set>
+			<if test="pid != null">
+				pId = #{pid,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="isLast != null">
+				is_last = #{isLast,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询详情 -->
+	<select id="selectFcCourseCategoryDetail" resultType="chinaPress.fc.course_category.vo.CourseCategoryVo">
+		select
+			id, name, code
+		from
+			fc_course_category
+		where
+			id = #{id}	
+	</select>
+	
+	<!-- 根据code查询 -->
+	<select id="selectFcCourseCategoryByCode" resultType="chinaPress.fc.course_category.vo.CourseCategoryVo">
+		select
+			id, name, code
+		from
+			fc_course_category
+		where
+			code like concat(#{code}, '%')
+	</select>
 </mapper>

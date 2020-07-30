@@ -21,6 +21,8 @@ import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.wxpay.WXPayUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
 import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
+import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
@@ -47,6 +49,10 @@ public class AlipayService {
 	private SMSService smsService;
 	@Autowired
 	private PractitionerInfoMapper practitionerInfoMapper;
+	@Autowired
+	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
+	
+	
 	/**
 	 * 支付宝支付回调
 	 * 
@@ -147,6 +153,13 @@ public class AlipayService {
 							updOrder.setEndTime(current_calendar.getTime());
 							updOrder.setPayStatus(2);
 							fcOrderService.updateByPrimaryKeySelective(updOrder);
+							
+							if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
+								FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
+								couponRecord.setId(orderModel.getCouponId());
+								couponRecord.setStatus(3);
+								fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
+							}
 
 							// 修改订单子数据为个人
 							fcOrderPersonMapper.updateIndividualByOrderId(orderModel.getId());
