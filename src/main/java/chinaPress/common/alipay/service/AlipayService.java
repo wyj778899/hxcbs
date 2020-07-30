@@ -135,7 +135,8 @@ public class AlipayService {
 					// 增加用户在数据库余额
 
 					// 订单详情
-					FcOrder orderModel = fcOrderService.selectByCode(out_trade_no);
+					String orderCode = out_trade_no.split("_")[0];
+					FcOrder orderModel = fcOrderService.selectByCode(orderCode);
 					if (orderModel != null) {
 						if (orderModel.getPayStatus() == 1) {
 							// 课程档案

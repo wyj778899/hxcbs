@@ -48,6 +48,7 @@ public class AliPayController {
 
 		// 商户订单号，商户网站订单系统中唯一订单号，必填
 		String out_trade_no = new String(request.getParameter("WIDout_trade_no").getBytes("ISO-8859-1"), "UTF-8");
+		out_trade_no = out_trade_no.concat("_").concat(WXPayUtil.generateNonceStr());
 		// 付款金额，必填
 		String total_amount = new String(request.getParameter("WIDtotal_amount").getBytes("ISO-8859-1"), "UTF-8");
 		// 订单名称，必填
