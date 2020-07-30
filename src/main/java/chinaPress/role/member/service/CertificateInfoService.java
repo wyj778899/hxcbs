@@ -12,6 +12,7 @@ import chinaPress.role.member.dao.CertificateInfoMapper;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.model.CertificateInfo;
 import chinaPress.role.member.model.MemberInfo;
+import chinaPress.role.member.vo.CertVo;
 import chinaPress.role.member.vo.MemberAndCer;
 
 @Service
@@ -61,15 +62,15 @@ public class CertificateInfoService {
 	}
 	
 	/**
-	 * 通过id 查询证书只返回证书图片信息
+	 * 通过id 查询证书信息
 	 * @param id
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Result findCertificateOnePrice(Integer id) {
-		CertificateInfo c = certificateInfoMapper.selectByPrimaryKey(id);
+		CertVo c = certificateInfoMapper.selectById(id);
 		if (c != null) {
-			return new Result(0, "查询成功", c.getPhoto());
+			return new Result(0, "查询成功", c);
 		} else {
 			return new Result(-1, "数据库错误", "");
 		}

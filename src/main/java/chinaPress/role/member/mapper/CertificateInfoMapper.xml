@@ -17,14 +17,29 @@
     <result column="update_id" jdbcType="INTEGER" property="updateId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="course_type" jdbcType="INTEGER" property="courseType" />
+    <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, role_id, certificate_type, photo, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, role_type, test_address, grade, `code`,course_type
+    update_id, update_time, role_type, test_address, grade, `code`,course_type,certificate_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
+    from fc_certificate_archives
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectById" parameterType="java.lang.Integer" resultType="chinaPress.role.member.vo.CertVo">
+    select 
+   	  photo as visibleDeImg,
+	  code,
+      grade,
+      certificate_time as certificateTime,
+      test_address as testAddress,
+      case when course_type = 1 then '上岗课程'
+		   when course_type = 1 then '评估课程培训'
+           else '' end as courseType
     from fc_certificate_archives
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -88,6 +103,9 @@
        <if test="courseType != null">
       	course_type,
       </if>
+      <if test="certificateTime != null">
+      	certificate_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -135,6 +153,9 @@
       <if test="courseType != null">
       	#{courseType},
       </if>
+      <if test="certificateTime != null">
+      	#{certificateTime},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="chinaPress.role.member.model.CertificateInfo">
@@ -181,6 +202,9 @@
       </if>
       <if test="courseType != null">
       	course_type = #{courseType},
+      </if>
+      <if test="certificateTime != null">
+      	certificate_time = #{certificateTime},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
