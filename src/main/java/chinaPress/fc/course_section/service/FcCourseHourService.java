@@ -70,7 +70,7 @@ public class FcCourseHourService {
 				} 
 				// 没有购买课程
 				else {
-					return ResultUtil.custom(-1, "暂无购买课程");
+					return ResultUtil.custom(-2, "暂无购买课程");
 				}
 			}
 
