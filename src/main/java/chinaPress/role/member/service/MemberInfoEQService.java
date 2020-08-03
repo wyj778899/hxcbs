@@ -104,6 +104,7 @@ public class MemberInfoEQService {
 			practitionerInfo.setSource(2);
 			practitionerInfo.setState(1);
 			practitionerInfo.setPassword(Md5Util.getEncryptedPwd("12345678"));
+			practitionerInfo.setName(practitionerInfo.getRealName());
 			//添加家长从业者信息
 			practitionerInfoMapper.insertSelective(practitionerInfo);
 			MemberInfo m = new MemberInfo();

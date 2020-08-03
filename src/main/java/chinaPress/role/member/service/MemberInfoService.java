@@ -282,7 +282,7 @@ public class MemberInfoService {
 		String value = jedis.get("register_".concat(tellPhone));
 		jedis.close();
 		if (value == "" || value == null) {
-			return new Result(-4, "系统错误", "");
+			return new Result(-4, "验证码已过期", "");
 		}
 		if (value.equals(userInfo.getVerificationCode())) {
 			MemberInfo memberInfo = new MemberInfo();
