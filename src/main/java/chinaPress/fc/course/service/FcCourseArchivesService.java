@@ -303,4 +303,19 @@ public class FcCourseArchivesService {
 		return fcCourseArchivesMapper.updateByPrimaryKeySelective(record);
 	}
 
+	/**
+	 * 查询当前这个课程当前报名人正在学习中的课时id
+	 * 
+	 * @author maguoliang
+	 * @param courseId
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
+	public Integer selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
+		// 判断当前这个课程当前报名人正在学习中的课时id
+		Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(courseId, roleId,
+				roleType);
+		return fcOrderPersonHour;
+	}
 }

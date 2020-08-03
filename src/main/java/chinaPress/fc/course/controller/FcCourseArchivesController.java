@@ -130,4 +130,23 @@ public class FcCourseArchivesController {
 		return ResultUtil.custom(-1, "操作失败");
 	}
 
+	/**
+	 * 查询当前这个课程当前报名人正在学习中的课时id
+	 * 
+	 * @author maguoliang
+	 * @param courseId 课程id
+	 * @param roleId   角色id
+	 * @param roleType 角色类型
+	 * @return
+	 */
+	@RequestMapping("selectTheNewestHour")
+	public Result selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
+		// 判断当前这个课程当前报名人正在学习中的课时id
+		Integer fcOrderPersonHour = fcCourseArchivesService.selectTheNewestHour(courseId, roleId,
+				roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+		if (fcOrderPersonHour != null) {
+			return ResultUtil.ok(fcOrderPersonHour);
+		}
+		return ResultUtil.error(fcOrderPersonHour);
+	}
 }

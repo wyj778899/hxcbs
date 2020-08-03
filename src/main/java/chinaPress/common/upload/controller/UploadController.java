@@ -114,7 +114,7 @@ public class UploadController {
 			dirFile.mkdirs();
 		}
 		// 最大文件大小
-		long maxSize = 5242880;
+//		long maxSize = 5242880;
 		String fileName = multipartFile.getOriginalFilename();
 
 		// 检查文件大小
@@ -149,23 +149,22 @@ public class UploadController {
 	 * @param response
 	 * @param imgFile
 	 * @throws FileUploadException
-	 * @throws UnsupportedEncodingException
+	 * @throws IOException 
 	 */
-	@RequestMapping("uploadFile")
+	@RequestMapping("kindeditor/upload")
 	public void uploadFile(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "imgFile") MultipartFile[] imgFile)
-			throws FileUploadException, UnsupportedEncodingException {
+			@RequestParam(value = "file") MultipartFile[] file)
+			throws FileUploadException, IOException {
 		try {
 			response.setCharacterEncoding("utf-8");
 			PrintWriter out = response.getWriter();
-
 			// 文件保存本地目录路径
 			String savePath = "";
 			// 判断windows或是linux
 			Properties prop = System.getProperties();
 			String os = prop.getProperty("os.name");
 			if (os != null && os.toLowerCase().indexOf("linux") > -1) {
-				savePath = "/home/ecloud_file/";
+				savePath = "/data/";
 			} else if (os != null && os.toLowerCase().indexOf("windows") > -1) {
 				savePath = "c:/ecloud_file/";
 			}
@@ -228,18 +227,18 @@ public class UploadController {
 			}
 
 			// 最大文件大小
-			long maxSize = 1000000;
+//			long maxSize = 1000000;
 
 			// 保存文件
-			for (MultipartFile iFile : imgFile) {
+			for (MultipartFile iFile : file) {
 				String fileName = iFile.getOriginalFilename();
 
-				// 检查文件大小
-				if (iFile.getSize() > maxSize) {
-					out.print(getError("上传文件大小超过限制。"));
-					out.close();
-					return;
-				}
+//				// 检查文件大小
+//				if (iFile.getSize() > maxSize) {
+//					out.print(getError("上传文件大小超过限制。"));
+//					out.close();
+//					return;
+//				}
 				// 检查扩展名
 				String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 				if (!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)) {
@@ -267,6 +266,10 @@ public class UploadController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.setCharacterEncoding("utf-8");
+			PrintWriter out = response.getWriter();
+			out.print(getError("上传文件失败。"));
+			out.close();
 		}
 	}
 
@@ -291,7 +294,7 @@ public class UploadController {
 				rootPath = "c:/ecloud_file/";
 			}
 			// 文件保存目录URL
-			String rootUrl = PATH_LINE + "upload" + PATH_LINE;
+			String rootUrl = PATH_LINE + "uploaded" + PATH_LINE;
 
 			response.setContentType("application/json; charset=UTF-8");
 			PrintWriter out = response.getWriter();

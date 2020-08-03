@@ -153,6 +153,7 @@ public class AlipayService {
 							current_calendar.add(Calendar.DAY_OF_YEAR, courseModel.getCourseNumber());
 							updOrder.setEndTime(current_calendar.getTime());
 							updOrder.setPayStatus(2);
+							updOrder.setPaymentMode("2");
 							fcOrderService.updateByPrimaryKeySelective(updOrder);
 							
 							if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {

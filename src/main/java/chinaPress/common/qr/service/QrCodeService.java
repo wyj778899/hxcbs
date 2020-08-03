@@ -84,7 +84,7 @@ public class QrCodeService {
 		String body = "购买课程";
 
 		reqData.put("body", body);
-		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestampMs())));
+		reqData.put("out_trade_no", orderModel.getCode());
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
 		// 转换为分
@@ -141,7 +141,7 @@ public class QrCodeService {
 				// 订单编码
 				String buyInfo = resultMap.get("out_trade_no");
 				// 订单详情
-				FcOrder orderModel = fcOrderService.selectByCode(buyInfo.split("_")[0]);
+				FcOrder orderModel = fcOrderService.selectByCode(buyInfo);
 				if (orderModel != null) {
 					if (orderModel.getPayStatus() == 1) {
 						// 课程档案
@@ -158,6 +158,7 @@ public class QrCodeService {
 						current_calendar.add(Calendar.DAY_OF_YEAR, courseModel.getCourseNumber());
 						updOrder.setEndTime(current_calendar.getTime());
 						updOrder.setPayStatus(2);
+						updOrder.setPaymentMode("1");
 						fcOrderService.updateByPrimaryKeySelective(updOrder);
 
 						if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
