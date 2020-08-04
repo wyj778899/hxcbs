@@ -17,6 +17,7 @@ import chinaPress.fc.course.util.FcCourseSectionTreeUtil;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
+import chinaPress.fc.course.vo.CourseIndexVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
@@ -314,8 +315,45 @@ public class FcCourseArchivesService {
 	 */
 	public Integer selectTheNewestHour(Integer courseId, Integer roleId, Integer roleType) {
 		// 判断当前这个课程当前报名人正在学习中的课时id
-		Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(courseId, roleId,
-				roleType);
+		Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(courseId, roleId, roleType);
 		return fcOrderPersonHour;
+	}
+
+	/**
+	 * 首页课程的详情
+	 * 
+	 * @author maguoliang
+	 * @param id       课程id
+	 * @param roleId   角色id
+	 * @param roleType 角色类型
+	 * @return
+	 */
+	public CourseIndexVo selectIndexCourseDetail(Integer id, Integer roleId, Integer roleType) {
+		CourseIndexVo courseIndexVo = fcCourseArchivesMapper.selectIndexCourseDetail(id);
+		if (courseIndexVo != null) {
+			// 查询课时视频数量
+			int count = fcCourseHourMapper.selectCourseHourCountByCOurseId(id);
+			if (count > 0) {
+				courseIndexVo.setCourseCount(count);
+			} else {
+				courseIndexVo.setCourseCount(0);
+			}
+			if (roleId != null && roleType != null && (roleType == 3 || roleType == 4)) {
+				roleType = (roleType == 3 ? 1 : (roleType == 4 ? 2 : 0));
+				// 判断当前这个课程当前报名人是否正在学习中
+				FcOrder fcOrder = fcOrderMapper.selectCourseIsLearning(roleId, roleType, id);
+				if (fcOrder != null) {
+					courseIndexVo.setIsLearning(1);
+				} else {
+					courseIndexVo.setIsLearning(0);
+				}
+				// 判断当前这个课程当前报名人正在学习中的课时id
+				Integer fcOrderPersonHour = fcOrderPersonHourMapper.selectTheNewestHour(id, roleId, roleType);
+				courseIndexVo.setLearningHourId(fcOrderPersonHour);
+			} else {
+				courseIndexVo.setIsLearning(0);
+			}
+		}
+		return courseIndexVo;
 	}
 }

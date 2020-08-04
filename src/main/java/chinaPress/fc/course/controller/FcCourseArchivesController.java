@@ -13,6 +13,7 @@ import chinaPress.fc.course.service.FcCourseArchivesService;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
+import chinaPress.fc.course.vo.CourseIndexVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 
 @RestController
@@ -148,5 +149,23 @@ public class FcCourseArchivesController {
 			return ResultUtil.ok(fcOrderPersonHour);
 		}
 		return ResultUtil.error(fcOrderPersonHour);
+	}
+
+	/**
+	 * 首页课程的详情
+	 * 
+	 * @author maguoliang
+	 * @param id       课程id
+	 * @param roleId   当前登录角色id
+	 * @param roleType 当前登录角色类型
+	 * @return
+	 */
+	@RequestMapping("selectIndexCourseDetail")
+	public Result selectIndexCourseDetail(Integer id, Integer roleId, Integer roleType) {
+		CourseIndexVo data = fcCourseArchivesService.selectIndexCourseDetail(id, roleId, roleType);
+		if (data != null) {
+			return ResultUtil.custom(1, "查询成功", data);
+		}
+		return ResultUtil.custom(-1, "查询失败", data);
 	}
 }

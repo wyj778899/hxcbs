@@ -338,4 +338,14 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	<!-- 首页展示的两个课程 -->
+	<select id="selectIndexCourseDetail" resultType="chinaPress.fc.course.vo.CourseIndexVo">
+		select 
+			id, photo cover, name courseName, attribute, remarks, course_price coursePrice
+		from
+			fc_course_archives
+		where
+			id = #{courseId}
+	</select>
 </mapper>
