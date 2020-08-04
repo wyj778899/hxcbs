@@ -100,7 +100,7 @@ public class AlipayService {
 				// 商户订单号,之前生成的带用户ID的订单号
 				String out_trade_no = params.get("out_trade_no");
 				// 支付宝交易号
-//				String trade_no = params.get("trade_no");
+				String trade_no = params.get("trade_no");
 				// 付款金额
 				String total_amount = params.get("total_amount");
 				// 交易状态
@@ -156,6 +156,7 @@ public class AlipayService {
 							updOrder.setPayStatus(2);
 							updOrder.setPaymentMode("2");
 							updOrder.setPayTime(new Date());
+							updOrder.setThirdPartyNo(trade_no);
 							fcOrderService.updateByPrimaryKeySelective(updOrder);
 							
 							if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {

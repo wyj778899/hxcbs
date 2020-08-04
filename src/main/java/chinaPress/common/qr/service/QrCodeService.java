@@ -160,6 +160,7 @@ public class QrCodeService {
 						updOrder.setPayStatus(2);
 						updOrder.setPaymentMode("1");
 						updOrder.setPayTime(new Date());
+						updOrder.setThirdPartyNo(resultMap.get("transaction_id"));
 						fcOrderService.updateByPrimaryKeySelective(updOrder);
 
 						if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
