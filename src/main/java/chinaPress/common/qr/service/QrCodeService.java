@@ -3,6 +3,7 @@ package chinaPress.common.qr.service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,6 @@ import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayConstants;
 import chinaPress.common.wxpay.WXPayConstants.SignType;
-import chinaPress.common.wxpay.WXPayRequest;
 import chinaPress.common.wxpay.WXPayUtil;
 import chinaPress.common.wxpay.WxUser;
 import chinaPress.fc.apply.dao.FcApplyMapper;
@@ -159,6 +159,7 @@ public class QrCodeService {
 						updOrder.setEndTime(current_calendar.getTime());
 						updOrder.setPayStatus(2);
 						updOrder.setPaymentMode("1");
+						updOrder.setPayTime(new Date());
 						fcOrderService.updateByPrimaryKeySelective(updOrder);
 
 						if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {

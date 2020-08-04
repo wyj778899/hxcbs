@@ -66,6 +66,11 @@ public class FcOrder {
 	private Integer payStatus;
 
 	/**
+	 * 支付时间
+	 */
+	private Date payTime;
+
+	/**
 	 * 状态（0.无效1.有效）
 	 */
 	private Integer state;
@@ -161,43 +166,42 @@ public class FcOrder {
 	private String thirdPartyNo;
 
 	private Integer isIndividual;
-	
+
 	/**
 	 * 开户银行
 	 */
 	private String bankDeposit;
-	
+
 	/**
 	 * 银行账号
 	 */
 	private String bankNumber;
-	
+
 	/**
 	 * 备注
 	 */
 	private String remarks;
-	
+
 	/**
 	 * 邮箱地址
 	 */
 	private String email;
-	
+
 	/**
 	 * 是否已申请开票
 	 */
 	private Integer invoiceState;
-	
+
 	/**
 	 * 页数
 	 */
 	private Integer page;
-	
+
 	/**
 	 * 每页的个数
 	 */
 	private Integer limit;
-	
-	
+
 	public Integer getPage() {
 		return page;
 	}
@@ -660,5 +664,19 @@ public class FcOrder {
 
 	public void setThirdPartyNo(String thirdPartyNo) {
 		this.thirdPartyNo = thirdPartyNo;
+	}
+
+	/**
+	 * 获取：payTime
+	 */
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	/**
+	 * 设置：payTime
+	 */
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
 	}
 }

@@ -21,6 +21,7 @@
 			property="couponId" />
 		<result column="pay_status" jdbcType="INTEGER"
 			property="payStatus" />
+		<result column="pay_time" property="payTime" />
 		<result column="state" jdbcType="INTEGER" property="state" />
 		<result column="create_id" jdbcType="INTEGER"
 			property="createId" />
@@ -75,7 +76,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `date`, code, role_type, role_id, course_id, start_time, end_time,
-		is_coupon,
+		is_coupon, pay_time,
 		coupon_id, pay_status, `state`, create_id, create_time, update_id, update_time,
 		is_individual,
 		order_amount, discount_amount, pay_amount, apply_id
@@ -182,6 +183,7 @@
 			<if test="remarks != null">remarks,</if>
 			<if test="email != null">email,</if>
 			<if test="invoiceState !=null">invoice_state,</if>
+			<if test="payTime != null">pay_time,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -262,6 +264,7 @@
 			<if test="remarks != null">#{remarks},</if>
 			<if test="email != null">#{email},</if>
 			<if test="invoiceState != null">#{invoiceState},</if>
+			<if test="payTime != null">#{payTime},</if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -343,6 +346,7 @@
 			<if test="remarks != null">remarks = #{remarks},</if>
 			<if test="email != null">email = #{email},</if>
 			<if test="invoiceState != null">invoice_state = #{invoiceState},</if>
+			<if test="payTime != null">pay_time = #{payTime},</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>

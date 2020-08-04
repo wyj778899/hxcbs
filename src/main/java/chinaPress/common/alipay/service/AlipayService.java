@@ -2,6 +2,7 @@ package chinaPress.common.alipay.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -154,6 +155,7 @@ public class AlipayService {
 							updOrder.setEndTime(current_calendar.getTime());
 							updOrder.setPayStatus(2);
 							updOrder.setPaymentMode("2");
+							updOrder.setPayTime(new Date());
 							fcOrderService.updateByPrimaryKeySelective(updOrder);
 							
 							if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
