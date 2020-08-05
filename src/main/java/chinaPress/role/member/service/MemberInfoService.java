@@ -98,6 +98,18 @@ public class MemberInfoService {
 		if (memberInfoMapper.selectByPrimaryKey(tellParam) != null) {
 			return new Result(-1, "手机号已注册", "");
 		}
+		//判断身份证号
+		String certificateNumber = trainInstitutionInfo.getRegisterCertificate();
+		if(certificateNumber!=null && certificateNumber!="") {
+			//家长从业者校验
+			if(practitionerInfoMapper.selectByIdCert(certificateNumber,null)!=null) {
+				return new Result(-1,"身份证号已注册","");
+			}
+			//培训机构校验
+			if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber,null)!=null) {
+				return new Result(-1,"身份证号已注册","");
+			}
+		}
 		Jedis jedis = jedisPool.getResource();
 		String value = jedis.get("register_".concat(tellPhone));
 		jedis.close();
@@ -210,6 +222,16 @@ public class MemberInfoService {
 			tellParam.setId(id);
 			if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 				return new Result(-1, "手机号已注册", "");
+			}
+		}
+		//判断证件号码
+		String certificate = trainInstitutionInfo.getCertificateNumber();
+		if(certificate!=null && certificate!="") {
+			if(trainInstitutionInfoMapper.selectByIdCert(certificate, trainInstitutionInfo.getId())!=null) {
+				return new Result(-1,"身份证号已注册","");
+			}
+			if(practitionerInfoMapper.selectByIdCert(certificate, null)!=null) {
+				return new Result(-1,"身份证号已注册","");
 			}
 		}
 		// 创建员工对象
@@ -417,6 +439,63 @@ public class MemberInfoService {
 				e.printStackTrace();
 				return new Result(-2, "密码不合法", "");
 			}
+			//判断身份证号
+			String certificate = practitionerInfo.getCertificateNumber();
+			if(certificate!=null && certificate!="") {
+				//家长和从业者
+				PractitionerInfo p = practitionerInfoMapper.selectByIdCert(certificate, null);
+				if(p!=null) {
+					//用户身份     
+					Integer type = p.getType();
+					String phone = p.getTellPhone();
+					//注册信息为从业者,身份证号不为null的信息身份为从业者和手机号码为null   满足修改条件
+					if((practitionerInfo.getType()!=null && practitionerInfo.getType()==2) && type==2 && (phone.length()==0 || phone.equals(""))) {
+						//为从业者时执行更新操作
+						practitionerInfo.setId(p.getId());
+						//角色id和角色类型查询档案表id
+						Integer id = memberInfoMapper.selectByRoleIdAndType(practitionerInfo.getId(), 4);
+						if(id==null) {
+							return new Result(-1,"用户信息异常","");
+						}
+						practitionerInfo.setSource(1);
+						practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+						MemberInfo m = new MemberInfo();
+						m.setUserName(practitionerInfo.getUserName());
+						m.setPassword(practitionerInfo.getPassword());
+						m.setName(practitionerInfo.getName());
+						m.setAddress(practitionerInfo.getAddress());
+						m.setTellPhone(practitionerInfo.getTellPhone());
+						m.setSex(practitionerInfo.getSex());
+						m.setProvice(practitionerInfo.getProvice());
+						m.setCity(practitionerInfo.getCity());
+						m.setArea(practitionerInfo.getArea());
+						m.setAddress(practitionerInfo.getAddress());
+						m.setEmail(practitionerInfo.getEmail());
+						m.setIsStart(1);
+						m.setState(2);
+						m.setRoleId(practitionerInfo.getId());
+						m.setSource(1);
+						m.setId(id);//档案表id
+						// 状态有值进行操作
+						if (practitionerInfo.getType()!=null && 1 == practitionerInfo.getType()) {
+							m.setRoleType(3);
+						}
+						if (practitionerInfo.getType()!=null && 2 == practitionerInfo.getType()) {
+							m.setRoleType(4);
+						}
+						m.setPhoto(practitionerInfo.getUserHead());
+						memberInfoMapper.updateByPrimaryKeySelective(m);
+						return new Result(0, "添加成功", "");
+					}else {
+						return new Result(-1,"身份证号已注册","");
+					}
+				}
+				//培训机构
+				TrainInstitutionInfo t = trainInstitutionInfoMapper.selectByIdCert(certificate, null);
+				if(t!=null) {
+					return new Result(-1,"身份证号已注册","");
+				}
+			}
 			practitionerInfo.setSource(1);
 			practitionerInfo.setState(1);
 			int i = practitionerInfoMapper.insertSelective(practitionerInfo);
@@ -542,6 +621,16 @@ public class MemberInfoService {
 			tellParam.setId(id);
 			if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
 				return new Result(-1, "手机号已注册", "");
+			}
+		}
+		//判断证件号码
+		String certificate = practitionerInfo.getCertificateNumber();
+		if(certificate!=null && certificate!="") {
+			if(practitionerInfoMapper.selectByIdCert(certificate, practitionerInfo.getId())!=null) {
+				return new Result(-1,"身份证号已注册","");
+			}
+			if(trainInstitutionInfoMapper.selectByIdCert(certificate, null)!=null) {
+				return new Result(-1,"身份证号已注册","");
 			}
 		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
@@ -1429,6 +1518,61 @@ public class MemberInfoService {
 		if (userInfo == null) {
 			return new Result(-1, "此用户信息不存在，无法更换注册身份", "");
 		}
+		//session里面的用户信息
+		MemberInfoVo memberVo = new MemberInfoVo();
+		//用户名和手机号还是原来的不用校验，身份证号需要校验
+		String certificate = practitionerInfo.getCertificateNumber();
+		//家长和从业者
+		PractitionerInfo p = practitionerInfoMapper.selectByIdCert(certificate, null);
+		if(p!=null) {
+			//用户身份     
+			Integer type = p.getType();
+			String phone = p.getTellPhone();
+			//注册信息为从业者,身份证号不为null的信息身份为从业者和手机号码为null   满足修改条件
+			if((practitionerInfo.getType()!=null && practitionerInfo.getType()==2) && type==2 && (phone==null || phone=="")) {
+				//为从业者时执行更新操作
+				practitionerInfo.setId(p.getId());
+				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
+				MemberInfo mem = new MemberInfo();
+				mem.setUserName(practitionerInfo.getUserName());
+				mem.setPassword(practitionerInfo.getPassword());
+				mem.setName(practitionerInfo.getName());
+				mem.setAddress(practitionerInfo.getAddress());
+				mem.setTellPhone(practitionerInfo.getTellPhone());
+				mem.setSex(practitionerInfo.getSex());
+				mem.setProvice(practitionerInfo.getProvice());
+				mem.setCity(practitionerInfo.getCity());
+				mem.setArea(practitionerInfo.getArea());
+				mem.setAddress(practitionerInfo.getAddress());
+				mem.setEmail(practitionerInfo.getEmail());
+				mem.setIsStart(1);
+				mem.setState(2);
+				mem.setRoleId(practitionerInfo.getId());
+				mem.setSource(1);
+				// 状态有值进行操作
+				if (practitionerInfo.getType()!=null && 1 == practitionerInfo.getType()) {
+					mem.setRoleType(3);
+				}
+				if (practitionerInfo.getType()!=null && 2 == practitionerInfo.getType()) {
+					mem.setRoleType(4);
+				}
+				mem.setPhoto(practitionerInfo.getUserHead());
+				memberInfoMapper.updateByPrimaryKeySelective(mem);
+				memberVo.setRoleId(mem.getRoleId());// 角色id
+				memberVo.setName(mem.getUserName());// 用户名
+				memberVo.setPhoto(mem.getPhoto());// 头像
+				memberVo.setRoleType(mem.getRoleType());// 角色类型
+				memberVo.setTellPhone(mem.getTellPhone());// 手机号
+				return new Result(0, "更换成功",memberVo);
+			}else {
+				return new Result(-1,"身份证号已注册","");
+			}
+		}
+		//培训机构
+		TrainInstitutionInfo t = trainInstitutionInfoMapper.selectByIdCert(certificate, null);
+		if(t!=null) {
+			return new Result(-1,"身份证号已注册","");
+		}
 		// 首次注册状态为有效
 		practitionerInfo.setState(1);
 		// 密码获取员工表的用户密码
@@ -1463,7 +1607,6 @@ public class MemberInfoService {
 		// 删除普通用户操作
 		i += userInfoMapper.deleteByPrimaryKey(id);
 		// 返回一个session里面的用户信息
-		MemberInfoVo memberVo = new MemberInfoVo();
 		memberVo.setRoleId(memberInfo.getRoleId());// 角色id
 		memberVo.setName(memberInfo.getUserName());// 用户名
 		memberVo.setPhoto(memberInfo.getPhoto());// 头像

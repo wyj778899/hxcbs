@@ -106,4 +106,13 @@ public interface MemberInfoMapper {
      * @return
      */
     int selectMembersAllCount(@Param("name") String name,@Param("tellPhone") String tellPhone);
+    
+    
+    /**
+     * 通过据角色id和角色类型查询档案表里面的员工id              从业者注册时身份证号存在并且手机号为null需要更新从业者信息,更新完从业者信息档案表没有主键所有用roleid和roletype查询档案表主键
+     * @param roleId
+     * @param roleType
+     * @return
+     */
+    Integer selectByRoleIdAndType(@Param("roleId")Integer roleId,@Param("roleType")Integer roleType);
 }

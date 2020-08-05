@@ -670,4 +670,17 @@
 	    </if>
   </select>
   
+  <!-- 证件号码查询用户信息  用于添加和更新 -->
+   <select id="selectByIdCert" resultMap="BaseResultMap">
+    select 
+		 <include refid="Base_Column_List" />
+    from role_practitioner_archives 
+    where 1=1
+      <if test="certificate !=null and certificate!=''">
+        and certificate_number = #{certificate}
+      </if>	
+      <if test="id != null">
+        and id != #{id}
+      </if>	
+  </select>
 </mapper>

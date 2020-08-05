@@ -91,4 +91,13 @@ public interface PractitionerInfoMapper {
      * @return
      */
     TeacherCerInfos selectTeacherByCers(@Param("teaId")Integer teaId,@Param("type")Integer type);
+    
+    
+    /**
+     * 通过证件编号查询用户信息     用于更新和添加
+     * @param Certificate
+     * @Param id
+     * @return
+     */
+    PractitionerInfo selectByIdCert(@Param("certificate")String certificate,@Param("id")Integer id);
 }

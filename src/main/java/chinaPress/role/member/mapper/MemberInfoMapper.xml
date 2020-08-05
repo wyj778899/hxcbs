@@ -528,4 +528,13 @@
 	      </if>
   </select>
 	
+	<select id="selectByRoleIdAndType" resultType="java.lang.Integer">
+		SELECT
+			id
+		FROM
+			role_staff_archives 
+		WHERE
+			role_id = #{roleId}
+			and role_type = #{roleType}
+	</select>
 </mapper>

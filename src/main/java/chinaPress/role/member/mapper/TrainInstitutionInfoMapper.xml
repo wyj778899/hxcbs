@@ -493,4 +493,18 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 证件号码查询机构信息  用于添加和更新 -->
+   <select id="selectByIdCert" resultMap="BaseResultMap">
+    select 
+		 <include refid="Base_Column_List" />
+    from role_institution_archives 
+    where 1=1
+      <if test="certificate !=null and certificate!=''">
+        and register_certificate = #{certificate}
+      </if>	
+      <if test="id != null">
+        and id != #{id}
+      </if>	
+  </select>
 </mapper>

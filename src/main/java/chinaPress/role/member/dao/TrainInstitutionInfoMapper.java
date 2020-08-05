@@ -3,6 +3,7 @@ package chinaPress.role.member.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.TrainInstitutionInfo;
@@ -50,4 +51,12 @@ public interface TrainInstitutionInfoMapper {
      * @return
      */
     int selectInstAndEmpInfoCount(String area,String name);
+    
+    /**
+     * 通过证件编号查询机构信息     用于更新和添加
+     * @param Certificate
+     * @Param id
+     * @return
+     */
+    TrainInstitutionInfo selectByIdCert(@Param("certificate")String certificate,@Param("id")Integer id);
 }
