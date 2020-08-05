@@ -178,41 +178,43 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setInstitution(TrainInstitutionInfo trainInstitutionInfo) {
-
-		// 通过用户名和密码到员工表查询用户信息 获取员工id更新员工操作
+		//培训机构id
+		Integer tid = trainInstitutionInfo.getId();
+		//查询机构信息
+		TrainInstitutionInfo t =trainInstitutionInfoMapper.selectByPrimaryKey(tid);
+		// 机构id和type查询员工信息
 		MemberInfo param = new MemberInfo();
-		param.setUserName(trainInstitutionInfo.getUserName());
+		param.setRoleId(t.getId());
+		param.setRoleType(2);
 		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
-		if (m == null) {
-			MemberInfo param1 = new MemberInfo();
-			param1.setTellPhone(trainInstitutionInfo.getRegisterTell());
-			m = memberInfoMapper.selectByPrimaryKey(param1);
-		}
 		if (m == null) {
 			return new Result(-5, "用户信息不存在", "");
 		}
-		// 先判断用户名和手机号不符合之间返回
+		//员工表的id
+		Integer id = m.getId();
 		// 判断用户名
 		MemberInfo nameParam = new MemberInfo();
 		String userName = trainInstitutionInfo.getUserName();
-		Integer id = m.getId();
-		nameParam.setUserName(userName);
-		nameParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
-			return new Result(-1, "用户名已注册", "");
+		if(userName!=null&&userName!="") {
+			nameParam.setUserName(userName);
+			nameParam.setId(id);
+			if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
+				return new Result(-1, "用户名已注册", "");
+			}
 		}
 		// 判断手机号
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = trainInstitutionInfo.getRegisterTell();
-		tellParam.setTellPhone(tellPhone);
-		tellParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
-			return new Result(-1, "手机号已注册", "");
+		if(tellPhone!=null&&tellPhone!="") {
+			tellParam.setTellPhone(tellPhone);
+			tellParam.setId(id);
+			if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
+				return new Result(-1, "手机号已注册", "");
+			}
 		}
 		// 创建员工对象
 		MemberInfo memberInfo = new MemberInfo();
 		// 获取用户的原始密码
-		TrainInstitutionInfo t = trainInstitutionInfoMapper.selectByPrimaryKey(trainInstitutionInfo.getId());
 		String password = t.getPassword();
 		// 是否修改密码
 		if (trainInstitutionInfo.getPassword() != null && trainInstitutionInfo.getPassword() != ""
@@ -339,36 +341,36 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setUserInfo(UserInfo userInfo) {
-		// 通过用户名和手机号查询用户信息
+		Integer uid = userInfo.getId();
+		UserInfo u = userInfoMapper.selectByPrimaryKey(uid);
 		MemberInfo param = new MemberInfo();
-		param.setUserName(userInfo.getUserName());
+		param.setRoleId(u.getId());
+		param.setRoleType(5);
 		MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
-		// 用户名不存在查询手机号
-		if (m == null) {
-			MemberInfo param1 = new MemberInfo();
-			param1.setTellPhone(userInfo.getTellPhone());
-			m = memberInfoMapper.selectByPrimaryKey(param1);
-		}
-		// 手机号还不存在直接返回
+		// 通过roleid和roletype查询员工信息
 		if (m == null) {
 			return new Result(-5, "用户信息不存在", "");
 		}
+		Integer id = m.getId();
 		// 判断用户名
 		MemberInfo nameParam = new MemberInfo();
 		String userName = userInfo.getUserName();
-		Integer id = m.getId();
-		nameParam.setUserName(userName);
-		nameParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
-			return new Result(-1, "用户名已注册", "");
+		if(userName!=null&&userName!="") {
+			nameParam.setUserName(userName);
+			nameParam.setId(id);
+			if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
+				return new Result(-1, "用户名已注册", "");
+			}
 		}
 		// 判断手机号
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = userInfo.getTellPhone();
-		tellParam.setTellPhone(tellPhone);
-		tellParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
-			return new Result(-1, "手机号已注册", "");
+		if(tellPhone!=null&&tellPhone!="") {
+			tellParam.setTellPhone(tellPhone);
+			tellParam.setId(id);
+			if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
+				return new Result(-1, "手机号已注册", "");
+			}
 		}
 		int i = userInfoMapper.updateByPrimaryKeySelective(userInfo);
 		m.setPhoto(userInfo.getUserHead());
@@ -435,10 +437,10 @@ public class MemberInfoService {
 			memberInfo.setRoleId(practitionerInfo.getId());
 			memberInfo.setSource(1);
 			// 状态有值进行操作
-			if (1 == practitionerInfo.getType()) {
+			if (practitionerInfo.getType()!=null && 1 == practitionerInfo.getType()) {
 				memberInfo.setRoleType(3);
 			}
-			if (2 == practitionerInfo.getType()) {
+			if (practitionerInfo.getType()!=null && 2 == practitionerInfo.getType()) {
 				memberInfo.setRoleType(4);
 			}
 			memberInfo.setPhoto("assets/image/userImg.jpg");
@@ -508,33 +510,39 @@ public class MemberInfoService {
 	 * @return
 	 */
 	public Result setpractitionerInfo(PractitionerInfo practitionerInfo) {
+		//家长从业者的id
+		Integer pid = practitionerInfo.getId();
+		//通过id获取家长从业者信息
+		PractitionerInfo p = practitionerInfoMapper.selectByPrimaryKey(pid);
 		MemberInfo param = new MemberInfo();
-		param.setUserName(practitionerInfo.getUserName());
+		param.setRoleId(p.getId());
+		param.setRoleType(p.getType() == 1 ? 3:4 );//判断家长和从业者
 		MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(param);
+		//如果此用户没有关联的员工信息直接返回
 		if (memberInfo == null) {
-			MemberInfo param1 = new MemberInfo();
-			param1.setTellPhone(practitionerInfo.getTellPhone());
-			memberInfo = memberInfoMapper.selectByPrimaryKey(param1);
+			return new Result(-5, "用户信息不存在", "");
 		}
-		if (memberInfo == null) {
-			return new Result(-5, "用户不存在", "");
-		}
+		Integer id = memberInfo.getId();
 		// 判断用户名
 		MemberInfo nameParam = new MemberInfo();
 		String userName = practitionerInfo.getUserName();
-		Integer id = memberInfo.getId();
-		nameParam.setUserName(userName);
-		nameParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
-			return new Result(-1, "用户名已注册", "");
+		if(userName!=null &&userName!="") {
+			nameParam.setUserName(userName);
+			nameParam.setId(id);
+			System.out.println(memberInfoMapper.selectUserAndTellPhone(nameParam));
+			if (memberInfoMapper.selectUserAndTellPhone(nameParam) > 0) {
+				return new Result(-1, "用户名已注册", "");
+			}
 		}
 		// 判断手机号
 		MemberInfo tellParam = new MemberInfo();
 		String tellPhone = practitionerInfo.getTellPhone();
-		tellParam.setTellPhone(tellPhone);
-		tellParam.setId(id);
-		if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
-			return new Result(-1, "手机号已注册", "");
+		if(tellPhone!=null &&tellPhone!="") {
+			tellParam.setTellPhone(tellPhone);
+			tellParam.setId(id);
+			if (memberInfoMapper.selectUserAndTellPhone(tellParam) > 0) {
+				return new Result(-1, "手机号已注册", "");
+			}
 		}
 		int i = practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
 		memberInfo.setPhoto(practitionerInfo.getUserHead());
@@ -549,10 +557,10 @@ public class MemberInfoService {
 		memberInfo.setAddress(practitionerInfo.getAddress());
 		memberInfo.setRoleId(practitionerInfo.getId());
 		// 状态有值进行操作
-		if (1 == practitionerInfo.getType()) {
+		if (practitionerInfo.getType()!=null && 1 == practitionerInfo.getType()) {
 			memberInfo.setRoleType(3);
 		}
-		if (2 == practitionerInfo.getType()) {
+		if (practitionerInfo.getType()!=null && 2 == practitionerInfo.getType()) {
 			memberInfo.setRoleType(4);
 		}
 		i += memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
@@ -1366,22 +1374,22 @@ public class MemberInfoService {
 			// 修改员工信息
 			memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
 			// 1.员工(不用二次修改手机号)2.机构3.家长4.从业者5.注册用户
-			int type = m.getRoleType();
+			Integer type = m.getRoleType();
 			int id = m.getRoleId();
-			if (2 == type) {
+			if (type!=null && 2 == type) {
 				// 创建培训机构对象更新密码 只赋值主键和密码的值
 				TrainInstitutionInfo trainInstitutionInfo = new TrainInstitutionInfo();
 				trainInstitutionInfo.setId(id);
 				trainInstitutionInfo.setPassword(pwd);
 				trainInstitutionInfoMapper.updateByPrimaryKeySelective(trainInstitutionInfo);
 			}
-			if (3 == type || 4 == type) {
+			if (type!=null && (3 == type || 4 == type)) {
 				PractitionerInfo practitionerInfo = new PractitionerInfo();
 				practitionerInfo.setId(id);
 				practitionerInfo.setPassword(pwd);
 				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
 			}
-			if (5 == type) {
+			if (type!=null && 5 == type) {
 				UserInfo userInfo = new UserInfo();
 				userInfo.setId(id);
 				userInfo.setPassword(pwd);
@@ -1444,10 +1452,10 @@ public class MemberInfoService {
 		memberInfo.setRoleId(practitionerInfo.getId());
 		memberInfo.setId(m.getId());
 		// 状态有值进行操作
-		if (1 == practitionerInfo.getType()) {
+		if (practitionerInfo.getType()!=null && 1 == practitionerInfo.getType()) {
 			memberInfo.setRoleType(3);
 		}
-		if (2 == practitionerInfo.getType()) {
+		if (practitionerInfo.getType()!=null &&2 == practitionerInfo.getType()) {
 			memberInfo.setRoleType(4);
 		}
 		// 添加员工档案操作
