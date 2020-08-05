@@ -66,12 +66,18 @@ public class FcOrderPersonService {
 				hour.setIsPass(isPass);
 				hour.setPassTime(new Date());
 				fcOrderPersonHourMapper.updateIsPass(hour);
-
-				FcOrderPersonHour personHour = new FcOrderPersonHour();
-				personHour.setOrderPersonId(personOrderId);
-				personHour.setHourId(fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, hourId));
-				fcOrderPersonHourMapper.insertSelective(personHour);
-				return 1;
+				
+				// 查询下个课时id
+				int nextHourId = fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, hourId);
+				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+						nextHourId);
+				if (fcOrderPersonHour != null) {
+					FcOrderPersonHour personHour = new FcOrderPersonHour();
+					personHour.setOrderPersonId(personOrderId);
+					personHour.setHourId(nextHourId);
+					fcOrderPersonHourMapper.insertSelective(personHour);
+					return 1;
+				}
 			}
 		}
 		return 0;
@@ -123,11 +129,15 @@ public class FcOrderPersonService {
 					fcOrderPersonHourMapper.insertSelective(record);
 				}
 			} else {
-				FcOrderPersonHour hour = new FcOrderPersonHour();
-				hour.setOrderPersonId(personOrderId);
-				hour.setHourId(hourId);
-				hour.setIsPass(isPass);
-				return fcOrderPersonHourMapper.updateIsPass(hour);
+				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+						hourId);
+				if (fcOrderPersonHour != null) {
+					FcOrderPersonHour hour = new FcOrderPersonHour();
+					hour.setOrderPersonId(personOrderId);
+					hour.setHourId(hourId);
+					hour.setIsPass(isPass);
+					return fcOrderPersonHourMapper.updateIsPass(hour);
+				}
 			}
 		}
 		return 0;
