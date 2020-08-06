@@ -71,7 +71,7 @@ public class FcOrderPersonService {
 				int nextHourId = fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, hourId);
 				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
 						nextHourId);
-				if (fcOrderPersonHour != null) {
+				if (fcOrderPersonHour == null) {
 					FcOrderPersonHour personHour = new FcOrderPersonHour();
 					personHour.setOrderPersonId(personOrderId);
 					personHour.setHourId(nextHourId);
