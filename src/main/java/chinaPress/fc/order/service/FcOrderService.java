@@ -79,6 +79,8 @@ public class FcOrderService {
 				terminalOrderListVo.setPayStatus(3);
 				idList.add(terminalOrderListVo.getId());
 			}
+			int courseHourCount = fcCourseHourMapper.selectCourseHourCountByCOurseId(terminalOrderListVo.getCourseId());
+			terminalOrderListVo.setCourseHourCount(courseHourCount);
 		}
 		updatePayStatus(idList);
 		return list;

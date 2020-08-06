@@ -58,6 +58,16 @@ public class TerminalOrderListVo {
 	 */
 	private BigDecimal payAmount;
 
+	/**
+	 * 课程id
+	 */
+	private Integer courseId;
+
+	/**
+	 * 课程课时个数
+	 */
+	private Integer courseHourCount;
+
 	public Integer getId() {
 		return id;
 	}
@@ -154,5 +164,33 @@ public class TerminalOrderListVo {
 	 */
 	public void setCourseCover(String courseCover) {
 		this.courseCover = courseCover;
+	}
+
+	/**
+	 * 获取：courseId
+	 */
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	/**
+	 * 设置：courseId
+	 */
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	/**
+	 * 获取：courseHourCount
+	 */
+	public Integer getCourseHourCount() {
+		return courseHourCount;
+	}
+
+	/**
+	 * 设置：courseHourCount
+	 */
+	public void setCourseHourCount(Integer courseHourCount) {
+		this.courseHourCount = courseHourCount;
 	}
 }
