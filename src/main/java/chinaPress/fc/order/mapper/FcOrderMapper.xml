@@ -374,6 +374,7 @@
 		SELECT
 			a.id AS id,
 			a.date,
+			b.id courseId,
 			a.`code`,
 			b.`name` AS courseName,
 			b.course_price AS coursePrice,

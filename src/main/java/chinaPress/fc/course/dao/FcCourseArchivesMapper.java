@@ -11,6 +11,7 @@ import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.CourseIndexVo;
+import chinaPress.fc.course.vo.CourseTutorVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 
 @Mapper
@@ -66,12 +67,22 @@ public interface FcCourseArchivesMapper {
 	FcCourseArchives selectByPrimaryKey(Integer id);
 
 	int updateByPrimaryKeySelective(FcCourseArchives record);
-	
+
 	/**
 	 * 首页课程的详情
+	 * 
 	 * @author maguoliang
 	 * @param id
 	 * @return
 	 */
 	CourseIndexVo selectIndexCourseDetail(Integer id);
+
+	/**
+	 * 查询课程相关联的导师
+	 * 
+	 * @author maguoliang
+	 * @param courseId 课程id
+	 * @return
+	 */
+	List<CourseTutorVo> selectCourseAboutTutor(Integer courseId);
 }

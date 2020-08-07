@@ -261,17 +261,19 @@ public class QrCodeService {
 		reqData.put("nonce_str", WXPayUtil.generateNonceStr());
 
 		reqData.put("openid", openId); // 用户标识
-		reqData.put("body", "11111"); // 商品描述
-		reqData.put("out_trade_no", WXPayUtil.generateNonceStr()); // 商户订单号
+		reqData.put("body", "购买课程"); // 商品描述
+//		reqData.put("out_trade_no", WXPayUtil.generateNonceStr()); // 商户订单号
+		reqData.put("out_trade_no", orderModel.getCode()); // 商户订单号
 
-//		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
-//		// 转换为分
-//		BigDecimal orderPayAmountFen = orderPayAmountYuan.multiply(new BigDecimal(100));
-		reqData.put("total_fee", "1"); // 标价金额
+		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
+		// 转换为分
+		BigDecimal orderPayAmountFen = orderPayAmountYuan.multiply(new BigDecimal(100));
+		reqData.put("total_fee", orderPayAmountFen.stripTrailingZeros().toPlainString()); // 标价金额
 
 		reqData.put("spbill_create_ip", "127.0.0.1"); // 终端ip
-		reqData.put("notify_url", "http://www.hxclass.cn/"); // 通知地址
+		reqData.put("notify_url", "http://www.hxclass.cn/chinaPressServer/notify_url"); // 通知地址
 		reqData.put("trade_type", "JSAPI"); // 交易类型
+		WXPayUtil.getLogger().info(reqData.toString());
 		reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), SignType.HMACSHA256));
 		System.out.println(reqData.toString());
 		// 下单，返回支付结果
@@ -304,7 +306,7 @@ public class QrCodeService {
 	 */
 	public String authorization() throws IOException {
 		// 授权后重定向的回调链接地址
-		String REDIRECT_URI = WXPayUtil.urlEncode("http://www.hxclass.cn/h5/", "UTF-8");
+		String REDIRECT_URI = WXPayUtil.urlEncode("http://www.hxclass.cn/h5/home", "UTF-8");
 		// 微信授权 URL
 		String AUTHORIZATION_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 		MyWXPayConfig myWXPayConfig = new MyWXPayConfig();
@@ -322,7 +324,7 @@ public class QrCodeService {
 	 * @throws IOException
 	 */
 	public String getWxOpenId(String code) throws IOException {
-		String openId = "";
+		String openId = "";	
 		MyWXPayConfig myWXPayConfig = new MyWXPayConfig();
 		// 回传用户接口
 		Map<String, String> params = new HashMap<String, String>();

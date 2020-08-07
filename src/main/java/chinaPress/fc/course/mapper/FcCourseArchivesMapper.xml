@@ -348,4 +348,16 @@
 		where
 			id = #{courseId}
 	</select>
+	
+	<!-- 查询课程相关联的导师 -->
+	<select id="selectCourseAboutTutor" resultType="chinaPress.fc.course.vo.CourseTutorVo">
+		select
+			c.id, c.pId, c.name, c.picture
+		from
+			fc_course_archives a
+		inner join fc_course_tutor b on a.id = b.course_id
+		inner join fc_tutor_archives c on b.tutor_id = c.id
+		where
+			a.id = #{courseId}		
+	</select>
 </mapper>
