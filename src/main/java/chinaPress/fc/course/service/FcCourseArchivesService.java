@@ -14,10 +14,12 @@ import chinaPress.fc.book.vo.FcCourseBookVo;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course.util.FcCourseSectionTreeUtil;
+import chinaPress.fc.course.util.FcCourseTutorTreeUtil;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.CourseIndexVo;
+import chinaPress.fc.course.vo.CourseTutorVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
@@ -190,6 +192,10 @@ public class FcCourseArchivesService {
 				data.setStudyDay(0);
 				data.setIsLearning(0);
 			}
+			// 查询课程相关导师
+			List<CourseTutorVo> tutorList = fcCourseArchivesMapper.selectCourseAboutTutor(id);
+			List<CourseTutorVo> tutorTreeList = FcCourseTutorTreeUtil.buildByRecursive(tutorList);
+			data.setTutorList(tutorTreeList);
 		}
 		return data;
 	}
