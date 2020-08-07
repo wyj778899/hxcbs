@@ -413,6 +413,7 @@
 			property="courseName" />
 		<result column="c_course_price" jdbcType="DECIMAL"
 			property="coursePrice" />
+		<result column="create_time" property="createTime" />
 	</resultMap>
 
 	<!-- 终端 机构我的订单详情 -->
@@ -429,7 +430,8 @@
 			c.course_price AS c_course_price,
 			c.course_number AS
 			courseNumber,
-			c.`name` AS c_name
+			c.`name` AS c_name,
+			a.create_time
 		FROM
 			fc_order a
 		LEFT JOIN fc_course_archives c ON c.id = a.course_id

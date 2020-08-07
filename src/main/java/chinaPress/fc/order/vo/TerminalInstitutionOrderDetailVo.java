@@ -59,6 +59,12 @@ public class TerminalInstitutionOrderDetailVo {
 	 */
 	private Integer courseNumber;
 
+	/**
+	 * 订单创建日期
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date createTime;
+
 	public Integer getId() {
 		return id;
 	}
@@ -137,5 +143,19 @@ public class TerminalInstitutionOrderDetailVo {
 
 	public void setCourseNumber(Integer courseNumber) {
 		this.courseNumber = courseNumber;
+	}
+
+	/**
+	 * 获取：createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * 设置：createTime
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
