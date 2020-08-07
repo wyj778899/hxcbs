@@ -58,16 +58,16 @@ public class TeacherInfoController {
 	 * 查询教师证书信息
 	 * @param name
 	 * @param certificateNumber
-	 * @param page
-	 * @param limit
+	 * @param certificateType
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/queryTeacherAndCertInfos")
-	public Result queryTeacherAndCertInfos(String name,String certificateNumber) {
+	public Result queryTeacherAndCertInfos(String name,String certificateNumber,Integer certificateType) {
 		PractitionerInfo practitionerInfo = new PractitionerInfo();
 		practitionerInfo.setName(name);
 		practitionerInfo.setCertificateNumber(certificateNumber);
+		practitionerInfo.setCertificateType(certificateType);
 		return teacherInfoService.findTeacherAndCertInfos(practitionerInfo);
 	}
 	

@@ -629,6 +629,9 @@
 		<if test="name !=null and name !=''">
 	   		and a.name = #{name}
 	    </if>
+	    <if test="certificateType !=null">
+	   		and a.certificate_type = #{certificateType}
+	    </if>
 	    <if test="certificateNumber !=null and certificateNumber !=''">
 	   		and a.certificate_number = #{certificateNumber}
 	    </if>
