@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
+import chinaPress.fc.order.model.FcOrderPerson;
 import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderPersonParam;
 import chinaPress.fc.order.vo.TerminalInstitutionOrderPersonVo;
@@ -55,20 +58,29 @@ public class FcOrderPersonService {
 	 * @param isPass   是否通过
 	 * @return
 	 */
+	@Transactional
 	public int setHaveCount(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
 		Integer personOrderId = fcOrderPersonMapper.findOrderPersonId(roleId, roleType, courseId);
 		if (personOrderId != null) {
-			int index = fcOrderPersonMapper.updateHaveCount(personOrderId);
-			if (index > 0) {
-				FcOrderPersonHour hour = new FcOrderPersonHour();
-				hour.setOrderPersonId(personOrderId);
-				hour.setHourId(hourId);
-				hour.setIsPass(isPass);
-				hour.setPassTime(new Date());
-				fcOrderPersonHourMapper.updateIsPass(hour);
-				
-				// 查询下个课时id
-				int nextHourId = fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, hourId);
+			// 修改学习进度信息
+			FcOrderPerson fcOrderPerson = fcOrderPersonMapper.selectByPrimaryKey(personOrderId);
+			if (fcOrderPerson.getHaveCount() < fcOrderPerson.getTotalCount()) {
+				fcOrderPersonMapper.updateHaveCount(personOrderId);
+			}
+			
+			// 修改课时学习状态
+			FcOrderPersonHour hour = new FcOrderPersonHour();
+			hour.setOrderPersonId(personOrderId);
+			hour.setHourId(hourId);
+			hour.setIsPass(isPass);
+			hour.setPassTime(new Date());
+			fcOrderPersonHourMapper.updateIsPass(hour);
+			
+			// 添加下个课时的学习进度和状态，查询下个课时id
+			// 先查询当前这个课时的排序
+			FcCourseHour currFcCourseHour = fcCourseHourMapper.selectByPrimaryKey(hourId);
+			Integer nextHourId = fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, currFcCourseHour.getOrder());
+			if (nextHourId != null) {
 				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
 						nextHourId);
 				if (fcOrderPersonHour == null) {
@@ -96,6 +108,7 @@ public class FcOrderPersonService {
 	public int setHourIsPass(Integer roleId, Integer roleType, Integer courseId, Integer hourId, Integer isPass) {
 		Integer personOrderId = fcOrderPersonMapper.findOrderPersonId(roleId, roleType, courseId);
 		if (personOrderId != null) {
+			// 针对播放完毕
 			// 如果看完了，且当前角色进度没有该章节视频记录则修改（针对视频没有小节题的）
 			if (isPass.intValue() == 3) {
 				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
@@ -103,11 +116,24 @@ public class FcOrderPersonService {
 				if (fcOrderPersonHour != null) {
 					// 0.只有观看权限，
 					if (fcOrderPersonHour.getIsPass().intValue() == 0) {
+						// 更新进度信息
 						FcOrderPersonHour hour = new FcOrderPersonHour();
 						hour.setOrderPersonId(personOrderId);
 						hour.setHourId(hourId);
-						hour.setIsPass(isPass);
-						return fcOrderPersonHourMapper.updateIsPass(hour);
+						int sectionId = fcCourseHourMapper.selectByPrimaryKey(hourId).getSectionId();
+						int stemCount = fcCourseHourMapper.selectIsHaveStemBySectionId(sectionId);
+						if (stemCount <= 0) {
+							hour.setIsPass(1);
+							fcOrderPersonHourMapper.updateIsPass(hour);
+							// 更新学习进度
+							FcOrderPerson fcOrderPerson = fcOrderPersonMapper.selectByPrimaryKey(personOrderId);
+							if (fcOrderPerson.getHaveCount() < fcOrderPerson.getTotalCount()) {
+								fcOrderPersonMapper.updateHaveCount(personOrderId);
+							}
+						} else {
+							hour.setIsPass(3);
+							fcOrderPersonHourMapper.updateIsPass(hour);
+						}
 					} 
 					// 1.已观看完且通过测试，
 					else if (fcOrderPersonHour.getIsPass().intValue() == 1) {
@@ -121,14 +147,37 @@ public class FcOrderPersonService {
 					else if (fcOrderPersonHour.getIsPass().intValue() == 3) {
 						
 					}
+					// 查询该课时是否有小节自测题，如果没有，那么添加下一个课时的进度信息
+					// 查询这个课时是否有题
+					int sectionId = fcCourseHourMapper.selectByPrimaryKey(hourId).getSectionId();
+					int stemCount = fcCourseHourMapper.selectIsHaveStemBySectionId(sectionId);
+					if (stemCount <= 0) {
+						FcCourseHour currFcCourseHour = fcCourseHourMapper.selectByPrimaryKey(hourId);
+						Integer nextHourId = fcCourseHourMapper.selectCourseNextHourIdBysectionId(courseId, currFcCourseHour.getOrder());
+						// 为空代表是当前是最后一个课时了
+						if (nextHourId != null) {
+							FcOrderPersonHour nextFcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
+									nextHourId);
+							if (nextFcOrderPersonHour == null) {
+								FcOrderPersonHour record = new FcOrderPersonHour();
+								record.setHourId(nextHourId);
+								record.setOrderPersonId(personOrderId);
+								record.setIsPass(0);
+								fcOrderPersonHourMapper.insertSelective(record);
+							}
+						}
+					}
+					return 1;
 				} else {
 					FcOrderPersonHour record = new FcOrderPersonHour();
 					record.setHourId(hourId);
 					record.setOrderPersonId(personOrderId);
 					record.setIsPass(isPass);
-					fcOrderPersonHourMapper.insertSelective(record);
+					return fcOrderPersonHourMapper.insertSelective(record);
 				}
-			} else {
+			} 
+			// 针对小节测试未通过，也就是isPass只能为2
+			else {
 				FcOrderPersonHour fcOrderPersonHour = fcOrderPersonHourMapper.selectByOrderPersonAndHour(personOrderId,
 						hourId);
 				if (fcOrderPersonHour != null) {

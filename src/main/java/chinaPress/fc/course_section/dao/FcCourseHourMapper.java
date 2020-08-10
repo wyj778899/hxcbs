@@ -26,10 +26,10 @@ public interface FcCourseHourMapper {
 	 * 
 	 * @author maguoliang
 	 * @param courseId 课程id
-	 * @param hourId   当前课时id
+	 * @param hourId   当前课时id的排序
 	 * @return
 	 */
-	int selectCourseNextHourIdBysectionId(@Param("courseId") Integer courseId, @Param("hourId") Integer hourId);
+	Integer selectCourseNextHourIdBysectionId(@Param("courseId") Integer courseId, @Param("order") Integer order);
 
 	/**
 	 * 根据章节id查询关联课时
@@ -54,4 +54,12 @@ public interface FcCourseHourMapper {
 	FcCourseHour selectByPrimaryKey(Integer id);
 
 	int updateByPrimaryKeySelective(FcCourseHour record);
+	
+	/**
+	 * 根据章节id查询该课时是否有题
+	 * @author maguoliang
+	 * @param sectionId
+	 * @return
+	 */
+	int selectIsHaveStemBySectionId(Integer sectionId);
 }

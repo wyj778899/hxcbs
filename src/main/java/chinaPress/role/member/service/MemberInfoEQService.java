@@ -1,5 +1,6 @@
 package chinaPress.role.member.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,7 +121,7 @@ public class MemberInfoEQService {
 					String phone = p.getTellPhone();
 					// 注册信息为从业者,身份证号不为null的信息身份为从业者和手机号码为null 满足修改条件
 					if ((practitionerInfo.getType() != null && practitionerInfo.getType() == 2) && type == 2
-							&& (phone.length()==0 || phone.equals(""))) {
+							&& StringUtils.isBlank(phone)) {
 						// 为从业者时执行更新操作
 						practitionerInfo.setId(p.getId());
 						//恩起注册的用户赋值初始密码

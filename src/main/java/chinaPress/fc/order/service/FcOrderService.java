@@ -1,19 +1,28 @@
 package chinaPress.fc.order.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
+import chinaPress.common.util.ResultUtil;
+import chinaPress.fc.book.dao.FcBookArchivesMapper;
+import chinaPress.fc.book.model.FcBookArchives;
+import chinaPress.fc.coupon.dao.FcDiscountCouponMapper;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
+import chinaPress.fc.coupon.model.FcDiscountCoupon;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
+import chinaPress.fc.course.dao.FcCourseArchivesMapper;
+import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderBookMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
@@ -53,6 +62,14 @@ public class FcOrderService {
 
 	@Autowired
 	private FcOrderBookMapper fcOrderBookMapper;
+	@Autowired
+	private FcCourseArchivesMapper fcCourseArchivesMapper;
+	@Autowired
+	private FcBookArchivesMapper fcBookArchivesMapper;
+	@Autowired
+	private FcDiscountCouponMapper fcDiscountCouponMapper;
+	
+	
 
 	/**
 	 * 终端 我的订单数据数量
@@ -75,7 +92,7 @@ public class FcOrderService {
 		List<TerminalOrderListVo> list = fcOrderMapper.findTerminalOrderList(param);
 		for (TerminalOrderListVo terminalOrderListVo : list) {
 			if (terminalOrderListVo.getPayStatus().intValue() == 1
-					&& DateUtil.getLongOfTwoDate(terminalOrderListVo.getCreateTime(), new Date()) >= 2) {
+					&& DateUtil.getLongOfTwoDate(terminalOrderListVo.getCreateTime(), new Date()) >= 100) {
 				terminalOrderListVo.setPayStatus(3);
 				idList.add(terminalOrderListVo.getId());
 			}
@@ -154,7 +171,92 @@ public class FcOrderService {
 	 * @param bookIdsStr
 	 * @return
 	 */
-	public int insertPractitioner(FcOrder record, String bookIdsStr) {
+	@Transactional
+	public Result insertPractitioner(FcOrder record, String bookIdsStr) {
+		Result result = new Result();
+		// 金额效验
+		// 订单金额（实际为课程金额+书籍金额），支付金额（订单金额-优惠金额）
+		BigDecimal payPrice = BigDecimal.valueOf(0);
+		// 先查询课程金额
+		FcCourseArchives checkCourse = fcCourseArchivesMapper.selectByPrimaryKey(record.getCourseId());
+		payPrice = payPrice.add(checkCourse.getCoursePrice());
+		// 在查询书籍金额
+		BigDecimal bookPrice = BigDecimal.valueOf(0);
+		// 在查询优惠金额
+		BigDecimal discountPrice = BigDecimal.valueOf(0);
+		
+		if (StringUtils.isNotBlank(bookIdsStr)) {
+			String[] checkBookIds = bookIdsStr.split(",");
+			for (String checkBookId : checkBookIds) {
+				FcBookArchives checkBook = fcBookArchivesMapper.selectByPrimaryKey(Integer.parseInt(checkBookId));
+				if (checkBook != null) {
+					bookPrice = bookPrice.add(checkBook.getPrice());
+				} else {
+					return ResultUtil.custom(-1, "非法数据，书籍错误", -1);
+				}
+			}
+			payPrice = payPrice.add(bookPrice);
+		}
+		// 如果客户端订单金额和实际订单金额不一致，返回错误
+		if (payPrice.compareTo(record.getOrderAmount()) != 0) {
+			result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+		}
+		
+		// 判断优惠金额
+		if (record.getIsCoupon() != null && record.getIsCoupon().intValue() == 1) {
+			// 优惠券id
+			Integer couponId = record.getCouponId();
+			FcDiscountCouponRecord checkCoupon = fcDiscountCouponRecordMapper.selectByPrimaryKey(couponId);
+			if (checkCoupon == null) {
+				result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+			} else {
+				// 发放角色类型（1.机构2.家长3.从业者）
+//				checkCoupon.getGrantRoleType();
+				// 角色类型（1.机构2.家长3.从业者）
+//				orderModel.getRoleType();
+				// 检查优惠券是否合法
+				if (checkCoupon.getStatus().intValue() == 1 || checkCoupon.getStatus().intValue() == 3) {
+					result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+				}
+				if (checkCoupon.getStatus().intValue() == 2) {
+					if (checkCoupon.getGrantRoleId().intValue() == record.getRoleId().intValue()
+							&& checkCoupon.getGrantRoleType().intValue() == record.getRoleType().intValue()) {
+						FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
+						// 类型（1.满减劵2.观影劵）
+						if (fcDiscountCoupon.getType().intValue() == 1) {
+							discountPrice = fcDiscountCoupon.getEnoughMoney();
+							payPrice = payPrice.subtract(discountPrice);
+						}
+						if (fcDiscountCoupon.getType().intValue() == 2) {
+							payPrice = new BigDecimal(0);
+						}
+						// 检测最终支付金额是否一致
+						if (payPrice.compareTo(record.getPayAmount()) == 0) {
+							return submitOrderSuccess(record, bookIdsStr);
+						} else {
+							result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+						}
+					} else {
+						result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+					}
+				}
+			}
+		} 
+		// 没使用优惠券  
+		else {
+			return submitOrderSuccess(record, bookIdsStr);
+		}
+		return result;
+	}
+	
+	/**
+	 * 提交订单成功后
+	 * @author maguoliang
+	 * @param record
+	 * @param bookIdsStr
+	 * @return
+	 */
+	public Result submitOrderSuccess(FcOrder record, String bookIdsStr) {
 		if (record.getCouponId() != null) {
 			record.setIsCoupon(1);
 		} else {
@@ -168,6 +270,7 @@ public class FcOrderService {
 		Date current_date = new Date();
 		record.setCode(String.valueOf(current_date.getTime()));
 		record.setDate(current_date);
+		
 		int index = fcOrderMapper.insertSelective(record);
 		if (index > 0) {
 			if (bookIdsStr != null && !bookIdsStr.equals("")) {
@@ -204,9 +307,10 @@ public class FcOrderService {
 				personHour.setHourId(fcCourseHourMapper.selectCourseHourIdBysectionId(record.getCourseId()));
 				fcOrderPersonHourMapper.insertSelective(personHour);
 			}
-			return record.getId();
+			return ResultUtil.custom(1, "操作成功", record.getId());
+		} else {
+			return ResultUtil.custom(0, "操作失败");
 		}
-		return 0;
 	}
 
 	/**
@@ -216,10 +320,100 @@ public class FcOrderService {
 	 * @param bookIdsStr
 	 * @return
 	 */
-	public int updatePractitioner(FcOrder record, String bookIdsStr) {
+	@Transactional
+	public Result updatePractitioner(FcOrder record, String bookIdsStr) {
+		Result result = new Result();
+		// 金额效验
+		// 订单金额（实际为课程金额+书籍金额），支付金额（订单金额-优惠金额）
+		BigDecimal payPrice = BigDecimal.valueOf(0);
+		// 先查询课程金额
+		FcOrder checkOrder = fcOrderMapper.selectByPrimaryKey(record.getId());
+		if (checkOrder == null) {
+			return ResultUtil.custom(-1, "该订单不存在");
+		} else {
+			FcCourseArchives checkCourse = fcCourseArchivesMapper.selectByPrimaryKey(checkOrder.getCourseId());
+			payPrice = payPrice.add(checkCourse.getCoursePrice());
+			// 在查询书籍金额
+			BigDecimal bookPrice = BigDecimal.valueOf(0);
+			// 在查询优惠金额
+			BigDecimal discountPrice = BigDecimal.valueOf(0);
+			
+			if (StringUtils.isNotBlank(bookIdsStr)) {
+				String[] checkBookIds = bookIdsStr.split(",");
+				for (String checkBookId : checkBookIds) {
+					FcBookArchives checkBook = fcBookArchivesMapper.selectByPrimaryKey(Integer.parseInt(checkBookId));
+					if (checkBook != null) {
+						bookPrice = bookPrice.add(checkBook.getPrice());
+					} else {
+						return ResultUtil.custom(-1, "非法数据，书籍错误", -1);
+					}
+				}
+				payPrice = payPrice.add(bookPrice);
+			}
+			// 如果客户端订单金额和实际订单金额不一致，返回错误
+			if (payPrice.compareTo(record.getOrderAmount()) != 0) {
+				return ResultUtil.custom(-1, "非法数据，金额错误", -1);
+			}
+			// 判断优惠金额
+			if (record.getIsCoupon() != null && record.getIsCoupon().intValue() == 1) {
+				// 优惠券id
+				Integer couponId = record.getCouponId();
+				FcDiscountCouponRecord checkCoupon = fcDiscountCouponRecordMapper.selectByPrimaryKey(couponId);
+				if (checkCoupon == null) {
+					result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+				} else {
+					// 发放角色类型（1.机构2.家长3.从业者）
+		//						checkCoupon.getGrantRoleType();
+					// 角色类型（1.机构2.家长3.从业者）
+		//						orderModel.getRoleType();
+					// 检查优惠券是否合法
+					if (checkCoupon.getStatus().intValue() == 1 || checkCoupon.getStatus().intValue() == 3) {
+						result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+					}
+					if (checkCoupon.getStatus().intValue() == 2) {
+						if (checkCoupon.getGrantRoleId().intValue() == record.getRoleId().intValue()
+								&& checkCoupon.getGrantRoleType().intValue() == record.getRoleType().intValue()) {
+							FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
+							// 类型（1.满减劵2.观影劵）
+							if (fcDiscountCoupon.getType().intValue() == 1) {
+								discountPrice = fcDiscountCoupon.getEnoughMoney();
+								payPrice = payPrice.subtract(discountPrice);
+							}
+							if (fcDiscountCoupon.getType().intValue() == 2) {
+								payPrice = new BigDecimal(0);
+							}
+							// 检测最终支付金额是否一致
+							if (payPrice.compareTo(record.getPayAmount()) == 0) {
+								return updateOrderSuccess(record, bookIdsStr);
+							} else {
+								result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+							}
+						} else {
+							result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
+						}
+					}
+				}
+			} 
+			// 没使用优惠券  
+			else {
+				return updateOrderSuccess(record, bookIdsStr);
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 修改订单提交成功后
+	 * @author maguoliang
+	 * @param record
+	 * @param bookIdsStr
+	 * @return
+	 */
+	public Result updateOrderSuccess(FcOrder record, String bookIdsStr) {
+		Result result = new Result();
 		FcOrder orderModel = fcOrderMapper.selectByPrimaryKey(record.getId());
 		if (orderModel == null) {
-			return 0;
+			result = ResultUtil.custom(-1, "该订单不存在");
 		}
 		if (record.getCouponId() != null) {
 			record.setIsCoupon(1);
@@ -247,9 +441,9 @@ public class FcOrderService {
 //				couponRecord.setStatus(3);
 //				fcDiscountCouponRecordMapper.updateByPrimaryKeySelective(couponRecord);
 //			}
-			return record.getId();
+			result = ResultUtil.custom(1, "操作成功", record.getId());
 		}
-		return 0;
+		return result;
 	}
 
 	/**

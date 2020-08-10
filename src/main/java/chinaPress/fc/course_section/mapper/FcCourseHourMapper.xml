@@ -23,56 +23,71 @@
 			property="updateTime" />
 		<result column="section_id" jdbcType="INTEGER"
 			property="sectionId" />
+		<result column="order" jdbcType="INTEGER"
+			property="order" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, `name`, address, url, format, is_look, is_delete, `state`, create_id,
-		create_time,
+		create_time, `order`,
 		update_id, update_time,section_id
 	</sql>
 	<select id="selectCourseHourIdBysectionId"
 		resultType="java.lang.Integer">
 		select
-		a.id
-		from fc_course_hour a
-		left join fc_course_section b on a.section_id
-		= b.id
-		where b.course_id = #{courseId}
-		LIMIT 1
+			a.id
+		from 
+			fc_course_hour a
+		left join fc_course_section b on a.section_id = b.id
+		where 
+			b.course_id = #{courseId}
+		limit 1
 	</select>
+	
 	<select id="selectCourseHourListBySectionId"
 		resultType="chinaPress.fc.course_section.vo.FcCourseHourVo">
 		select
-		a.id as `id`,
-		a.`name`,
-		a.address,
-		a.url,
-		a.format,
-		a.is_look as isLook
-		from fc_course_hour a
-		where a.section_id = #{sectionId}
+			a.id as `id`,
+			a.`name`,
+			a.address,
+			a.url,
+			a.format,
+			a.is_look as isLook
+		from 
+			fc_course_hour a
+		where 
+			a.section_id = #{sectionId}
 	</select>
+	
 	<!-- 根据课程id查询视频数量 -->
 	<select id="selectCourseHourCountByCOurseId"
 		resultType="java.lang.Integer" parameterType="java.lang.Integer">
 		select
-		count(*)
+			count(*)
 		from
-		fc_course_hour a
+			fc_course_hour a
 		left join fc_course_section b on a.section_id = b.id
-		where b.course_id = #{courseId}
+		where 
+			b.course_id = #{courseId}
 	</select>
+	
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from fc_course_hour
-		where id = #{id,jdbcType=INTEGER}
+			<include refid="Base_Column_List" />
+		from 
+			fc_course_hour
+		where 
+			id = #{id,jdbcType=INTEGER}
 	</select>
+	
 	<delete id="deleteByPrimaryKey"
 		parameterType="java.lang.Integer">
-		delete from fc_course_hour
-		where id = #{id,jdbcType=INTEGER}
+		delete 
+			from fc_course_hour
+		where 
+			id = #{id,jdbcType=INTEGER}
 	</delete>
+	
 	<insert id="insertSelective"
 		parameterType="chinaPress.fc.course_section.model.FcCourseHour"
 		useGeneratedKeys="true" keyProperty="id">
@@ -117,6 +132,9 @@
 			<if test="sectionId != null">
 				section_id,
 			</if>
+			<if test="order != null">
+				`order`,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -158,8 +176,12 @@
 			<if test="sectionId != null">
 				#{sectionId,jdbcType=INTEGER},
 			</if>
+			<if test="order != null">
+				#{order},
+			</if>
 		</trim>
 	</insert>
+	
 	<update id="updateByPrimaryKeySelective"
 		parameterType="chinaPress.fc.course_section.model.FcCourseHour">
 		update fc_course_hour
@@ -200,6 +222,9 @@
 			<if test="sectionId != null">
 				sectionId = #{sectionId,jdbcType=INTEGER},
 			</if>
+			<if test="order != null">
+				`order` = #{order},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -214,7 +239,20 @@
 		left join fc_course_section b on a.section_id = b.id
 		where 
 			b.course_id = #{courseId}
-			and a.id > #{hourId}
-		LIMIT 1
+			and a.`order` > #{order}
+		order by
+			a.`order`
+		limit 1
+	</select>
+	
+	<!-- 根据章节id查询该课时是否有题 -->
+	<select id="selectIsHaveStemBySectionId" resultType="int">
+		select
+			count(*)
+		from
+			fc_course_hour a 
+		right join fc_question_stem b on a.id = b.hour_id
+		where
+			a.section_id = #{sectionId}
 	</select>
 </mapper>

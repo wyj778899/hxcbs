@@ -84,7 +84,7 @@ public class QrCodeService {
 		String body = "购买课程";
 
 		reqData.put("body", body);
-		reqData.put("out_trade_no", orderModel.getCode());
+		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
 		// 转换为分
@@ -139,7 +139,7 @@ public class QrCodeService {
 			// 验证签名
 			if (WXPayUtil.isSignatureValid(resultMap, config.getKey(), SignType.HMACSHA256)) {
 				// 订单编码
-				String buyInfo = resultMap.get("out_trade_no");
+				String buyInfo = resultMap.get("out_trade_no").split("_")[0];
 				// 订单详情
 				FcOrder orderModel = fcOrderService.selectByCode(buyInfo);
 				if (orderModel != null) {
@@ -263,7 +263,7 @@ public class QrCodeService {
 		reqData.put("openid", openId); // 用户标识
 		reqData.put("body", "购买课程"); // 商品描述
 //		reqData.put("out_trade_no", WXPayUtil.generateNonceStr()); // 商户订单号
-		reqData.put("out_trade_no", orderModel.getCode()); // 商户订单号
+		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp()))); // 商户订单号
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
 		// 转换为分
@@ -346,4 +346,61 @@ public class QrCodeService {
 		}
 		return openId;
 	}
+	
+//	/**
+//	 * h5支付
+//	 * 
+//	 * @author maguoliang
+//	 * @param wxPayCallbackMap
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public Map<String, String> wxH5Pay(Integer orderId) throws Exception {
+//		FcOrder orderModel = fcOrderService.selectById(orderId);
+//
+//		// 统一下单
+//		MyWXPayConfig config = new MyWXPayConfig();
+//		WXPay wxPay = new WXPay(config);
+//		Map<String, String> reqData = new HashMap<>();
+//		String body = "购买课程";
+//
+//		reqData.put("body", body);
+////		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
+//		reqData.put("out_trade_no", String.valueOf(WXPayUtil.getCurrentTimestamp()));
+//
+////		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
+////		// 转换为分
+////		BigDecimal orderPayAmountFen = orderPayAmountYuan.multiply(new BigDecimal(100));
+//
+//		reqData.put("total_fee", "1");
+//		reqData.put("spbill_create_ip", "127.0.0.1");
+//		reqData.put("notify_url", "http://www.hxclass.cn/notify_url");
+//		reqData.put("trade_type", "MWEB"); // 交易类型
+//
+//		// 下单，返回结果
+//		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);
+//		WXPayUtil.getLogger().info(resultMap.toString());
+//		Map<String, String> resParams = new HashMap<String, String>();
+//		// 统一下单成功
+//		if (resultMap.get("return_code").equals("SUCCESS")) {
+//			// 暂时只做统一下单成功，就立马需要支付，中间暂不做业务
+//			resParams.put("return_code", "SUCCESS"); // 必须
+//			resParams.put("appid", config.getAppID()); // 必须
+//			resParams.put("mch_id", config.getMchID()); // 必须
+//			resParams.put("nonce_str", WXPayUtil.generateNonceStr()); // 必须
+//			resParams.put("prepay_id", resultMap.get("prepay_id")); // 必须
+//			resParams.put("result_code", "SUCCESS"); // 必须
+//			resParams.put("sign", WXPayUtil.generateSignature(resParams, config.getKey(), SignType.MD5)); // 签名
+//		} else if (resultMap.get("return_code").equals("FAIL")) {
+//			resParams.put("return_code", "FAIL"); // 必须
+//			resParams.put("return_msg", "统一下单返回失败"); // 必须
+//			resParams.put("appid", config.getAppID()); // 必须
+//			resParams.put("mch_id", config.getMchID()); // 必须
+//			resParams.put("nonce_str", WXPayUtil.generateNonceStr()); // 必须
+//			resParams.put("prepay_id", ""); // 必须
+//			resParams.put("result_code", "FAIL"); // 必须
+//			resParams.put("sign", WXPayUtil.generateSignature(resParams, config.getKey(), SignType.MD5)); // 签名
+//		}
+//		return resParams;
+//	}
 }

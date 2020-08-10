@@ -38,6 +38,11 @@ public class FcCourseHourService {
 		// 根据章节id查询是否有视频
 		List<FcCourseHourVo> data = fcCourseHourMapper.selectCourseHourListBySectionId(sectionId);
 		if (data.size() > 0) {
+			for (FcCourseHourVo fcCourseHourVo : data) {
+				// 查询这个课时是否有题
+				int stemCount = fcCourseHourMapper.selectIsHaveStemBySectionId(sectionId);
+				fcCourseHourVo.setIsHaveStem(stemCount > 0 ? 1 : 0);
+			}
 			// 查询该课程是否买过
 			Map<String, Object> map = fcOrderService.findMyCourseIsExist(personId, roleType, courseId);
 			if (map.get("code").toString().equals("0")) {
@@ -61,7 +66,7 @@ public class FcCourseHourService {
 					return ResultUtil.custom(5, "从未考过小节测试", data);
 				}
 				else {
-					return ResultUtil.custom(0, "暂未学习到该视频");
+					return ResultUtil.custom(0, "暂未学习到该视频", data);
 				}
 			} else {
 				// 免费试看

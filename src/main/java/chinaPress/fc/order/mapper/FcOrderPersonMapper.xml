@@ -200,7 +200,7 @@
 		INNER JOIN fc_course_archives c ON c.id = a.course_id
 		WHERE
 			b.is_individual = 1
-			AND a.start_time <![CDATA[ < ]]> NOW() 
+			AND a.start_time <![CDATA[ < ]]> NOW()
 			AND a.end_time <![CDATA[ > ]]> NOW()
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
