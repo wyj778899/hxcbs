@@ -383,23 +383,9 @@ public class QrCodeService {
 //		Map<String, String> resParams = new HashMap<String, String>();
 //		// 统一下单成功
 //		if (resultMap.get("return_code").equals("SUCCESS")) {
-//			// 暂时只做统一下单成功，就立马需要支付，中间暂不做业务
-//			resParams.put("return_code", "SUCCESS"); // 必须
-//			resParams.put("appid", config.getAppID()); // 必须
-//			resParams.put("mch_id", config.getMchID()); // 必须
-//			resParams.put("nonce_str", WXPayUtil.generateNonceStr()); // 必须
-//			resParams.put("prepay_id", resultMap.get("prepay_id")); // 必须
-//			resParams.put("result_code", "SUCCESS"); // 必须
-//			resParams.put("sign", WXPayUtil.generateSignature(resParams, config.getKey(), SignType.MD5)); // 签名
+//			resParams.put("mweb_url", resultMap.get("mweb_url"));
 //		} else if (resultMap.get("return_code").equals("FAIL")) {
-//			resParams.put("return_code", "FAIL"); // 必须
-//			resParams.put("return_msg", "统一下单返回失败"); // 必须
-//			resParams.put("appid", config.getAppID()); // 必须
-//			resParams.put("mch_id", config.getMchID()); // 必须
-//			resParams.put("nonce_str", WXPayUtil.generateNonceStr()); // 必须
-//			resParams.put("prepay_id", ""); // 必须
-//			resParams.put("result_code", "FAIL"); // 必须
-//			resParams.put("sign", WXPayUtil.generateSignature(resParams, config.getKey(), SignType.MD5)); // 签名
+//			resParams.put("mweb_url", "");
 //		}
 //		return resParams;
 //	}
