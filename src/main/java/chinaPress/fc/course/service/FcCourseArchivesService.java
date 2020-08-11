@@ -362,4 +362,13 @@ public class FcCourseArchivesService {
 		}
 		return courseIndexVo;
 	}
+	
+	/**
+	 * 查询所有上架的课程个数
+	 * @author maguoliang
+	 * @return
+	 */
+	public int selectPutAwayCourseCount() {
+		return fcCourseArchivesMapper.selectPutAwayCourseCount();
+	}
 }

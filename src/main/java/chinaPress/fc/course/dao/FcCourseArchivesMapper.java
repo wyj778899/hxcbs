@@ -85,4 +85,11 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	List<CourseTutorVo> selectCourseAboutTutor(Integer courseId);
+	
+	/**
+	 * 查询所有上架的课程个数
+	 * @author maguoliang
+	 * @return
+	 */
+	int selectPutAwayCourseCount();
 }

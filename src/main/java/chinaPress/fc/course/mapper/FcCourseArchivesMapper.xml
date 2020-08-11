@@ -360,4 +360,14 @@
 		where
 			a.id = #{courseId}		
 	</select>
+	
+	<!-- 查询所有上架的课程 -->
+	<select id="selectPutAwayCourseCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_course_archives
+		where
+			is_putaway = 1
+	</select>
 </mapper>
