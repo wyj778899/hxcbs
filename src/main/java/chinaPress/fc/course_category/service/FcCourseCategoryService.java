@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.tree.model.TreeNode;
 import chinaPress.common.util.TreeUtil;
+import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course_category.dao.FcCourseCategoryMapper;
 import chinaPress.fc.course_category.model.FcCourseCategory;
 import chinaPress.fc.course_category.vo.CourseCategoryParam;
@@ -18,6 +19,8 @@ import chinaPress.fc.course_category.vo.PageIndexCategoryVo;
 public class FcCourseCategoryService {
 	@Autowired
 	private FcCourseCategoryMapper fcCourseCategoryMapper;
+	@Autowired
+	private FcCourseArchivesMapper fcCourseArchivesMapper;
 
 	/**
 	 * 查询首页点击更多分类
@@ -25,7 +28,14 @@ public class FcCourseCategoryService {
 	 * @return
 	 */
 	public List<PageIndexCategoryVo> selectPageIndexCategory() {
-		return fcCourseCategoryMapper.selectPageIndexCategory();
+		List<PageIndexCategoryVo> list = fcCourseCategoryMapper.selectPageIndexCategory();
+		if (list.size() > 0) {
+			for (PageIndexCategoryVo pageIndexCategoryVo : list) {
+				pageIndexCategoryVo.setCount(
+						fcCourseArchivesMapper.selectCourseByCategoryIdCount(pageIndexCategoryVo.getCategoryId()));
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -138,7 +148,7 @@ public class FcCourseCategoryService {
 	public CourseCategoryVo selectFcCourseCategoryDetail(Integer id) {
 		return fcCourseCategoryMapper.selectFcCourseCategoryDetail(id);
 	}
-	
+
 	/**
 	 * 根据code查询
 	 * 
