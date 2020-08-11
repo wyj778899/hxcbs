@@ -87,8 +87,8 @@ public class ImportController {
 
 					for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 						XSSFRow xssfRow = xssfSheet.getRow(rowNum);
-//						if (!isAllRowEmpty(xssfRow, xssfSheet.getRow(0))) {
-						if (xssfRow != null) {
+						if (!isAllRowEmpty(xssfRow, xssfSheet.getRow(0))) {
+//						if (xssfRow != null) {
 							// 报名机构信息
 							if (rowNum < 4) {
 								// 机构名称

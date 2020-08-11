@@ -3,6 +3,8 @@ package chinaPress.role.member.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -175,6 +177,7 @@ public class PractitionerInfo {
 	/**
 	 * 孩子生日
 	 */
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthdayTime;
 
