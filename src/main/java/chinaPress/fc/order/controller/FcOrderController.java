@@ -243,8 +243,16 @@ public class FcOrderController {
 					if (checkCoupon == null) {
 						result = ResultUtil.custom(-1, "异常数据，优惠券错误", -1);
 					} else {
-						// 发放角色类型（1.机构2.家长3.从业者）
-//						checkCoupon.getGrantRoleType();
+						Integer finalGrantRoleType = 0; 
+						if (checkCoupon.getGrantRoleType().intValue() == 2) {
+							finalGrantRoleType = 1;
+						}
+						else if (checkCoupon.getGrantRoleType().intValue() == 3) {
+							finalGrantRoleType = 2;
+						}
+						else if (checkCoupon.getGrantRoleType().intValue() == 4) {
+							finalGrantRoleType = 3;
+						}
 						// 角色类型（1.机构2.家长3.从业者）
 //						orderModel.getRoleType();
 						// 检查优惠券是否合法
@@ -253,7 +261,7 @@ public class FcOrderController {
 						}
 						if (checkCoupon.getStatus().intValue() == 2) {
 							if (checkCoupon.getGrantRoleId().intValue() == orderModel.getRoleId().intValue()
-									&& checkCoupon.getGrantRoleType().intValue() == orderModel.getRoleType().intValue()) {
+									&& finalGrantRoleType.intValue() == orderModel.getRoleType().intValue()) {
 								FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
 								// 类型（1.满减劵2.观影劵）
 								if (fcDiscountCoupon.getType().intValue() == 1) {
