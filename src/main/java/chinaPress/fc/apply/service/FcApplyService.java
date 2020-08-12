@@ -6,11 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import chinaPress.common.result.model.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.JacksonUtil;
@@ -89,8 +87,20 @@ public class FcApplyService {
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Map<String, Object> resultMap = new HashMap<>();
 		List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
-		//先校验机构的身份证号存在直接返回
+		//先校验机构的身份证号存在直接返回,如果用户数据重复直接返回
 		for(FcApplyPersonParam f : personList) {
+			//手机号排重
+			long phones = personList.stream().map(FcApplyPersonParam::getTellPhone).distinct().count();
+			if(phones < personList.size()){
+				resultMap.put("error","报名信息手机号码重复");
+				return ResultUtil.error(resultMap);
+			}
+			//身份证号排重
+			long certs = personList.stream().map(FcApplyPersonParam::getCertificateNumber).distinct().count();
+			if(certs < personList.size()){
+				resultMap.put("error","报名信息身份证号重复");
+				return ResultUtil.error(resultMap);
+			}
 			String certificateNumber = f.getCertificateNumber();
 			if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
 				resultMap.put("error",certificateNumber+":身份证号已存在");
