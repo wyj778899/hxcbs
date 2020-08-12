@@ -347,46 +347,47 @@ public class QrCodeService {
 		return openId;
 	}
 	
-//	/**
-//	 * h5支付
-//	 * 
-//	 * @author maguoliang
-//	 * @param wxPayCallbackMap
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public Map<String, String> wxH5Pay(Integer orderId) throws Exception {
-//		FcOrder orderModel = fcOrderService.selectById(orderId);
-//
-//		// 统一下单
-//		MyWXPayConfig config = new MyWXPayConfig();
-//		WXPay wxPay = new WXPay(config);
-//		Map<String, String> reqData = new HashMap<>();
-//		String body = "购买课程";
-//
-//		reqData.put("body", body);
-////		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
+	/**
+	 * h5支付
+	 * 
+	 * @author maguoliang
+	 * @param wxPayCallbackMap
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> wxH5Pay(Integer orderId) throws Exception {
+		FcOrder orderModel = fcOrderService.selectById(orderId);
+
+		// 统一下单
+		MyWXPayConfig config = new MyWXPayConfig();
+		WXPay wxPay = new WXPay(config);
+		Map<String, String> reqData = new HashMap<>();
+		String body = "购买课程";
+
+		reqData.put("body", body);
+		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
 //		reqData.put("out_trade_no", String.valueOf(WXPayUtil.getCurrentTimestamp()));
-//
-////		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
-////		// 转换为分
-////		BigDecimal orderPayAmountFen = orderPayAmountYuan.multiply(new BigDecimal(100));
-//
+
+		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
+		// 转换为分
+		BigDecimal orderPayAmountFen = orderPayAmountYuan.multiply(new BigDecimal(100));
+
 //		reqData.put("total_fee", "1");
-//		reqData.put("spbill_create_ip", "127.0.0.1");
-//		reqData.put("notify_url", "http://www.hxclass.cn/notify_url");
-//		reqData.put("trade_type", "MWEB"); // 交易类型
-//
-//		// 下单，返回结果
-//		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);
-//		WXPayUtil.getLogger().info(resultMap.toString());
-//		Map<String, String> resParams = new HashMap<String, String>();
-//		// 统一下单成功
-//		if (resultMap.get("return_code").equals("SUCCESS")) {
-//			resParams.put("mweb_url", resultMap.get("mweb_url"));
-//		} else if (resultMap.get("return_code").equals("FAIL")) {
-//			resParams.put("mweb_url", "");
-//		}
-//		return resParams;
-//	}
+		reqData.put("total_fee", orderPayAmountFen.stripTrailingZeros().toPlainString());
+		reqData.put("spbill_create_ip", "127.0.0.1");
+		reqData.put("notify_url", "http://www.hxclass.cn/chinaPressServer/notify_url");
+		reqData.put("trade_type", "MWEB"); // 交易类型
+
+		// 下单，返回结果
+		Map<String, String> resultMap = wxPay.unifiedOrder(reqData);
+		WXPayUtil.getLogger().info(resultMap.toString());
+		Map<String, String> resParams = new HashMap<String, String>();
+		// 统一下单成功
+		if (resultMap.get("return_code").equals("SUCCESS")) {
+			resParams.put("mweb_url", resultMap.get("mweb_url"));
+		} else if (resultMap.get("return_code").equals("FAIL")) {
+			resParams.put("mweb_url", "");
+		}
+		return resParams;
+	}
 }

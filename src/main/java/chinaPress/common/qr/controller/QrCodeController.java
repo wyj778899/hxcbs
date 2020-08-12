@@ -251,18 +251,18 @@ public class QrCodeController {
 		return qrCodeService.h5CallPay(openId, orderId);
 	}
 	
-//	/**
-//	 * h5支付
-//	 * 
-//	 * @author maguoliang
-//	 * @param request
-//	 * @param response
-//	 * @throws Exception
-//	 */
-//	@RequestMapping("wxH5Pay")
-//	public chinaPress.common.result.model.Result wxH5Pay(HttpServletRequest request, HttpServletResponse response, Integer orderId) throws Exception {
-//		Map<String, String> resParams = qrCodeService.wxH5Pay(orderId);
-//		WXPayUtil.getLogger().info(resParams.toString());
-//		return ResultUtil.ok(resParams);
-//	}
+	/**
+	 * h5支付
+	 * 
+	 * @author maguoliang
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping("wxH5Pay")
+	public chinaPress.common.result.model.Result wxH5Pay(HttpServletRequest request, HttpServletResponse response, Integer orderId) throws Exception {
+		Map<String, String> resParams = qrCodeService.wxH5Pay(orderId);
+		WXPayUtil.getLogger().info(resParams.toString());
+		return ResultUtil.ok(resParams);
+	}
 }
