@@ -27,12 +27,11 @@
 	<select id="selectPageIndexCategory"
 		resultType="chinaPress.fc.course_category.vo.PageIndexCategoryVo">
 		select
-			a.category_id as categoryId, b.`name` categoryName, count(*) as count
-		from 
-			fc_course_archives a
-		left join fc_course_category b on a.category_id = b.id
-		GROUP BY 
-			a.category_id
+			id categoryId, name categoryName
+		from
+			fc_course_category
+		where
+			state = 1
 	</select>
 	
 	<!-- 查询分类 -->

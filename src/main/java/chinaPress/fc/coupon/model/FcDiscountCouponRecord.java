@@ -29,7 +29,7 @@ public class FcDiscountCouponRecord {
     private Integer grantRoleId;
 
     /**
-     * 发放角色类型（1.机构2.家长3.从业者）
+     * 发放角色类型（2.机构3.家长4.从业者）
      */
     private Integer grantRoleType;
 
@@ -141,7 +141,7 @@ public class FcDiscountCouponRecord {
     }
 
     /**
-     * 发放角色类型（1.机构2.家长3.从业者）
+     * 发放角色类型（2.机构3.家长4.从业者）
      * @param grantRoleType
      */
     public void setGrantRoleType(Integer grantRoleType) {

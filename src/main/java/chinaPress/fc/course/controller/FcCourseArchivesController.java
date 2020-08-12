@@ -168,4 +168,15 @@ public class FcCourseArchivesController {
 		}
 		return ResultUtil.custom(-1, "查询失败", data);
 	}
+
+	/**
+	 * 查询所有上架的课程个数
+	 * 
+	 * @author maguoliang
+	 * @return
+	 */
+	@RequestMapping("selectPutAwayCourseCount")
+	public Result selectPutAwayCourseCount() {
+		return ResultUtil.ok(fcCourseArchivesService.selectPutAwayCourseCount());
+	}
 }

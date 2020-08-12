@@ -68,6 +68,22 @@
 		</where>
 	</select>
 	
+	<!-- 根据分类id查询关联课程个数 -->
+	<select id="selectCourseByCategoryIdCount"
+		resultType="int"
+		parameterType="java.lang.Integer">
+		select
+			count(*)
+		from fc_course_archives a
+		left join fc_course_category b on a.category_id = b.id
+		<where>
+			a.is_putaway = 1
+			<if test="categoryId != null">
+				and a.category_id = #{categoryId}
+			</if>
+		</where>
+	</select>
+	
 	<!-- 查询课程详情 -->
 	<select id="selectCourseArchivesById"
 		resultType="chinaPress.fc.course.vo.CourseArchivesNewVo"
@@ -359,5 +375,15 @@
 		inner join fc_tutor_archives c on b.tutor_id = c.id
 		where
 			a.id = #{courseId}		
+	</select>
+	
+	<!-- 查询所有上架的课程 -->
+	<select id="selectPutAwayCourseCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_course_archives
+		where
+			is_putaway = 1
 	</select>
 </mapper>

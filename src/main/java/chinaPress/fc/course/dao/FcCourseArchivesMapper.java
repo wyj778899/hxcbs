@@ -25,6 +25,14 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId);
+	
+	/**
+	 * 根据分类id查询关联课程个数
+	 * 
+	 * @param categoryId
+	 * @return
+	 */
+	int selectCourseByCategoryIdCount(Integer categoryId);
 
 	/**
 	 * 查询课程详情
@@ -85,4 +93,11 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	List<CourseTutorVo> selectCourseAboutTutor(Integer courseId);
+	
+	/**
+	 * 查询所有上架的课程个数
+	 * @author maguoliang
+	 * @return
+	 */
+	int selectPutAwayCourseCount();
 }

@@ -210,8 +210,17 @@ public class FcOrderService {
 			if (checkCoupon == null) {
 				result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 			} else {
-				// 发放角色类型（1.机构2.家长3.从业者）
-//				checkCoupon.getGrantRoleType();
+				// 发放角色类型（2.机构3.家长4.从业者）
+				Integer finalGrantRoleType = 0; 
+				if (checkCoupon.getGrantRoleType().intValue() == 2) {
+					finalGrantRoleType = 1;
+				}
+				else if (checkCoupon.getGrantRoleType().intValue() == 3) {
+					finalGrantRoleType = 2;
+				}
+				else if (checkCoupon.getGrantRoleType().intValue() == 4) {
+					finalGrantRoleType = 3;
+				}
 				// 角色类型（1.机构2.家长3.从业者）
 //				orderModel.getRoleType();
 				// 检查优惠券是否合法
@@ -220,7 +229,7 @@ public class FcOrderService {
 				}
 				if (checkCoupon.getStatus().intValue() == 2) {
 					if (checkCoupon.getGrantRoleId().intValue() == record.getRoleId().intValue()
-							&& checkCoupon.getGrantRoleType().intValue() == record.getRoleType().intValue()) {
+							&& finalGrantRoleType.intValue() == record.getRoleType().intValue()) {
 						FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
 						// 类型（1.满减劵2.观影劵）
 						if (fcDiscountCoupon.getType().intValue() == 1) {
@@ -362,8 +371,17 @@ public class FcOrderService {
 				if (checkCoupon == null) {
 					result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 				} else {
-					// 发放角色类型（1.机构2.家长3.从业者）
-		//						checkCoupon.getGrantRoleType();
+					// 发放角色类型（2.机构3.家长4.从业者）
+					Integer finalGrantRoleType = 0; 
+					if (checkCoupon.getGrantRoleType().intValue() == 2) {
+						finalGrantRoleType = 1;
+					}
+					else if (checkCoupon.getGrantRoleType().intValue() == 3) {
+						finalGrantRoleType = 2;
+					}
+					else if (checkCoupon.getGrantRoleType().intValue() == 4) {
+						finalGrantRoleType = 3;
+					}
 					// 角色类型（1.机构2.家长3.从业者）
 		//						orderModel.getRoleType();
 					// 检查优惠券是否合法
@@ -371,8 +389,8 @@ public class FcOrderService {
 						result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 					}
 					if (checkCoupon.getStatus().intValue() == 2) {
-						if (checkCoupon.getGrantRoleId().intValue() == record.getRoleId().intValue()
-								&& checkCoupon.getGrantRoleType().intValue() == record.getRoleType().intValue()) {
+						if (checkCoupon.getGrantRoleId().intValue() == checkOrder.getRoleId().intValue()
+								&& finalGrantRoleType.intValue() == checkOrder.getRoleType().intValue()) {
 							FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
 							// 类型（1.满减劵2.观影劵）
 							if (fcDiscountCoupon.getType().intValue() == 1) {
