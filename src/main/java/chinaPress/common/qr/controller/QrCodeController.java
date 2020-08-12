@@ -261,7 +261,7 @@ public class QrCodeController {
 	 */
 	@RequestMapping("wxH5Pay")
 	public chinaPress.common.result.model.Result wxH5Pay(HttpServletRequest request, HttpServletResponse response, Integer orderId) throws Exception {
-		Map<String, String> resParams = qrCodeService.wxH5Pay(orderId);
+		Map<String, String> resParams = qrCodeService.wxH5Pay(request, orderId);
 		WXPayUtil.getLogger().info(resParams.toString());
 		return ResultUtil.ok(resParams);
 	}

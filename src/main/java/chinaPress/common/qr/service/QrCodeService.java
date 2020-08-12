@@ -7,12 +7,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chinaPress.common.httpclient.HttpClient;
 import chinaPress.common.httpclient.Result;
 import chinaPress.common.sms.service.SMSService;
+import chinaPress.common.util.IpUtil;
 import chinaPress.common.util.JacksonUtil;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.common.wxpay.MyWXPayConfig;
@@ -355,7 +358,7 @@ public class QrCodeService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> wxH5Pay(Integer orderId) throws Exception {
+	public Map<String, String> wxH5Pay(HttpServletRequest request, Integer orderId) throws Exception {
 		FcOrder orderModel = fcOrderService.selectById(orderId);
 
 		// 统一下单
@@ -374,7 +377,7 @@ public class QrCodeService {
 
 //		reqData.put("total_fee", "1");
 		reqData.put("total_fee", orderPayAmountFen.stripTrailingZeros().toPlainString());
-		reqData.put("spbill_create_ip", "127.0.0.1");
+		reqData.put("spbill_create_ip", IpUtil.getIpAddress(request));
 		reqData.put("notify_url", "http://www.hxclass.cn/chinaPressServer/notify_url");
 		reqData.put("trade_type", "MWEB"); // 交易类型
 
