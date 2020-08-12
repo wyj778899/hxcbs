@@ -35,6 +35,7 @@ import chinaPress.fc.order.model.FcOrderPerson;
 import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
+import chinaPress.role.member.dao.TrainInstitutionInfoMapper;
 import chinaPress.role.member.model.MemberInfo;
 import chinaPress.role.member.model.PractitionerInfo;
 
@@ -70,7 +71,10 @@ public class FcApplyService {
 
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
-
+	
+	@Autowired
+	private TrainInstitutionInfoMapper trainInstitutionInfoMapper;
+	
 	/**
 	 * 新增
 	 * 
@@ -84,10 +88,18 @@ public class FcApplyService {
 	public Result insert(FcApply record, String personJson)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Map<String, Object> resultMap = new HashMap<>();
+		List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
+		//先校验机构的身份证号存在直接返回
+		for(FcApplyPersonParam f : personList) {
+			String certificateNumber = f.getCertificateNumber();
+			if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
+				resultMap.put("error",certificateNumber+":身份证号已存在");
+				return ResultUtil.error(resultMap);
+			}
+		}
 		int index = fcApplyMapper.insertSelective(record);
 		if (index > 0) {
 			int staffRoleType = 0;
-			List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
 			if (record.getApplyType().intValue() == 1) {
 				staffRoleType = 2;
 				for (FcApplyPersonParam item : personList) {
@@ -97,6 +109,12 @@ public class FcApplyService {
 					MemberInfo memberParam = new MemberInfo();
 					memberParam.setTellPhone(item.getTellPhone());
 					MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+					if(memberInfo==null) {
+						//手机号查询为null走用户名查询
+						MemberInfo nameParam = new MemberInfo();
+						nameParam.setUserName(item.getTellPhone());
+						memberInfo = memberInfoMapper.selectByPrimaryKey(nameParam);
+					}
 					if (memberInfo != null) {
 						if (memberInfo.getRoleType().intValue() != 3 && memberInfo.getRoleType().intValue() != 4) {
 							continue;

@@ -1,11 +1,12 @@
 package chinaPress.role.member.service;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
+import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.Md5Util;
 import chinaPress.role.member.dao.MemberInfoMapper;
 import chinaPress.role.member.dao.PractitionerInfoMapper;
@@ -42,6 +43,8 @@ public class MemberInfoEQService {
 	@Autowired
 	private TrainInstitutionInfoMapper trainInstitutionInfoMapper;
 	
+	@Autowired
+	private SMSService smsService;
 	/**
 	 * 家长/从业者注册
 	 * @param practitionerInfo
@@ -112,6 +115,7 @@ public class MemberInfoEQService {
 		try {
 			//判断身份证号
 			String certificate = practitionerInfo.getCertificateNumber();
+			MemberInfoVo memberInfoVo = new MemberInfoVo();
 			if (certificate != null && certificate != "") {
 				// 家长和从业者
 				PractitionerInfo p = practitionerInfoMapper.selectByIdCert(certificate, null);
@@ -150,6 +154,7 @@ public class MemberInfoEQService {
 						m.setRoleId(practitionerInfo.getId());
 						m.setSource(1);//更新的话用户归属于华夏
 						m.setId(id);//档案表的id
+						m.setPhoto("assets/image/userImg.jpg");
 						// 状态有值进行操作
 						if (practitionerInfo.getType() != null && 1 == practitionerInfo.getType()) {
 							m.setRoleType(3);
@@ -159,7 +164,15 @@ public class MemberInfoEQService {
 						}
 						m.setPhoto(practitionerInfo.getUserHead());
 						memberInfoMapper.updateByPrimaryKeySelective(m);
-						return new Result(0, "添加成功", "");
+						memberInfoVo.setName(userName);
+						memberInfoVo.setPhoto(m.getPhoto());
+						memberInfoVo.setRoleId(m.getRoleId());
+						memberInfoVo.setRoleType(m.getRoleType());
+						memberInfoVo.setTellPhone(tellPhone);
+						String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxchlass.cn的用户名为："
+								+ practitionerInfo.getUserName() + "，初始密码为12345678 ，请及时修改密码。";
+						smsService.sendFinishSMS(tellPhone, msg);
+						return new Result(1, "添加成功", memberInfoVo);
 					} else {
 						return new Result(-1, "身份证号已注册", "");
 					}
@@ -201,12 +214,16 @@ public class MemberInfoEQService {
 			m.setPhoto("assets/image/userImg.jpg");
 			//添加员工档案信息
 			memberInfoMapper.insertSelective(m);
-			MemberInfoVo memberInfoVo = new MemberInfoVo();
 			memberInfoVo.setName(userName);
 			memberInfoVo.setPhoto(m.getPhoto());
 			memberInfoVo.setRoleId(m.getRoleId());
 			memberInfoVo.setRoleType(m.getRoleType());
 			memberInfoVo.setTellPhone(tellPhone);
+			// 注册成功发送短信
+			String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxchlass.cn的用户名为："
+					+ practitionerInfo.getUserName() + "，初始密码为12345678 ，请及时修改密码。";
+			smsService.sendFinishSMS(tellPhone, msg);
+			
 			return new Result(1,"ok",memberInfoVo);
 		} catch (Exception e) {
 			e.printStackTrace();
