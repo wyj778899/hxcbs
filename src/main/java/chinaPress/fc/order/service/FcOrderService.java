@@ -96,8 +96,11 @@ public class FcOrderService {
 				terminalOrderListVo.setPayStatus(3);
 				idList.add(terminalOrderListVo.getId());
 			}
+			// 查询课程课时视频数量
 			int courseHourCount = fcCourseHourMapper.selectCourseHourCountByCOurseId(terminalOrderListVo.getCourseId());
 			terminalOrderListVo.setCourseHourCount(courseHourCount);
+			// 查询课程关联书籍
+			terminalOrderListVo.setBookList(fcOrderBookMapper.selectBookByOrderId(terminalOrderListVo.getId()));
 		}
 		updatePayStatus(idList);
 		return list;

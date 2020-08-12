@@ -2,8 +2,11 @@ package chinaPress.fc.order.vo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import chinaPress.fc.book.vo.FcCourseBookVo;
 
 public class TerminalOrderListVo {
 
@@ -67,6 +70,11 @@ public class TerminalOrderListVo {
 	 * 课程课时个数
 	 */
 	private Integer courseHourCount;
+
+	/**
+	 * 书籍
+	 */
+	private List<FcCourseBookVo> bookList;
 
 	public Integer getId() {
 		return id;
@@ -192,5 +200,19 @@ public class TerminalOrderListVo {
 	 */
 	public void setCourseHourCount(Integer courseHourCount) {
 		this.courseHourCount = courseHourCount;
+	}
+
+	/**
+	 * 获取：bookList
+	 */
+	public List<FcCourseBookVo> getBookList() {
+		return bookList;
+	}
+
+	/**
+	 * 设置：bookList
+	 */
+	public void setBookList(List<FcCourseBookVo> bookList) {
+		this.bookList = bookList;
 	}
 }

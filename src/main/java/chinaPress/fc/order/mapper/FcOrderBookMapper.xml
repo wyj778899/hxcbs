@@ -83,4 +83,15 @@
 		from fc_order_book
 		where order_id = #{orderId}
 	</select>
+	
+	<!-- 查询订单关联的书籍信息 -->
+	<select id="selectBookByOrderId" resultType="chinaPress.fc.book.vo.FcCourseBookVo">
+		select
+			a.id, a.picture, a.name, a.price, a.sets
+		from
+			fc_book_archives a
+			inner join fc_order_book b on a.id = b.book_id
+		where
+			b.order_id = #{orderId}
+	</select>
 </mapper>
