@@ -122,6 +122,7 @@ public class FcOrderPersonService {
 						hour.setHourId(hourId);
 						int sectionId = fcCourseHourMapper.selectByPrimaryKey(hourId).getSectionId();
 						int stemCount = fcCourseHourMapper.selectIsHaveStemBySectionId(sectionId);
+						// 没题
 						if (stemCount <= 0) {
 							hour.setIsPass(1);
 							fcOrderPersonHourMapper.updateIsPass(hour);
@@ -130,7 +131,9 @@ public class FcOrderPersonService {
 							if (fcOrderPerson.getHaveCount() < fcOrderPerson.getTotalCount()) {
 								fcOrderPersonMapper.updateHaveCount(personOrderId);
 							}
-						} else {
+						} 
+						// 有题
+						else {
 							hour.setIsPass(3);
 							fcOrderPersonHourMapper.updateIsPass(hour);
 						}
@@ -168,13 +171,7 @@ public class FcOrderPersonService {
 						}
 					}
 					return 1;
-				} else {
-					FcOrderPersonHour record = new FcOrderPersonHour();
-					record.setHourId(hourId);
-					record.setOrderPersonId(personOrderId);
-					record.setIsPass(isPass);
-					return fcOrderPersonHourMapper.insertSelective(record);
-				}
+				} 
 			} 
 			// 针对小节测试未通过，也就是isPass只能为2
 			else {

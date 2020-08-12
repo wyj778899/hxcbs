@@ -230,23 +230,35 @@
 	<!-- 查询课时 -->
 	<select id="findPersonHour"
 		resultType="chinaPress.fc.order.model.FcOrderPersonHour">
-		SELECT
-			c.id,
-			c.order_person_id AS orderPersonId,
-			c.hour_id AS hourId,
-			c.is_pass
-			AS isPass
-		FROM
-			fc_order a
-		LEFT JOIN fc_order_person b ON b.order_id = a.id
-		LEFT JOIN fc_order_person_hour c ON c.order_person_id = b.id
-		WHERE
-			a.course_id = #{courseId}
-			AND b.role_id = #{roleId}
-			AND b.role_type = #{roleType}
-			AND c.hour_id = #{hourId}
-			AND a.pay_status = 2
-		ORDER BY c.id
-		LIMIT 1
+<!-- 		SELECT -->
+<!-- 			c.id, -->
+<!-- 			c.order_person_id AS orderPersonId, -->
+<!-- 			c.hour_id AS hourId, -->
+<!-- 			c.is_pass -->
+<!-- 			AS isPass -->
+<!-- 		FROM -->
+<!-- 			fc_order a -->
+<!-- 		LEFT JOIN fc_order_person b ON b.order_id = a.id -->
+<!-- 		LEFT JOIN fc_order_person_hour c ON c.order_person_id = b.id -->
+<!-- 		WHERE -->
+<!-- 			a.course_id = #{courseId} -->
+<!-- 			AND b.role_id = #{roleId} -->
+<!-- 			AND b.role_type = #{roleType} -->
+<!-- 			AND c.hour_id = #{hourId} -->
+<!-- 			AND a.pay_status = 2 -->
+<!-- 		ORDER BY c.id -->
+<!-- 		LIMIT 1 -->
+		select
+			a.id, a.order_person_id orderPersonId, a.hour_id hourId, a.is_pass isPass
+		from
+			fc_order_person_hour a
+		inner join fc_order_person b on a.order_person_id = b.id
+		inner join fc_order c on b.order_id = c.id
+		where
+			b.role_id = #{roleId}
+			and b.role_type = #{roleType}
+			and c.course_id = #{courseId}
+			and c.pay_status = 2
+			and a.hour_id = #{hourId}
 	</select>
 </mapper>

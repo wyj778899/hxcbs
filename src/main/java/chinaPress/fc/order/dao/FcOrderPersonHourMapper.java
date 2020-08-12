@@ -60,4 +60,14 @@ public interface FcOrderPersonHourMapper {
 	 */
 	Integer selectTheNewestHour(@Param("courseId") Integer courseId, @Param("roleId") Integer roleId,
 			@Param("roleType") Integer roleType);
+
+	/**
+	 * 根据orderPersonId和hourId删除
+	 * 
+	 * @author maguoliang
+	 * @param orderPersonId
+	 * @param hourId
+	 * @return
+	 */
+	int deleteByOrderPersonIdAndHourId(@Param("orderPersonId") Integer orderPersonId, @Param("hourId") Integer hourId);
 }

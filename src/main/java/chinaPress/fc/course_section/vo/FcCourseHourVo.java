@@ -11,6 +11,23 @@ public class FcCourseHourVo {
 	private Integer isLook;// 是否试看0否1是
 	private Integer isHaveStem;// 是否有题1.有题0.没题
 
+	public FcCourseHourVo() {
+		super();
+	}
+
+	public FcCourseHourVo(Integer id, Integer sectionId, String name, String address, String url, Integer format,
+			Integer isLook, Integer isHaveStem) {
+		super();
+		this.id = id;
+		this.sectionId = sectionId;
+		this.name = name;
+		this.address = address;
+		this.url = url;
+		this.format = format;
+		this.isLook = isLook;
+		this.isHaveStem = isHaveStem;
+	}
+
 	public Integer getId() {
 		return id;
 	}

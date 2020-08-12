@@ -134,4 +134,14 @@
 			and b.role_id = #{roleId}
 			and c.is_pass != 1
 	</select>
+	
+	<!-- 根据id删除 -->
+	<delete id="deleteByOrderPersonIdAndHourId">
+		delete
+		from
+			fc_order_person_hour
+		where
+			order_person_id = #{orderPersonId}
+			and hour_id = #{hourId}
+	</delete>
 </mapper>

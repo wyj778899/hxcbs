@@ -245,6 +245,22 @@
 		limit 1
 	</select>
 	
+	<!-- 根据当前课时查询上一个课时 -->
+	<select id="selectCourseLastHourIdBysectionId"
+		resultType="int">
+		select
+			a.id
+		from 
+			fc_course_hour a
+		left join fc_course_section b on a.section_id = b.id
+		where 
+			b.course_id = #{courseId}
+			and a.`order` <![CDATA[<]]> #{order}
+		order by
+			a.`order` desc
+		limit 1
+	</select>
+	
 	<!-- 根据章节id查询该课时是否有题 -->
 	<select id="selectIsHaveStemBySectionId" resultType="int">
 		select

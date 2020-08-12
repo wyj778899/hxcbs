@@ -30,6 +30,16 @@ public interface FcCourseHourMapper {
 	 * @return
 	 */
 	Integer selectCourseNextHourIdBysectionId(@Param("courseId") Integer courseId, @Param("order") Integer order);
+	
+	/**
+	 * 根据课程id和课时id查询上一个课时id
+	 * 
+	 * @author maguoliang
+	 * @param courseId 课程id
+	 * @param hourId   当前课时id的排序
+	 * @return
+	 */
+	Integer selectCourseLastHourIdBysectionId(@Param("courseId") Integer courseId, @Param("order") Integer order);
 
 	/**
 	 * 根据章节id查询关联课时
