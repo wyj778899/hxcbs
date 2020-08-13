@@ -1,7 +1,10 @@
 package chinaPress.fc.order.vo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class TerminalPayOrderDetailVo {
 
@@ -19,6 +22,12 @@ public class TerminalPayOrderDetailVo {
 	 * 支付金额
 	 */
 	private BigDecimal payAmount;
+	
+	/**
+	 * 订单创建时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date createTime;
 
 	/**
 	 * 课程id
@@ -44,6 +53,11 @@ public class TerminalPayOrderDetailVo {
 	 * 课程价格
 	 */
 	private BigDecimal coursePrice;
+	
+	/**
+	 * 课程有效期
+	 */
+	private Integer courseNumber;
 
 	/**
 	 * 书籍id集合
@@ -126,5 +140,33 @@ public class TerminalPayOrderDetailVo {
 	 */
 	public void setBookIds(List<Integer> bookIds) {
 		this.bookIds = bookIds;
+	}
+
+	/**
+	 * 获取：createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * 设置：createTime
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取：courseNumber
+	 */
+	public Integer getCourseNumber() {
+		return courseNumber;
+	}
+
+	/**
+	 * 设置：courseNumber
+	 */
+	public void setCourseNumber(Integer courseNumber) {
+		this.courseNumber = courseNumber;
 	}
 }

@@ -527,7 +527,9 @@
 			b.photo AS
 			coursePhoto,
 			b.`name` AS courseName,
-			b.course_price AS coursePrice
+			b.course_price AS coursePrice,
+			a.create_time createTime,
+			b.course_number courseNumber
 		FROM
 			fc_order a
 		INNER JOIN fc_course_archives b ON b.id = a.course_id
