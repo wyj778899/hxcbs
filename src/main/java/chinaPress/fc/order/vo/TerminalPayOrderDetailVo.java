@@ -19,10 +19,15 @@ public class TerminalPayOrderDetailVo {
 	private String code;
 
 	/**
+	 * 支付状态
+	 */
+	private Integer payStatus;
+
+	/**
 	 * 支付金额
 	 */
 	private BigDecimal payAmount;
-	
+
 	/**
 	 * 订单创建时间
 	 */
@@ -53,7 +58,7 @@ public class TerminalPayOrderDetailVo {
 	 * 课程价格
 	 */
 	private BigDecimal coursePrice;
-	
+
 	/**
 	 * 课程有效期
 	 */
@@ -168,5 +173,19 @@ public class TerminalPayOrderDetailVo {
 	 */
 	public void setCourseNumber(Integer courseNumber) {
 		this.courseNumber = courseNumber;
+	}
+
+	/**
+	 * 获取：payStatus
+	 */
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	/**
+	 * 设置：payStatus
+	 */
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
 	}
 }
