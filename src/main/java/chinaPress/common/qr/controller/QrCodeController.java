@@ -215,8 +215,8 @@ public class QrCodeController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "wxH5Authorization")
-	public String authorization() throws IOException {
-		return qrCodeService.authorization();
+	public String authorization(String redirectUrl) throws IOException {
+		return qrCodeService.authorization(redirectUrl);
 	}
 
 	/**

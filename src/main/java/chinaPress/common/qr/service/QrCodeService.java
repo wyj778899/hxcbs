@@ -307,9 +307,9 @@ public class QrCodeService {
 	 * @return
 	 * @throws IOException
 	 */
-	public String authorization() throws IOException {
+	public String authorization(String redirectUrl) throws IOException {
 		// 授权后重定向的回调链接地址
-		String REDIRECT_URI = WXPayUtil.urlEncode("http://www.hxclass.cn/h5/home", "UTF-8");
+		String REDIRECT_URI = WXPayUtil.urlEncode(redirectUrl, "UTF-8");
 		// 微信授权 URL
 		String AUTHORIZATION_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 		MyWXPayConfig myWXPayConfig = new MyWXPayConfig();
