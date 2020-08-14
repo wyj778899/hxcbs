@@ -2,6 +2,7 @@ package chinaPress.role.member.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -1529,7 +1530,8 @@ public class MemberInfoService {
 			Integer type = p.getType();
 			String phone = p.getTellPhone();
 			//注册信息为从业者,身份证号不为null的信息身份为从业者和手机号码为null   满足修改条件
-			if((practitionerInfo.getType()!=null && practitionerInfo.getType()==2) && type==2 && (phone==null || phone=="")) {
+			if((practitionerInfo.getType() != null && practitionerInfo.getType() == 2) 
+					&& type == 2 && StringUtils.isBlank(phone)) {
 				//为从业者时执行更新操作
 				practitionerInfo.setId(p.getId());
 				practitionerInfoMapper.updateByPrimaryKeySelective(practitionerInfo);
@@ -1557,7 +1559,10 @@ public class MemberInfoService {
 					mem.setRoleType(4);
 				}
 				mem.setPhoto(practitionerInfo.getUserHead());
+				mem.setId(m.getId());
 				memberInfoMapper.updateByPrimaryKeySelective(mem);
+				// 删除普通用户表的数据
+				userInfoMapper.deleteByPrimaryKey(id);
 				memberVo.setRoleId(mem.getRoleId());// 角色id
 				memberVo.setName(mem.getUserName());// 用户名
 				memberVo.setPhoto(mem.getPhoto());// 头像
