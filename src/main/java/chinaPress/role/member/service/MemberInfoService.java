@@ -1559,10 +1559,17 @@ public class MemberInfoService {
 					mem.setRoleType(4);
 				}
 				mem.setPhoto(practitionerInfo.getUserHead());
-				mem.setId(m.getId());
+				// 根据员工表id查询角色id
+				MemberInfo mi = new MemberInfo();
+				mi.setRoleId(p.getId());
+				mi.setRoleType(4);
+				MemberInfo mmi = memberInfoMapper.selectByPrimaryKey(mi);
+				mem.setId(mmi.getId());
 				memberInfoMapper.updateByPrimaryKeySelective(mem);
 				// 删除普通用户表的数据
 				userInfoMapper.deleteByPrimaryKey(id);
+				// 删除普通用户关联的员工表数据
+				memberInfoMapper.deleteByPrimaryKey(m.getId());
 				memberVo.setRoleId(mem.getRoleId());// 角色id
 				memberVo.setName(mem.getUserName());// 用户名
 				memberVo.setPhoto(mem.getPhoto());// 头像
