@@ -417,7 +417,16 @@ public class FcOrderService {
 			} 
 			// 没使用优惠券  
 			else {
-				return updateOrderSuccess(record, bookIdsStr);
+				if (record.getDiscountAmount().compareTo(new BigDecimal(0)) > 0
+						|| record.getPayAmount().compareTo(new BigDecimal(0)) == 0) {
+					result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+				} else {
+					if (payPrice.compareTo(record.getPayAmount()) != 0) {
+						result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+					} else {
+						return updateOrderSuccess(record, bookIdsStr);
+					}
+				}
 			}
 		}
 		return result;
