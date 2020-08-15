@@ -87,20 +87,20 @@ public class FcApplyService {
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Map<String, Object> resultMap = new HashMap<>();
 		List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
+		//手机号排重
+		long phones = personList.stream().map(FcApplyPersonParam::getTellPhone).distinct().count();
+		if(phones < personList.size()){
+			resultMap.put("error","报名信息手机号码重复");
+			return ResultUtil.error(resultMap);
+		}
+		//身份证号排重
+		long certs = personList.stream().map(FcApplyPersonParam::getCertificateNumber).distinct().count();
+		if(certs < personList.size()){
+			resultMap.put("error","报名信息身份证号重复");
+			return ResultUtil.error(resultMap);
+		}
 		//先校验机构的身份证号存在直接返回,如果用户数据重复直接返回
 		for(FcApplyPersonParam f : personList) {
-			//手机号排重
-			long phones = personList.stream().map(FcApplyPersonParam::getTellPhone).distinct().count();
-			if(phones < personList.size()){
-				resultMap.put("error","报名信息手机号码重复");
-				return ResultUtil.error(resultMap);
-			}
-			//身份证号排重
-			long certs = personList.stream().map(FcApplyPersonParam::getCertificateNumber).distinct().count();
-			if(certs < personList.size()){
-				resultMap.put("error","报名信息身份证号重复");
-				return ResultUtil.error(resultMap);
-			}
 			String certificateNumber = f.getCertificateNumber();
 			if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
 				resultMap.put("error",certificateNumber+":身份证号已存在");
@@ -194,7 +194,9 @@ public class FcApplyService {
 						insMemberModel.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						insMemberModel.setSex(item.getSex());
 						insMemberModel.setAddress(item.getInstitutionAddress());
-						insMemberModel.setIsStart(0);
+						insMemberModel.setIsStart(1);//是否启用
+						insMemberModel.setState(2);//已审核
+						insMemberModel.setSource(1);//用户来源
 						insMemberModel.setRoleId(practitionerInfo.getId());
 						insMemberModel.setPhoto("assets/image/userImg.jpg");
 						if (item.getRoleType().intValue() == 1) {
