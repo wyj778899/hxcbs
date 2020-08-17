@@ -92,7 +92,7 @@ public class FcOrderService {
 		List<TerminalOrderListVo> list = fcOrderMapper.findTerminalOrderList(param);
 		for (TerminalOrderListVo terminalOrderListVo : list) {
 			if (terminalOrderListVo.getPayStatus().intValue() == 1
-					&& DateUtil.getLongOfTwoDate(terminalOrderListVo.getCreateTime(), new Date()) >= 100) {
+					&& DateUtil.getLongOfTwoDate(terminalOrderListVo.getCreateTime(), new Date()) >= 2) {
 				terminalOrderListVo.setPayStatus(3);
 				idList.add(terminalOrderListVo.getId());
 			}
