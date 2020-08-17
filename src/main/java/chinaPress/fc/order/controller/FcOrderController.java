@@ -298,6 +298,8 @@ public class FcOrderController {
 				}
 			} else if (orderModel.getPayStatus().intValue() == 2) {
 				result = ResultUtil.custom(-1, "该订单已支付", -1);
+			} else if (orderModel.getPayStatus().intValue() == 3) {
+				result = ResultUtil.custom(-1, "该订单已关闭", -1);
 			}
 		} else {
 			result = ResultUtil.custom(0, "该订单不存在");
