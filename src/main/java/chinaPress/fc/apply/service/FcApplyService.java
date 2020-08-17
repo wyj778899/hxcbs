@@ -102,9 +102,13 @@ public class FcApplyService {
 		//先校验机构的身份证号存在直接返回,如果用户数据重复直接返回
 		for(FcApplyPersonParam f : personList) {
 			String certificateNumber = f.getCertificateNumber();
-			if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
-				resultMap.put("error",certificateNumber+":身份证号已存在");
-				return ResultUtil.error(resultMap);
+			//机构报名校验身份证号,个人报名不校验
+			if(record.getApplyType().intValue() == 1) {
+				//判断机构和家长/从业者身份证号是否存在存在直接返回   
+				if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null || practitionerInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
+					resultMap.put("error",certificateNumber+":身份证号已存在");
+					return ResultUtil.error(resultMap);
+				}
 			}
 		}
 		int index = fcApplyMapper.insertSelective(record);
@@ -129,7 +133,7 @@ public class FcApplyService {
 						if (memberInfo.getRoleType().intValue() != 3 && memberInfo.getRoleType().intValue() != 4) {
 							continue;
 						}
-
+ 
 						// 修改员工
 //						MemberInfo updMember = new MemberInfo();
 //						updMember.setId(memberInfo.getId());
@@ -230,35 +234,36 @@ public class FcApplyService {
 				return ResultUtil.ok(resultMap);
 			} else {
 
-				FcApplyPersonParam personModel = personList.get(0);
-				MemberInfo memberParam = new MemberInfo();
-				memberParam.setTellPhone(personModel.getTellPhone());
-				MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
-				if (memberInfo != null) {
-					// 修改员工
-					MemberInfo updMember = new MemberInfo();
-					updMember.setId(memberInfo.getId());
-					updMember.setName(personModel.getName());
-					memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
-
-					// 修改家长/从业者
-					PractitionerInfo updPractitioner = new PractitionerInfo();
-					updPractitioner.setId(memberInfo.getRoleId());
-					// 姓名
-					updPractitioner.setName(personModel.getName());
-					updPractitioner.setPost(personModel.getPost());
-					updPractitioner.setWorkYear(personModel.getWorkYear());
-					// 学历
-					updPractitioner.setEducation(personModel.getEducation());
-					// 机构名称
-					updPractitioner.setInstitutionName(personModel.getInstitutionName());
-					// 单位地址
-					updPractitioner.setInstitutionAddress(personModel.getInstitutionAddress());
-					updPractitioner.setEthnic(personModel.getEthnic());
-					updPractitioner.setNativePlace(personModel.getNativePlace());
-					updPractitioner.setMailingAddress(personModel.getMailingAddress());
-					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
-				}
+				//个人报名申请不修改用户个人信息
+//				FcApplyPersonParam personModel = personList.get(0);
+//				MemberInfo memberParam = new MemberInfo();
+//				memberParam.setTellPhone(personModel.getTellPhone());
+//				MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
+//				if (memberInfo != null) {
+//					// 修改员工
+//					MemberInfo updMember = new MemberInfo();
+//					updMember.setId(memberInfo.getId());
+//					updMember.setName(personModel.getName());
+//					memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+//
+//					// 修改家长/从业者
+//					PractitionerInfo updPractitioner = new PractitionerInfo();
+//					updPractitioner.setId(memberInfo.getRoleId());
+//					// 姓名
+//					updPractitioner.setName(personModel.getName());
+//					updPractitioner.setPost(personModel.getPost());
+//					updPractitioner.setWorkYear(personModel.getWorkYear());
+//					// 学历
+//					updPractitioner.setEducation(personModel.getEducation());
+//					// 机构名称
+//					updPractitioner.setInstitutionName(personModel.getInstitutionName());
+//					// 单位地址
+//					updPractitioner.setInstitutionAddress(personModel.getInstitutionAddress());
+//					updPractitioner.setEthnic(personModel.getEthnic());
+//					updPractitioner.setNativePlace(personModel.getNativePlace());
+//					updPractitioner.setMailingAddress(personModel.getMailingAddress());
+//					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
+//				}
 
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
