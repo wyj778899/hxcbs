@@ -1,9 +1,11 @@
 package chinaPress.fc.course_section.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +15,10 @@ import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.course_section.vo.FcCourseHourVo;
+import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
+import chinaPress.fc.order.model.FcOrder;
 import chinaPress.fc.order.model.FcOrderPersonHour;
 import chinaPress.fc.order.service.FcOrderPersonService;
 import chinaPress.fc.order.service.FcOrderService;
@@ -28,6 +32,8 @@ public class FcCourseHourService {
 	private FcOrderPersonService fcOrderPersonService;
 	@Autowired
 	private FcOrderService fcOrderService;
+	@Autowired
+	private FcOrderMapper fcOrderMapper;
 	@Autowired
 	private FcOrderPersonMapper fcOrderPersonMapper;
 	@Autowired
@@ -47,6 +53,37 @@ public class FcCourseHourService {
 	public Result selectCourseHourListBySectionId(Integer personId, Integer courseId, Integer sectionId,
 			Integer roleType, Integer type) {
 		Result result = new Result();
+		// 判断此课程关联的订单是否为异常订单
+		int orderRoleType = 0;
+		if (roleType.intValue() == 1) {
+			orderRoleType = 2;
+		}
+		if (roleType.intValue() == 2) {
+			orderRoleType = 3;
+		}
+		FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(personId, orderRoleType, courseId);
+		// 说明没有购买过此课程的订单
+		if (exceptionFcOrder == null) {
+			return ResultUtil.custom(7, "请去购买课程");
+		} else {
+			// 如果支付方式为空
+			if (StringUtils.isBlank(exceptionFcOrder.getPaymentMode())) {
+				// 且没使用优惠券
+				if (exceptionFcOrder.getIsCoupon() == 0) {
+					// 且订单金额为0
+					if (exceptionFcOrder.getOrderAmount().compareTo(BigDecimal.valueOf(0)) == 0
+							|| exceptionFcOrder.getPayAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
+						// 修改此订单为异常订单，跳转到订单页面，且提示用户联系客服
+						FcOrder fo = new FcOrder();
+						fo.setId(exceptionFcOrder.getId());
+						fo.setPayStatus(4);
+						fcOrderMapper.updateByPrimaryKeySelective(fo);
+						return ResultUtil.custom(8, "此课程关联的订单为异常订单，请联系客服");
+					}
+				}
+			}
+		}
+		
 		// 先去判断上个课时是否通过测试了，如果通过测试了，允许观看（不能快进，即isPass为0），如果没通过测试，删除本条记录，修改上个课时为已观看（未考试，即isPass为3）
 		
 		// 当前点击的课时章节
