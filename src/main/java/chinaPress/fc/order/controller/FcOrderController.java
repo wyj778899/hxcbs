@@ -233,15 +233,15 @@ public class FcOrderController {
 				}
 				// 如果客户端订单金额和实际订单金额不一致，返回错误
 				if (payPrice.compareTo(orderModel.getOrderAmount()) != 0) {
-					result = ResultUtil.custom(-1, "异常数据，金额错误", -1);
+					result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
 				}
 				// 判断优惠金额
-				if (orderModel.getIsCoupon().intValue() == 1) {
+				if (orderModel.getIsCoupon() == 1) {
 					// 优惠券id
 					Integer couponId = orderModel.getCouponId();
 					FcDiscountCouponRecord checkCoupon = fcDiscountCouponRecordMapper.selectByPrimaryKey(couponId);
 					if (checkCoupon == null) {
-						result = ResultUtil.custom(-1, "异常数据，优惠券错误", -1);
+						result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 					} else {
 						Integer finalGrantRoleType = 0; 
 						if (checkCoupon.getGrantRoleType().intValue() == 2) {
@@ -257,7 +257,7 @@ public class FcOrderController {
 //						orderModel.getRoleType();
 						// 检查优惠券是否合法
 						if (checkCoupon.getStatus().intValue() == 1 || checkCoupon.getStatus().intValue() == 3) {
-							result = ResultUtil.custom(-1, "异常数据，优惠券错误", -1);
+							result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 						}
 						if (checkCoupon.getStatus().intValue() == 2) {
 							if (checkCoupon.getGrantRoleId().intValue() == orderModel.getRoleId().intValue()
@@ -275,17 +275,26 @@ public class FcOrderController {
 								if (payPrice.compareTo(orderModel.getPayAmount()) == 0) {
 									return paySucces(orderModel);
 								} else {
-									result = ResultUtil.custom(-1, "异常数据，金额错误", -1);
+									result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
 								}
 							} else {
-								result = ResultUtil.custom(-1, "异常数据，优惠券错误", -1);
+								result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 							}
 						}
 					}
 				} 
 				// 没使用优惠券
 				else {
-					return paySucces(orderModel);
+					if (orderModel.getDiscountAmount().compareTo(new BigDecimal(0)) > 0
+							|| orderModel.getPayAmount().compareTo(new BigDecimal(0)) == 0) {
+						result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+					} else {
+						if (payPrice.compareTo(orderModel.getPayAmount()) != 0) {
+							result = ResultUtil.custom(-1, "非法数据，金额错误", -1);
+						} else {
+							return paySucces(orderModel);
+						}
+					}
 				}
 			} else if (orderModel.getPayStatus().intValue() == 2) {
 				result = ResultUtil.custom(-1, "该订单已支付", -1);
