@@ -165,4 +165,45 @@
 			<if test="name != null and name != ''">AND b.`name` LIKE CONCAT('%', #{name}, '%')</if>
 			<if test="pageNumber != null and pageSize != null">LIMIT #{offSet}, #{pageSize}</if>
 	</select>
+	
+	<!-- 查询所有报名申请已审核的家长和从业者个数 -->
+	<select id="selectFcApplyPersonInfoCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_apply_person a
+			inner join fc_apply b on a.apply_id = b.id
+			inner join role_practitioner_archives c on a.role_type = c.type and a.role_id = c.id
+		where
+			b.audit_status = 2
+			<if test="tellPhoneUserName != null and tellPhoneUserName != ''">
+				and (
+					c.tell_phone like concat('%', #{tellPhoneUserName}, '%')
+					or
+					c.user_name like concat('%', #{tellPhoneUserName}, '%')
+				)
+			</if>
+	</select>
+	
+	<!-- 查询所有报名申请已审核的家长和从业者列表 -->
+	<select id="selectFcApplyPersonInfoList" resultType="chinaPress.fc.apply.vo.FcApplyPersonVo">
+		select
+			c.id, c.user_name userName, case c.sex when 1 then '男' when 2 then '女' else '未知' end sexTxt, 
+			c.tell_phone tellPhone, case c.type when 1 then '家长' when 2 then '从业者' end typeTxt
+		from
+			fc_apply_person a
+			inner join fc_apply b on a.apply_id = b.id
+			inner join role_practitioner_archives c on a.role_type = c.type and a.role_id = c.id
+		where
+			b.audit_status = 2
+		<if test="tellPhoneUserName != null and tellPhoneUserName != ''">
+			and (
+				c.tell_phone like concat('%', #{tellPhoneUserName}, '%')
+				or
+				c.user_name like concat('%', #{tellPhoneUserName}, '%')
+			)
+		</if>
+		limit
+			#{offset}, #{rows}
+	</select>
 </mapper>
