@@ -144,7 +144,6 @@ public class FcApplyService {
 					OrderVo orderVo = fcApplyMapper.selectApplyOrder(record.getCourseId(), m.getRoleType()==3?1:m.getRoleType()==4?2:null,m.getRoleId());
 					if(orderVo!=null) {
 					Date d = new Date();
-					System.out.println(DateUtil.getLongOfTwoDate(orderVo.getCreateTime(),d));
 					//订单的开始时间到现在是否为两天            或者                订单的状态为已支付       未支付的情况不准确
 					if((orderVo.getPayStatus()!=null && orderVo.getPayStatus().intValue()==2) || (orderVo.getCreateTime()!=null && DateUtil.getLongOfTwoDate(orderVo.getCreateTime(),d)>1)){
 						if(count == 1) {
@@ -190,8 +189,6 @@ public class FcApplyService {
 							memberInfo.setRoleId(p.getId());//赋值角色id
 							memberInfo.setRoleType(p.getType() == 1 ? 3: p.getType() == 2 ? 4 :null);//赋值角色类型
 							//身份证号匹配成功并且手机号为null并且查询出来的用户角色为从业者                   此处是教师数据缺失的用户信息进行更新，别的数据不操作
-							System.out.println(StringUtils.isBlank(p.getTellPhone()));
-							System.out.println(p.getType()!=null && p.getType().intValue()==2);
 							if(StringUtils.isBlank(p.getTellPhone())&&(p.getType()!=null && p.getType().intValue()==2)){
 								// 修改员工
 								MemberInfo updMember = new MemberInfo();
