@@ -50,4 +50,44 @@ public class FcQuestionStemController {
 		}
 		return ResultUtil.custom(0, "无小节题", list);
 	}
+	
+	/**
+	 * 添加试题
+	 * @param fcQuestionStem
+	 * @return
+	 */
+	@RequestMapping("registerQuestionStem")
+	public Result registerQuestionStem(FcQuestionStem fcQuestionStem) {
+		return fcQuestionStemService.addQuestionStem(fcQuestionStem);
+	}
+	
+	/**
+	 * 修改试题
+	 * @param fcQuestionStem
+	 * @return
+	 */
+	@RequestMapping("modifyQuestionStem")
+	public Result modifyQuestionStem(FcQuestionStem fcQuestionStem) {
+		return fcQuestionStemService.setQuestionStem(fcQuestionStem);
+	}
+	
+	/**
+	 * 查询试题和答案信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("queryPageQuestionStem")
+	public Result queryPageQuestionStem(Integer id) {
+		return fcQuestionStemService.findQuestionOne(id);
+	}
+	
+	/**
+	 * 删除试题信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("removeByQuestionStem")
+	public Result removeByQuestionStem(Integer id) {
+		return fcQuestionStemService.deleteQuestionOne(id);
+	}
 }

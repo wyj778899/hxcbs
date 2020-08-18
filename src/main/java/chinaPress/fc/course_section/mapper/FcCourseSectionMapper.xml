@@ -212,4 +212,9 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	<!-- 查询所有的课时id和章节名称 -->
+	<select id="selectSectionAndHourAll" resultType="chinaPress.fc.course_section.vo.FcSectionHourInfo">
+		select a.id as id,b.name as name from fc_course_hour a left join fc_course_section b on b.id = a.section_id
+	</select>
 </mapper>

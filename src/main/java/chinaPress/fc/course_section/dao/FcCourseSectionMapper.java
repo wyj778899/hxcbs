@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.course_section.model.FcCourseSection;
 import chinaPress.fc.course_section.vo.FcCourseSectionVo;
+import chinaPress.fc.course_section.vo.FcSectionHourInfo;
 
 @Mapper
 @Repository
@@ -26,4 +27,10 @@ public interface FcCourseSectionMapper {
     FcCourseSection selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(FcCourseSection record);
+    
+    /**
+     * 查询所有课时id和对应的章节名称
+     * @return
+     */
+    List<FcSectionHourInfo> selectSectionAndHourAll();
 }

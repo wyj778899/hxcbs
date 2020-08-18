@@ -74,6 +74,15 @@ public class FcQuestionStem {
      */
     private Integer catalogId;
     
+    /**
+     * 视频解析
+     */
+    private String analysis;
+    
+    /**
+     * 1.小结2.自测,3考试
+     */
+    private Integer type;
     
     /**
      * 分数
@@ -96,6 +105,14 @@ public class FcQuestionStem {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	/**
@@ -297,6 +314,13 @@ public class FcQuestionStem {
 	public void setCatalogId(Integer catalogId) {
 		this.catalogId = catalogId;
 	}
-    
+
+	public String getAnalysis() {
+		return analysis;
+	}
+
+	public void setAnalysis(String analysis) {
+		this.analysis = analysis;
+	}
     
 }

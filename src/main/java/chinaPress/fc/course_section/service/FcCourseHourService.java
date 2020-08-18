@@ -6,13 +6,16 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
+import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
 import chinaPress.fc.course_section.model.FcCourseHour;
 import chinaPress.fc.course_section.vo.FcCourseHourVo;
+import chinaPress.fc.course_section.vo.FcSectionHourInfo;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
 import chinaPress.fc.order.model.FcOrderPersonHour;
@@ -32,6 +35,8 @@ public class FcCourseHourService {
 	private FcOrderPersonMapper fcOrderPersonMapper;
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
+	@Autowired
+	private FcCourseSectionMapper fcCourseSectionMapper;
 
 	/**
 	 * 根据章节id查询关联课时
@@ -307,4 +312,23 @@ public class FcCourseHourService {
 		return fcCourseHourMapper.selectCourseHourCountByCOurseId(courseId);
 	}
 
+	
+	/**
+	 * 查询所有课时id和章节名称用于试题关联展示
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findSectionAndHourAll() {
+		try {
+			List<FcSectionHourInfo> selectSectionAndHours = fcCourseSectionMapper.selectSectionAndHourAll();
+			if(selectSectionAndHours.size()>0) {
+				return new Result(1,"查询成功",selectSectionAndHours);
+			}else {
+				return new Result(0,"无数据","");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
 }

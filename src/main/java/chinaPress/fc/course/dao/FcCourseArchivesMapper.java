@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.course.model.FcCourseArchives;
+import chinaPress.fc.course.vo.CourseArchivesInfo;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
@@ -100,4 +101,10 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	int selectPutAwayCourseCount();
+	
+	/**
+	 * 查询所有的有效课程信息
+	 * @return
+	 */
+	List<CourseArchivesInfo> selectCourseArchivesAll();
 }

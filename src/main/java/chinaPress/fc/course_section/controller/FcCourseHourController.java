@@ -1,9 +1,5 @@
 package chinaPress.fc.course_section.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.course_section.service.FcCourseHourService;
-import chinaPress.fc.course_section.vo.FcCourseHourVo;
 
 @RestController
 public class FcCourseHourController {
@@ -47,4 +42,12 @@ public class FcCourseHourController {
 		return ResultUtil.custom(-1, "查询失败", count);
 	}
 
+	/**
+	 * 查询课时id和章节名称
+	 * @return
+	 */
+	@RequestMapping("querySectionAndHourAll")
+	public Result querySectionAndHourAll() {
+		return fcCourseHourService.findSectionAndHourAll();
+	} 
 }

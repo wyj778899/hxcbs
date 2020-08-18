@@ -179,4 +179,13 @@ public class FcCourseArchivesController {
 	public Result selectPutAwayCourseCount() {
 		return ResultUtil.ok(fcCourseArchivesService.selectPutAwayCourseCount());
 	}
+	
+	/**
+	 * 查询所有课程信息
+	 * @return
+	 */
+	@RequestMapping("queryCourseArchivesAll")
+	public Result queryCourseArchivesAll() {
+		return fcCourseArchivesService.findCourseArchivesAll();
+	}
 }

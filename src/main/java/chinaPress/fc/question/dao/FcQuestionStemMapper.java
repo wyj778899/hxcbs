@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.question.model.FcQuestionStem;
+import chinaPress.fc.question.vo.FcQuestionAndOption;
 import chinaPress.fc.question.vo.FcQuestionStemListVo;
 
 @Mapper
@@ -41,4 +42,24 @@ public interface FcQuestionStemMapper {
 	 * @return
 	 */
 	List<FcQuestionStem> selectIsHaveStem(@Param("courseId") Integer courseId, @Param("sectionId") Integer sectionId);
+	
+	/**
+	 * 试题名称不可重复,查询试题名称
+	 * @param questionStem
+	 * @return
+	 */
+	int selectByQuestionStem(@Param("questionStem") String questionStem,@Param("id")Integer id);
+	
+	/**
+	 * 通过id查询试题信息和试题关联的答案信息
+	 * @param id
+	 * @return
+	 */
+	FcQuestionAndOption selectById(@Param("id")Integer id);
+	
+	/**
+	 * 查询所有试题的名称
+	 * @return
+	 */
+	List<String> selectQuestionStemNameAll();
 }

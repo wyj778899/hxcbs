@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
 import chinaPress.common.util.JacksonUtil;
 import chinaPress.fc.book.dao.FcCourseBookMapper;
@@ -15,6 +17,7 @@ import chinaPress.fc.course.dao.FcCourseArchivesMapper;
 import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course.util.FcCourseSectionTreeUtil;
 import chinaPress.fc.course.util.FcCourseTutorTreeUtil;
+import chinaPress.fc.course.vo.CourseArchivesInfo;
 import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
@@ -370,5 +373,24 @@ public class FcCourseArchivesService {
 	 */
 	public int selectPutAwayCourseCount() {
 		return fcCourseArchivesMapper.selectPutAwayCourseCount();
+	}
+	
+	/**
+	 * 所有有效课程信息
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findCourseArchivesAll() {
+		try {
+			List<CourseArchivesInfo> courseArchivesInfos = fcCourseArchivesMapper.selectCourseArchivesAll();
+			if(courseArchivesInfos.size()>0) {
+				return new Result(1,"查询成功",courseArchivesInfos);
+			}else {
+				return new Result(1,"无数据","");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
 	}
 }

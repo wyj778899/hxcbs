@@ -18,4 +18,11 @@ public interface FcQuestionOptionMapper {
     List<FcQuestionOptionVo> selectByStemId(Integer id);
 
     int updateByPrimaryKeySelective(FcQuestionOption record);
+    
+    /**
+     * 试题id删除试题答案信息
+     * @param itemId
+     * @return
+     */
+    int deleteItemId(Integer itemId);
 }

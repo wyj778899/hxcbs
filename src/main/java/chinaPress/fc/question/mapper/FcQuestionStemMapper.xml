@@ -30,6 +30,7 @@
 			property="analysis" />
 		<result column="grade" jdbcType="INTEGER" property="grade" />
 		<result column="catalog_id" jdbcType="INTEGER" property="catalogId" />
+		<result column="type" jdbcType="INTEGER" property="type" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, course_id, hour_id, question_type, `task_difficulty`, question_stem,
@@ -243,5 +244,63 @@
 			a.course_id = #{courseId}
 			and c.id = #{sectionId}
 			and a.type = 1
+	</select>
+	
+	<!-- 根据试题名称个数 -->
+	<select id="selectByQuestionStem" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			fc_question_stem 
+		WHERE question_stem = #{questionStem}
+		<if test="id != null">
+				and id != #{id}
+		</if>
+	</select>
+	
+	<!-- 根据id查询试题信息 -->
+	<select id="selectById" parameterType="java.lang.Integer" resultMap="fcQuestionAndOptionMap">
+		select 
+			a.id as id,
+			a.question_stem as question_stem,
+			a.question_type as question_type,
+		  	a.task_difficulty as task_difficulty,
+			a.catalog_id as catalog_id,
+			a.course_id as course_id,
+		  	a.hour_id as hour_id,
+			b.id as o_id,
+			b.option_type as option_type,
+		  	b.option_name as option_name,
+			b.is_correct as is_correct
+		from 
+	 		fc_question_stem a 
+		left join 
+			fc_question_option b
+		on a.id = b.stem_id
+		where a.id = #{id}
+	</select>
+	<!-- 封装试题信息的resultMap -->
+	<resultMap id="fcQuestionAndOptionMap"  type="chinaPress.fc.question.vo.FcQuestionAndOption">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="question_stem" jdbcType="VARCHAR" property="questionStem" />
+		<result column="question_type" jdbcType="INTEGER" property="questionType" />
+		<result column="task_difficulty" jdbcType="INTEGER" property="taskDifficulty" />
+		<result column="catalog_id" jdbcType="INTEGER" property="catalogId" />
+		<result column="course_id" jdbcType="INTEGER" property="courseId" />
+		<result column="hour_id" jdbcType="INTEGER" property="hourId" />
+		<collection property="options" ofType="chinaPress.fc.question.vo.QuestionOption">
+			<id column="o_id" jdbcType="INTEGER" property="oId"/>
+			<result column="option_type" jdbcType="INTEGER" property="optionType" />
+			<result column="option_name" jdbcType="VARCHAR" property="optionName" />
+			<result column="is_correct" jdbcType="INTEGER" property="isCorrect" />
+		</collection>
+	</resultMap>
+	
+	<!-- 查询所有试题的抿成 -->
+	<select id="selectQuestionStemNameAll" resultType="java.lang.String">
+		select 
+			a.question_stem
+		from 
+	 		fc_question_stem a 
 	</select>
 </mapper>

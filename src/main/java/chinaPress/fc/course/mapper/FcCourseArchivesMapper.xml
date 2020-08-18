@@ -386,4 +386,16 @@
 		where
 			is_putaway = 1
 	</select>
+	
+	<!-- 有效的课程信息 -->
+	<select id="selectCourseArchivesAll" resultType="chinaPress.fc.course.vo.CourseArchivesInfo">
+		select
+			id,name
+		from
+			fc_course_archives
+		where
+			is_putaway = 1
+			and state= 1
+			and is_delete = 0
+	</select>
 </mapper>

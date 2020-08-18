@@ -9,7 +9,7 @@ import chinaPress.fc.question.model.FcQuestionCatalog;
 import chinaPress.fc.question.service.FcQuestionCatalogService;
 
 /**
- * 书籍分类
+ * 试题分类
  * @author wyj
  *
  */
@@ -23,7 +23,7 @@ public class FcQuestionCatalogController {
 	
 	
 	/**
-	 * 添加书籍分类
+	 * 添加试题分类
 	 * @param fcQuestionCatalog
 	 * @return
 	 */
@@ -34,17 +34,17 @@ public class FcQuestionCatalogController {
 	
 	
 	/**
-	 * 更新书籍分类
+	 * 更新试题分类
 	 * @param fcQuestionCatalog
 	 * @return
 	 */
-	@RequestMapping("/mofidyCatalog")
-	public Result mofidyCatalog(FcQuestionCatalog fcQuestionCatalog) {
+	@RequestMapping("/modifyCatalog")
+	public Result modifyCatalog(FcQuestionCatalog fcQuestionCatalog) {
 		return fcQuestionCatalogService.setQuestionCatalog(fcQuestionCatalog);
 	}
 	
 	/**
-	 * 显示所有书籍分类
+	 * 显示所有试题分类
 	 * @return
 	 */
 	@RequestMapping("/queryAll")
@@ -53,7 +53,7 @@ public class FcQuestionCatalogController {
 	}
 	
 	/**
-	 * 删除书籍分类
+	 * 删除试题分类
 	 * @return
 	 */
 	@RequestMapping("/removeCatalog")
