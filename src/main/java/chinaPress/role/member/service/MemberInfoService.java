@@ -450,7 +450,7 @@ public class MemberInfoService {
 					Integer type = p.getType();
 					String phone = p.getTellPhone();
 					//注册信息为从业者,身份证号不为null的信息身份为从业者和手机号码为null   满足修改条件
-					if((practitionerInfo.getType()!=null && practitionerInfo.getType()==2) && type==2 && (phone.length()==0 || phone.equals(""))) {
+					if((practitionerInfo.getType()!=null && practitionerInfo.getType()==2) && type==2 && StringUtils.isAllBlank(phone)) {
 						//为从业者时执行更新操作
 						practitionerInfo.setId(p.getId());
 						//角色id和角色类型查询档案表id
