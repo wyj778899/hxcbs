@@ -261,4 +261,14 @@
 			and c.pay_status = 2
 			and a.hour_id = #{hourId}
 	</select>
+	
+	<!-- 根据订单id查询 -->
+	<select id="selectByOrderId" resultMap="BaseResultMap">
+		select
+			*
+		from
+			fc_order_person
+		where
+			order_id = #{orderId}
+	</select>
 </mapper>
