@@ -107,44 +107,55 @@ public interface FcOrderMapper {
 	 */
 	FcOrder selectCourseIsLearning(@Param("roleId") Integer roleId, @Param("roleType") Integer roleType,
 			@Param("courseId") Integer courseId);
-	
-	
-	
+
 	/**
-	 * 查询订单发票信息
-	 * record   订单对象
+	 * 查询订单发票信息 record 订单对象
+	 * 
 	 * @return
 	 */
 	List<OrderInvoiceInfo> selectInvoiceInfo(FcOrder record);
-	
-	
+
 	/**
-	 * 查询订单发票信息个数
-	 * record   订单对象
+	 * 查询订单发票信息个数 record 订单对象
+	 * 
 	 * @return
 	 */
 	int selectInvoiceInfoCount(FcOrder record);
-	
+
 	/**
-	 * 根据发票类型查询用户的发票信息   家长/从业者，培训机构
+	 * 根据发票类型查询用户的发票信息 家长/从业者，培训机构
+	 * 
 	 * @param type
 	 * @return
 	 */
-	List<UserInvoiceInfo> selectUserInvoices(@Param("type")Integer type,@Param("page")Integer page,@Param("limit")Integer limit);
-	
+	List<UserInvoiceInfo> selectUserInvoices(@Param("type") Integer type, @Param("page") Integer page,
+			@Param("limit") Integer limit);
+
 	/**
-	 * 根据发票类型查询用户的发票信息个数   家长/从业者，培训机构
+	 * 根据发票类型查询用户的发票信息个数 家长/从业者，培训机构
+	 * 
 	 * @param type
 	 * @return
 	 */
-	int selectUserInvoicesCount(@Param("type")Integer type);
-	
-	
+	int selectUserInvoicesCount(@Param("type") Integer type);
+
 	/**
-	 * 发票详情信息   终端和管理端公用
+	 * 发票详情信息 终端和管理端公用
+	 * 
 	 * @param id
 	 * @return
 	 */
-	OrderInvoiceInfo selectInvoicePage(@Param("id")Integer id);
-		
+	OrderInvoiceInfo selectInvoicePage(@Param("id") Integer id);
+
+	/**
+	 * 查询某个角色针对某个课程已支付的订单
+	 * 
+	 * @author maguoliang
+	 * @param roleId   角色id
+	 * @param roleType 角色类型（1.家长2.从业者）
+	 * @param courseId 课程id
+	 * @return
+	 */
+	FcOrder selectIsExceptionOrder(@Param("roleId") Integer roleId, @Param("roleType") Integer roleType,
+			@Param("courseId") Integer courseId);
 }

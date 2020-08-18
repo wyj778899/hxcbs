@@ -71,4 +71,12 @@ public interface FcOrderPersonMapper {
 	 * @return
 	 */
 	FcOrderPersonHour findPersonHour(Integer roleId, Integer roleType, Integer courseId, Integer hourId);
+	
+	/**
+	 * 根据订单id查询
+	 * @author maguoliang
+	 * @param orderId
+	 * @return
+	 */
+	FcOrderPerson selectByOrderId(Integer orderId);
 }

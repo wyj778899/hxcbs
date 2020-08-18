@@ -61,7 +61,7 @@ public class FcOrder {
 	private Integer couponId;
 
 	/**
-	 * 支付状态（1.未支付2.已支付）
+	 * 支付状态（1.未支付2.已支付3.已关闭4.异常订单）
 	 */
 	private Integer payStatus;
 
@@ -447,7 +447,7 @@ public class FcOrder {
 	}
 
 	/**
-	 * 支付状态（1.未支付2.已支付）
+	 * 支付状态（1.未支付2.已支付3.已关闭4.异常订单）
 	 * 
 	 * @return payStatus
 	 */
@@ -456,7 +456,7 @@ public class FcOrder {
 	}
 
 	/**
-	 * 支付状态（1.未支付2.已支付）
+	 * 支付状态（1.未支付2.已支付3.已关闭4.异常订单）
 	 * 
 	 * @param payStatus
 	 */

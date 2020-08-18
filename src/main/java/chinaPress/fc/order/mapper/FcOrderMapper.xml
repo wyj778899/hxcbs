@@ -769,36 +769,52 @@
 	
 	<!-- 发票详情信息  终端和管理端公用-->
 	<select id="selectInvoicePage" resultType="chinaPress.fc.order.vo.OrderInvoiceInfo">
-	SELECT
-		a.id,
-		a.date,
-		a. CODE,
-		b. NAME,
-		a.pay_amount as payAmount,
-		(
-			CASE
-			WHEN a.invoice_type = 2 THEN
-			'个人'
-			WHEN a.invoice_type = 3 THEN
-			'公司'
-			ELSE
-			''
-			END
-		) invoiceType,
-		a.invoice_title as invoiceTitle,
-		a.invoice_number as invoiceNumber,
-		a.bank_deposit as bankDeposit,
-		a.bank_number as bankNumber,
-		a.remarks,
-		a.email
-	FROM
-	fc_order a
-	LEFT JOIN fc_course_archives b ON a.course_id = b.id
-	WHERE
-		a.pay_status = 2
-		AND (a.invoice_type = 2 OR a.invoice_type = 3)
-		<if test="id != null">
-			AND a.id = #{id}
-	    </if>
+		SELECT
+			a.id,
+			a.date,
+			a. CODE,
+			b. NAME,
+			a.pay_amount as payAmount,
+			(
+				CASE
+				WHEN a.invoice_type = 2 THEN
+				'个人'
+				WHEN a.invoice_type = 3 THEN
+				'公司'
+				ELSE
+				''
+				END
+			) invoiceType,
+			a.invoice_title as invoiceTitle,
+			a.invoice_number as invoiceNumber,
+			a.bank_deposit as bankDeposit,
+			a.bank_number as bankNumber,
+			a.remarks,
+			a.email
+		FROM
+		fc_order a
+		LEFT JOIN fc_course_archives b ON a.course_id = b.id
+		WHERE
+			a.pay_status = 2
+			AND (a.invoice_type = 2 OR a.invoice_type = 3)
+			<if test="id != null">
+				AND a.id = #{id}
+		    </if>
+	</select>
+	
+	<!-- 查询订单是否为异常数据 -->
+	<select id="selectIsExceptionOrder" resultMap="BaseResultMap">
+		SELECT
+			a.*
+		FROM 
+			fc_order a
+		INNER JOIN fc_order_person b ON b.order_id = a.id
+		INNER JOIN fc_course_archives c ON c.id = a.course_id
+		WHERE
+			b.is_individual = 1
+			AND a.pay_status = 2
+			AND b.role_id = #{roleId}
+			AND b.role_type = #{roleType}
+			AND a.course_id = #{courseId}
 	</select>
 </mapper>
