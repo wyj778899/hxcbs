@@ -54,17 +54,10 @@ public class FcCourseHourService {
 			Integer roleType, Integer type) {
 		Result result = new Result();
 		// 判断此课程关联的订单是否为异常订单
-		int orderRoleType = 0;
-		if (roleType.intValue() == 1) {
-			orderRoleType = 2;
-		}
-		if (roleType.intValue() == 2) {
-			orderRoleType = 3;
-		}
-		FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(personId, orderRoleType, courseId);
-		// 说明没有购买过此课程的订单
+		FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(personId, roleType, courseId);
+		// 说明没有购买过此课程的订单	
 		if (exceptionFcOrder == null) {
-			return ResultUtil.custom(7, "请去购买课程");
+			return ResultUtil.custom(7, "此课程关联的订单为异常订单，无法观看，请联系客服");
 		} else {
 			// 如果支付方式为空
 			if (StringUtils.isBlank(exceptionFcOrder.getPaymentMode())) {
@@ -78,7 +71,7 @@ public class FcCourseHourService {
 						fo.setId(exceptionFcOrder.getId());
 						fo.setPayStatus(4);
 						fcOrderMapper.updateByPrimaryKeySelective(fo);
-						return ResultUtil.custom(8, "此课程关联的订单为异常订单，请联系客服");
+						return ResultUtil.custom(8, "此课程关联的订单为异常订单，无法观看，请联系客服");
 					}
 				}
 			}

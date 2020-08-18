@@ -152,7 +152,7 @@ public interface FcOrderMapper {
 	 * 
 	 * @author maguoliang
 	 * @param roleId   角色id
-	 * @param roleType 角色类型1.机构2.家长3.从业者
+	 * @param roleType 角色类型（1.家长2.从业者）
 	 * @param courseId 课程id
 	 * @return
 	 */
