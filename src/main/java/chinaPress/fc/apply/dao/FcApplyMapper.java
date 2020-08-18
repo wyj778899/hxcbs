@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.apply.vo.OrderVo;
 import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
@@ -62,5 +63,15 @@ public interface FcApplyMapper {
 	 * @return
 	 */
 	FcApply selectIsSecondApply(@Param("courseId") Integer courseId, @Param("roleType") Integer roleType,
-			@Param("id") Integer roleId);
+			@Param("roleId") Integer roleId);
+	
+	
+	/**
+	 * 通过课程id,角色id，角色类型查询用户的订单状态和订单创建时间                   判断机构是不是给这个用户二次报名
+	 * @param courseId
+	 * @param roleType   1.家长2.从业者
+	 * @param roleId
+	 * @return
+	 */
+	OrderVo selectApplyOrder(@Param("courseId") Integer courseId, @Param("roleType") Integer roleType,@Param("roleId") Integer roleId);
 }

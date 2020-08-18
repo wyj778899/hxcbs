@@ -276,4 +276,22 @@
 			and b.role_type = #{roleType}
 			and b.role_id = #{roleId}
 	</select>
+	
+	<!-- 查询机构是不是给这个用户第二次报名    时间倒叙，只差最后一条记录 -->
+	<select id="selectApplyOrder" resultType="chinaPress.fc.apply.vo.OrderVo">
+		select
+			c.pay_status as payStatus,
+			c.create_time as createTime
+		from
+			fc_apply a
+			inner join fc_apply_person b on a.id = b.apply_id
+			inner join fc_order c on a.id = c.apply_id
+		where
+			a.course_id = #{courseId}
+			and a.apply_type in (2, 3)
+			and b.role_type = #{roleType}
+			and b.role_id = #{roleId}
+		order by c.create_time desc 
+		limit 1
+	</select>
 </mapper>

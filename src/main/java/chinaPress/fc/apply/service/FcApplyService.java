@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.sms.service.SMSService;
+import chinaPress.common.util.DateUtil;
 import chinaPress.common.util.JacksonUtil;
 import chinaPress.common.util.Md5Util;
 import chinaPress.common.util.ResultUtil;
@@ -22,6 +24,7 @@ import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
 import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.apply.vo.FcApplyPersonParam;
+import chinaPress.fc.apply.vo.OrderVo;
 import chinaPress.fc.apply.vo.TerminalApplyListParam;
 import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
@@ -89,6 +92,7 @@ public class FcApplyService {
 	@Transactional
 	public Result insert(FcApply record, String personJson)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
 		Map<String, Object> resultMap = new HashMap<>();
 		List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
 		//手机号排重
@@ -103,15 +107,57 @@ public class FcApplyService {
 			resultMap.put("error","报名信息身份证号重复");
 			return ResultUtil.error(resultMap);
 		}
-		//先校验机构的身份证号存在直接返回,如果用户数据重复直接返回
-		for(FcApplyPersonParam f : personList) {
-			String certificateNumber = f.getCertificateNumber();
-			//机构报名校验身份证号,个人报名不校验
-			if(record.getApplyType().intValue() == 1) {
-				//判断机构和家长/从业者身份证号是否存在存在直接返回   
-				if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null || practitionerInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
-					resultMap.put("error",certificateNumber+":身份证号已存在");
+		//机构报名校验身份证号,个人报名不校验
+		if(record.getApplyType().intValue() == 1) {
+			for(FcApplyPersonParam f : personList) {
+				String certificateNumber = f.getCertificateNumber();
+				//判断机构是否存在，存在直接返回   
+				if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
+					resultMap.put("error",certificateNumber+":身份证号已被机构注册");
 					return ResultUtil.error(resultMap);
+				}
+				int count = 0;
+				//手机号查询
+				MemberInfo param = new MemberInfo();
+				param.setTellPhone(f.getTellPhone());
+				MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
+				count++;
+				//用户名查询
+				if(m==null) {
+					MemberInfo param1 = new MemberInfo();
+					param1.setUserName(f.getTellPhone());
+					m = memberInfoMapper.selectByPrimaryKey(param1);
+					count++;
+				}
+				//身份证号查询
+				if(m==null) {
+					PractitionerInfo pra = practitionerInfoMapper.selectByIdCert(f.getCertificateNumber(), null);
+					if(pra!=null) {
+						m = new MemberInfo();
+						m.setRoleId(pra.getId());
+						m.setRoleType(pra.getType() == 1 ? 3: pra.getType() == 2 ? 4 :null);
+						count++;
+					}
+				}
+				if(m!=null) {
+					//校验机构报名的用户是否已经申请报名并且订单状态还存在     这样的用户不允许二次报名
+					OrderVo orderVo = fcApplyMapper.selectApplyOrder(record.getCourseId(), m.getRoleType()==3?1:m.getRoleType()==4?2:null,m.getRoleId());
+					if(orderVo!=null) {
+					Date d = new Date();
+					System.out.println(DateUtil.getLongOfTwoDate(orderVo.getCreateTime(),d));
+					//订单的开始时间到现在是否为两天            或者                订单的状态为已支付       未支付的情况不准确
+					if((orderVo.getPayStatus()!=null && orderVo.getPayStatus().intValue()==2) || (orderVo.getCreateTime()!=null && DateUtil.getLongOfTwoDate(orderVo.getCreateTime(),d)>1)){
+						if(count == 1) {
+							resultMap.put("error",f.getTellPhone()+":此用户已报名该课程,并且已生成订单");
+						}else if (count == 2){
+							resultMap.put("error",f.getUserName()+":此用户已报名该课程,并且已生成订单");
+						}else if(count == 3) {
+							resultMap.put("error",f.getCertificateNumber()+":此用户已报名该课程,并且已生成订单");
+						}
+						
+						return ResultUtil.error(resultMap);
+					}
+					}
 				}
 			}
 		}
@@ -124,6 +170,7 @@ public class FcApplyService {
 					if (item.getSex() == null) {
 						item.setSex(1);
 					}
+					//判断手机号是否存在
 					MemberInfo memberParam = new MemberInfo();
 					memberParam.setTellPhone(item.getTellPhone());
 					MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
@@ -132,6 +179,51 @@ public class FcApplyService {
 						MemberInfo nameParam = new MemberInfo();
 						nameParam.setUserName(item.getTellPhone());
 						memberInfo = memberInfoMapper.selectByPrimaryKey(nameParam);
+					}
+					if(memberInfo==null) {
+						//用户查询为null走身份证号查询
+						PractitionerInfo p = practitionerInfoMapper.selectByIdCert(item.getCertificateNumber(), null);
+						if(p!=null) {
+							//用户角色id和角色类型查询员工表的id
+							Integer mId = memberInfoMapper.selectByRoleIdAndType(p.getId(), p.getType() == 1 ? 3: p.getType() == 2 ? 4 :null);
+							memberInfo = new MemberInfo();
+							memberInfo.setRoleId(p.getId());//赋值角色id
+							memberInfo.setRoleType(p.getType() == 1 ? 3: p.getType() == 2 ? 4 :null);//赋值角色类型
+							//身份证号匹配成功并且手机号为null并且查询出来的用户角色为从业者                   此处是教师数据缺失的用户信息进行更新，别的数据不操作
+							System.out.println(StringUtils.isBlank(p.getTellPhone()));
+							System.out.println(p.getType()!=null && p.getType().intValue()==2);
+							if(StringUtils.isBlank(p.getTellPhone())&&(p.getType()!=null && p.getType().intValue()==2)){
+								// 修改员工
+								MemberInfo updMember = new MemberInfo();
+								updMember.setId(mId);
+								updMember.setName(item.getName());
+								updMember.setSex(item.getSex());
+								updMember.setUserName(item.getTellPhone());
+								updMember.setTellPhone(item.getTellPhone());
+								updMember.setPassword(Md5Util.getEncryptedPwd("12345678"));//赋初始密码
+								memberInfoMapper.updateByPrimaryKeySelective(updMember);
+
+								// 修改家长/从业者
+								PractitionerInfo updPractitioner = new PractitionerInfo();
+								updPractitioner.setPassword(Md5Util.getEncryptedPwd("12345678"));//赋初始密码
+								updPractitioner.setId(memberInfo.getRoleId());
+								updPractitioner.setUserName(item.getTellPhone());
+								updPractitioner.setTellPhone(item.getTellPhone());
+								updPractitioner.setName(item.getName());
+								updPractitioner.setSex(item.getSex());
+								updPractitioner.setCertificateNumber(item.getCertificateNumber());
+								updPractitioner.setPost(item.getPost());
+								updPractitioner.setWorkYear(item.getWorkYear());
+								updPractitioner.setCensusAddress(item.getCensusAddress());
+								updPractitioner.setInstitutionName(item.getInstitutionName());
+								updPractitioner.setInstitutionAddress(item.getInstitutionAddress());
+								updPractitioner.setEducation(item.getEducation());
+								updPractitioner.setEthnic(item.getEthnic());
+								updPractitioner.setNativePlace(item.getNativePlace());
+								updPractitioner.setMailingAddress(item.getMailingAddress());
+								practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
+							}
+						}
 					}
 					if (memberInfo != null) {
 						if (memberInfo.getRoleType().intValue() != 3 && memberInfo.getRoleType().intValue() != 4) {
