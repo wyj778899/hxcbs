@@ -1,14 +1,17 @@
 package chinaPress.fc.apply.service;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import chinaPress.common.result.model.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.JacksonUtil;
@@ -24,6 +27,7 @@ import chinaPress.fc.apply.vo.TerminalApplyListVo;
 import chinaPress.fc.apply.vo.TerminalInstitutionApplyDetailVo;
 import chinaPress.fc.apply.vo.TerminalPractitionerApplyDetailVo;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
+import chinaPress.fc.course.model.FcCourseArchives;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonHourMapper;
@@ -312,10 +316,16 @@ public class FcApplyService {
 				insOrder.setCourseId(applyModel.getCourseId());
 				insOrder.setPayStatus(1);
 				insOrder.setCreateId(auditPeople);
+				insOrder.setApplyId(id);
+				// 订单金额和支付金额
+				List<FcApplyPerson> personList = fcApplyPersonMapper.findByApplyId(id);
+				FcCourseArchives fcCourseArchives = fcCourseArchivesMapper.selectByPrimaryKey(applyModel.getCourseId());
+				BigDecimal orderMoney = fcCourseArchives.getCoursePrice().multiply(BigDecimal.valueOf(personList.size()));
+				insOrder.setOrderAmount(orderMoney);
+				insOrder.setPayAmount(orderMoney);
 				int insOrderIndex = fcOrderMapper.insertSelective(insOrder);
 				if (insOrderIndex > 0) {
 					int totalCount = fcCourseHourMapper.selectCourseHourCountByCOurseId(applyModel.getCourseId());
-					List<FcApplyPerson> personList = fcApplyPersonMapper.findByApplyId(id);
 					for (FcApplyPerson item : personList) {
 						FcOrderPerson person = new FcOrderPerson();
 						person.setOrderId(insOrder.getId());
