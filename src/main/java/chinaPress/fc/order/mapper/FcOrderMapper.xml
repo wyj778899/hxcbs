@@ -567,7 +567,8 @@
 			a.bank_deposit AS bankDeposit,
 			a.bank_number AS bankNumber,
 			a.remarks AS remarks,
-			a.email AS email
+			a.email AS email,
+			a.apply_id applyId
 		FROM
 			fc_order a
 		INNER JOIN fc_course_archives b ON b.id = a.course_id

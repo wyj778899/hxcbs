@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
 import chinaPress.common.util.ResultUtil;
+import chinaPress.fc.apply.dao.FcApplyPersonMapper;
+import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.book.dao.FcBookArchivesMapper;
 import chinaPress.fc.book.model.FcBookArchives;
 import chinaPress.fc.coupon.dao.FcDiscountCouponMapper;
@@ -68,6 +70,8 @@ public class FcOrderService {
 	private FcBookArchivesMapper fcBookArchivesMapper;
 	@Autowired
 	private FcDiscountCouponMapper fcDiscountCouponMapper;
+	@Autowired
+	private FcApplyPersonMapper fcApplyPersonMapper;
 	
 	
 
@@ -575,6 +579,8 @@ public class FcOrderService {
 		if (detail != null) {
 			detail.setBookIds(fcOrderBookMapper.findBookIds(id));
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+			List<FcApplyPerson> list = fcApplyPersonMapper.findByApplyId(detail.getApplyId());
+			detail.setApplyCount(list.size());
 		}
 		return detail;
 	}
