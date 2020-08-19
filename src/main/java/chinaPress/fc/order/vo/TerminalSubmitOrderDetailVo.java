@@ -114,26 +114,36 @@ public class TerminalSubmitOrderDetailVo {
 	 * 收获电话
 	 */
 	private String consigneePhone;
-	
+
 	/**
 	 * 开户银行
 	 */
 	private String bankDeposit;
-	
+
 	/**
 	 * 银行账号
 	 */
 	private String bankNumber;
-	
+
 	/**
 	 * 备注说明
 	 */
 	private String remarks;
-	
+
 	/**
 	 * 邮箱
 	 */
 	private String email;
+
+	/**
+	 * 申请id
+	 */
+	private Integer applyId;
+
+	/**
+	 * 申请人数
+	 */
+	private Integer applyCount;
 
 	/**
 	 * 书籍id集合
@@ -355,6 +365,33 @@ public class TerminalSubmitOrderDetailVo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
+	/**
+	 * 获取：applyId
+	 */
+	public Integer getApplyId() {
+		return applyId;
+	}
+
+	/**
+	 * 设置：applyId
+	 */
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
+	}
+
+	/**
+	 * 获取：applyCount
+	 */
+	public Integer getApplyCount() {
+		return applyCount;
+	}
+
+	/**
+	 * 设置：applyCount
+	 */
+	public void setApplyCount(Integer applyCount) {
+		this.applyCount = applyCount;
+	}
+
 }
