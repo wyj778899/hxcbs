@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="chinaPress.exam.exam_signup.dao.FcExamSignupMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.exam.exam_signup.model.FcExamSignup">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="signup_name" jdbcType="VARCHAR"
+			property="signupName" />
+		<result column="signup_count" jdbcType="INTEGER"
+			property="signupCount" />
+		<result column="course_id" jdbcType="INTEGER"
+			property="courseId" />
+		<result column="cert_id" jdbcType="INTEGER" property="certId" />
+		<result column="exam_form" jdbcType="INTEGER"
+			property="examForm" />
+		<result column="again_type" jdbcType="INTEGER"
+			property="againType" />
+		<result column="again_price" jdbcType="DECIMAL"
+			property="againPrice" />
+		<result column="banner_photo" jdbcType="VARCHAR"
+			property="bannerPhoto" />
+		<result column="is_putaway" jdbcType="INTEGER"
+			property="isPutaway" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, signup_name, signup_count, course_id, cert_id, exam_form, again_type,
+		again_price,
+		banner_photo, is_putaway, remarks, create_id, create_time, update_id, update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_exam_signup
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_exam_signup
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignup">
+		insert into fc_exam_signup (id, signup_name, signup_count,
+		course_id, cert_id, exam_form,
+		again_type, again_price, banner_photo,
+		is_putaway, remarks, create_id,
+		create_time, update_id, update_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{signupName,jdbcType=VARCHAR},
+		#{signupCount,jdbcType=INTEGER},
+		#{courseId,jdbcType=INTEGER}, #{certId,jdbcType=INTEGER}, #{examForm,jdbcType=INTEGER},
+		#{againType,jdbcType=INTEGER}, #{againPrice,jdbcType=DECIMAL},
+		#{bannerPhoto,jdbcType=VARCHAR},
+		#{isPutaway,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignup"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_exam_signup
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="signupName != null">
+				signup_name,
+			</if>
+			<if test="signupCount != null">
+				signup_count,
+			</if>
+			<if test="courseId != null">
+				course_id,
+			</if>
+			<if test="certId != null">
+				cert_id,
+			</if>
+			<if test="examForm != null">
+				exam_form,
+			</if>
+			<if test="againType != null">
+				again_type,
+			</if>
+			<if test="againPrice != null">
+				again_price,
+			</if>
+			<if test="bannerPhoto != null">
+				banner_photo,
+			</if>
+			<if test="isPutaway != null">
+				is_putaway,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="signupName != null">
+				#{signupName,jdbcType=VARCHAR},
+			</if>
+			<if test="signupCount != null">
+				#{signupCount,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="certId != null">
+				#{certId,jdbcType=INTEGER},
+			</if>
+			<if test="examForm != null">
+				#{examForm,jdbcType=INTEGER},
+			</if>
+			<if test="againType != null">
+				#{againType,jdbcType=INTEGER},
+			</if>
+			<if test="againPrice != null">
+				#{againPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="bannerPhoto != null">
+				#{bannerPhoto,jdbcType=VARCHAR},
+			</if>
+			<if test="isPutaway != null">
+				#{isPutaway,jdbcType=INTEGER},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignup">
+		update fc_exam_signup
+		<set>
+			<if test="signupName != null">
+				signup_name = #{signupName,jdbcType=VARCHAR},
+			</if>
+			<if test="signupCount != null">
+				signup_count = #{signupCount,jdbcType=INTEGER},
+			</if>
+			<if test="courseId != null">
+				course_id = #{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="certId != null">
+				cert_id = #{certId,jdbcType=INTEGER},
+			</if>
+			<if test="examForm != null">
+				exam_form = #{examForm,jdbcType=INTEGER},
+			</if>
+			<if test="againType != null">
+				again_type = #{againType,jdbcType=INTEGER},
+			</if>
+			<if test="againPrice != null">
+				again_price = #{againPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="bannerPhoto != null">
+				banner_photo = #{bannerPhoto,jdbcType=VARCHAR},
+			</if>
+			<if test="isPutaway != null">
+				is_putaway = #{isPutaway,jdbcType=INTEGER},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignup">
+		update fc_exam_signup
+		set signup_name = #{signupName,jdbcType=VARCHAR},
+		signup_count = #{signupCount,jdbcType=INTEGER},
+		course_id = #{courseId,jdbcType=INTEGER},
+		cert_id = #{certId,jdbcType=INTEGER},
+		exam_form = #{examForm,jdbcType=INTEGER},
+		again_type = #{againType,jdbcType=INTEGER},
+		again_price = #{againPrice,jdbcType=DECIMAL},
+		banner_photo = #{bannerPhoto,jdbcType=VARCHAR},
+		is_putaway = #{isPutaway,jdbcType=INTEGER},
+		remarks = #{remarks,jdbcType=VARCHAR},
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_id = #{updateId,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询考试报名列表个数 -->
+	<select id="selectExamSignupCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup
+		where
+			1 = 1
+			<if test="signupName != null and signupName != ''">
+				and signup_name like concat('%', #{signupName}, '%')
+			</if>
+			<if test="examForm != null">
+				and exam_form = #{examForm}
+			</if>
+			<if test="isPutaway != null">
+				and is_putaway = #{isPutaway}
+			</if>
+	</select>
+	
+	<!-- 查询考试报名列表-->
+	<select id="selectExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupListVo">
+		select
+			id, signup_name signupName, signup_count signupCount, exam_form examForm, is_putaway isPutaway
+		from
+			fc_exam_signup
+		where
+			1 = 1
+			<if test="signupName != null and signupName != ''">
+				and signup_name like concat('%', #{signupName}, '%')
+			</if>
+			<if test="examForm != null">
+				and exam_form = #{examForm}
+			</if>
+			<if test="isPutaway != null">
+				and is_putaway = #{isPutaway}
+			</if>
+		limit
+			#{offset}, #{rows}
+	</select>
+	
+	<!-- 查询已上架的考试报名 -->
+	<select id="selectPutawayExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo">
+		select
+			id, banner_photo banner, signup_name name, 
+			case exam_form when 1 then '现场' when 0 then '非现场' end form, signup_count count
+		from
+			fc_exam_signup
+		where
+			is_putaway = 1
+	</select>
+	
+	<resultMap type="chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo" id="putawayExamSignupDetailResultMap">
+		<id column="id" property="id" />
+		<result column="banner_photo" property="banner" />
+		<result column="signup_name" property="name" />
+		<result column="form" property="form" />
+		<result column="signup_count" property="count" />
+		<result column="remarks" property="remarks" />
+		<collection property="areaList" ofType="chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailAreaVo">
+			<id column="area_id" property="id" />
+			<result column="area_count" property="count" />
+			<result column="area_address" property="address" />
+			<result column="area_time" property="time" />
+			<result column="area_is_putaway" property="isPutaway" />
+		</collection>
+	</resultMap>
+	
+	<!-- 查询已上架的考试报名详情 -->
+	<select id="selectPutawayExamSignupDetail" resultMap="putawayExamSignupDetailResultMap">
+		select
+			a.id, a.banner_photo, a.signup_name, a.remarks,
+			case a.exam_form when 1 then '现场' when 0 then '非现场' end form, b.max_count signup_count,
+			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ', b.address) area_address,
+			concat(a.start_time, a.end_time) area_time, b.is_putaway area_is_putaway
+		from
+			fc_exam_signup a
+			inner join fc_exam_signup_area b on a.id = b.signup_id
+			left join fc_province_city_district c on c.code = b.province
+			left join fc_province_city_district d on d.code = b.city
+			left join fc_province_city_district e on e.code = b.area
+		where
+			a.id = #{signupId}
+	</select>
+</mapper>

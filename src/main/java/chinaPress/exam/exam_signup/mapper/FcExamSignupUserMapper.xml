@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.exam.exam_signup.model.FcExamSignupUser">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="signup_id" jdbcType="INTEGER"
+			property="signupId" />
+		<result column="user_head" jdbcType="VARCHAR"
+			property="userHead" />
+		<result column="user_name" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="education" jdbcType="VARCHAR"
+			property="education" />
+		<result column="tell_phone" jdbcType="VARCHAR"
+			property="tellPhone" />
+		<result column="certificate_number" jdbcType="VARCHAR"
+			property="certificateNumber" />
+		<result column="certificate_front" jdbcType="VARCHAR"
+			property="certificateFront" />
+		<result column="certificate_behind" jdbcType="VARCHAR"
+			property="certificateBehind" />
+		<result column="hand_certificate" jdbcType="VARCHAR"
+			property="handCertificate" />
+		<result column="province" jdbcType="VARCHAR"
+			property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="area" jdbcType="VARCHAR" property="area" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="post" jdbcType="VARCHAR" property="post" />
+		<result column="institution_name" jdbcType="VARCHAR"
+			property="institutionName" />
+		<result column="examine_type" jdbcType="INTEGER"
+			property="examineType" />
+		<result column="area_id" jdbcType="INTEGER" property="areaId" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="role_id" jdbcType="INTEGER" property="roleId" />
+		<result column="role_type" jdbcType="INTEGER"
+			property="roleType" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, signup_id, user_head, user_name, education, tell_phone,
+		certificate_number, certificate_front,
+		certificate_behind, hand_certificate, province, city, area, address, post,
+		institution_name,
+		examine_type, area_id, remarks, role_id, role_type, create_id, create_time,
+		update_id,
+		update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_exam_signup_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_exam_signup_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignupUser">
+		insert into fc_exam_signup_user (id, signup_id, user_head,
+		user_name, education, tell_phone,
+		certificate_number, certificate_front, certificate_behind,
+		hand_certificate, province, city,
+		area, address, post,
+		institution_name, examine_type, area_id,
+		remarks, role_id, role_type,
+		create_id, create_time, update_id,
+		update_time)
+		values (#{id,jdbcType=INTEGER}, #{signupId,jdbcType=INTEGER},
+		#{userHead,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{tellPhone,jdbcType=VARCHAR},
+		#{certificateNumber,jdbcType=VARCHAR},
+		#{certificateFront,jdbcType=VARCHAR},
+		#{certificateBehind,jdbcType=VARCHAR},
+		#{handCertificate,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{post,jdbcType=VARCHAR},
+		#{institutionName,jdbcType=VARCHAR}, #{examineType,jdbcType=INTEGER},
+		#{areaId,jdbcType=INTEGER},
+		#{remarks,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{roleType,jdbcType=INTEGER},
+		#{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateId,jdbcType=INTEGER},
+		#{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignupUser"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into fc_exam_signup_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="signupId != null">
+				signup_id,
+			</if>
+			<if test="userHead != null">
+				user_head,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="education != null">
+				education,
+			</if>
+			<if test="tellPhone != null">
+				tell_phone,
+			</if>
+			<if test="certificateNumber != null">
+				certificate_number,
+			</if>
+			<if test="certificateFront != null">
+				certificate_front,
+			</if>
+			<if test="certificateBehind != null">
+				certificate_behind,
+			</if>
+			<if test="handCertificate != null">
+				hand_certificate,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="post != null">
+				post,
+			</if>
+			<if test="institutionName != null">
+				institution_name,
+			</if>
+			<if test="examineType != null">
+				examine_type,
+			</if>
+			<if test="areaId != null">
+				area_id,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="roleType != null">
+				role_type,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="signupId != null">
+				#{signupId,jdbcType=INTEGER},
+			</if>
+			<if test="userHead != null">
+				#{userHead,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="education != null">
+				#{education,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				#{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateNumber != null">
+				#{certificateNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateFront != null">
+				#{certificateFront,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateBehind != null">
+				#{certificateBehind,jdbcType=VARCHAR},
+			</if>
+			<if test="handCertificate != null">
+				#{handCertificate,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null">
+				#{post,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionName != null">
+				#{institutionName,jdbcType=VARCHAR},
+			</if>
+			<if test="examineType != null">
+				#{examineType,jdbcType=INTEGER},
+			</if>
+			<if test="areaId != null">
+				#{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="roleId != null">
+				#{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignupUser">
+		update fc_exam_signup_user
+		<set>
+			<if test="signupId != null">
+				signup_id = #{signupId,jdbcType=INTEGER},
+			</if>
+			<if test="userHead != null">
+				user_head = #{userHead,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="education != null">
+				education = #{education,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				tell_phone = #{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateNumber != null">
+				certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateFront != null">
+				certificate_front = #{certificateFront,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateBehind != null">
+				certificate_behind = #{certificateBehind,jdbcType=VARCHAR},
+			</if>
+			<if test="handCertificate != null">
+				hand_certificate = #{handCertificate,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null">
+				post = #{post,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionName != null">
+				institution_name = #{institutionName,jdbcType=VARCHAR},
+			</if>
+			<if test="examineType != null">
+				examine_type = #{examineType,jdbcType=INTEGER},
+			</if>
+			<if test="areaId != null">
+				area_id = #{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="roleId != null">
+				role_id = #{roleId,jdbcType=INTEGER},
+			</if>
+			<if test="roleType != null">
+				role_type = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.exam.exam_signup.model.FcExamSignupUser">
+		update fc_exam_signup_user
+		set signup_id = #{signupId,jdbcType=INTEGER},
+		user_head = #{userHead,jdbcType=VARCHAR},
+		user_name = #{userName,jdbcType=VARCHAR},
+		education = #{education,jdbcType=VARCHAR},
+		tell_phone = #{tellPhone,jdbcType=VARCHAR},
+		certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+		certificate_front = #{certificateFront,jdbcType=VARCHAR},
+		certificate_behind = #{certificateBehind,jdbcType=VARCHAR},
+		hand_certificate = #{handCertificate,jdbcType=VARCHAR},
+		province = #{province,jdbcType=VARCHAR},
+		city = #{city,jdbcType=VARCHAR},
+		area = #{area,jdbcType=VARCHAR},
+		address = #{address,jdbcType=VARCHAR},
+		post = #{post,jdbcType=VARCHAR},
+		institution_name = #{institutionName,jdbcType=VARCHAR},
+		examine_type = #{examineType,jdbcType=INTEGER},
+		area_id = #{areaId,jdbcType=INTEGER},
+		remarks = #{remarks,jdbcType=VARCHAR},
+		role_id = #{roleId,jdbcType=INTEGER},
+		role_type = #{roleType,jdbcType=INTEGER},
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_id = #{updateId,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询考试报名下的报名人员信息个数 -->
+	<select id="selectExamSignupUserCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup b on a.signup_id = b.id
+			inner join fc_exam_signup_area c on a.area_id = c.id
+			left join fc_province_city_district d on d.code = c.province
+			left join fc_province_city_district e on e.code = c.city
+			left join fc_province_city_district f on f.code = c.area
+		where
+		 	1 = 1
+		 	and signup_id = #{signupId}
+		 	<if test="signupAreaId != null">
+		 		and a.area_id = #{signupAreaId}
+		 	</if>
+			<if test="userName != null and userName != ''">
+				and b.user_name like concat('%', #{userName} , '%')
+			</if>
+			<if test="tellPhone != null and tellPhone != ''">
+				and a.tell_phone like concat('%', #{tellPhone}, '%')
+			</if>
+			<if test="certificateNumber != null and certificateNumber != ''">
+				and a.certificate_number like concat('%', #{certificateNumber}, '%')
+			</if>
+			<if test="examineType != null">
+				and a.examine_type =  #{examineType}
+			</if>
+	</select>
+	
+	<!-- 查询考试报名下的报名人员信息列表 -->
+	<select id="selectExamSignupUserList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo">
+		select
+			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
+			a.user_head photo, a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber,
+<!-- 			是否补考, 补考次数, -->
+			case a.examine_type when 0 then '未审核' when 1 then '已审核' when 2 '已驳回' else '-'
+			end auditStatusTxt, a.examine_type auditStatus, a.role_id roleId, a.role_type roleType,
+			b.course_id courseId
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup b on a.signup_id = b.id
+			inner join fc_exam_signup_area c on a.area_id = c.id
+			left join fc_province_city_district d on d.code = c.province
+			left join fc_province_city_district e on e.code = c.city
+			left join fc_province_city_district f on f.code = c.area
+		where
+		 	1 = 1
+		 	and signup_id = #{signupId}
+		 	<if test="signupAreaId != null">
+		 		and a.area_id = #{signupAreaId}
+		 	</if>
+			<if test="userName != null and userName != ''">
+				and b.user_name like concat('%', #{userName} , '%')
+			</if>
+			<if test="tellPhone != null and tellPhone != ''">
+				and a.tell_phone like concat('%', #{tellPhone}, '%')
+			</if>
+			<if test="certificateNumber != null and certificateNumber != ''">
+				and a.certificate_number like concat('%', #{certificateNumber}, '%')
+			</if>
+			<if test="examineType != null">
+				and a.examine_type =  #{examineType}
+			</if>
+			limit #{offset}, #{rows}
+	</select>
+	
+	<!-- 根据考试报名id和区域id查询有多少人 -->
+	<select id="selectCountBySignupIdAndAreaId" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup_user
+		where
+			signup_id = #{signupId}
+			and area_id = #{areaId}
+	</select>
+</mapper>
