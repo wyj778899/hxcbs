@@ -4,256 +4,317 @@ import java.util.Date;
 
 /**
  * fc_comment
+ * 
  * @author Administrator
  * @date 2020-07-15 09:57:53
  */
 public class FcCommentInfo {
-    /**
-     */
-    private Integer id;
+	/**
+	 */
+	private Integer id;
 
-    /**
-     * 章节id
-     */
-    private Integer sectionId;
+	/**
+	 * 评论对象1.评论章节2.评论课程3.评论书籍
+	 */
+	private Integer type;
 
-    /**
-     * 1.匿名0.不是匿名
-     */
-    private Integer isAnonymous;
+	/**
+	 * 章节id
+	 */
+	private Integer sectionId;
 
-    /**
-     * 评论内容
-     */
-    private String content;
+	/**
+	 * 1.匿名0.不是匿名
+	 */
+	private Integer isAnonymous;
 
-    /**
-     * 角色id
-     */
-    private Integer roleId;
+	/**
+	 * 评论内容
+	 */
+	private String content;
 
-    /**
-     * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     */
-    private Integer roleType;
+	/**
+	 * 角色id
+	 */
+	private Integer roleId;
 
-    /**
-     * 接收角色id
-     */
-    private Integer receiveId;
+	/**
+	 * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 */
+	private Integer roleType;
 
-    /**
-     * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     */
-    private Integer receiveRoleType;
+	/**
+	 * 接收角色id
+	 */
+	private Integer receiveId;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+	/**
+	 * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 */
+	private Integer receiveRoleType;
 
-    /**
-     * 创建人
-     */
-    private Integer createId;
+	/**
+	 * 审核状态0.未审核1.通过2.驳回
+	 */
+	private Integer status;
 
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
+	/**
+	 * 创建时间
+	 */
+	private Date createTime;
 
-    /**
-     * 修改人
-     */
-    private Integer updateId;
+	/**
+	 * 创建人
+	 */
+	private Integer createId;
 
-    /**
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
+	/**
+	 * 修改时间
+	 */
+	private Date updateTime;
 
-    /**
-     * @param id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	/**
+	 * 修改人
+	 */
+	private Integer updateId;
 
-    /**
-     * 章节id
-     * @return sectionId
-     */
-    public Integer getSectionId() {
-        return sectionId;
-    }
+	/**
+	 * @return id
+	 */
+	public Integer getId() {
+		return id;
+	}
 
-    /**
-     * 章节id
-     * @param sectionId
-     */
-    public void setSectionId(Integer sectionId) {
-        this.sectionId = sectionId;
-    }
+	/**
+	 * @param id
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    /**
-     * 1.匿名0.不是匿名
-     * @return isAnonymous
-     */
-    public Integer getIsAnonymous() {
-        return isAnonymous;
-    }
+	/**
+	 * @return the type
+	 */
+	public Integer getType() {
+		return type;
+	}
 
-    /**
-     * 1.匿名0.不是匿名
-     * @param isAnonymous
-     */
-    public void setIsAnonymous(Integer isAnonymous) {
-        this.isAnonymous = isAnonymous;
-    }
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
-    /**
-     * 评论内容
-     * @return content
-     */
-    public String getContent() {
-        return content;
-    }
+	/**
+	 * 章节id
+	 * 
+	 * @return sectionId
+	 */
+	public Integer getSectionId() {
+		return sectionId;
+	}
 
-    /**
-     * 评论内容
-     * @param content
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
+	/**
+	 * 章节id
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(Integer sectionId) {
+		this.sectionId = sectionId;
+	}
 
-    /**
-     * 角色id
-     * @return roleId
-     */
-    public Integer getRoleId() {
-        return roleId;
-    }
+	/**
+	 * 1.匿名0.不是匿名
+	 * 
+	 * @return isAnonymous
+	 */
+	public Integer getIsAnonymous() {
+		return isAnonymous;
+	}
 
-    /**
-     * 角色id
-     * @param roleId
-     */
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
+	/**
+	 * 1.匿名0.不是匿名
+	 * 
+	 * @param isAnonymous
+	 */
+	public void setIsAnonymous(Integer isAnonymous) {
+		this.isAnonymous = isAnonymous;
+	}
 
-    /**
-     * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     * @return roleType
-     */
-    public Integer getRoleType() {
-        return roleType;
-    }
+	/**
+	 * 评论内容
+	 * 
+	 * @return content
+	 */
+	public String getContent() {
+		return content;
+	}
 
-    /**
-     * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     * @param roleType
-     */
-    public void setRoleType(Integer roleType) {
-        this.roleType = roleType;
-    }
+	/**
+	 * 评论内容
+	 * 
+	 * @param content
+	 */
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    /**
-     * 接收角色id
-     * @return receiveId
-     */
-    public Integer getReceiveId() {
-        return receiveId;
-    }
+	/**
+	 * 角色id
+	 * 
+	 * @return roleId
+	 */
+	public Integer getRoleId() {
+		return roleId;
+	}
 
-    /**
-     * 接收角色id
-     * @param receiveId
-     */
-    public void setReceiveId(Integer receiveId) {
-        this.receiveId = receiveId;
-    }
+	/**
+	 * 角色id
+	 * 
+	 * @param roleId
+	 */
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
 
-    /**
-     * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     * @return receiveRoleType
-     */
-    public Integer getReceiveRoleType() {
-        return receiveRoleType;
-    }
+	/**
+	 * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 * 
+	 * @return roleType
+	 */
+	public Integer getRoleType() {
+		return roleType;
+	}
 
-    /**
-     * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
-     * @param receiveRoleType
-     */
-    public void setReceiveRoleType(Integer receiveRoleType) {
-        this.receiveRoleType = receiveRoleType;
-    }
+	/**
+	 * 角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 * 
+	 * @param roleType
+	 */
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}
 
-    /**
-     * 创建时间
-     * @return createTime
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
+	/**
+	 * 接收角色id
+	 * 
+	 * @return receiveId
+	 */
+	public Integer getReceiveId() {
+		return receiveId;
+	}
 
-    /**
-     * 创建时间
-     * @param createTime
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	/**
+	 * 接收角色id
+	 * 
+	 * @param receiveId
+	 */
+	public void setReceiveId(Integer receiveId) {
+		this.receiveId = receiveId;
+	}
 
-    /**
-     * 创建人
-     * @return createId
-     */
-    public Integer getCreateId() {
-        return createId;
-    }
+	/**
+	 * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 * 
+	 * @return receiveRoleType
+	 */
+	public Integer getReceiveRoleType() {
+		return receiveRoleType;
+	}
 
-    /**
-     * 创建人
-     * @param createId
-     */
-    public void setCreateId(Integer createId) {
-        this.createId = createId;
-    }
+	/**
+	 * 接收角色类型1.员工2.机构3.家长4.从业者5.注册用户
+	 * 
+	 * @param receiveRoleType
+	 */
+	public void setReceiveRoleType(Integer receiveRoleType) {
+		this.receiveRoleType = receiveRoleType;
+	}
 
-    /**
-     * 修改时间
-     * @return updateTime
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
 
-    /**
-     * 修改时间
-     * @param updateTime
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    /**
-     * 修改人
-     * @return updateId
-     */
-    public Integer getUpdateId() {
-        return updateId;
-    }
+	/**
+	 * 创建时间
+	 * 
+	 * @return createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    /**
-     * 修改人
-     * @param updateId
-     */
-    public void setUpdateId(Integer updateId) {
-        this.updateId = updateId;
-    }
+	/**
+	 * 创建时间
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 创建人
+	 * 
+	 * @return createId
+	 */
+	public Integer getCreateId() {
+		return createId;
+	}
+
+	/**
+	 * 创建人
+	 * 
+	 * @param createId
+	 */
+	public void setCreateId(Integer createId) {
+		this.createId = createId;
+	}
+
+	/**
+	 * 修改时间
+	 * 
+	 * @return updateTime
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	/**
+	 * 修改时间
+	 * 
+	 * @param updateTime
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/**
+	 * 修改人
+	 * 
+	 * @return updateId
+	 */
+	public Integer getUpdateId() {
+		return updateId;
+	}
+
+	/**
+	 * 修改人
+	 * 
+	 * @param updateId
+	 */
+	public void setUpdateId(Integer updateId) {
+		this.updateId = updateId;
+	}
 }
