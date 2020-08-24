@@ -13,6 +13,7 @@ import chinaPress.exam.exam_signup.service.FcExamSignupService;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailVo;
 
 @RestController
 @RequestMapping("exam_signup")
@@ -95,6 +96,23 @@ public class FcExamSignupController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResultUtil.custom(0, "操作失败", 0);
+		}
+	}
+
+	/**
+	 * 查询已上架的考试报名详情
+	 * 
+	 * @author maguoliang
+	 * @param signupId
+	 * @return
+	 */
+	@RequestMapping("manage/detail")
+	public Result selectExamSignupDetail(Integer signupId) {
+		FcExamSignupManageDetailVo data = fcExamSignupService.selectExamSignupDetail(signupId);
+		if (data != null) {
+			return ResultUtil.custom(1, "有数据", data);
+		} else {
+			return ResultUtil.custom(0, "无数据", data);
 		}
 	}
 

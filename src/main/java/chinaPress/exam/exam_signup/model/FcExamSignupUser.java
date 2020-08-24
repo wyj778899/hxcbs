@@ -89,7 +89,7 @@ public class FcExamSignupUser {
     private String institutionName;
 
     /**
-     * 审核状态(0未审核,1已审核,2已驳回)
+     * 审核状态(0未审核,1已审核,2已驳回,3已报考)
      */
     private Integer examineType;
 
@@ -390,7 +390,7 @@ public class FcExamSignupUser {
     }
 
     /**
-     * 审核状态(0未审核,1已审核,2已驳回)
+     * 审核状态(0未审核,1已审核,2已驳回,3已报考)
      * @return examineType
      */
     public Integer getExamineType() {
@@ -398,7 +398,7 @@ public class FcExamSignupUser {
     }
 
     /**
-     * 审核状态(0未审核,1已审核,2已驳回)
+     * 审核状态(0未审核,1已审核,2已驳回,3已报考)
      * @param examineType
      */
     public void setExamineType(Integer examineType) {

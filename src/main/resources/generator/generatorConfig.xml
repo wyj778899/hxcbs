@@ -25,13 +25,13 @@
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-        <javaModelGenerator targetPackage="chinaPress.role.praise.model" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="chinaPress.exam.exam.model" targetProject="src/main/java"/>
         <!-- mapper -->
-        <sqlMapGenerator targetPackage="chinaPress.role.praise.mapper" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="chinaPress.exam.exam.mapper" targetProject="src/main/java"/>
         <!-- dao -->
-        <javaClientGenerator targetPackage="chinaPress.role.praise.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="chinaPress.exam.exam.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="fc_comment_praise" domainObjectName="FcCommentPraise" enableCountByExample="false"
+        <table tableName="fc_exam_user" domainObjectName="FcExamUser" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->

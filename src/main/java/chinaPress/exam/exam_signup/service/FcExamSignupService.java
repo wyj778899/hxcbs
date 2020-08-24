@@ -17,6 +17,7 @@ import chinaPress.exam.exam_signup.model.FcExamSignupArea;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailVo;
 
 @Service
 public class FcExamSignupService {
@@ -100,6 +101,16 @@ public class FcExamSignupService {
 				examSignupAreaMapper.insertSelective(fcExamSignupArea);
 			}
 		}
+	}
+
+	/**
+	 * 查询考试报名详情
+	 * 
+	 * @param signupId 考试报名id
+	 * @return
+	 */
+	public FcExamSignupManageDetailVo selectExamSignupDetail(Integer signupId) {
+		return fcExamSignupMapper.selectExamSignupDetail(signupId);
 	}
 
 	/**

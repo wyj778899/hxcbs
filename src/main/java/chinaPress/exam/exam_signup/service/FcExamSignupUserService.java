@@ -134,6 +134,8 @@ public class FcExamSignupUserService {
 				}
 			}
 		}
+		// 再检查上次报名是否已经考试完成
+		
 		// 报名成功后判断是否满足最大人数限制，满足则自动下架
 		fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
 		int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(),
@@ -154,11 +156,15 @@ public class FcExamSignupUserService {
 	 * @author maguoliang
 	 * @param signupUserId 考试报名用户id
 	 * @param status       审核状态1.通过2.拒绝
+	 * @param remarks      驳回原因
 	 * @return
 	 */
-	public int auditFcExamSignupUser(Integer signupUserId, Integer status) {
+	public int auditFcExamSignupUser(Integer signupUserId, Integer status, String remarks) {
 		FcExamSignupUser record = new FcExamSignupUser();
 		record.setExamineType(status);
+		if (status.intValue() == 2) {
+			record.setRemarks(remarks);
+		}
 		return fcExamSignupUserMapper.updateByPrimaryKeySelective(record);
 	}
 }

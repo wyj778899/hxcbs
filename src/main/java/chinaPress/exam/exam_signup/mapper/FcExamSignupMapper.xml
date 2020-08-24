@@ -318,4 +318,48 @@
 		where
 			a.id = #{signupId}
 	</select>
+	
+	<resultMap type="chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailVo" id="examSignupDetailResultMap">
+		<id column="id" property="id" />
+		<result column="signup_name" property="signupName" />
+		<result column="courseId" property="courseId" />
+		<result column="courseName" property="courseName" />
+		<result column="certId" property="certId" />
+		<result column="certName" property="certName" />
+		<result column="exam_form" property="examForm" />
+		<result column="again_type" property="againType" />
+		<result column="again_price" property="againPrice" />
+		<result column="bannerPhoto" property="bannerPhoto" />
+		<result column="isPutaway" property="isPutaway" />
+		<result column="remarks" property="remarks" />
+		<collection property="areaList" ofType="chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailAreaVo">
+			<id column="area_id" property="id" />	
+			<result column="province" property="province" />
+			<result column="city" property="city" />
+			<result column="district" property="district" />
+			<result column="address" property="address" />
+			<result column="startTime" property="startTime" />
+			<result column="endTime" property="endTime" />
+			<result column="area_count" property="maxCount" />
+		</collection>
+	</resultMap>
+	
+	<!-- 后台管理端查询考试报名详情 -->
+	<select id="selectExamSignupDetail" resultMap="examSignupDetailResultMap">
+		select
+			a.id, a.signup_name, a.course_id, c.name courseName, a.exam_form,
+<!-- 			证书, -->
+			
+			b.id area_id, b.province, b.city, b.area district,
+			b.start_time, b.end_time, b.max_count area_count,
+			
+			a.again_type, a.again_price, a.banner_photo,  a.remarks
+		from
+			fc_exam_signup a
+			inner join fc_exam_signup_area b on a.id = b.signup_id
+			inner join fc_course_archives c on a.course_id = c.id
+			inner join fc_certificate_archives d on a.cert_id = d.id
+		where
+			a.id = #{signupId}
+	</select>
 </mapper>

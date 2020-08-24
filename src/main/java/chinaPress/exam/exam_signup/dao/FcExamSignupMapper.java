@@ -10,6 +10,7 @@ import chinaPress.exam.exam_signup.model.FcExamSignup;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailVo;
 
 @Mapper
 @Repository
@@ -50,21 +51,31 @@ public interface FcExamSignupMapper {
 	 * @return
 	 */
 	List<FcExamSignupListVo> selectExamSignupList(@Param("signupName") String signupName,
-			@Param("examForm") Integer examForm, @Param("isPutaway") Integer isPutaway,
-			@Param("offset") Integer offset, @Param("rows") Integer rows);
-	
+			@Param("examForm") Integer examForm, @Param("isPutaway") Integer isPutaway, @Param("offset") Integer offset,
+			@Param("rows") Integer rows);
+
 	/**
 	 * 查询已上架的考试报名
+	 * 
 	 * @author maguoliang
 	 * @return
 	 */
 	List<FcExamSignupIndexVo> selectPutawayExamSignupList();
-	
+
 	/**
 	 * 查询已上架的考试报名详情
+	 * 
 	 * @author maguoliang
-	 * @param signupId
+	 * @param signupId 考试报名id
 	 * @return
 	 */
 	FcExamSignupIndexDetailVo selectPutawayExamSignupDetail(Integer signupId);
+
+	/**
+	 * 查询考试报名详情
+	 * 
+	 * @param signupId 考试报名id
+	 * @return
+	 */
+	FcExamSignupManageDetailVo selectExamSignupDetail(Integer signupId);
 }

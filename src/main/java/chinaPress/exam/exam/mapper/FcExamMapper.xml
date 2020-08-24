@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.exam.exam.dao.FcExamMapper">
+	<resultMap id="BaseResultMap"
+		type="chinaPress.exam.exam.model.FcExam">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="exam_name" jdbcType="VARCHAR"
+			property="examName" />
+		<result column="province" jdbcType="VARCHAR"
+			property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="area" jdbcType="VARCHAR" property="area" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="signup_id" jdbcType="INTEGER"
+			property="signupId" />
+		<result column="signup_area_id" jdbcType="INTEGER"
+			property="signupAreaId" />
+		<result column="exam_type" jdbcType="INTEGER"
+			property="examType" />
+		<result column="exam_form" jdbcType="INTEGER"
+			property="examForm" />
+		<result column="start_time" jdbcType="TIMESTAMP"
+			property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+		<result column="course_id" jdbcType="INTEGER"
+			property="courseId" />
+		<result column="group_id" jdbcType="INTEGER" property="groupId" />
+		<result column="again_type" jdbcType="INTEGER"
+			property="againType" />
+		<result column="again_price" jdbcType="DECIMAL"
+			property="againPrice" />
+		<result column="grade" jdbcType="VARCHAR" property="grade" />
+		<result column="pass_comment" jdbcType="VARCHAR"
+			property="passComment" />
+		<result column="fail_comment" jdbcType="VARCHAR"
+			property="failComment" />
+		<result column="create_id" jdbcType="INTEGER"
+			property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="update_id" jdbcType="INTEGER"
+			property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP"
+			property="updateTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, exam_name, province, city, area, address, signup_id, signup_area_id,
+		exam_type,
+		exam_form, start_time, end_time, course_id, group_id, again_type, again_price,
+		grade,
+		pass_comment, fail_comment, create_id, create_time, update_id, update_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from fc_exam
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from fc_exam
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="chinaPress.exam.exam.model.FcExam">
+		insert into fc_exam (id, exam_name, province,
+		city, area, address,
+		signup_id, signup_area_id, exam_type,
+		exam_form, start_time, end_time,
+		course_id, group_id, again_type,
+		again_price, grade, pass_comment,
+		fail_comment, create_id, create_time,
+		update_id, update_time)
+		values (#{id,jdbcType=INTEGER}, #{examName,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{signupId,jdbcType=INTEGER}, #{signupAreaId,jdbcType=INTEGER},
+		#{examType,jdbcType=INTEGER},
+		#{examForm,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+		#{courseId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER},
+		#{againType,jdbcType=INTEGER},
+		#{againPrice,jdbcType=DECIMAL}, #{grade,jdbcType=VARCHAR}, #{passComment,jdbcType=VARCHAR},
+		#{failComment,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="chinaPress.exam.exam.model.FcExam">
+		insert into fc_exam
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="examName != null">
+				exam_name,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="signupId != null">
+				signup_id,
+			</if>
+			<if test="signupAreaId != null">
+				signup_area_id,
+			</if>
+			<if test="examType != null">
+				exam_type,
+			</if>
+			<if test="examForm != null">
+				exam_form,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="courseId != null">
+				course_id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="againType != null">
+				again_type,
+			</if>
+			<if test="againPrice != null">
+				again_price,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="passComment != null">
+				pass_comment,
+			</if>
+			<if test="failComment != null">
+				fail_comment,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="examName != null">
+				#{examName,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="signupId != null">
+				#{signupId,jdbcType=INTEGER},
+			</if>
+			<if test="signupAreaId != null">
+				#{signupAreaId,jdbcType=INTEGER},
+			</if>
+			<if test="examType != null">
+				#{examType,jdbcType=INTEGER},
+			</if>
+			<if test="examForm != null">
+				#{examForm,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="againType != null">
+				#{againType,jdbcType=INTEGER},
+			</if>
+			<if test="againPrice != null">
+				#{againPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="passComment != null">
+				#{passComment,jdbcType=VARCHAR},
+			</if>
+			<if test="failComment != null">
+				#{failComment,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="chinaPress.exam.exam.model.FcExam">
+		update fc_exam
+		<set>
+			<if test="examName != null">
+				exam_name = #{examName,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="signupId != null">
+				signup_id = #{signupId,jdbcType=INTEGER},
+			</if>
+			<if test="signupAreaId != null">
+				signup_area_id = #{signupAreaId,jdbcType=INTEGER},
+			</if>
+			<if test="examType != null">
+				exam_type = #{examType,jdbcType=INTEGER},
+			</if>
+			<if test="examForm != null">
+				exam_form = #{examForm,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="courseId != null">
+				course_id = #{courseId,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				group_id = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="againType != null">
+				again_type = #{againType,jdbcType=INTEGER},
+			</if>
+			<if test="againPrice != null">
+				again_price = #{againPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="passComment != null">
+				pass_comment = #{passComment,jdbcType=VARCHAR},
+			</if>
+			<if test="failComment != null">
+				fail_comment = #{failComment,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				create_id = #{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="chinaPress.exam.exam.model.FcExam">
+		update fc_exam
+		set exam_name = #{examName,jdbcType=VARCHAR},
+		province = #{province,jdbcType=VARCHAR},
+		city = #{city,jdbcType=VARCHAR},
+		area = #{area,jdbcType=VARCHAR},
+		address = #{address,jdbcType=VARCHAR},
+		signup_id = #{signupId,jdbcType=INTEGER},
+		signup_area_id = #{signupAreaId,jdbcType=INTEGER},
+		exam_type = #{examType,jdbcType=INTEGER},
+		exam_form = #{examForm,jdbcType=INTEGER},
+		start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time = #{endTime,jdbcType=TIMESTAMP},
+		course_id = #{courseId,jdbcType=INTEGER},
+		group_id = #{groupId,jdbcType=INTEGER},
+		again_type = #{againType,jdbcType=INTEGER},
+		again_price = #{againPrice,jdbcType=DECIMAL},
+		grade = #{grade,jdbcType=VARCHAR},
+		pass_comment = #{passComment,jdbcType=VARCHAR},
+		fail_comment = #{failComment,jdbcType=VARCHAR},
+		create_id = #{createId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_id = #{updateId,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

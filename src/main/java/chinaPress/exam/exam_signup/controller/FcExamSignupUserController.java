@@ -101,11 +101,12 @@ public class FcExamSignupUserController {
 	 * @author maguoliang
 	 * @param signupUserId 考试报名用户id
 	 * @param status       审核状态1.通过2.拒绝
+	 * @param remarks      驳回原因
 	 * @return
 	 */
 	@RequestMapping("manage/audit")
-	public Result auditFcExamSignupUser(Integer signupUserId, Integer status) {
-		int index = examSignupUserService.auditFcExamSignupUser(signupUserId, status);
+	public Result auditFcExamSignupUser(Integer signupUserId, Integer status, String remarks) {
+		int index = examSignupUserService.auditFcExamSignupUser(signupUserId, status, remarks);
 		if (index > 0) {
 			return ResultUtil.ok(index);
 		} else {
