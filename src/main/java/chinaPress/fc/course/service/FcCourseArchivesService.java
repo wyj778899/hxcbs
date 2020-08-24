@@ -23,6 +23,7 @@ import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.CourseIndexVo;
 import chinaPress.fc.course.vo.CourseTutorVo;
+import chinaPress.fc.course.vo.FcExamSignupCourseListVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 import chinaPress.fc.course_section.dao.FcCourseHourMapper;
 import chinaPress.fc.course_section.dao.FcCourseSectionMapper;
@@ -365,32 +366,57 @@ public class FcCourseArchivesService {
 		}
 		return courseIndexVo;
 	}
-	
+
 	/**
 	 * 查询所有上架的课程个数
+	 * 
 	 * @author maguoliang
 	 * @return
 	 */
 	public int selectPutAwayCourseCount() {
 		return fcCourseArchivesMapper.selectPutAwayCourseCount();
 	}
-	
+
 	/**
 	 * 所有有效课程信息
+	 * 
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Result findCourseArchivesAll() {
 		try {
 			List<CourseArchivesInfo> courseArchivesInfos = fcCourseArchivesMapper.selectCourseArchivesAll();
-			if(courseArchivesInfos.size()>0) {
-				return new Result(1,"查询成功",courseArchivesInfos);
-			}else {
-				return new Result(1,"无数据","");
+			if (courseArchivesInfos.size() > 0) {
+				return new Result(1, "查询成功", courseArchivesInfos);
+			} else {
+				return new Result(1, "无数据", "");
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(0,"系统错误","");
+			return new Result(0, "系统错误", "");
 		}
+	}
+
+	/**
+	 * 查询课程，用于考试报名关联的课程列表
+	 * 
+	 * @param name 课程名称
+	 * @return
+	 */
+	public int selectFcExamSingupCourseCount(String name) {
+		return fcCourseArchivesMapper.selectFcExamSingupCourseCount(name);
+	}
+
+	/**
+	 * 查询课程，用于考试报名关联的课程列表
+	 * 
+	 * @param name       课程名称
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条数据
+	 * @return
+	 */
+	public List<FcExamSignupCourseListVo> selectFcExamSingupCourseList(String name, Integer pageNumber,
+			Integer pageSize) {
+		return fcCourseArchivesMapper.selectFcExamSingupCourseList(name, pageNumber * pageSize - pageSize, pageSize);
 	}
 }

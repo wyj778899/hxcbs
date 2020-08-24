@@ -18,27 +18,20 @@
         </commentGenerator>
         <!-- 数据源 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://39.106.111.184:3306/press_test?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        connectionURL="jdbc:mysql://39.106.111.184:3306/press?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
                         userId="root" password="mlmMysqldb123!@#">
             <property name="useInformationSchema" value="true"></property>
             <!-- 可以防止不同数据库中相同表名时，生成的代码不对 -->
             <property name="nullCatalogMeansCurrent" value="true"></property>
         </jdbcConnection>
         <!-- model -->
-        <javaModelGenerator targetPackage="chinaPress.fc.book.model" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="chinaPress.role.praise.model" targetProject="src/main/java"/>
         <!-- mapper -->
-        <sqlMapGenerator targetPackage="chinaPress.fc.book.mapper" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="chinaPress.role.praise.mapper" targetProject="src/main/java"/>
         <!-- dao -->
-        <javaClientGenerator targetPackage="chinaPress.fc.book.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <javaClientGenerator targetPackage="chinaPress.role.praise.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="fc_book_archives" domainObjectName="FcBookArchives" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-            <!--解决长文本生成带WithBLOBs问题-->
-            <columnOverride column="request_data" jdbcType="VARCHAR"/>
-            <columnOverride column="response_data" jdbcType="VARCHAR"/>
-        </table>
-        <table tableName="fc_course_book" domainObjectName="FcCourseBook" enableCountByExample="false"
+        <table tableName="fc_comment_praise" domainObjectName="FcCommentPraise" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->

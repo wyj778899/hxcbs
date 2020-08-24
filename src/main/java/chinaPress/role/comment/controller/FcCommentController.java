@@ -10,6 +10,7 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.role.comment.model.FcCommentInfo;
 import chinaPress.role.comment.service.FcCommentService;
+import chinaPress.role.comment.vo.FcCommentIndexListVo;
 import chinaPress.role.comment.vo.FcCommentListVo;
 
 @RestController
@@ -88,19 +89,38 @@ public class FcCommentController {
 	/**
 	 * 后台管理系统审核评论
 	 * 
-	 * @param id
-	 * @param status
+	 * @param id           评论id
+	 * @param status       评论状态1.通过2.驳回
+	 * @param rejectReason 驳回原因
 	 * @return
 	 */
 	@RequestMapping("manage/audit")
-	public Result auditComment(Integer id, Integer status) {
-		int index = fcCommentService.auditComment(id, status);
+	public Result auditComment(Integer id, Integer status, String rejectReason) {
+		int index = fcCommentService.auditComment(id, status, rejectReason);
 		if (index > 0) {
 			return ResultUtil.custom(1, "操作成功", index);
 		} else if (index == -1) {
 			return ResultUtil.custom(-1, "该评论已审核", index);
 		} else {
 			return ResultUtil.custom(0, "操作失败", 0);
+		}
+	}
+
+	/**
+	 * 前台展示评论
+	 * 
+	 * @param type   哪个类型下的评论1.评论章节2.评论课程3.评论书籍
+	 * @param dataId 哪个类型下哪个具体类型的数据id
+	 * @param order  按照什么来排序1.最新2.热门，默认为最新
+	 * @return
+	 */
+	@RequestMapping("index/treeList")
+	public Result selectIndexCommentList(Integer type, Integer dataId, Integer order) {
+		List<FcCommentIndexListVo> list = fcCommentService.selectIndexCommentList(type, dataId, order);
+		if (list.size() > 0) {
+			return ResultUtil.ok(list);
+		} else {
+			return ResultUtil.error(list);
 		}
 	}
 }

@@ -5,6 +5,7 @@
 	<resultMap id="BaseResultMap"
 		type="chinaPress.role.comment.model.FcCommentInfo">
 		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="pId" property="pId" />
 		<result column="type" property="type" />
 		<result column="section_id" jdbcType="INTEGER"
 			property="sectionId" />
@@ -20,6 +21,9 @@
 			property="receiveRoleType" />
 		<result column="status" jdbcType="INTEGER"
 			property="status" />
+		<result column="praise_count" jdbcType="INTEGER"
+			property="praiseCount" />
+		<result column="reject_reason" property="rejectReason" />
 		<result column="create_time" jdbcType="TIMESTAMP"
 			property="createTime" />
 		<result column="create_id" jdbcType="INTEGER"
@@ -31,8 +35,8 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, section_id, is_anonymous, content, role_id, role_type,
-		receive_id, type, status,
-		receive_role_type,
+		receive_id, type, status, praise_count,
+		receive_role_type, pId, reject_reason,
 		create_time, create_id, update_time,
 		update_id
 	</sql>
@@ -54,6 +58,9 @@
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
+			</if>
+			<if test="pId != null">
+				pId,
 			</if>
 			<if test="type != null">
 				type,
@@ -82,6 +89,12 @@
 			<if test="status != null">
 				status,
 			</if>
+			<if test="praiseCount != null">
+				praise_count,
+			</if>
+			<if test="rejectReason != null">
+				reject_reason,
+			</if>
 			<if test="createTime != null">
 				create_time,
 			</if>
@@ -98,6 +111,9 @@
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="pId != null">
+				#{pId},
 			</if>
 			<if test="type != null">
 				#{type},
@@ -126,6 +142,12 @@
 			<if test="status != null">
 				#{status},
 			</if>
+			<if test="praiseCount != null">
+				#{praiseCount},
+			</if>
+			<if test="rejectReason != null">
+				#{rejectReason},
+			</if>
 			<if test="createTime != null">
 				#{createTime,jdbcType=TIMESTAMP},
 			</if>
@@ -146,6 +168,9 @@
 		<set>
 			<if test="type != null">
 				type = #{type},
+			</if>
+			<if test="pId != null">
+				pId = #{pId},
 			</if>
 			<if test="sectionId != null">
 				section_id = #{sectionId,jdbcType=INTEGER},
@@ -170,6 +195,12 @@
 			</if>
 			<if test="status != null">
 				status = #{status},
+			</if>
+			<if test="praiseCount != null">
+				praise_count = #{praiseCount},
+			</if>
+			<if test="rejectReason != null">
+				reject_reason = #{rejectReason},
 			</if>
 			<if test="createTime != null">
 				create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -244,5 +275,36 @@
 			inner join role_staff_archives b on a.role_id = b.role_id and a.role_type = b.role_type
 		where
 			a.id = #{id}
+	</select>
+	
+	<!-- 根据评论类型和数据id查询评论 -->
+	<select id="selectIndexCommentList" resultType="chinaPress.role.comment.vo.FcCommentIndexListVo">
+		select
+			a.id, a.pId, 
+			a.role_id fromRoleId, a.role_type fromRoleType, b.photo fromUserPhoto, b.user_name fromUserName, 
+			a.receive_id toRoleId, a.receive_role_type toRoleType, c.photo toUserName, c.user_name toUserPhoto,
+			a.content, a.create_time time
+		from
+			fc_comment a
+			inner join role_staff_archives b on a.role_id = b.role_id and a.role_type = b.role_type
+			left join role_staff_archives c on a.receive_id = c.role_id and a.receive_role_type = c.role_type
+		where
+			a.type = #{type}
+			and a.section_id = #{dataId}
+			and a.status = 1
+			<if test="order != null">
+				<if test="order == 1">
+					order by
+						a.create_time desc
+				</if>
+				<if test="order == 2">
+					order by
+						a.praise_count desc
+				</if>
+			</if>
+			<if test="order == null">
+				order by
+					a.create_time desc
+			</if>
 	</select>
 </mapper>

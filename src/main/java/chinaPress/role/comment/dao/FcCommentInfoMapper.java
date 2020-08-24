@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.comment.model.FcCommentInfo;
+import chinaPress.role.comment.vo.FcCommentIndexListVo;
 import chinaPress.role.comment.vo.FcCommentListVo;
 
 @Mapper
@@ -51,4 +52,15 @@ public interface FcCommentInfoMapper {
 	 * @param id 评论id
 	 */
 	FcCommentListVo selectManageFcCommentDetail(Integer id);
+
+	/**
+	 * 前台展示评论
+	 * 
+	 * @param type   哪个类型下的评论1.评论章节2.评论课程3.评论书籍
+	 * @param dataId 哪个类型下哪个具体类型的数据id
+	 * @param order  按照什么来排序1.最新2.热门，默认为最新
+	 * @return
+	 */
+	List<FcCommentIndexListVo> selectIndexCommentList(@Param("type") Integer type, @Param("dataId") Integer dataId,
+			@Param("order") Integer order);
 }

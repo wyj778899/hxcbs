@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import chinaPress.common.result.model.Result;
 import chinaPress.role.comment.dao.FcCommentInfoMapper;
 import chinaPress.role.comment.model.FcCommentInfo;
+import chinaPress.role.comment.util.FcCommentIndexTreeUtil;
+import chinaPress.role.comment.vo.FcCommentIndexListVo;
 import chinaPress.role.comment.vo.FcCommentListVo;
 
 @Service
@@ -27,9 +29,9 @@ public class FcCommentService {
 	public Result addCommentInfo(FcCommentInfo fcCommentInfo) {
 		int count = fcCommentInfoMapper.insertSelective(fcCommentInfo);
 		if (count > 0) {
-			return new Result(1, "发表成功", "");
+			return new Result(1, "发表成功", count);
 		} else {
-			return new Result(0, "发表失败", "");
+			return new Result(0, "发表失败", 0);
 		}
 	}
 
@@ -73,12 +75,13 @@ public class FcCommentService {
 	/**
 	 * 审核评论
 	 * 
-	 * @param id     评论id
-	 * @param status 评论状态1.通过2.驳回
+	 * @param id           评论id
+	 * @param status       评论状态1.通过2.驳回
+	 * @param rejectReason 驳回原因
 	 * @return
 	 */
 	@Transactional
-	public int auditComment(Integer id, Integer status) {
+	public int auditComment(Integer id, Integer status, String rejectReason) {
 		FcCommentInfo fcCommentInfo = fcCommentInfoMapper.selectByPrimaryKey(id);
 		if (fcCommentInfo.getStatus().intValue() != 0) {
 			return -1;
@@ -86,6 +89,22 @@ public class FcCommentService {
 		FcCommentInfo record = new FcCommentInfo();
 		record.setId(id);
 		record.setStatus(status);
+		if (status.intValue() == 2) {
+			record.setRejectReason(rejectReason);
+		}
 		return fcCommentInfoMapper.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 前台展示评论
+	 * 
+	 * @param type   哪个类型下的评论1.评论章节2.评论课程3.评论书籍
+	 * @param dataId 哪个类型下哪个具体类型的数据id
+	 * @param order  按照什么来排序1.最新2.热门，默认为最新
+	 * @return
+	 */
+	public List<FcCommentIndexListVo> selectIndexCommentList(Integer type, Integer dataId, Integer order) {
+		List<FcCommentIndexListVo> list = fcCommentInfoMapper.selectIndexCommentList(type, dataId, order);
+		return FcCommentIndexTreeUtil.buildByRecursive(list);
 	}
 }

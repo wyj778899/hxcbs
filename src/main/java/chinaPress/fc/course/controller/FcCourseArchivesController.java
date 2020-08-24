@@ -14,6 +14,7 @@ import chinaPress.fc.course.vo.CourseArchivesNewVo;
 import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.CourseIndexVo;
+import chinaPress.fc.course.vo.FcExamSignupCourseListVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 
 @RestController
@@ -179,13 +180,49 @@ public class FcCourseArchivesController {
 	public Result selectPutAwayCourseCount() {
 		return ResultUtil.ok(fcCourseArchivesService.selectPutAwayCourseCount());
 	}
-	
+
 	/**
 	 * 查询所有课程信息
+	 * 
 	 * @return
 	 */
 	@RequestMapping("queryCourseArchivesAll")
 	public Result queryCourseArchivesAll() {
 		return fcCourseArchivesService.findCourseArchivesAll();
+	}
+
+	/**
+	 * 查询课程，用于考试报名关联的课程列表
+	 * 
+	 * @param name 课程名称
+	 * @return
+	 */
+	@RequestMapping("fcExamSignupCourseCount")
+	public Result selectFcExamSingupCourseCount(String name) {
+		int index = fcCourseArchivesService.selectFcExamSingupCourseCount(name);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error(index);
+		}
+	}
+
+	/**
+	 * 查询课程，用于考试报名关联的课程列表
+	 * 
+	 * @param name       课程名称
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条数据
+	 * @return
+	 */
+	@RequestMapping("fcExamSignupCourseList")
+	public Result selectFcExamSingupCourseList(String name, Integer pageNumber, Integer pageSize) {
+		List<FcExamSignupCourseListVo> list = fcCourseArchivesService.selectFcExamSingupCourseList(name, pageNumber,
+				pageSize);
+		if (list.size() > 0) {
+			return ResultUtil.ok(list);
+		} else {
+			return ResultUtil.error(list);
+		}
 	}
 }

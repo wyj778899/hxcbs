@@ -13,6 +13,7 @@ import chinaPress.fc.course.vo.CourseArchivesParam;
 import chinaPress.fc.course.vo.CourseArchivesVo;
 import chinaPress.fc.course.vo.CourseIndexVo;
 import chinaPress.fc.course.vo.CourseTutorVo;
+import chinaPress.fc.course.vo.FcExamSignupCourseListVo;
 import chinaPress.fc.course.vo.PageIndexCourseVo;
 
 @Mapper
@@ -26,7 +27,7 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	List<CourseArchivesNewVo> selectCourseByCategoryId(Integer categoryId);
-	
+
 	/**
 	 * 根据分类id查询关联课程个数
 	 * 
@@ -94,17 +95,38 @@ public interface FcCourseArchivesMapper {
 	 * @return
 	 */
 	List<CourseTutorVo> selectCourseAboutTutor(Integer courseId);
-	
+
 	/**
 	 * 查询所有上架的课程个数
+	 * 
 	 * @author maguoliang
 	 * @return
 	 */
 	int selectPutAwayCourseCount();
-	
+
 	/**
 	 * 查询所有的有效课程信息
+	 * 
 	 * @return
 	 */
 	List<CourseArchivesInfo> selectCourseArchivesAll();
+
+	/**
+	 * 查询课程，用于考试报名关联的课程个数
+	 * 
+	 * @param name 课程名称
+	 * @return
+	 */
+	int selectFcExamSingupCourseCount(@Param("name") String name);
+
+	/**
+	 * 查询课程，用于考试报名关联的课程列表
+	 * 
+	 * @param name   课程名称
+	 * @param offset 从哪一条数据开始查询
+	 * @param rows   查询多少条数据
+	 * @return
+	 */
+	List<FcExamSignupCourseListVo> selectFcExamSingupCourseList(@Param("name") String name,
+			@Param("offset") Integer offset, @Param("rows") Integer rows);
 }

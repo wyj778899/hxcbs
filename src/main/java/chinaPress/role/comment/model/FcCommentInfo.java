@@ -14,6 +14,11 @@ public class FcCommentInfo {
 	private Integer id;
 
 	/**
+	 * 评论父级id
+	 */
+	private Integer pId;
+
+	/**
 	 * 评论对象1.评论章节2.评论课程3.评论书籍
 	 */
 	private Integer type;
@@ -59,6 +64,16 @@ public class FcCommentInfo {
 	private Integer status;
 
 	/**
+	 * 点赞数量
+	 */
+	private Integer praiseCount;
+
+	/**
+	 * 驳回原因
+	 */
+	private String rejectReason;
+
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -90,6 +105,20 @@ public class FcCommentInfo {
 	 */
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the pId
+	 */
+	public Integer getpId() {
+		return pId;
+	}
+
+	/**
+	 * @param pId the pId to set
+	 */
+	public void setpId(Integer pId) {
+		this.pId = pId;
 	}
 
 	/**
@@ -247,6 +276,20 @@ public class FcCommentInfo {
 	}
 
 	/**
+	 * @return the praiseCount
+	 */
+	public Integer getPraiseCount() {
+		return praiseCount;
+	}
+
+	/**
+	 * @param praiseCount the praiseCount to set
+	 */
+	public void setPraiseCount(Integer praiseCount) {
+		this.praiseCount = praiseCount;
+	}
+
+	/**
 	 * 创建时间
 	 * 
 	 * @return createTime
@@ -316,5 +359,19 @@ public class FcCommentInfo {
 	 */
 	public void setUpdateId(Integer updateId) {
 		this.updateId = updateId;
+	}
+
+	/**
+	 * @return the rejectReason
+	 */
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+	/**
+	 * @param rejectReason the rejectReason to set
+	 */
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
 	}
 }
