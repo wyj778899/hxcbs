@@ -10,6 +10,8 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
 import chinaPress.exam.exam_signup.service.FcExamSignupUserService;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
 
 @RestController
@@ -111,6 +113,59 @@ public class FcExamSignupUserController {
 			return ResultUtil.ok(index);
 		} else {
 			return ResultUtil.error(index);
+		}
+	}
+
+	/**
+	 * 查询前台管理端用户的已报名审核个数
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @return
+	 */
+	@RequestMapping("index/audit/count")
+	public Result selectUserFcExamSignupCount(Integer roleId, Integer roleType) {
+		int index = examSignupUserService.selectUserFcExamSignupCount(roleId, roleType);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error(index);
+		}
+	}
+
+	/**
+	 * 查询前台管理端用户的已报名审核列表
+	 * 
+	 * @param roleId     角色id
+	 * @param roleType   角色类型1.家长2.从业者
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条
+	 * @return
+	 */
+	@RequestMapping("index/audit/list")
+	public Result selectUserFcExamSignupList(Integer roleId, Integer roleType, Integer pageNumber, Integer pageSize) {
+		List<FcExamSignupUserListIndexVo> list = examSignupUserService.selectUserFcExamSignupList(roleId, roleType,
+				pageNumber, pageSize);
+		if (list.size() > 0) {
+			return ResultUtil.ok(list);
+		} else {
+			return ResultUtil.error(list);
+		}
+	}
+
+	/**
+	 * 查询考试报名用户信息
+	 * 
+	 * @param signupUserId 考试报名用户id
+	 * @return
+	 */
+	@RequestMapping("index/audit/detail")
+	public Result selectFcExamSignupUserDetail(Integer signupUserId) {
+		FcExamSignupUserDetailVo data = examSignupUserService.selectFcExamSignupUserDetail(signupUserId);
+		if (data != null) {
+			return ResultUtil.ok(data);
+		} else {
+			return ResultUtil.error(data);
 		}
 	}
 }

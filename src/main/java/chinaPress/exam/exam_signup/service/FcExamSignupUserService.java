@@ -12,6 +12,8 @@ import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
 import chinaPress.exam.exam_signup.model.FcExamSignup;
 import chinaPress.exam.exam_signup.model.FcExamSignupArea;
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
 import chinaPress.fc.order.dao.FcOrderMapper;
 import chinaPress.fc.order.dao.FcOrderPersonMapper;
@@ -91,7 +93,7 @@ public class FcExamSignupUserService {
 	 * @author maguoliang
 	 * @param fcExamSignupUser
 	 * @return -1 用户所报名的考试不存在，-2用户所报名的考试区域不存在，-3用户所报名的考试区域和考试不一致，-4该考试报名已下架
-	 * 	-5该报名下的该区域报名人数已满
+	 *         -5该报名下的该区域报名人数已满
 	 */
 	@Transactional
 	public int userSignup(FcExamSignupUser fcExamSignupUser) {
@@ -109,7 +111,8 @@ public class FcExamSignupUserService {
 					return -2;
 				} else {
 					// 检查考试报名区域时间是否存在
-					FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExamSignupUser.getAreaId());
+					FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper
+							.selectByPrimaryKey(fcExamSignupUser.getAreaId());
 					if (fcExamSignupArea == null) {
 						return -2;
 					} else {
@@ -135,7 +138,7 @@ public class FcExamSignupUserService {
 			}
 		}
 		// 再检查上次报名是否已经考试完成
-		
+
 		// 报名成功后判断是否满足最大人数限制，满足则自动下架
 		fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
 		int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(),
@@ -166,5 +169,41 @@ public class FcExamSignupUserService {
 			record.setRemarks(remarks);
 		}
 		return fcExamSignupUserMapper.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 查询前台管理端用户的已报名审核个数
+	 * 
+	 * @param roleId   角色id
+	 * @param roleType 角色类型1.家长2.从业者
+	 * @return
+	 */
+	public int selectUserFcExamSignupCount(Integer roleId, Integer roleType) {
+		return fcExamSignupUserMapper.selectUserFcExamSignupCount(roleId, roleType);
+	}
+
+	/**
+	 * 查询前台管理端用户的已报名审核列表
+	 * 
+	 * @param roleId     角色id
+	 * @param roleType   角色类型1.家长2.从业者
+	 * @param pageNumber 第几页
+	 * @param pageSize   每页查询多少条
+	 * @return
+	 */
+	public List<FcExamSignupUserListIndexVo> selectUserFcExamSignupList(Integer roleId, Integer roleType,
+			Integer pageNumber, Integer pageSize) {
+		return fcExamSignupUserMapper.selectUserFcExamSignupList(roleId, roleType, pageNumber * pageSize - pageSize,
+				pageSize);
+	}
+	
+	/**
+	 * 查询考试报名用户信息
+	 * 
+	 * @param signupUserId 考试报名用户id
+	 * @return
+	 */
+	public FcExamSignupUserDetailVo selectFcExamSignupUserDetail(Integer signupUserId) {
+		return fcExamSignupUserMapper.selectFcExamSignupUserDetail(signupUserId);
 	}
 }

@@ -1,8 +1,10 @@
 package chinaPress.exam.exam.dao;
 
-import chinaPress.exam.exam.model.FcExam;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import chinaPress.exam.exam.model.FcExam;
+import chinaPress.exam.exam.vo.FcExamManageDetailVo;
 
 @Mapper
 @Repository
@@ -18,4 +20,10 @@ public interface FcExamMapper {
     int updateByPrimaryKeySelective(FcExam record);
 
     int updateByPrimaryKey(FcExam record);
+    
+    /**
+     * 查询考试详情
+     * @param id 考试id
+     */
+    FcExamManageDetailVo selectFcExamDetail(Integer id);
 }

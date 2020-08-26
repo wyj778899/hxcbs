@@ -29,4 +29,11 @@ public interface FcExamUserMapper {
 	 * @return
 	 */
 	List<FcExamUser> selectByFcExamId(Integer examId);
+	
+	/**
+	 * 根据考试id删除考试下的考试用户
+	 * @param examId
+	 * @return
+	 */
+	int deleteByFcExamId(Integer examId);
 }

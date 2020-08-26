@@ -6,6 +6,10 @@ public class FcExamSignupIndexVo {
 	 */
 	private Integer id;
 	/**
+	 * 考试报名封面
+	 */
+	private String cover;
+	/**
 	 * 考试报名名称
 	 */
 	private String name;
@@ -30,6 +34,20 @@ public class FcExamSignupIndexVo {
 	 */
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the cover
+	 */
+	public String getCover() {
+		return cover;
+	}
+
+	/**
+	 * @param cover the cover to set
+	 */
+	public void setCover(String cover) {
+		this.cover = cover;
 	}
 
 	/**

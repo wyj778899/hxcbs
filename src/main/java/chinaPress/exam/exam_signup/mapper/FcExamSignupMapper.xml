@@ -278,7 +278,7 @@
 	<!-- 查询已上架的考试报名 -->
 	<select id="selectPutawayExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo">
 		select
-			id, banner_photo banner, signup_name name, 
+			id, banner_photo cover, signup_name name, 
 			case exam_form when 1 then '现场' when 0 then '非现场' end form, signup_count count
 		from
 			fc_exam_signup
@@ -288,7 +288,7 @@
 	
 	<resultMap type="chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo" id="putawayExamSignupDetailResultMap">
 		<id column="id" property="id" />
-		<result column="banner_photo" property="banner" />
+		<result column="banner_photo" property="cover" />
 		<result column="signup_name" property="name" />
 		<result column="form" property="form" />
 		<result column="signup_count" property="count" />
@@ -308,7 +308,7 @@
 			a.id, a.banner_photo, a.signup_name, a.remarks,
 			case a.exam_form when 1 then '现场' when 0 then '非现场' end form, b.max_count signup_count,
 			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ', b.address) area_address,
-			concat(a.start_time, a.end_time) area_time, b.is_putaway area_is_putaway
+			concat(b.start_time, ' 至 ', b.end_time) area_time, b.is_putaway area_is_putaway
 		from
 			fc_exam_signup a
 			inner join fc_exam_signup_area b on a.id = b.signup_id

@@ -365,7 +365,7 @@ public class FcOrderController {
 				// 机构
 			} else {
 				// 家长/从业者
-				message = "【华夏云课堂】您好：您已成功报名[" + courseName + "]，请及时关注课程信息，祝您学习愉快！";
+				message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
 				smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 			}
 		}
