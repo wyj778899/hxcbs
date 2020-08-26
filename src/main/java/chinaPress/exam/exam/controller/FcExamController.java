@@ -21,11 +21,12 @@ public class FcExamController {
 	 * 
 	 * @param fcExam
 	 * @param signupUsers
+	 * @param signupAreas
 	 */
 	@RequestMapping("manage/add")
-	public Result addFcExam(FcExam fcExam, String signupUsers) {
+	public Result addFcExam(FcExam fcExam, String signupUsers, String signupAreas) {
 		try {
-			fcExamService.addFcExam(fcExam, signupUsers);
+			fcExamService.addFcExam(fcExam, signupUsers, signupAreas);
 			return ResultUtil.ok();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,17 +39,37 @@ public class FcExamController {
 	 * 
 	 * @param fcExam
 	 * @param signupUsers
+	 * @param signupAreas
 	 * @return
 	 */
 	@RequestMapping("manage/update")
-	public Result updateExam(FcExam fcExam, String signupUsers) {
+	public Result updateExam(FcExam fcExam, String signupUsers, String signupAreas) {
+		Result result = new Result();
 		try {
-			fcExamService.updateExam(fcExam, signupUsers);
-			return ResultUtil.ok();
+			int index = fcExamService.updateExam(fcExam, signupUsers, signupAreas);
+			if (index > 0) {
+				result = ResultUtil.ok();
+			}
+			if (index == -1) {
+				result = ResultUtil.custom(index, "当前操作的考试设置不存在", index);
+			}
+			if (index == -2) {
+				result = ResultUtil.custom(index, "当前操作的考试设置关联的报名信息不存在", index);
+			}
+			if (index == -3) {
+				result = ResultUtil.custom(index, "当前操作的考试设置关联的考试报名区域时间不存在", index);
+			}
+			if (index == -4) {
+				result = ResultUtil.custom(index, "当前操作的考试设置正在考试中，无法操作", index);
+			}
+			if (index == -5) {
+				result = ResultUtil.custom(index, "当前操作的考试设置已关闭", index);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResultUtil.error();
+			result = ResultUtil.error();
 		}
+		return result;
 	}
 
 	/**

@@ -1,11 +1,13 @@
 package chinaPress.exam.exam_signup.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import chinaPress.common.util.DateUtil;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
@@ -120,6 +122,11 @@ public class FcExamSignupUserService {
 						if (fcExamSignupArea.getSignupId().intValue() != fcExamSignupUser.getSignupId().intValue()) {
 							return -3;
 						} else {
+							// 检查是否在报名时间范围
+							if (DateUtil.compareDate(fcExamSignupArea.getStartTime(), new Date())
+									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
+								return -6;
+							} 
 							// 检查考试报名是否下架了
 							if (fcExamSignup.getIsPutaway().intValue() == 0) {
 								return -4;
@@ -138,7 +145,7 @@ public class FcExamSignupUserService {
 			}
 		}
 		// 再检查上次报名是否已经考试完成
-
+		
 		// 报名成功后判断是否满足最大人数限制，满足则自动下架
 		fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
 		int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(),

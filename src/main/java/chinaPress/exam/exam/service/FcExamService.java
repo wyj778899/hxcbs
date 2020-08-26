@@ -11,9 +11,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import chinaPress.common.util.DateUtil;
+import chinaPress.exam.exam.dao.FcExamAreaMapper;
 import chinaPress.exam.exam.dao.FcExamMapper;
 import chinaPress.exam.exam.dao.FcExamUserMapper;
 import chinaPress.exam.exam.model.FcExam;
+import chinaPress.exam.exam.model.FcExamArea;
 import chinaPress.exam.exam.model.FcExamUser;
 import chinaPress.exam.exam.vo.FcExamManageDetailVo;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
@@ -35,22 +37,24 @@ public class FcExamService {
 	private FcExamSignupUserMapper fcExamSignupUserMapper;
 	@Autowired
 	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
+	@Autowired
+	private FcExamAreaMapper fcExamAreaMapper;
 	
 
 	/**
 	 * 添加考试设置
 	 * @param fcExam
 	 * @param signupUsers
+	 * @param signupAreas
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public void addFcExam(FcExam fcExam, String signupUsers) {
-//		Integer singupId = fcExam.getSignupId();
-//		Integer signupAreaId = fcExam.getSignupAreaId();
+	public void addFcExam(FcExam fcExam, String signupUsers, String signupAreas) {
 		// 添加考试设置
 		fcExamMapper.insertSelective(fcExam);
-		List<FcExamUser> list = new Gson().fromJson(signupUsers, new TypeToken<List<FcExamUser>>() {
+		// 添加考试关联用户
+		List<FcExamUser> userList = new Gson().fromJson(signupUsers, new TypeToken<List<FcExamUser>>() {
 		}.getType());
-		for (FcExamUser fcExamUser : list) {
+		for (FcExamUser fcExamUser : userList) {
 			fcExamUser.setExamId(fcExam.getId());
 			fcExamUserMapper.insertSelective(fcExamUser);
 			// 修改报名人员状态
@@ -59,16 +63,24 @@ public class FcExamService {
 			fcExamSignupUser.setExamineType(3);
 			fcExamSignupUserMapper.updateByPrimaryKeySelective(fcExamSignupUser);
 		}
+		// 添加考试关联区域
+		List<FcExamArea> areaList = new Gson().fromJson(signupAreas, new TypeToken<List<FcExamArea>>() {
+		}.getType());
+		for (FcExamArea fcExamArea : areaList) {
+			fcExamArea.setExamId(fcExam.getId());
+			fcExamAreaMapper.insertSelective(fcExamArea);
+		}
 	}
 	
 	/**
 	 * 修改考试设置
 	 * @param fcExam
 	 * @param signupUsers
+	 * @param signupAreas
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public int updateExam(FcExam fcExam, String signupUsers) {
+	public int updateExam(FcExam fcExam, String signupUsers, String signupAreas) {
 		// 检查是否可修改
 		FcExam selFcExam = fcExamMapper.selectByPrimaryKey(fcExam.getId());
 		if (selFcExam != null) {
@@ -89,20 +101,37 @@ public class FcExamService {
 					}
 					// 编辑考试设置
 					fcExamMapper.updateByPrimaryKey(fcExam);
-					// 恢复原来关联的考试报名用户的审核状态：已报考->已审核
+					// 恢复原来关联的考试报名用户的审核状态：已报考->已审核，且修改新的关联的考试报名用户的审核状态为：已报考
 					List<FcExamUser> list = new Gson().fromJson(signupUsers, new TypeToken<List<FcExamUser>>() {
 					}.getType());
+					List<FcExamUser> oldExamUserList = fcExamUserMapper.selectByFcExamId(fcExam.getId());
+					for (FcExamUser fcExamUser : oldExamUserList) {
+						FcExamSignupUser fcExamSignupUser = new FcExamSignupUser();
+						fcExamSignupUser.setId(fcExamUser.getSignupUserId());
+						fcExamSignupUser.setExamineType(1);
+						fcExamSignupUserMapper.updateByPrimaryKeySelective(fcExamSignupUser);
+					}
 					for (FcExamUser fcExamUser : list) {
 						FcExamSignupUser fcExamSignupUser = new FcExamSignupUser();
 						fcExamSignupUser.setId(fcExamUser.getSignupUserId());
-						fcExamSignupUser.setExamineType(2);
+						fcExamSignupUser.setExamineType(3);
 						fcExamSignupUserMapper.updateByPrimaryKeySelective(fcExamSignupUser);
 					}
 					// 删除原来关联的考试用户
 					fcExamUserMapper.deleteByFcExamId(fcExam.getId());
 					// 添加新写的考试用户
 					for (FcExamUser fcExamUser : list) {
+						fcExamUser.setExamId(fcExam.getId());
 						fcExamUserMapper.insertSelective(fcExamUser);
+					}
+					// 删除原来关联的考试区域
+					fcExamAreaMapper.deleteByFcExamId(fcExam.getId());
+					// 添加新的考试区域
+					List<FcExamArea> areaList = new Gson().fromJson(signupAreas, new TypeToken<List<FcExamArea>>() {
+					}.getType());
+					for (FcExamArea fcExamArea : areaList) {
+						fcExamArea.setExamId(fcExam.getId());
+						fcExamAreaMapper.insertSelective(fcExamArea);
 					}
 					return 1; 
 				} else {

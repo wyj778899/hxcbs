@@ -31,7 +31,7 @@
         <!-- dao -->
         <javaClientGenerator targetPackage="chinaPress.exam.exam.dao" targetProject="src/main/java" type="XMLMAPPER"/>
         <!-- table<->model -->
-        <table tableName="fc_exam_user" domainObjectName="FcExamUser" enableCountByExample="false"
+        <table tableName="fc_exam_area" domainObjectName="FcExamArea" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <!--解决长文本生成带WithBLOBs问题-->

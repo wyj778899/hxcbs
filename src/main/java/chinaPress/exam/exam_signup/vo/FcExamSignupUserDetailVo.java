@@ -53,6 +53,14 @@ public class FcExamSignupUserDetailVo {
 	 * 手持身份证
 	 */
 	private String certificateHand;
+	/**
+	 * 审核状态0.未审核1.已审核2.已驳回
+	 */
+	private Integer auditStatus;
+	/**
+	 * 驳回原因
+	 */
+	private String rejectReason;
 
 	/**
 	 * @return the id
@@ -234,5 +242,33 @@ public class FcExamSignupUserDetailVo {
 	 */
 	public void setCertificateHand(String certificateHand) {
 		this.certificateHand = certificateHand;
+	}
+
+	/**
+	 * @return the auditStatus
+	 */
+	public Integer getAuditStatus() {
+		return auditStatus;
+	}
+
+	/**
+	 * @param auditStatus the auditStatus to set
+	 */
+	public void setAuditStatus(Integer auditStatus) {
+		this.auditStatus = auditStatus;
+	}
+
+	/**
+	 * @return the rejectReason
+	 */
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+	/**
+	 * @param rejectReason the rejectReason to set
+	 */
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
 	}
 }

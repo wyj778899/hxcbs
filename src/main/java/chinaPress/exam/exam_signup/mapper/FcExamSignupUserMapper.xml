@@ -492,7 +492,8 @@
 			a.tell_phone phone, a.certificate_number certificateNumber, 
 			a.institution_name institution, a.post,
 			a.certificate_front certificateFront, a.certificate_behind certificateBehind, 
-			a.hand_certificate certificateHand
+			a.hand_certificate certificateHand, a.examine_type auditStatus,
+			a.remarks rejectReason
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup_area b on a.area_id = b.id
