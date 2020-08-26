@@ -48,8 +48,18 @@ public class FcQuestionCatalogController {
 	 * @return
 	 */
 	@RequestMapping("/queryAll")
-	public Result queryAll() {
-		return fcQuestionCatalogService.findAll();
+	public Result queryAll(String name,Integer page,Integer limit) {
+		return fcQuestionCatalogService.findAll(name,(page-1)*limit,limit);
+	}
+	
+	
+	/**
+	 * 显示所有试题分类
+	 * @return
+	 */
+	@RequestMapping("/queryAllCount")
+	public Result queryAllCount(String name) {
+		return fcQuestionCatalogService.findAllCount(name);
 	}
 	
 	/**

@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import chinaPress.fc.question.model.FcQuestionStem;
 import chinaPress.fc.question.vo.FcQuestionAndOption;
+import chinaPress.fc.question.vo.FcQuestionInfo;
 import chinaPress.fc.question.vo.FcQuestionStemListVo;
+import chinaPress.fc.question.vo.QuestionNameVo;
+import chinaPress.fc.question.vo.QuestionVo;
 
 @Mapper
 @Repository
@@ -62,4 +65,42 @@ public interface FcQuestionStemMapper {
 	 * @return
 	 */
 	List<String> selectQuestionStemNameAll();
+	
+	
+	/**
+	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @param type
+	 * @return
+	 */
+	List<FcQuestionInfo> selectByCatalogIdAll(@Param("questionStem") String questionStem, @Param("taskDifficulty") Integer taskDifficulty,@Param("catalogId")Integer catalogId,@Param("type")Integer type,@Param("page")Integer page,@Param("limit")Integer limit);
+	
+	
+	/**
+	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息个数
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @param type
+	 * @return
+	 */
+	int selectByCatalogIdCount(@Param("questionStem") String questionStem, @Param("taskDifficulty") Integer taskDifficulty,@Param("catalogId")Integer catalogId,@Param("type")Integer type);
+
+	/**
+	 * 查询所有试题信息        关联试题分类,试题答案 
+	 * @return
+	 */
+	List<QuestionVo> selectQuestionAll();
+	
+	
+	/**
+	 * 查询试题的名称信息
+	 * @param catalogId            试题分类id
+	 * @param questionType         试题类型 
+	 * @param taskDifficulty       试题难度     
+	 * @return
+	 */
+	QuestionNameVo selectQuestionNameInfo(@Param("catalogId") Integer catalogId,@Param("questionType")Integer questionType,@Param("taskDifficulty") Integer taskDifficulty);
 }

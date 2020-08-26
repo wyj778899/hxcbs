@@ -80,7 +80,7 @@ public class FcQuestionStemImportService {
 		List<FcSectionHourInfo> sectionAndHours = fcCourseSectionMapper.selectSectionAndHourAll();
 		
 		//所有试题分类信息
-		List<FcQuestionCatalogVo> questionCatalogs = fcQuestionCatalogMapper.selectAll();
+		List<FcQuestionCatalogVo> questionCatalogs = fcQuestionCatalogMapper.selectAll(null,null,null);
 		
 		//所有试题名称信息
 		List<String> questionStemNames = fcQuestionStemMapper.selectQuestionStemNameAll();

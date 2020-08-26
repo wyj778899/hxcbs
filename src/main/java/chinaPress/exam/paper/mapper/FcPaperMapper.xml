@@ -4,7 +4,9 @@
   <resultMap id="BaseResultMap" type="chinaPress.exam.paper.model.FcPaper">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="paper_type" jdbcType="INTEGER" property="paperType" />
+    <result column="paper_catalog" jdbcType="INTEGER" property="paperCatalog" />
     <result column="paper_name" jdbcType="VARCHAR" property="paperName" />
+    <result column="paper_grade" jdbcType="VARCHAR" property="paperGrade" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="create_id" jdbcType="INTEGER" property="createId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -13,7 +15,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, paper_type, paper_name, remarks, create_id, create_time, update_id, update_time
+    id, paper_type, paper_name, paper_grade, paper_catalog, remarks, create_id, create_time, update_id, update_time
   </sql>
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -28,7 +30,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insertSelective" parameterType="chinaPress.exam.paper.model.FcPaper">
+  <insert id="insertSelective" parameterType="chinaPress.exam.paper.model.FcPaper" useGeneratedKeys="true" keyProperty="id">
     insert into fc_paper
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -39,6 +41,12 @@
       </if>
       <if test="paperName != null">
         paper_name,
+      </if>
+      <if test="paperGrade != null">
+        paper_grade,
+      </if>
+      <if test="paperCatalog != null">
+        paper_catalog,
       </if>
       <if test="remarks != null">
         remarks,
@@ -66,6 +74,12 @@
       <if test="paperName != null">
         #{paperName,jdbcType=VARCHAR},
       </if>
+      <if test="paperGrade != null">
+        #{paperGrade,jdbcType=VARCHAR},
+      </if>
+       <if test="paperCatalog != null">
+        #{paperCatalog,jdbcType=INTEGER},
+      </if>
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
       </if>
@@ -90,8 +104,14 @@
       <if test="paperType != null">
         paper_type = #{paperType,jdbcType=INTEGER},
       </if>
+      <if test="paperCatalog != null">
+        paper_catalog = #{paperCatalog,jdbcType=INTEGER},
+      </if>
       <if test="paperName != null">
         paper_name = #{paperName,jdbcType=VARCHAR},
+      </if>
+      <if test="paperGrade != null">
+        paper_grade = #{paperGrade,jdbcType=VARCHAR},
       </if>
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
@@ -115,13 +135,179 @@
   <select id="selectByPaperName" resultType="java.lang.Integer">
     select count(*)
    		from fc_paper
-    where
+    where 1=1 
     	<if test="paperName != null">
-    		paper_name = #{paperName,jdbcType=VARCHAR}  
+    		and paper_name = #{paperName,jdbcType=VARCHAR}  
     	</if>
     	<if test="paperId != null">
-    		id != #{paperId,jdbcType=INTEGER}
+    		and id != #{paperId,jdbcType=INTEGER}
     	</if>
   </select>
 	
+	<!-- 试卷id 查询试卷信息,试卷-试题-试题分类型-试题答案 -->
+  <select id="selectByPaperId" parameterType="java.lang.Integer" resultMap="paperMap">
+		SELECT
+			a.id AS paper_id,
+			a.paper_name AS paper_name,
+			a.paper_type AS paper_type,
+			a.paper_grade AS paper_grade,
+			a.paper_catalog AS paper_catalog,
+			a.remarks AS remarks,
+			d.id AS catalog_id,
+			d.catalog_name AS catalog_name,
+			c.id AS question_id,
+			c.question_stem AS question_stem,
+			c.task_difficulty AS task_difficulty,
+			c.question_type AS question_type,
+			b.use_grade AS grade,
+			e.id AS option_id,
+			e.option_name AS option_name,
+			e.option_type AS option_type
+		FROM
+			fc_paper a
+		LEFT JOIN fc_paper_stem b ON a.id = b.paper_id
+		LEFT JOIN fc_question_stem c ON b.stem_id = c.id
+		LEFT JOIN fc_question_catalog d ON c.catalog_id = d.id
+		LEFT JOIN fc_question_option e ON c.id = e.stem_id
+		WHERE
+			a.id = #{id}
+		ORDER BY c.id 
+  </select>
+  
+  <resultMap id="paperMap" type="chinaPress.exam.paper.model.FcPaper">
+    <id column="paper_id" jdbcType="INTEGER" property="id" />
+    <result column="paper_type" jdbcType="INTEGER" property="paperType" />
+    <result column="paper_name" jdbcType="VARCHAR" property="paperName" />
+    <result column="paper_grade" jdbcType="VARCHAR" property="paperGrade" />
+    <result column="paper_catalog" jdbcType="VARCHAR" property="paperCatalog" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <!-- 试卷试题关联信息 -->
+    <collection property="papers" ofType="chinaPress.exam.paper.vo.PaperVo">
+    	 <result column="catalog_id" property="catalogId" />
+         <result column="task_difficulty" property="taskDifficulty"/>
+         <result column="question_type" property="questionType"/>
+         <!-- <result column="count" property="count"/> -->
+         <result column="grade" property="grade"/>
+    </collection>
+    <!-- 试卷的试题信息 -->
+     <collection property="questions" ofType="chinaPress.fc.question.vo.QuestionVo">
+     		<id column="question_id" property="id" />
+     		<result column="question_stem" property="questionStem"/>
+	        <result column="question_type" property="questionType"/>
+	        <result column="task_difficulty" property="taskDifficulty"/>
+	        <result column="grade" property="grade"/>
+	        <result column="catalog_name" property="catalogName"/>
+	        <result column="catalog_id" property="catalogId"/>
+    		<!-- 试题的答案信息 -->
+    	 <collection property="options" ofType="chinaPress.fc.question.model.FcQuestionOption">
+    		<id column="option_id" property="id" />
+    		<result column="question_id" property="stemId"/>
+     		<result column="option_name" property="optionName"/>
+	        <result column="option_type" property="optionType"/>
+    	 </collection>
+    </collection>
+  </resultMap>
+  
+  <select id="selectExamPaperId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select count(*) from fc_exam_paper where paper_id = #{id}
+  </select>
+  
+  
+  <select id="selectPaperLikeName" resultType="chinaPress.exam.paper.vo.PaperStemVo">
+  	SELECT
+  		a.id as paperId,
+		a.paper_name AS paperName,
+		CASE WHEN a.paper_type = 1 THEN
+				'固定试题组卷'
+			 WHEN a.paper_type = 2 THEN
+				'随机试题组卷'
+			 END AS paperType,
+		a.paper_grade AS paperGrade,
+	 	count(b.id) AS count
+	FROM
+		fc_paper a
+	LEFT JOIN fc_paper_stem b ON a.id = b.paper_id
+	WHERE 1=1
+		<if test="paperName !=null and paperName!=''">
+    		and paper_name like concat('%',#{paperName},'%')
+    	</if>
+    	<if test="paperCatalog !=null">
+    		and paper_catalog = #{paperCatalog}
+    	</if>
+	GROUP BY
+		a.id,
+		a.paper_name,
+		a.paper_type,
+		a.paper_grade
+	LIMIT #{page} , #{limit}
+  </select>
+  
+  
+  <select id="selectPaperLikeNameCount" resultType="java.lang.Integer">
+  	SELECT
+		count(*)
+	FROM
+		fc_paper 
+	WHERE 1=1
+		<if test="paperName !=null and paperName!=''">
+    		and paper_name like concat('%',#{paperName},'%')
+    	</if>
+    	<if test="paperCatalog !=null">
+    		and paper_catalog = #{paperCatalog}
+    	</if>
+  </select>
+  
+  
+  <!-- 查询考试下的试卷信息 -->
+  <select id="selectExamById" resultMap="examMap">
+	  	select a.id as exam_id, 
+	     	   c.paper_grade as paper_grade,
+	     	   c.paper_type as paper_type,
+       	 	   e.id as question_id,
+       	 	   e.question_stem as question_stem,
+       	 	   e.task_difficulty as task_difficulty,
+			   e.question_type as question_type,
+			   d.use_grade as grade,
+			   f.id as option_id,
+			   f.option_name as option_name,
+			   <!-- 标识符不为null展示答案信息 -->
+			   <if test="flag!=null">
+			   f.is_correct as is_correct,
+			   </if>
+			   f.option_type as option_type,
+			   g.id as catalog_id,
+			   g.catalog_name as catalog_name
+		from fc_exam a
+		left join fc_exam_paper b on a.id = b.exam_id
+		left join fc_paper c on b.paper_id = c.id
+		left join fc_paper_stem d on c.id = d.paper_id
+		left join fc_question_stem e on d.stem_id = e.id
+		left join fc_question_option f on e.id = f.stem_id
+		left join fc_question_catalog g on e.catalog_id = g.id
+		where a.id = #{examId}
+  </select>
+  
+  <!-- 所有考试信息封装 -->
+  <resultMap id="examMap" type="chinaPress.exam.paper.vo.PaperQuestionStem">
+    <id column="exam_id" jdbcType="INTEGER" property="examId" />
+    <result column="paper_grade" jdbcType="VARCHAR" property="grade" />
+    <result column="paper_type" jdbcType="INTEGER" property="type" />
+    <collection property="questions" ofType="chinaPress.fc.question.vo.QuestionVo">
+     		<id column="question_id" property="id" />
+     		<result column="question_stem" property="questionStem"/>
+	        <result column="question_type" property="questionType"/>
+	        <result column="task_difficulty" property="taskDifficulty"/>
+	        <result column="grade" property="grade"/>
+	        <result column="catalog_name" property="catalogName"/>
+	        <result column="catalog_id" property="catalogId"/>
+    		<!-- 试题的答案信息 -->
+    	 <collection property="options" ofType="chinaPress.fc.question.model.FcQuestionOption">
+    		<id column="option_id" property="id" />
+    		<result column="question_id" property="stemId"/>
+     		<result column="option_name" property="optionName"/>
+	        <result column="option_type" property="optionType"/>
+	        <result column="is_correct" property="isCorrect"/>
+    	 </collection>
+    </collection>
+  </resultMap>
 </mapper>

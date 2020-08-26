@@ -686,4 +686,39 @@
         and id != #{id}
       </if>	
   </select>
+  
+   <select id="selectUserAll" resultType="chinaPress.role.member.vo.GroupUser">
+    	select 
+			id,
+			user_name as userName,
+			case when sex = 1 then '男' 
+			     when sex = 2 then '女'
+					 end as sex,
+			tell_phone as tellPhone,
+			case when type = 1 then '家长' 
+			     when type = 2 then '从业人员'
+					 end as type
+		from role_practitioner_archives
+		where user_name is not null 
+			  and user_name !=''
+			  and tell_phone is not null 
+			  and tell_phone !=''
+			  <if test="name!=null and name!=''">
+			  	and (user_name like concat('%',#{name},'%') or tell_phone like concat('%',#{name},'%'))
+			  </if>
+		<if test="page!=null and limit!=null">
+			limit #{page} , #{limit}
+		</if>
+  </select>
+  
+  <select id="selectUserAllCount" resultType="java.lang.Integer">
+    	select 
+			count(*)
+		from role_practitioner_archives
+		where user_name is not null 
+			  and user_name !=''
+			  and tell_phone is not null 
+			  and tell_phone !=''
+			  and (user_name like concat('%',#{name},'%') or tell_phone like concat('%',#{name},'%'))
+  </select>
 </mapper>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
@@ -13,6 +14,7 @@ import chinaPress.fc.question.dao.FcQuestionStemMapper;
 import chinaPress.fc.question.model.FcQuestionOption;
 import chinaPress.fc.question.model.FcQuestionStem;
 import chinaPress.fc.question.vo.FcQuestionAndOption;
+import chinaPress.fc.question.vo.FcQuestionInfo;
 import chinaPress.fc.question.vo.FcQuestionOptionVo;
 import chinaPress.fc.question.vo.FcQuestionStemListVo;
 
@@ -157,4 +159,43 @@ public class FcQuestionStemService {
 			return new Result(0,"系统错误","");
 		}
 	}
+	
+	
+	/**
+	 * 通过试题名称,试题难度,试题分类  查询试题信息
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findByCatalogIdAll(String questionStem,Integer taskDifficulty,Integer catalogId,Integer type,Integer page,Integer limit){
+		try {
+			List<FcQuestionInfo> list = fcQuestionStemMapper.selectByCatalogIdAll(questionStem, taskDifficulty, catalogId,type,page,limit);
+			return new Result(1,"查询成功",list);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"查询失败","");
+		}
+	}
+	
+	
+	/**
+	 * 通过试题名称,试题难度,试题分类  查询试题个数
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findByCatalogIdCount(String questionStem,Integer taskDifficulty,Integer catalogId,Integer type){
+		try {
+			int count = fcQuestionStemMapper.selectByCatalogIdCount(questionStem, taskDifficulty, catalogId,type);
+			return new Result(1,"查询成功",count);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"查询失败","");
+		}
+	}
+	
 }

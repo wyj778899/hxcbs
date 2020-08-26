@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.role.member.model.PractitionerInfo;
+import chinaPress.role.member.vo.GroupUser;
 import chinaPress.role.member.vo.PractitionerApplyInfoVo;
 import chinaPress.role.member.vo.PractitionerEmps;
 import chinaPress.role.member.vo.PractitionerParent;
@@ -100,4 +101,21 @@ public interface PractitionerInfoMapper {
      * @return
      */
     PractitionerInfo selectByIdCert(@Param("certificate")String certificate,@Param("id")Integer id);
+    
+    /**
+     * 查询所有家长和从业者信息
+     * @param name
+     * @param page
+     * @param limit
+     * @return
+     */
+    List<GroupUser> selectUserAll(@Param("name")String name,@Param("page")Integer page,@Param("limit")Integer limit);
+    
+    
+    /**
+     * 查询所有家长和从业者信息个数
+     * @param name
+     * @return
+     */
+    int selectUserAllCount(@Param("name")String name);
 }

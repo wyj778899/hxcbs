@@ -72,4 +72,9 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <!-- 试卷id删除试题对应的信息 -->
+  <delete id="deleteByPaperId" parameterType="java.lang.Integer">
+    delete from fc_paper_stem
+    where paper_id = #{paperId,jdbcType=INTEGER}
+  </delete>
 </mapper>
