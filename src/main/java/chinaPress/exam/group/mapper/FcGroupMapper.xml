@@ -45,7 +45,7 @@
 		#{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
 	</insert>
 	<insert id="insertSelective"
-		parameterType="chinaPress.exam.group.model.FcGroup">
+		parameterType="chinaPress.exam.group.model.FcGroup" useGeneratedKeys="true" keyProperty="id">
 		insert into fc_group
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -100,6 +100,7 @@
 			</if>
 		</trim>
 	</insert>
+	
 	<update id="updateByPrimaryKeySelective"
 		parameterType="chinaPress.exam.group.model.FcGroup">
 		update fc_group
@@ -128,6 +129,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
 	<update id="updateByPrimaryKey"
 		parameterType="chinaPress.exam.group.model.FcGroup">
 		update fc_group
@@ -140,4 +142,65 @@
 		update_time = #{updateTime,jdbcType=TIMESTAMP}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	
+	<select id="selectByGroupName" resultType="java.lang.Integer">
+		select count(*)
+		from fc_group
+		where 1=1
+		<if test="id!=null">
+			and id !=#{id}
+		</if> 
+		<if test="groupName!=null and groupName!=''">
+			and group_name = #{groupName}
+		</if>
+	</select>
+	
+	<!-- id查询分组详情 -->
+	<select id="selectByGroupId" resultMap="groupMap">
+		select a.id as group_id,	
+			 a.group_name as group_name,
+			 c.id as role_id,
+			 c.user_name as user_name
+		from fc_group a 
+		left join fc_group_user b on a.id = b.group_id
+		left join role_practitioner_archives c on b.role_id = c.id
+		where a.id = #{id}
+	</select>
+	<resultMap id="groupMap" type="chinaPress.exam.group.vo.GroupVo">
+		<id column="group_id" jdbcType="INTEGER" property="groupId" />
+		<result column="group_name" jdbcType="VARCHAR" property="groupName" />
+		<collection property="users" ofType="chinaPress.exam.group.vo.UserVo">
+			<id column="role_id" jdbcType="INTEGER" property="id" />
+			<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		</collection>
+	</resultMap>
+	
+	
+	<select id="selectByNameLikeAll" resultType="chinaPress.exam.group.vo.GroupAndUser">
+		select a.id as groupId,	
+			 a.group_name as groupName,
+				GROUP_CONCAT(c.user_name) as userName
+			from fc_group a 
+			left join fc_group_user b on a.id = b.group_id
+			left join role_practitioner_archives c on b.role_id = c.id
+			where 1=1
+			<if test="groupName!=null and groupName!=''">
+				and a.group_name like concat('%',#{groupName},'%')
+			</if>
+			group by a.id,
+			 		 a.group_name
+			<if test="page!=null and limit!=null">
+				limit #{page} , #{limit}
+			</if>
+	</select>
+	
+	<select id="selectByNameLikeAllCount" resultType="java.lang.Integer">
+		select count(*)
+		from fc_group a 
+		where 1=1
+		<if test="groupName!=null and groupName!=''">
+			and a.group_name like concat('%',#{groupName},'%')
+		</if>
+	</select>
+	
 </mapper>

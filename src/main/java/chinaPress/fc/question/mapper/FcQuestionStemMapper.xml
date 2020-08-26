@@ -303,4 +303,135 @@
 		from 
 	 		fc_question_stem a 
 	</select>
+		
+	<!-- 根据试题名称，试题难度，试题分类展示试题信息 -->
+	<select id="selectByCatalogIdAll" resultType="chinaPress.fc.question.vo.FcQuestionInfo">
+		SELECT
+			a.id as id,
+			a.question_stem as questionStem,
+			b.catalog_name as catalogName,
+			c.user_name as userName,
+			a.create_time as createTime
+		FROM
+			fc_question_stem a
+		LEFT JOIN 
+			fc_question_catalog b 
+		ON 
+			a.catalog_id = b.id
+		LEFT JOIN 
+			role_staff_archives c 
+		ON 
+			a.create_id = c.id
+		WHERE
+			    1 = 1  <!-- 默认创建人字段为空,暂时不做创建人匹配-->
+			<if test="questionStem!=null and questionStem!=''">
+				and a.question_stem like concat('%',#{questionStem},'%')
+			</if>
+			<if test="taskDifficulty != null">
+				and a.task_difficulty = #{taskDifficulty}
+			</if>
+			<if test="catalogId != null">
+				and a.catalog_id = #{catalogId}
+			</if>
+			<if test="type != null">
+				and a.type = #{type}
+			</if>
+		LIMIT #{page} , #{limit}	
+	</select>
+	
+	<!-- 根据试题名称，试题难度，试题分类展示试题个数 -->
+	<select id="selectByCatalogIdCount" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			fc_question_stem a
+		LEFT JOIN 
+			fc_question_catalog b 
+		ON 
+			a.catalog_id = b.id
+		LEFT JOIN 
+			role_staff_archives c 
+		ON 
+			a.create_id = c.id
+		WHERE
+			    1 = 1  <!-- 试题创建人为空暂时不做创建人匹配-->
+			<if test="questionStem !=null and questionStem!=''">
+				and a.question_stem like concat('%',#{questionStem},'%')
+			</if>
+			<if test="taskDifficulty != null">
+				and a.task_difficulty = #{taskDifficulty}
+			</if>
+			<if test="catalogId != null">
+				and a.catalog_id = #{catalogId}
+			</if>
+	</select>
+	
+	<!-- 查询所有试题信息  关联试题分类,试题答案 -->
+	<select id="selectQuestionAll" resultMap="questionMap">
+		SELECT
+			a.id AS id,
+			a.question_stem AS question_stem,
+			a.question_type AS question_type,
+			a.task_difficulty AS task_difficulty,
+			a.catalog_id AS catalog_id,
+			a.grade AS grade,
+			b.catalog_name AS catalog_name,
+			c.id AS o_id,
+			c.option_type AS option_type,
+			c.option_name AS option_name
+		FROM
+			fc_question_stem a
+		LEFT JOIN fc_question_catalog b ON a.catalog_id = b.id
+		LEFT JOIN fc_question_option c ON a.id = c.stem_id
+	</select>
+	
+	<!-- 封装试题信息的resultMap   关联试题分类,试题答案 -->
+	<resultMap id="questionMap"  type="chinaPress.fc.question.vo.QuestionVo">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="question_stem" jdbcType="VARCHAR" property="questionStem" />
+		<result column="question_type" jdbcType="INTEGER" property="questionType" />
+		<result column="task_difficulty" jdbcType="INTEGER" property="taskDifficulty" />
+		<result column="catalog_id" jdbcType="INTEGER" property="catalogId" />
+		<result column="catalog_name" jdbcType="VARCHAR" property="catalogName" />
+		<result column="grade" jdbcType="VARCHAR" property="grade" />
+		<collection property="options" ofType="chinaPress.fc.question.vo.QuestionOption">
+			<id column="o_id" jdbcType="INTEGER" property="oId"/>
+			<result column="option_type" jdbcType="INTEGER" property="optionType" />
+			<result column="option_name" jdbcType="VARCHAR" property="optionName" />
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 查询所有试题信息  关联试题分类,试题答案 -->
+	<select id="selectQuestionNameInfo" resultType="chinaPress.fc.question.vo.QuestionNameVo">
+			SELECT
+				b.catalog_name AS catalogName,
+				CASE
+					WHEN a.question_type = 1 THEN
+						'单选'
+					WHEN a.question_type = 2 THEN
+						'多选'
+					WHEN a.question_type = 3 THEN
+						'判断'
+					END AS questionTypeName,
+			 	CASE
+					WHEN a.task_difficulty = 1 THEN
+						'简单'
+					WHEN a.task_difficulty = 2 THEN
+						'一般'
+					WHEN a.task_difficulty = 3 THEN
+						'困难'
+					END AS taskDifficultyName,
+				count(b.id) AS count	
+			FROM
+				fc_question_stem a
+			LEFT JOIN fc_question_catalog b ON a.catalog_id = b.id
+			WHERE
+				b.id = #{catalogId}
+			AND a.question_type = #{questionType}
+			AND a.task_difficulty = #{taskDifficulty}
+			GROUP BY  b.catalog_name,a.task_difficulty
+			LIMIT 1
+	</select>
+	
 </mapper>

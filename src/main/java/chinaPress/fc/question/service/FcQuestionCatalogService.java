@@ -97,10 +97,25 @@ public class FcQuestionCatalogService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-	public Result findAll() {
+	public Result findAll(String name,Integer page,Integer limit) {
 		try {
-			List<FcQuestionCatalogVo> list = fcQuestionCatalogMapper.selectAll();
+			List<FcQuestionCatalogVo> list = fcQuestionCatalogMapper.selectAll(name,page,limit);
 			return new Result(1,"查询成功",list);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	/**
+	 * 查询所有分类个数
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+	public Result findAllCount(String name) {
+		try {
+			int count = fcQuestionCatalogMapper.selectAllCount(name);
+			return new Result(1,"查询成功",count);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new Result(0,"系统错误","");

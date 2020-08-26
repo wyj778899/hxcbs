@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import chinaPress.exam.paper.vo.PaperVo;
+import chinaPress.fc.question.vo.QuestionVo;
 
 /**
  * fc_paper
@@ -25,6 +26,11 @@ public class FcPaper {
      * 试卷名称
      */
     private String paperName;
+    
+    /**
+     * 试卷分类
+     */
+    private Integer paperCatalog;
 
     /**
      * 备注(考试评语)
@@ -41,6 +47,11 @@ public class FcPaper {
     private Date createTime;
 
     /**
+     * 试卷分数
+     */
+    private String paperGrade;
+    
+    /**
      * 更新人
      */
     private Integer updateId;
@@ -51,11 +62,31 @@ public class FcPaper {
     private Date updateTime;
     
     /**
-     * 试卷和试题关联信息
+     *试题个数 
+     */
+    private Integer count;
+    
+    
+    /**
+     * 试卷和试题关联信息    试卷抽取试题配置
      */
     private List<PaperVo> papers;
+    
+    /**
+     * 试题信息
+     */
+    List<QuestionVo> questions;
+    
 
-    public List<PaperVo> getPapers() {
+	public List<QuestionVo> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<QuestionVo> questions) {
+		this.questions = questions;
+	}
+
+	public List<PaperVo> getPapers() {
 		return papers;
 	}
 
@@ -188,4 +219,30 @@ public class FcPaper {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getPaperGrade() {
+		return paperGrade;
+	}
+
+	public void setPaperGrade(String paperGrade) {
+		this.paperGrade = paperGrade;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public Integer getPaperCatalog() {
+		return paperCatalog;
+	}
+
+	public void setPaperCatalog(Integer paperCatalog) {
+		this.paperCatalog = paperCatalog;
+	}
+	
+	
 }

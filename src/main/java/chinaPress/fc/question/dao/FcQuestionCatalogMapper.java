@@ -36,7 +36,14 @@ public interface FcQuestionCatalogMapper {
      * 查询所有
      * @return
      */
-    List<FcQuestionCatalogVo> selectAll();
+    List<FcQuestionCatalogVo> selectAll(@Param("name")String name,@Param("page")Integer page,@Param("limit")Integer limit);
+    
+    
+    /**
+     * 查询所有分类个数
+     * @return
+     */
+    int selectAllCount(@Param("name")String name);
     
     
     /**

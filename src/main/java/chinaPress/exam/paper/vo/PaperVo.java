@@ -1,9 +1,8 @@
 package chinaPress.exam.paper.vo;
 
-import java.math.BigDecimal;
 
 /**
- * 试卷关联试题参数封装 
+ * 试卷抽取试题配置封装
  * @author wyj
  *
  */
@@ -32,7 +31,7 @@ public class PaperVo {
 	/**
 	 * 试题分数
 	 */
-	private BigDecimal grade;
+	private String grade;
 
 	public Integer getCatalogId() {
 		return catalogId;
@@ -66,12 +65,62 @@ public class PaperVo {
 		this.count = count;
 	}
 
-	public BigDecimal getGrade() {
+	public String getGrade() {
 		return grade;
 	}
 
-	public void setGrade(BigDecimal grade) {
+	public void setGrade(String grade) {
 		this.grade = grade;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((catalogId == null) ? 0 : catalogId.hashCode());
+		result = prime * result + ((count == null) ? 0 : count.hashCode());
+		result = prime * result + ((grade == null) ? 0 : grade.hashCode());
+		result = prime * result + ((questionType == null) ? 0 : questionType.hashCode());
+		result = prime * result + ((taskDifficulty == null) ? 0 : taskDifficulty.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PaperVo other = (PaperVo) obj;
+		if (catalogId == null) {
+			if (other.catalogId != null)
+				return false;
+		} else if (!catalogId.equals(other.catalogId))
+			return false;
+		if (count == null) {
+			if (other.count != null)
+				return false;
+		} else if (!count.equals(other.count))
+			return false;
+		if (grade == null) {
+			if (other.grade != null)
+				return false;
+		} else if (!grade.equals(other.grade))
+			return false;
+		if (questionType == null) {
+			if (other.questionType != null)
+				return false;
+		} else if (!questionType.equals(other.questionType))
+			return false;
+		if (taskDifficulty == null) {
+			if (other.taskDifficulty != null)
+				return false;
+		} else if (!taskDifficulty.equals(other.taskDifficulty))
+			return false;
+		return true;
+	}
+	
 	
 }
