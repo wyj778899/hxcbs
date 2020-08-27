@@ -512,6 +512,7 @@
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
 			AND a.course_id = #{courseId}
+			AND a.pay_status = 2
 		ORDER BY update_time DESC
 		LIMIT 1
 	</select>
