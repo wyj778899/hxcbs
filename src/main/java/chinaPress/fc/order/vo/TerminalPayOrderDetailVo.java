@@ -65,6 +65,16 @@ public class TerminalPayOrderDetailVo {
 	private Integer courseNumber;
 
 	/**
+	 * 申请id
+	 */
+	private Integer applyId;
+
+	/**
+	 * 申请人数
+	 */
+	private Integer applyCount;
+
+	/**
 	 * 书籍id集合
 	 */
 	private List<Integer> bookIds;
@@ -187,5 +197,33 @@ public class TerminalPayOrderDetailVo {
 	 */
 	public void setPayStatus(Integer payStatus) {
 		this.payStatus = payStatus;
+	}
+
+	/**
+	 * 获取：applyId
+	 */
+	public Integer getApplyId() {
+		return applyId;
+	}
+
+	/**
+	 * 设置：applyId
+	 */
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
+	}
+
+	/**
+	 * 获取：applyCount
+	 */
+	public Integer getApplyCount() {
+		return applyCount;
+	}
+
+	/**
+	 * 设置：applyCount
+	 */
+	public void setApplyCount(Integer applyCount) {
+		this.applyCount = applyCount;
 	}
 }
