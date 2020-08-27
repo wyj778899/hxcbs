@@ -375,7 +375,7 @@ public class FcOrderController {
 				for (FcApplyPerson fcApplyPerson : list) {
 					MemberInfo selMemberInfo = new MemberInfo();
 					selMemberInfo.setRoleType(
-							fcApplyPerson.getRoleType() == 1 ? 3 : (fcApplyPerson.getRoleType() == 4 ? 2 : null));
+							fcApplyPerson.getRoleType() == 1 ? 3 : (fcApplyPerson.getRoleType() == 2 ? 4 : null));
 					selMemberInfo.setRoleId(fcApplyPerson.getRoleId());
 					MemberInfo resultMemberInfo = memberInfoMapper.selectByPrimaryKey(selMemberInfo);
 					tellPhoneList.add(resultMemberInfo.getTellPhone());
