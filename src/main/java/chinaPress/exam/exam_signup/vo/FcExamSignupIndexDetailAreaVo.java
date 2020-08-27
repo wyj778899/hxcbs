@@ -21,6 +21,10 @@ public class FcExamSignupIndexDetailAreaVo {
 	 * 是否上架1.上架0.下架
 	 */
 	private Integer isPutaway;
+	/**
+	 * 是否可报名
+	 */
+	private Integer isSignup;
 
 	/**
 	 * 获取：id
@@ -90,5 +94,19 @@ public class FcExamSignupIndexDetailAreaVo {
 	 */
 	public void setIsPutaway(Integer isPutaway) {
 		this.isPutaway = isPutaway;
+	}
+
+	/**
+	 * @return the isSignup
+	 */
+	public Integer getIsSignup() {
+		return isSignup;
+	}
+
+	/**
+	 * @param isSignup the isSignup to set
+	 */
+	public void setIsSignup(Integer isSignup) {
+		this.isSignup = isSignup;
 	}
 }

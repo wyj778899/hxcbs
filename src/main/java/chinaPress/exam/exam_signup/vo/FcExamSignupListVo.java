@@ -14,11 +14,11 @@ public class FcExamSignupListVo {
 	 */
 	private Integer signupCount;
 	/**
-	 * 考试形式
+	 * 考试形式(1现场0非现场)
 	 */
 	private Integer examForm;
 	/**
-	 * 是否上架
+	 * 是否上架1.上架0.下架
 	 */
 	private Integer isPutaway;
 

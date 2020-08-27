@@ -299,6 +299,7 @@
 			<result column="area_address" property="address" />
 			<result column="area_time" property="time" />
 			<result column="area_is_putaway" property="isPutaway" />
+			<result column="isSignup" property="isSignup" />
 		</collection>
 	</resultMap>
 	
@@ -308,7 +309,13 @@
 			a.id, a.banner_photo, a.signup_name, a.remarks,
 			case a.exam_form when 1 then '现场' when 0 then '非现场' end form, b.max_count signup_count,
 			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ', b.address) area_address,
-			concat(b.start_time, ' 至 ', b.end_time) area_time, b.is_putaway area_is_putaway
+			concat(b.start_time, ' 至 ', b.end_time) area_time, b.is_putaway area_is_putaway,
+			case
+				b.is_putaway
+				when 1 then
+					if(now() <![CDATA[<]]> b.start_time || now() <![CDATA[>]]> b.end_time,0,1)
+				when 0 then 0
+			end isSignup
 		from
 			fc_exam_signup a
 			inner join fc_exam_signup_area b on a.id = b.signup_id
