@@ -366,7 +366,7 @@ public class FcOrderController {
 			String message = "";
 			if (orderModel.getRoleType().intValue() == 1) {
 				// 机构
-				message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
+				message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclass.cn登陆，访问“我的课堂”中进行学习。";
 				smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 				// 同时给机构下所有报名人员发送短信
 				Integer applyId = orderModel.getApplyId();
@@ -383,7 +383,7 @@ public class FcOrderController {
 				smsService.sendFinishSMS(String.join(",", tellPhoneList), message);
 			} else {
 				// 家长/从业者
-				message = "您好：您已成功报名（" + courseName + "），请及时关注课程信息，祝您学习愉快！";
+				message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclass.cn登陆，访问“我的课堂”中进行学习。";
 				smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 			}
 		}
