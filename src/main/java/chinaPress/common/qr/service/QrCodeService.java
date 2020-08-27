@@ -2,9 +2,11 @@ package chinaPress.common.qr.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +27,9 @@ import chinaPress.common.wxpay.WXPayConstants.SignType;
 import chinaPress.common.wxpay.WXPayUtil;
 import chinaPress.common.wxpay.WxUser;
 import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
@@ -40,30 +44,24 @@ import chinaPress.role.member.model.PractitionerInfo;
 
 @Service
 public class QrCodeService {
-
 	@Autowired
 	private FcOrderService fcOrderService;
-
 	@Autowired
 	private FcCourseArchivesMapper fcCourseArchivesMapper;
-
 	@Autowired
 	private FcOrderPersonMapper fcOrderPersonMapper;
-
 	@Autowired
 	private FcApplyMapper fcApplyMapper;
-
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
-
 	@Autowired
 	private SMSService smsService;
-
 	@Autowired
 	private PractitionerInfoMapper practitionerInfoMapper;
-
 	@Autowired
 	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
+	@Autowired
+	private FcApplyPersonMapper fcApplyPersonMapper;
 
 	/**
 	 * 微信支付模式一支付回调
@@ -76,7 +74,7 @@ public class QrCodeService {
 	public Map<String, String> wxPayCallback(Map<String, String> wxPayCallbackMap) throws Exception {
 		// 购买的信息
 		String orderId = wxPayCallbackMap.get("product_id");
-		String openId = wxPayCallbackMap.get("openid");
+//		String openId = wxPayCallbackMap.get("openid");
 
 		FcOrder orderModel = fcOrderService.selectById(Integer.parseInt(orderId));
 
@@ -87,7 +85,8 @@ public class QrCodeService {
 		String body = "购买课程";
 
 		reqData.put("body", body);
-		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
+		reqData.put("out_trade_no",
+				orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
 		// 转换为分
@@ -200,6 +199,21 @@ public class QrCodeService {
 							String message = "";
 							if (orderModel.getRoleType().intValue() == 1) {
 								// 机构
+								message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
+								smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+								// 同时给机构下所有报名人员发送短信
+								Integer applyId = orderModel.getApplyId();
+								List<FcApplyPerson> list = fcApplyPersonMapper.findByApplyId(applyId);
+								List<String> tellPhoneList = new ArrayList<String>();
+								for (FcApplyPerson fcApplyPerson : list) {
+									MemberInfo selMemberInfo = new MemberInfo();
+									selMemberInfo.setRoleType(fcApplyPerson.getRoleType() == 1 ? 3
+											: (fcApplyPerson.getRoleType() == 4 ? 2 : null));
+									selMemberInfo.setRoleId(fcApplyPerson.getRoleId());
+									MemberInfo resultMemberInfo = memberInfoMapper.selectByPrimaryKey(selMemberInfo);
+									tellPhoneList.add(resultMemberInfo.getTellPhone());
+								}
+								smsService.sendFinishSMS(String.join(",", tellPhoneList), message);
 							} else {
 								// 如果是恩起用户回调给恩起
 								Integer roleId = orderModel.getRoleId();
@@ -222,14 +236,14 @@ public class QrCodeService {
 									}
 								}
 								// 家长/从业者
-								message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+								message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
 								smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 							}
 						}
 					}
 					resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 				} else {
-					resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付成功，购买会员失败]]></return_msg></xml>";
+					resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付成功，购买课程失败]]></return_msg></xml>";
 				}
 			} else {
 				resXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[验签失败]]></return_msg></xml>";
@@ -266,7 +280,8 @@ public class QrCodeService {
 		reqData.put("openid", openId); // 用户标识
 		reqData.put("body", "购买课程"); // 商品描述
 //		reqData.put("out_trade_no", WXPayUtil.generateNonceStr()); // 商户订单号
-		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp()))); // 商户订单号
+		reqData.put("out_trade_no",
+				orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp()))); // 商户订单号
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();
 		// 转换为分
@@ -327,7 +342,7 @@ public class QrCodeService {
 	 * @throws IOException
 	 */
 	public String getWxOpenId(String code) throws IOException {
-		String openId = "";	
+		String openId = "";
 		MyWXPayConfig myWXPayConfig = new MyWXPayConfig();
 		// 回传用户接口
 		Map<String, String> params = new HashMap<String, String>();
@@ -349,7 +364,7 @@ public class QrCodeService {
 		}
 		return openId;
 	}
-	
+
 	/**
 	 * h5支付
 	 * 
@@ -368,7 +383,8 @@ public class QrCodeService {
 		String body = "购买课程";
 
 		reqData.put("body", body);
-		reqData.put("out_trade_no", orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
+		reqData.put("out_trade_no",
+				orderModel.getCode().concat("_").concat(String.valueOf(WXPayUtil.getCurrentTimestamp())));
 //		reqData.put("out_trade_no", String.valueOf(WXPayUtil.getCurrentTimestamp()));
 
 		BigDecimal orderPayAmountYuan = orderModel.getPayAmount();

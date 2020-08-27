@@ -1,9 +1,11 @@
 package chinaPress.common.alipay.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +23,9 @@ import chinaPress.common.httpclient.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.wxpay.WXPayUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.coupon.dao.FcDiscountCouponRecordMapper;
 import chinaPress.fc.coupon.model.FcDiscountCouponRecord;
 import chinaPress.fc.course.dao.FcCourseArchivesMapper;
@@ -52,8 +56,9 @@ public class AlipayService {
 	private PractitionerInfoMapper practitionerInfoMapper;
 	@Autowired
 	private FcDiscountCouponRecordMapper fcDiscountCouponRecordMapper;
-	
-	
+	@Autowired
+	private FcApplyPersonMapper fcApplyPersonMapper;
+
 	/**
 	 * 支付宝支付回调
 	 * 
@@ -158,7 +163,7 @@ public class AlipayService {
 							updOrder.setPayTime(new Date());
 							updOrder.setThirdPartyNo(trade_no);
 							fcOrderService.updateByPrimaryKeySelective(updOrder);
-							
+
 							if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
 								FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
 								couponRecord.setId(orderModel.getCouponId());
@@ -193,18 +198,37 @@ public class AlipayService {
 								String message = "";
 								if (orderModel.getRoleType().intValue() == 1) {
 									// 机构
+									message = "您好，您报名的（" + courseName
+											+ "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
+									smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+									// 同时给机构下所有报名人员发送短信
+									Integer applyId = orderModel.getApplyId();
+									List<FcApplyPerson> list = fcApplyPersonMapper.findByApplyId(applyId);
+									List<String> tellPhoneList = new ArrayList<String>();
+									for (FcApplyPerson fcApplyPerson : list) {
+										MemberInfo selMemberInfo = new MemberInfo();
+										selMemberInfo.setRoleType(fcApplyPerson.getRoleType() == 1 ? 3
+												: (fcApplyPerson.getRoleType() == 4 ? 2 : null));
+										selMemberInfo.setRoleId(fcApplyPerson.getRoleId());
+										MemberInfo resultMemberInfo = memberInfoMapper
+												.selectByPrimaryKey(selMemberInfo);
+										tellPhoneList.add(resultMemberInfo.getTellPhone());
+									}
+									smsService.sendFinishSMS(String.join(",", tellPhoneList), message);
 								} else {
-									//如果是恩起用户回调给恩起
+									// 如果是恩起用户回调给恩起
 									Integer roleId = orderModel.getRoleId();
-									PractitionerInfo practitionerInfo  = practitionerInfoMapper.selectByPrimaryKey(roleId);
+									PractitionerInfo practitionerInfo = practitionerInfoMapper
+											.selectByPrimaryKey(roleId);
 									Integer source = practitionerInfo.getSource();
-									if(source!=null && source==2) {
-										//回传用户接口
+									if (source != null && source == 2) {
+										// 回传用户接口
 										Map<String, String> enqiparams = new HashMap<String, String>();
 										enqiparams.put("tellPhone", practitionerInfo.getTellPhone());
 										enqiparams.put("certificateNumber", practitionerInfo.getCertificateNumber());
 										try {
-											Result result = HttpClient.doPost("http://www.ingclass.org/hx/status/update.do", params);
+											Result result = HttpClient
+													.doPost("http://www.ingclass.org/hx/status/update.do", params);
 											if (result.getCode() == 200) {
 												WXPayUtil.getLogger().info("恩起发送成功");
 											}
@@ -214,7 +238,8 @@ public class AlipayService {
 										}
 									}
 									// 家长/从业者
-									message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+									message = "您好，您报名的（" + courseName
+											+ "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
 									smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 								}
 							}

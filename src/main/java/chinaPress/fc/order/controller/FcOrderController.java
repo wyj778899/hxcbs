@@ -1,6 +1,7 @@
 package chinaPress.fc.order.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,9 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.sms.service.SMSService;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.fc.apply.dao.FcApplyMapper;
+import chinaPress.fc.apply.dao.FcApplyPersonMapper;
 import chinaPress.fc.apply.model.FcApply;
+import chinaPress.fc.apply.model.FcApplyPerson;
 import chinaPress.fc.book.dao.FcBookArchivesMapper;
 import chinaPress.fc.book.model.FcBookArchives;
 import chinaPress.fc.coupon.dao.FcDiscountCouponMapper;
@@ -63,8 +66,8 @@ public class FcOrderController {
 	private FcBookArchivesMapper fcBookArchivesMapper;
 	@Autowired
 	private FcDiscountCouponMapper fcDiscountCouponMapper;
-	
-	
+	@Autowired
+	private FcApplyPersonMapper fcApplyPersonMapper;
 
 	/**
 	 * 终端 我的订单数据数量
@@ -203,7 +206,7 @@ public class FcOrderController {
 	 * 如果使用优惠券后支付金额为0元，走此接口
 	 * 
 	 * @author maguoliang
-	 * @param orderId  订单id
+	 * @param orderId 订单id
 	 * @return
 	 */
 	@RequestMapping("falseWxPayOrder")
@@ -243,14 +246,12 @@ public class FcOrderController {
 					if (checkCoupon == null) {
 						result = ResultUtil.custom(-1, "非法数据，优惠券错误", -1);
 					} else {
-						Integer finalGrantRoleType = 0; 
+						Integer finalGrantRoleType = 0;
 						if (checkCoupon.getGrantRoleType().intValue() == 2) {
 							finalGrantRoleType = 1;
-						}
-						else if (checkCoupon.getGrantRoleType().intValue() == 3) {
+						} else if (checkCoupon.getGrantRoleType().intValue() == 3) {
 							finalGrantRoleType = 2;
-						}
-						else if (checkCoupon.getGrantRoleType().intValue() == 4) {
+						} else if (checkCoupon.getGrantRoleType().intValue() == 4) {
 							finalGrantRoleType = 3;
 						}
 						// 角色类型（1.机构2.家长3.从业者）
@@ -262,7 +263,8 @@ public class FcOrderController {
 						if (checkCoupon.getStatus().intValue() == 2) {
 							if (checkCoupon.getGrantRoleId().intValue() == orderModel.getRoleId().intValue()
 									&& finalGrantRoleType.intValue() == orderModel.getRoleType().intValue()) {
-								FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
+								FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper
+										.selectByPrimaryKey(checkCoupon.getCouponId());
 								// 类型（1.满减劵2.观影劵）
 								if (fcDiscountCoupon.getType().intValue() == 1) {
 									discountPrice = fcDiscountCoupon.getEnoughMoney();
@@ -282,7 +284,7 @@ public class FcOrderController {
 							}
 						}
 					}
-				} 
+				}
 				// 没使用优惠券
 				else {
 					if (orderModel.getDiscountAmount().compareTo(new BigDecimal(0)) > 0
@@ -306,9 +308,10 @@ public class FcOrderController {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 支付成功后
+	 * 
 	 * @author maguoliang
 	 * @param orderModel
 	 * @return
@@ -329,7 +332,7 @@ public class FcOrderController {
 		updOrder.setPayStatus(2);
 		updOrder.setPayTime(new Date());
 		fcOrderService.updateByPrimaryKeySelective(updOrder);
-		
+
 		if (orderModel.getIsCoupon() != null && orderModel.getIsCoupon().intValue() == 1) {
 			FcDiscountCouponRecord couponRecord = new FcDiscountCouponRecord();
 			couponRecord.setId(orderModel.getCouponId());
@@ -363,15 +366,30 @@ public class FcOrderController {
 			String message = "";
 			if (orderModel.getRoleType().intValue() == 1) {
 				// 机构
+				message = "您好，您报名的（" + courseName + "）课程，已经缴费成功，您可以登陆hxclss.cn登陆，访问“我的课堂”中进行学习。";
+				smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
+				// 同时给机构下所有报名人员发送短信
+				Integer applyId = orderModel.getApplyId();
+				List<FcApplyPerson> list = fcApplyPersonMapper.findByApplyId(applyId);
+				List<String> tellPhoneList = new ArrayList<String>();
+				for (FcApplyPerson fcApplyPerson : list) {
+					MemberInfo selMemberInfo = new MemberInfo();
+					selMemberInfo.setRoleType(
+							fcApplyPerson.getRoleType() == 1 ? 3 : (fcApplyPerson.getRoleType() == 4 ? 2 : null));
+					selMemberInfo.setRoleId(fcApplyPerson.getRoleId());
+					MemberInfo resultMemberInfo = memberInfoMapper.selectByPrimaryKey(selMemberInfo);
+					tellPhoneList.add(resultMemberInfo.getTellPhone());
+				}
+				smsService.sendFinishSMS(String.join(",", tellPhoneList), message);
 			} else {
 				// 家长/从业者
-				message = "【华夏云课堂】您好：您已成功报名[" + courseName + "]，请及时关注课程信息，祝您学习愉快！";
+				message = "您好：您已成功报名（" + courseName + "），请及时关注课程信息，祝您学习愉快！";
 				smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 			}
 		}
 		return ResultUtil.custom(1, "支付成功");
 	}
-	
+
 	/**
 	 * 查询订单发票信息终端
 	 * 

@@ -76,10 +76,10 @@ public class FcApplyService {
 
 	@Autowired
 	private FcOrderPersonHourMapper fcOrderPersonHourMapper;
-	
+
 	@Autowired
 	private TrainInstitutionInfoMapper trainInstitutionInfoMapper;
-	
+
 	/**
 	 * 新增
 	 * 
@@ -95,67 +95,70 @@ public class FcApplyService {
 
 		Map<String, Object> resultMap = new HashMap<>();
 		List<FcApplyPersonParam> personList = JacksonUtil.fromJSONList(personJson, FcApplyPersonParam.class);
-		//手机号排重
+		// 手机号排重
 		long phones = personList.stream().map(FcApplyPersonParam::getTellPhone).distinct().count();
-		if(phones < personList.size()){
-			resultMap.put("error","报名信息手机号码重复");
+		if (phones < personList.size()) {
+			resultMap.put("error", "报名信息手机号码重复");
 			return ResultUtil.error(resultMap);
 		}
-		//身份证号排重
+		// 身份证号排重
 		long certs = personList.stream().map(FcApplyPersonParam::getCertificateNumber).distinct().count();
-		if(certs < personList.size()){
-			resultMap.put("error","报名信息身份证号重复");
+		if (certs < personList.size()) {
+			resultMap.put("error", "报名信息身份证号重复");
 			return ResultUtil.error(resultMap);
 		}
-		//机构报名校验身份证号,个人报名不校验
-		if(record.getApplyType().intValue() == 1) {
-			for(FcApplyPersonParam f : personList) {
+		// 机构报名校验身份证号,个人报名不校验
+		if (record.getApplyType().intValue() == 1) {
+			for (FcApplyPersonParam f : personList) {
 				String certificateNumber = f.getCertificateNumber();
-				//判断机构是否存在，存在直接返回   
-				if(trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null)!=null) {
-					resultMap.put("error",certificateNumber+":身份证号已被机构注册");
+				// 判断机构是否存在，存在直接返回
+				if (trainInstitutionInfoMapper.selectByIdCert(certificateNumber, null) != null) {
+					resultMap.put("error", certificateNumber + ":身份证号已被机构注册");
 					return ResultUtil.error(resultMap);
 				}
 				int count = 0;
-				//手机号查询
+				// 手机号查询
 				MemberInfo param = new MemberInfo();
 				param.setTellPhone(f.getTellPhone());
 				MemberInfo m = memberInfoMapper.selectByPrimaryKey(param);
 				count++;
-				//用户名查询
-				if(m==null) {
+				// 用户名查询
+				if (m == null) {
 					MemberInfo param1 = new MemberInfo();
 					param1.setUserName(f.getTellPhone());
 					m = memberInfoMapper.selectByPrimaryKey(param1);
 					count++;
 				}
-				//身份证号查询
-				if(m==null) {
+				// 身份证号查询
+				if (m == null) {
 					PractitionerInfo pra = practitionerInfoMapper.selectByIdCert(f.getCertificateNumber(), null);
-					if(pra!=null) {
+					if (pra != null) {
 						m = new MemberInfo();
 						m.setRoleId(pra.getId());
-						m.setRoleType(pra.getType() == 1 ? 3: pra.getType() == 2 ? 4 :null);
+						m.setRoleType(pra.getType() == 1 ? 3 : pra.getType() == 2 ? 4 : null);
 						count++;
 					}
 				}
-				if(m!=null) {
-					//校验机构报名的用户是否已经申请报名并且订单状态还存在     这样的用户不允许二次报名
-					OrderVo orderVo = fcApplyMapper.selectApplyOrder(record.getCourseId(), m.getRoleType()==3?1:m.getRoleType()==4?2:null,m.getRoleId());
-					if(orderVo!=null) {
-					Date d = new Date();
-					//订单的开始时间到现在是否为两天            或者                订单的状态为已支付       未支付的情况不准确
-					if((orderVo.getPayStatus()!=null && orderVo.getPayStatus().intValue()==2) || (orderVo.getCreateTime()!=null && DateUtil.getLongOfTwoDate(orderVo.getCreateTime(),d)>1)){
-						if(count == 1) {
-							resultMap.put("error",f.getTellPhone()+":此用户已报名该课程,并且已生成订单");
-						}else if (count == 2){
-							resultMap.put("error",f.getUserName()+":此用户已报名该课程,并且已生成订单");
-						}else if(count == 3) {
-							resultMap.put("error",f.getCertificateNumber()+":此用户已报名该课程,并且已生成订单");
+				if (m != null) {
+					// 校验机构报名的用户是否已经申请报名并且订单状态还存在 这样的用户不允许二次报名
+					OrderVo orderVo = fcApplyMapper.selectApplyOrder(record.getCourseId(),
+							m.getRoleType() == 3 ? 1 : m.getRoleType() == 4 ? 2 : null, m.getRoleId());
+					if (orderVo != null) {
+						Date d = new Date();
+						// 订单的开始时间到现在是否为两天 或者 订单的状态为已支付 未支付的情况不准确
+						if ((orderVo.getPayStatus() != null && orderVo.getPayStatus().intValue() == 2)
+								|| (orderVo.getCreateTime() != null
+										&& DateUtil.getLongOfTwoDate(orderVo.getCreateTime(), d) > 1)) {
+							if (count == 1) {
+								resultMap.put("error", f.getTellPhone() + ":此用户已报名该课程,并且已生成订单");
+							} else if (count == 2) {
+								resultMap.put("error", f.getUserName() + ":此用户已报名该课程,并且已生成订单");
+							} else if (count == 3) {
+								resultMap.put("error", f.getCertificateNumber() + ":此用户已报名该课程,并且已生成订单");
+							}
+
+							return ResultUtil.error(resultMap);
 						}
-						
-						return ResultUtil.error(resultMap);
-					}
 					}
 				}
 			}
@@ -169,27 +172,29 @@ public class FcApplyService {
 					if (item.getSex() == null) {
 						item.setSex(1);
 					}
-					//判断手机号是否存在
+					// 判断手机号是否存在
 					MemberInfo memberParam = new MemberInfo();
 					memberParam.setTellPhone(item.getTellPhone());
 					MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
-					if(memberInfo==null) {
-						//手机号查询为null走用户名查询
+					if (memberInfo == null) {
+						// 手机号查询为null走用户名查询
 						MemberInfo nameParam = new MemberInfo();
 						nameParam.setUserName(item.getTellPhone());
 						memberInfo = memberInfoMapper.selectByPrimaryKey(nameParam);
 					}
-					if(memberInfo==null) {
-						//用户查询为null走身份证号查询
+					if (memberInfo == null) {
+						// 用户查询为null走身份证号查询
 						PractitionerInfo p = practitionerInfoMapper.selectByIdCert(item.getCertificateNumber(), null);
-						if(p!=null) {
-							//用户角色id和角色类型查询员工表的id
-							Integer mId = memberInfoMapper.selectByRoleIdAndType(p.getId(), p.getType() == 1 ? 3: p.getType() == 2 ? 4 :null);
+						if (p != null) {
+							// 用户角色id和角色类型查询员工表的id
+							Integer mId = memberInfoMapper.selectByRoleIdAndType(p.getId(),
+									p.getType() == 1 ? 3 : p.getType() == 2 ? 4 : null);
 							memberInfo = new MemberInfo();
-							memberInfo.setRoleId(p.getId());//赋值角色id
-							memberInfo.setRoleType(p.getType() == 1 ? 3: p.getType() == 2 ? 4 :null);//赋值角色类型
-							//身份证号匹配成功并且手机号为null并且查询出来的用户角色为从业者                   此处是教师数据缺失的用户信息进行更新，别的数据不操作
-							if(StringUtils.isBlank(p.getTellPhone())&&(p.getType()!=null && p.getType().intValue()==2)){
+							memberInfo.setRoleId(p.getId());// 赋值角色id
+							memberInfo.setRoleType(p.getType() == 1 ? 3 : p.getType() == 2 ? 4 : null);// 赋值角色类型
+							// 身份证号匹配成功并且手机号为null并且查询出来的用户角色为从业者 此处是教师数据缺失的用户信息进行更新，别的数据不操作
+							if (StringUtils.isBlank(p.getTellPhone())
+									&& (p.getType() != null && p.getType().intValue() == 2)) {
 								// 修改员工
 								MemberInfo updMember = new MemberInfo();
 								updMember.setId(mId);
@@ -197,12 +202,12 @@ public class FcApplyService {
 								updMember.setSex(item.getSex());
 								updMember.setUserName(item.getTellPhone());
 								updMember.setTellPhone(item.getTellPhone());
-								updMember.setPassword(Md5Util.getEncryptedPwd("12345678"));//赋初始密码
+								updMember.setPassword(Md5Util.getEncryptedPwd("12345678"));// 赋初始密码
 								memberInfoMapper.updateByPrimaryKeySelective(updMember);
 
 								// 修改家长/从业者
 								PractitionerInfo updPractitioner = new PractitionerInfo();
-								updPractitioner.setPassword(Md5Util.getEncryptedPwd("12345678"));//赋初始密码
+								updPractitioner.setPassword(Md5Util.getEncryptedPwd("12345678"));// 赋初始密码
 								updPractitioner.setId(memberInfo.getRoleId());
 								updPractitioner.setUserName(item.getTellPhone());
 								updPractitioner.setTellPhone(item.getTellPhone());
@@ -227,7 +232,7 @@ public class FcApplyService {
 						if (memberInfo.getRoleType().intValue() != 3 && memberInfo.getRoleType().intValue() != 4) {
 							continue;
 						}
- 
+
 						// 修改员工
 //						MemberInfo updMember = new MemberInfo();
 //						updMember.setId(memberInfo.getId());
@@ -293,9 +298,9 @@ public class FcApplyService {
 						insMemberModel.setPassword(Md5Util.getEncryptedPwd("12345678"));
 						insMemberModel.setSex(item.getSex());
 						insMemberModel.setAddress(item.getInstitutionAddress());
-						insMemberModel.setIsStart(1);//是否启用
-						insMemberModel.setState(2);//已审核
-						insMemberModel.setSource(1);//用户来源
+						insMemberModel.setIsStart(1);// 是否启用
+						insMemberModel.setState(2);// 已审核
+						insMemberModel.setSource(1);// 用户来源
 						insMemberModel.setRoleId(practitionerInfo.getId());
 						insMemberModel.setPhoto("assets/image/userImg.jpg");
 						if (item.getRoleType().intValue() == 1) {
@@ -320,8 +325,8 @@ public class FcApplyService {
 				MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(memberParam);
 				if (memberInfo != null) {
 					String courseName = fcCourseArchivesMapper.selectByPrimaryKey(record.getCourseId()).getName();
-					String message = "【华夏云课堂】尊敬的机构用户：您已成功提交" + courseName
-							+ "课程的报名信息，我们会在2-3个工作日进行审核，您可在“我的课堂”中查询结果。如有疑义，可致电010-64672273。感谢您的支持！";
+					String message = "尊敬的机构用户：您已成功提交（" + courseName
+							+ "）课程的报名信息，我们会在2-3个工作日进行审核，您可在“我的课堂”中查询结果。如有疑义，可致电010-64672273。感谢您的支持！";
 					smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 				}
 
@@ -329,7 +334,7 @@ public class FcApplyService {
 				return ResultUtil.ok(resultMap);
 			} else {
 
-				//个人报名申请不修改用户个人信息
+				// 个人报名申请不修改用户个人信息
 //				FcApplyPersonParam personModel = personList.get(0);
 //				MemberInfo memberParam = new MemberInfo();
 //				memberParam.setTellPhone(personModel.getTellPhone());
@@ -411,7 +416,8 @@ public class FcApplyService {
 				// 订单金额和支付金额
 				List<FcApplyPerson> personList = fcApplyPersonMapper.findByApplyId(id);
 				FcCourseArchives fcCourseArchives = fcCourseArchivesMapper.selectByPrimaryKey(applyModel.getCourseId());
-				BigDecimal orderMoney = fcCourseArchives.getCoursePrice().multiply(BigDecimal.valueOf(personList.size()));
+				BigDecimal orderMoney = fcCourseArchives.getCoursePrice()
+						.multiply(BigDecimal.valueOf(personList.size()));
 				insOrder.setOrderAmount(orderMoney);
 				insOrder.setPayAmount(orderMoney);
 				int insOrderIndex = fcOrderMapper.insertSelective(insOrder);
@@ -452,7 +458,7 @@ public class FcApplyService {
 				String message = "";
 				if (applyModel.getApplyType().intValue() == 1 && auditStatus == 2) {
 					// 审核
-					message = "【华夏云课堂】您好：您已成功报名" + courseName + "，请及时关注课程信息，祝您学习愉快！";
+					message = "您好：您已成功报名（" + courseName + "），请及时关注课程信息，祝您学习愉快！";
 					smsService.sendFinishSMS(memberInfo.getTellPhone(), message);
 				} else if (applyModel.getApplyType().intValue() == 1 && auditStatus == 3) {
 					// 驳回
