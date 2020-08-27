@@ -161,6 +161,9 @@ public class FcGroupService {
 		if(groupId==null) {
 			return new Result(0,"分组信息出错","");
 		}
+		
+		// XXX 分组管理：删除只要被引用，无法删除
+		
 		try {
 			fcGroupUserMapper.deleteByGroupId(groupId);
 			fcGroupMapper.deleteByPrimaryKey(groupId);
