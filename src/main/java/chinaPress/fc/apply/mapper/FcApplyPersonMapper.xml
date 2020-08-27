@@ -6,20 +6,33 @@
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="apply_id" jdbcType="INTEGER" property="applyId" />
 		<result column="role_id" jdbcType="INTEGER" property="roleId" />
-		<result column="role_type" jdbcType="INTEGER"
-			property="roleType" />
-		<result column="create_id" jdbcType="INTEGER"
-			property="createId" />
-		<result column="create_time" jdbcType="TIMESTAMP"
-			property="createTime" />
-		<result column="update_id" jdbcType="INTEGER"
-			property="updateId" />
-		<result column="update_time" jdbcType="TIMESTAMP"
-			property="updateTime" />
+		<result column="role_type" jdbcType="INTEGER" property="roleType" />
+		<result column="create_id" jdbcType="INTEGER" property="createId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_id" jdbcType="INTEGER" property="updateId" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<!-- 20200827   wyj   add  添加姓名,性别,年龄,学历,身份证号,手机号,岗位,工作年限,户籍所在地,详细工作,籍贯,民族,机构名称,邮寄地址,用户名-->
+		<result column="person_name" jdbcType="VARCHAR" property="personName" />
+		<result column="person_sex" jdbcType="INTEGER" property="personSex" />
+		<result column="person_age" jdbcType="INTEGER" property="personAge" />
+		<result column="person_education" jdbcType="VARCHAR" property="personEducation" />
+		<result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+		<result column="tell_phone" jdbcType="VARCHAR" property="tellPhone" />
+		<result column="post" jdbcType="VARCHAR" property="post" />
+		<result column="work_year" jdbcType="INTEGER" property="workYear" />
+		<result column="provice_city_area" jdbcType="VARCHAR" property="proviceCityArea" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="mailing_address" jdbcType="VARCHAR" property="mailingAddress" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="person_ethnic" jdbcType="VARCHAR" property="personEthnic" />
+		<result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
+		<result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, apply_id, role_id, role_type, create_id, create_time, update_id,
-		update_time
+		id, apply_id, role_id, role_type, 
+		person_name,person_sex,person_age,person_education,certificate_number,tell_phone,
+		post,work_year,provice_city_area,address,mailing_address,user_name,person_ethnic,native_place,institution_name
+		create_id, create_time, update_id,update_time
 	</sql>
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -70,6 +83,52 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<!-- 20200827  wyj  add -->
+			<if test="personName != null">
+				person_name,
+			</if>
+			<if test="personSex != null">
+				person_sex,
+			</if>
+			<if test="personAge != null">
+				person_age,
+			</if>
+			<if test="personEducation != null">
+				person_education,
+			</if>
+			<if test="certificateNumber != null">
+				certificate_number,
+			</if>
+			<if test="tellPhone != null">
+				tell_phone,
+			</if>
+			<if test="post != null">
+				post,
+			</if>
+			<if test="workYear != null">
+				work_year,
+			</if>
+			<if test="proviceCityArea != null">
+				provice_city_area,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="mailingAddress != null">
+				mailing_address,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="personEthnic != null">
+				person_ethnic,
+			</if>
+			<if test="nativePlace != null">
+				native_place,
+			</if>
+			<if test="institutionName != null">
+				institution_name,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -95,6 +154,52 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<!-- 20200827  wyj  add -->
+			<if test="personName != null">
+				#{personName,jdbcType=VARCHAR},
+			</if>
+			<if test="personSex != null">
+				#{personSex,jdbcType=INTEGER},
+			</if>
+			<if test="personAge != null">
+				#{personAge,jdbcType=INTEGER},
+			</if>
+			<if test="personEducation != null">
+				#{personEducation,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateNumber != null">
+				#{certificateNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				#{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null">
+				#{post,jdbcType=VARCHAR},
+			</if>
+			<if test="workYear != null">
+				#{workYear,jdbcType=INTEGER},
+			</if>
+			<if test="proviceCityArea != null">
+				#{proviceCityArea,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="mailingAddress != null">
+				#{mailingAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="personEthnic != null">
+				#{personEthnic,jdbcType=VARCHAR},
+			</if>
+			<if test="nativePlace != null">
+				#{nativePlace,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionName != null">
+				#{institutionName,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -122,6 +227,52 @@
 			</if>
 			<if test="updateTime != null">
 				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<!-- 20200827  wyj  add -->
+			<if test="personName != null">
+				person_name = #{personName,jdbcType=VARCHAR},
+			</if>
+			<if test="personSex != null">
+				person_sex = #{personSex,jdbcType=INTEGER},
+			</if>
+			<if test="personAge != null">
+				person_age = #{personAge,jdbcType=INTEGER},
+			</if>
+			<if test="personEducation != null">
+				person_education = #{personEducation,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateNumber != null">
+				certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="tellPhone != null">
+				tell_phone = #{tellPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null">
+				post = #{post,jdbcType=VARCHAR},
+			</if>
+			<if test="workYear != null">
+				work_year = #{workYear,jdbcType=INTEGER},
+			</if>
+			<if test="proviceCityArea != null">
+				provice_city_area = #{proviceCityArea,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="mailingAddress != null">
+				mailing_address = #{mailingAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="personEthnic != null">
+				person_ethnic = #{personEthnic,jdbcType=VARCHAR},
+			</if>
+			<if test="nativePlace != null">
+				native_place = #{nativePlace,jdbcType=VARCHAR},
+			</if>
+			<if test="institutionName != null">
+				institution_name = #{institutionName,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

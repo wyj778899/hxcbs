@@ -48,7 +48,206 @@ public class FcApplyPerson {
      */
     private Date updateTime;
 
+    
     /**
+     *20200827 wyj    add    机构报名导出用户信息不完整
+     *姓名
+     */
+    private String personName;
+    
+    /**
+     * 性别
+     */
+    private Integer personSex;
+    
+    /**
+     * 年龄
+     */
+    private Integer personAge;
+    
+    /**
+     * 学历
+     */
+    private String personEducation;
+    
+    /**
+     *身份证号 
+     */
+    private String certificateNumber;
+    
+    /**
+     * 手机号
+     */
+    private String tellPhone;
+    
+    /**
+     * 岗位
+     */
+    private String post;
+    
+    /**
+     * 工作年限
+     */
+    private Integer workYear;
+    
+    /**
+     * 省市区
+     */
+    private String proviceCityArea;
+    
+    /**
+     * 详细地址
+     */
+    private String address;
+    
+    /**
+     * 邮寄地址
+     */
+    private String mailingAddress;
+    
+    /**
+     * 用户名
+     */
+    private String userName;
+    
+    /**
+	 * 民族
+	 */
+	private String personEthnic;
+	
+	/**
+	 * 籍贯
+	 */
+	private String nativePlace;
+	
+	/**
+	 * 机构名称
+	 */
+    private String institutionName;
+    
+    
+    public String getInstitutionName() {
+		return institutionName;
+	}
+
+	public void setInstitutionName(String institutionName) {
+		this.institutionName = institutionName;
+	}
+
+
+	public String getPersonEthnic() {
+		return personEthnic;
+	}
+
+	public void setPersonEthnic(String personEthnic) {
+		this.personEthnic = personEthnic;
+	}
+
+	public String getNativePlace() {
+		return nativePlace;
+	}
+
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
+	}
+
+	public String getMailingAddress() {
+		return mailingAddress;
+	}
+
+	public void setMailingAddress(String mailingAddress) {
+		this.mailingAddress = mailingAddress;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPersonName() {
+		return personName;
+	}
+
+	public void setPersonName(String personName) {
+		this.personName = personName;
+	}
+
+	public Integer getPersonSex() {
+		return personSex;
+	}
+
+	public void setPersonSex(Integer personSex) {
+		this.personSex = personSex;
+	}
+
+	public Integer getPersonAge() {
+		return personAge;
+	}
+
+	public void setPersonAge(Integer personAge) {
+		this.personAge = personAge;
+	}
+
+	public String getPersonEducation() {
+		return personEducation;
+	}
+
+	public void setPersonEducation(String personEducation) {
+		this.personEducation = personEducation;
+	}
+
+	public String getCertificateNumber() {
+		return certificateNumber;
+	}
+
+	public void setCertificateNumber(String certificateNumber) {
+		this.certificateNumber = certificateNumber;
+	}
+
+	public String getTellPhone() {
+		return tellPhone;
+	}
+
+	public void setTellPhone(String tellPhone) {
+		this.tellPhone = tellPhone;
+	}
+
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public Integer getWorkYear() {
+		return workYear;
+	}
+
+	public void setWorkYear(Integer workYear) {
+		this.workYear = workYear;
+	}
+
+	public String getProviceCityArea() {
+		return proviceCityArea;
+	}
+
+	public void setProviceCityArea(String proviceCityArea) {
+		this.proviceCityArea = proviceCityArea;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	/**
      * 报名关联人员
      * @return id
      */
