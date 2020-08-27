@@ -347,19 +347,20 @@ public class FcOrderService {
 		if (checkOrder == null) {
 			return ResultUtil.custom(-1, "该订单不存在");
 		} else {
+			Integer applyId = checkOrder.getApplyId();
+			List<FcApplyPerson> applyPersonList = fcApplyPersonMapper.findByApplyId(applyId);
 			FcCourseArchives checkCourse = fcCourseArchivesMapper.selectByPrimaryKey(checkOrder.getCourseId());
-			payPrice = payPrice.add(checkCourse.getCoursePrice());
+			payPrice = payPrice.add(checkCourse.getCoursePrice().multiply(BigDecimal.valueOf(applyPersonList.size())));
 			// 在查询书籍金额
 			BigDecimal bookPrice = BigDecimal.valueOf(0);
 			// 在查询优惠金额
-			BigDecimal discountPrice = BigDecimal.valueOf(0);
 			
 			if (StringUtils.isNotBlank(bookIdsStr)) {
 				String[] checkBookIds = bookIdsStr.split(",");
 				for (String checkBookId : checkBookIds) {
 					FcBookArchives checkBook = fcBookArchivesMapper.selectByPrimaryKey(Integer.parseInt(checkBookId));
 					if (checkBook != null) {
-						bookPrice = bookPrice.add(checkBook.getPrice());
+						bookPrice = bookPrice.add(checkBook.getPrice().multiply(BigDecimal.valueOf(applyPersonList.size())));
 					} else {
 						return ResultUtil.custom(-1, "非法数据，书籍错误", -1);
 					}
@@ -401,8 +402,11 @@ public class FcOrderService {
 							FcDiscountCoupon fcDiscountCoupon = fcDiscountCouponMapper.selectByPrimaryKey(checkCoupon.getCouponId());
 							// 类型（1.满减劵2.观影劵）
 							if (fcDiscountCoupon.getType().intValue() == 1) {
-								discountPrice = fcDiscountCoupon.getEnoughMoney();
-								payPrice = payPrice.subtract(discountPrice);
+								BigDecimal discountPrice = fcDiscountCoupon.getEnoughMoney();
+								// 满足满减规则
+								if (discountPrice.compareTo(payPrice) < 0) {
+									payPrice = payPrice.subtract(fcDiscountCoupon.getDiscountMoney());
+								}
 							}
 							if (fcDiscountCoupon.getType().intValue() == 2) {
 								payPrice = new BigDecimal(0);
@@ -564,6 +568,8 @@ public class FcOrderService {
 		if (detail != null) {
 			detail.setBookIds(fcOrderBookMapper.findBookIds(id));
 			detail.setVideoNumber(fcCourseHourMapper.selectCourseHourCountByCOurseId(detail.getCourseId()));
+			List<FcApplyPerson> list = fcApplyPersonMapper.findByApplyId(detail.getApplyId());
+			detail.setApplyCount(list.size());
 		}
 		return detail;
 	}

@@ -512,6 +512,7 @@
 			AND b.role_id = #{roleId}
 			AND b.role_type = #{roleType}
 			AND a.course_id = #{courseId}
+			AND a.pay_status = 2
 		ORDER BY update_time DESC
 		LIMIT 1
 	</select>
@@ -530,7 +531,8 @@
 			b.course_price AS coursePrice,
 			a.create_time createTime,
 			b.course_number courseNumber,
-			a.pay_status payStatus
+			a.pay_status payStatus,
+			a.apply_id applyId
 		FROM
 			fc_order a
 		INNER JOIN fc_course_archives b ON b.id = a.course_id

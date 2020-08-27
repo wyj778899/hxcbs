@@ -58,25 +58,27 @@ public class FcCourseHourService {
 	public Result selectCourseHourListBySectionId(Integer personId, Integer courseId, Integer sectionId,
 			Integer roleType, Integer type) {
 		Result result = new Result();
-		// 判断此课程关联的订单是否为异常订单
-		FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(personId, roleType, courseId);
-		// 说明没有购买过此课程的订单	
-		if (exceptionFcOrder == null) {
-			return ResultUtil.custom(7, "此课程关联的订单为异常订单，无法观看，请联系客服");
-		} else {
-			// 如果支付方式为空
-			if (StringUtils.isBlank(exceptionFcOrder.getPaymentMode())) {
-				// 且没使用优惠券
-				if (exceptionFcOrder.getIsCoupon() == 0) {
-					// 且订单金额为0
-					if (exceptionFcOrder.getOrderAmount().compareTo(BigDecimal.valueOf(0)) == 0
-							|| exceptionFcOrder.getPayAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
-						// 修改此订单为异常订单，跳转到订单页面，且提示用户联系客服
-						FcOrder fo = new FcOrder();
-						fo.setId(exceptionFcOrder.getId());
-						fo.setPayStatus(4);
-						fcOrderMapper.updateByPrimaryKeySelective(fo);
-						return ResultUtil.custom(8, "此课程关联的订单为异常订单，无法观看，请联系客服");
+		if (type.intValue() != 0) {
+			// 判断此课程关联的订单是否为异常订单
+			FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(personId, roleType, courseId);
+			// 说明没有购买过此课程的订单	
+			if (exceptionFcOrder == null) {
+				return ResultUtil.custom(7, "此课程关联的订单为异常订单，无法观看，请联系客服");
+			} else {
+				// 如果支付方式为空
+				if (StringUtils.isBlank(exceptionFcOrder.getPaymentMode())) {
+					// 且没使用优惠券
+					if (exceptionFcOrder.getIsCoupon() == 0) {
+						// 且订单金额为0
+						if (exceptionFcOrder.getOrderAmount().compareTo(BigDecimal.valueOf(0)) == 0
+								|| exceptionFcOrder.getPayAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
+							// 修改此订单为异常订单，跳转到订单页面，且提示用户联系客服
+							FcOrder fo = new FcOrder();
+							fo.setId(exceptionFcOrder.getId());
+							fo.setPayStatus(4);
+							fcOrderMapper.updateByPrimaryKeySelective(fo);
+							return ResultUtil.custom(8, "此课程关联的订单为异常订单，无法观看，请联系客服");
+						}
 					}
 				}
 			}

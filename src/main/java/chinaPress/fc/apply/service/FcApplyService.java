@@ -218,6 +218,7 @@ public class FcApplyService {
 								updPractitioner.setEthnic(item.getEthnic());
 								updPractitioner.setNativePlace(item.getNativePlace());
 								updPractitioner.setMailingAddress(item.getMailingAddress());
+								updPractitioner.setAge(item.getAge());
 								practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 							}
 						}
@@ -282,6 +283,7 @@ public class FcApplyService {
 						practitionerInfo.setNativePlace(item.getNativePlace());
 						practitionerInfo.setMailingAddress(item.getMailingAddress());
 						practitionerInfo.setRealName(item.getName());
+						practitionerInfo.setAge(item.getAge());
 						practitionerInfoMapper.insertSelective(practitionerInfo);
 						// 新增员工表
 						MemberInfo insMemberModel = new MemberInfo();
