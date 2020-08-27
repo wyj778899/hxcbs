@@ -169,7 +169,7 @@ public class MemberInfoEQService {
 						memberInfoVo.setRoleId(m.getRoleId());
 						memberInfoVo.setRoleType(m.getRoleType());
 						memberInfoVo.setTellPhone(tellPhone);
-						String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxchlass.cn的用户名为："
+						String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxclass.cn的用户名为："
 								+ practitionerInfo.getUserName() + "，初始密码为12345678 ，请及时修改密码。";
 						smsService.sendFinishSMS(tellPhone, msg);
 						return new Result(1, "添加成功", memberInfoVo);
@@ -220,7 +220,7 @@ public class MemberInfoEQService {
 			memberInfoVo.setRoleType(m.getRoleType());
 			memberInfoVo.setTellPhone(tellPhone);
 			// 注册成功发送短信
-			String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxchlass.cn的用户名为："
+			String msg = "您已经成功提交报名《孤独症康复教育上岗培训课程》。访问hxclass.cn登录进行缴费和学习，您在hxclass.cn的用户名为："
 					+ practitionerInfo.getUserName() + "，初始密码为12345678 ，请及时修改密码。";
 			smsService.sendFinishSMS(tellPhone, msg);
 			
