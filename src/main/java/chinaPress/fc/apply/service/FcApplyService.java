@@ -266,6 +266,17 @@ public class FcApplyService {
 						} else if (memberInfo.getRoleType().intValue() == 4) {
 							applyPerson.setRoleType(2);
 						}
+						// 新加字段
+						applyPerson.setPersonName(item.getName());
+						applyPerson.setPersonSex(item.getSex());
+						applyPerson.setPersonAge(item.getAge());
+						applyPerson.setPersonEducation(item.getEducation());
+						applyPerson.setCertificateNumber(item.getCertificateNumber());
+						applyPerson.setTellPhone(item.getTellPhone());
+						applyPerson.setPost(item.getPost());
+						applyPerson.setWorkYear(item.getWorkYear());
+						applyPerson.setProviceCityArea(item.getCensusAddress());
+						applyPerson.setAddress(item.getInstitutionAddress());
 						fcApplyPersonMapper.insertSelective(applyPerson);
 					} else {
 						item.setRoleType(2);
@@ -315,6 +326,17 @@ public class FcApplyService {
 						applyPerson.setCreateId(record.getCreateId());
 						applyPerson.setRoleId(practitionerInfo.getId());
 						applyPerson.setRoleType(item.getRoleType());
+						// 新加字段
+						applyPerson.setPersonName(item.getName());
+						applyPerson.setPersonSex(item.getSex());
+						applyPerson.setPersonAge(item.getAge());
+						applyPerson.setPersonEducation(item.getEducation());
+						applyPerson.setCertificateNumber(item.getCertificateNumber());
+						applyPerson.setTellPhone(item.getTellPhone());
+						applyPerson.setPost(item.getPost());
+						applyPerson.setWorkYear(item.getWorkYear());
+						applyPerson.setProviceCityArea(item.getCensusAddress());
+						applyPerson.setAddress(item.getInstitutionAddress());
 						fcApplyPersonMapper.insertSelective(applyPerson);
 					}
 				}
@@ -364,7 +386,8 @@ public class FcApplyService {
 //					updPractitioner.setMailingAddress(personModel.getMailingAddress());
 //					practitionerInfoMapper.updateByPrimaryKeySelective(updPractitioner);
 //				}
-
+				// 个人报名的信息
+				FcApplyPersonParam personModel = personList.get(0);
 				FcApplyPerson person = new FcApplyPerson();
 				person.setApplyId(record.getId());
 				person.setRoleId(record.getApplyId());
@@ -374,6 +397,20 @@ public class FcApplyService {
 					person.setRoleType(2);
 				}
 				person.setCreateId(record.getCreateId());
+				// 新加字段 个人报名没有年龄和省市区字段 多了用户名,邮寄地址,现就职机构名称,籍贯，民族字段
+				person.setPersonName(personModel.getName());
+				person.setPersonSex(personModel.getSex());
+				person.setPersonEducation(personModel.getEducation());
+				person.setCertificateNumber(personModel.getCertificateNumber());
+				person.setTellPhone(personModel.getTellPhone());
+				person.setPost(personModel.getPost());
+				person.setWorkYear(personModel.getWorkYear());
+				person.setAddress(personModel.getInstitutionAddress());
+				person.setMailingAddress(personModel.getMailingAddress());
+				person.setUserName(personModel.getUserName());
+				person.setPersonEthnic(personModel.getEthnic());
+				person.setNativePlace(personModel.getNativePlace());
+				person.setInstitutionName(personModel.getInstitutionAddress());
 				fcApplyPersonMapper.insertSelective(person);
 				resultMap.put("type", 2);
 				resultMap.put("applyId", record.getId());
