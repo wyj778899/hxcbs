@@ -31,7 +31,7 @@
 	<sql id="Base_Column_List">
 		id, apply_id, role_id, role_type, 
 		person_name,person_sex,person_age,person_education,certificate_number,tell_phone,
-		post,work_year,provice_city_area,address,mailing_address,user_name,person_ethnic,native_place,institution_name
+		post,work_year,provice_city_area,address,mailing_address,user_name,person_ethnic,native_place,institution_name,
 		create_id, create_time, update_id,update_time
 	</sql>
 	<select id="selectByPrimaryKey"
