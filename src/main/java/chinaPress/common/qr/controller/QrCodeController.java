@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.zxing.BarcodeFormat;
@@ -27,13 +26,11 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-import chinaPress.common.httpclient.Result;
 import chinaPress.common.qr.service.QrCodeService;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.common.wxpay.MyWXPayConfig;
 import chinaPress.common.wxpay.WXPay;
 import chinaPress.common.wxpay.WXPayUtil;
-import chinaPress.fc.order.service.FcOrderService;
 
 @RestController
 public class QrCodeController {
@@ -250,7 +247,7 @@ public class QrCodeController {
 	public chinaPress.common.result.model.Result h5CallPay(String openId, Integer orderId) throws Exception {
 		return qrCodeService.h5CallPay(openId, orderId);
 	}
-	
+
 	/**
 	 * h5支付
 	 * 
@@ -260,7 +257,8 @@ public class QrCodeController {
 	 * @throws Exception
 	 */
 	@RequestMapping("wxH5Pay")
-	public chinaPress.common.result.model.Result wxH5Pay(HttpServletRequest request, HttpServletResponse response, Integer orderId) throws Exception {
+	public chinaPress.common.result.model.Result wxH5Pay(HttpServletRequest request, HttpServletResponse response,
+			Integer orderId) throws Exception {
 		Map<String, String> resParams = qrCodeService.wxH5Pay(request, orderId);
 		WXPayUtil.getLogger().info(resParams.toString());
 		return ResultUtil.ok(resParams);
