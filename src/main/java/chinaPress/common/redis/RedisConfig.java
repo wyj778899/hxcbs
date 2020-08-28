@@ -24,6 +24,8 @@ public class RedisConfig extends CachingConfigurerSupport{
     public JedisPool redisPoolFactory() {
         logger.info("JedisPool注入成功！！");
         JedisPoolConfig config = new JedisPoolConfig();
+        config.setMaxIdle(-1);
+        config.setMaxTotal(-1);
         JedisPool jedisPool = new JedisPool(config, redisProperties.getHost(), redisProperties.getPort(), 30000,
         		redisProperties.getPassword(), 0);
         return jedisPool;
