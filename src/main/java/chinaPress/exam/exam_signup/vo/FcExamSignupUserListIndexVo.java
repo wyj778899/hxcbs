@@ -24,7 +24,7 @@ public class FcExamSignupUserListIndexVo {
 	/**
 	 * 审核状态审核状态(0未审核,1已审核,2已驳回,3已报考)
 	 */
-	private Integer auditStatusTxt;
+	private String auditStatusTxt;
 	/**
 	 * 考试形式
 	 */
@@ -48,12 +48,12 @@ public class FcExamSignupUserListIndexVo {
 	/**
 	 * 考试报名开始时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "GMT+8")
 	private Date startTime;
 	/**
 	 * 考试报名结束时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "GMT+8")
 	private Date endTime;
 	/**
 	 * 是否为补考1.是0.不是
@@ -119,14 +119,14 @@ public class FcExamSignupUserListIndexVo {
 	/**
 	 * @return the auditStatusTxt
 	 */
-	public Integer getAuditStatusTxt() {
+	public String getAuditStatusTxt() {
 		return auditStatusTxt;
 	}
 
 	/**
 	 * @param auditStatusTxt the auditStatusTxt to set
 	 */
-	public void setAuditStatusTxt(Integer auditStatusTxt) {
+	public void setAuditStatusTxt(String auditStatusTxt) {
 		this.auditStatusTxt = auditStatusTxt;
 	}
 

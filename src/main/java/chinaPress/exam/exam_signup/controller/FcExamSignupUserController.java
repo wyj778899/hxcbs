@@ -93,6 +93,8 @@ public class FcExamSignupUserController {
 			result = ResultUtil.custom(index, "该场考试报名区域报名人数已满", index);
 		} else if (index == -6) {
 			result = ResultUtil.custom(index, "请在报名时间范围内报名", index);
+		} else if (index == -7) {
+			result = ResultUtil.custom(index, "该场考试报名区域已下架", index);
 		} else {
 			result = ResultUtil.custom(0, "报名失败", 0);
 		}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.util.DateUtil;
+import chinaPress.exam.exam.dao.FcExamMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
@@ -34,6 +35,8 @@ public class FcExamSignupUserService {
 	private FcExamSignupMapper fcExamSignupMapper;
 	@Autowired
 	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
+	@Autowired
+	private FcExamMapper fcExamMapper;
 
 	/**
 	 * 查询考试报名的人员信息
@@ -122,14 +125,18 @@ public class FcExamSignupUserService {
 						if (fcExamSignupArea.getSignupId().intValue() != fcExamSignupUser.getSignupId().intValue()) {
 							return -3;
 						} else {
-							// 检查是否在报名时间范围
-							if (DateUtil.compareDate(fcExamSignupArea.getStartTime(), new Date())
-									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
-								return -6;
-							} 
+//							// 检查是否在报名时间范围
+//							if (DateUtil.compareDate(fcExamSignupArea.getStartTime(), new Date())
+//									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
+//								return -6;
+//							}
 							// 检查考试报名是否下架了
 							if (fcExamSignup.getIsPutaway().intValue() == 0) {
 								return -4;
+							}
+							// 检查考试报名区域是否下架了
+							if (fcExamSignupArea.getIsPutaway().intValue() == 0) {
+								return -7;
 							}
 							// 检查报名人员是否已经满了
 							// 1.最大报名人数
@@ -139,13 +146,20 @@ public class FcExamSignupUserService {
 							if (currFcExamSignupUser == maxCount) {
 								return -5;
 							}
+//							// 检查是否已经报名了
+//							List<FcExamSignupUser> list = fcExamSignupUserMapper
+//									.selectIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+//							if (list.size() > 0) {
+//
+//							}
 						}
 					}
 				}
 			}
 		}
 		// 再检查上次报名是否已经考试完成
-		
+//		fcExamMapper.selectByPrimaryKey(id);
+
 		// 报名成功后判断是否满足最大人数限制，满足则自动下架
 		fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
 		int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(),
@@ -200,10 +214,11 @@ public class FcExamSignupUserService {
 	 */
 	public List<FcExamSignupUserListIndexVo> selectUserFcExamSignupList(Integer roleId, Integer roleType,
 			Integer pageNumber, Integer pageSize) {
-		return fcExamSignupUserMapper.selectUserFcExamSignupList(roleId, roleType, pageNumber * pageSize - pageSize,
-				pageSize);
+		List<FcExamSignupUserListIndexVo> list = fcExamSignupUserMapper.selectUserFcExamSignupList(roleId, roleType,
+				pageNumber * pageSize - pageSize, pageSize);
+		return list;
 	}
-	
+
 	/**
 	 * 查询考试报名用户信息
 	 * 

@@ -372,7 +372,6 @@
 			<result column="examSignupAreaExamform" property="examForm" />
 		</collection>
 		<collection property="userList" ofType="chinaPress.exam.exam.vo.FcExamManageDetailUserVo">
-			
 			<id column="examUserId" property="examUserId" />
 			<result column="examSignupUserId" property="examSignupUserId" />
 			<result column="examSignupUserProvince" property="province" />
@@ -398,7 +397,7 @@
 			d.id signupId, d.signup_name signupName,
 			
 			e.id examSignupAreaId, k.name examSignupAreaProvince, l.name examSignupAreaCity, m.name examSignupAreaDistrict, 
-			e.address examSignupAreaAddress, e.start_time examSignupAreaStartTime, e.end_time examSignupAreaEndTime, 
+			q.address examSignupAreaAddress, q.start_time examSignupAreaStartTime, q.end_time examSignupAreaEndTime, 
 			a.exam_form examSignupAreaExamform, j.name examSignupAreaCourseName, 
 			
 			f.id examUserId, g.id examSignupUserId, n.name examSignupUserProvince, o.name examSignupUserCity, 
@@ -414,21 +413,39 @@
 			inner join fc_exam_paper b on a.id = b.exam_id
 			inner join fc_paper c on c.id = b.paper_id
 			inner join fc_exam_signup d on a.signup_id = d.id
-			inner join fc_exam_signup_area e on d.id = e.signup_id
+			
+			
+			inner join fc_exam_area e on e.exam_id = a.id
+			inner join fc_exam_signup_area q on q.id = e.exam_signup_area_id
+			
 			inner join fc_exam_user f on a.id = f.exam_id
 			inner join fc_exam_signup_user g on f.signup_user_id = g.id
 			inner join fc_exam_signup h on g.signup_id = h.id
 			inner join fc_exam_signup_area i on h.id = i. signup_id
 			inner join fc_course_archives j on d.course_id = j.id
 			
-			left join fc_province_city_district k on k.code = e.province
-			left join fc_province_city_district l on l.code = e.city
-			left join fc_province_city_district m on m.code = e.area
+			left join fc_province_city_district k on k.code = q.province
+			left join fc_province_city_district l on l.code = q.city
+			left join fc_province_city_district m on m.code = q.area
 			
 			left join fc_province_city_district n on n.code = i.province
 			left join fc_province_city_district o on o.code = i.city
 			left join fc_province_city_district p on p.code = i.area
 		where
 			a.id = #{id}
+	</select>
+	
+	<!-- 根据考试报名关联的考试设置 -->
+	<select id="selectFcExamBySignup" resultMap="BaseResultMap">
+		select
+			a.*
+		from
+			fc_exam a
+			inner join fc_exam_area b on a.id = b.exam_id
+			inner join fc_exam_user d on a.id = d.exam_id
+		where
+			a.signup_id = #{signupId}
+			and b.exam_signup_area_id = #{signupAreaId}
+			and d.signup_user_id = #{signupUserId}
 	</select>
 </mapper>

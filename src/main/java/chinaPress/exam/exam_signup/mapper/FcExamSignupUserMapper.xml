@@ -443,14 +443,14 @@
 	</select>
 	
 	<!-- 前台查询报名审核个数 -->
-	<select id="selectUserFcExamSignupCount" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo">
+	<select id="selectUserFcExamSignupCount" resultType="int">
 		select
 			count(*)
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup b on a.signup_id = b.id
 			inner join fc_course_archives c on b.course_id = c.id
-			inner join fc_exam_signup_area d on d.signup_id = b.id
+			inner join fc_exam_signup_area d on a.area_id = d.id
 			left join fc_province_city_district e on e.code = d.province
 			left join fc_province_city_district f on f.code = d.city
 			left join fc_province_city_district g on g.code = d.area
@@ -466,14 +466,14 @@
 			c.name courseName, a.examine_type auditStatus,
 			case a.examine_type when 0 then '未审核' when 1 then '已审核'
 			when 2 then '已驳回' end auditStatusTxt,
-			case b.exam_form when 1 then '现场' when 0 then '非现场',
+			case b.exam_form when 1 then '现场' when 0 then '非现场' end examForm,
 			e.name province, f.name city, g.name district, d.address,
 			d.start_time startTime, d.end_time endTime
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup b on a.signup_id = b.id
 			inner join fc_course_archives c on b.course_id = c.id
-			inner join fc_exam_signup_area d on d.signup_id = b.id
+			inner join fc_exam_signup_area d on a.area_id = d.id
 			left join fc_province_city_district e on e.code = d.province
 			left join fc_province_city_district f on f.code = d.city
 			left join fc_province_city_district g on g.code = d.area
@@ -488,7 +488,7 @@
 	<select id="selectFcExamSignupUserDetail" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo">
 		select
 			a.id, a.user_head photo, a.user_name name, a.education,
-			concat(c.name, ' ', d.name, ' ', e.name) address, b.address detailAddress,
+			concat(c.name, '/ ', d.name, '/', e.name) address, a.address detailAddress,
 			a.tell_phone phone, a.certificate_number certificateNumber, 
 			a.institution_name institution, a.post,
 			a.certificate_front certificateFront, a.certificate_behind certificateBehind, 
@@ -497,10 +497,21 @@
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup_area b on a.area_id = b.id
-			left join fc_province_city_district c on c.code = b.province
-			left join fc_province_city_district d on d.code = b.city
-			left join fc_province_city_district e on e.code = b.area
+			left join fc_province_city_district c on c.code = a.province
+			left join fc_province_city_district d on d.code = a.city
+			left join fc_province_city_district e on e.code = a.area
 		where
 			a.id = #{signupUserId}
+	</select>
+	
+	<!-- 查询是否已经报名了 -->
+	<select id="selectIsSignup" resultMap="BaseResultMap">
+		select
+			*
+		from
+			fc_exam_signup_user
+		where
+			signup_id = #{signupId}
+			and area_id = #{signupAreaId}
 	</select>
 </mapper>

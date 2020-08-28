@@ -97,4 +97,14 @@ public interface FcExamSignupUserMapper {
 	 * @return
 	 */
 	FcExamSignupUserDetailVo selectFcExamSignupUserDetail(Integer signupUserId);
+
+	/**
+	 * 查询是否已经报名了
+	 * 
+	 * @param signupId     考试报名id
+	 * @param signupAreaId 考试报名区域id
+	 * @return
+	 */
+	List<FcExamSignupUser> selectIsSignup(@Param("signupId") Integer signupId,
+			@Param("signupAreaId") Integer signupAreaId);
 }
