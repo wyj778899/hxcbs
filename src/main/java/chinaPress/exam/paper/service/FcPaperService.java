@@ -175,7 +175,7 @@ public class FcPaperService {
 	 * @param count           个数
 	 * @return
 	 */
-	@Transactional
+	 @Transactional
 	 private Result getRandomQuestion(List<QuestionVo> list,Integer catalogId,Integer taskDifficulty,Integer questionType,Integer count,String grade){
 		 if(count == 0) {
 			 return new Result(0,"试题抽取个数不能为0","");
@@ -235,6 +235,8 @@ public class FcPaperService {
 			//获取试题信息
 			questions = fcPaper.getQuestions();
 			if(questions!=null && questions.size()>0) {
+				// 试题个数赋值
+				fcPaper.setCount(questions.size());
 				//分数赋值
 				fcPaper.setPaperGrade(questions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
 				fcPaperMapper.insertSelective(fcPaper);
@@ -281,6 +283,8 @@ public class FcPaperService {
 							return result;
 						}
 					}
+					// 试题个数赋值
+					fcPaper.setCount(fcQuestionStems.size());
 					//分数赋值
 					fcPaper.setPaperGrade(resultQuestions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
 					fcPaperMapper.insertSelective(fcPaper);
@@ -355,6 +359,8 @@ public class FcPaperService {
 			questions = fcPaper.getQuestions();
 			//试题信息不为空直接更新  代表预览后保存
 			if(questions!=null && questions.size()>0) {
+				// 试题个数赋值
+				fcPaper.setCount(questions.size());
 				//试卷分数赋值
 				fcPaper.setPaperGrade(questions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
 				//试卷更新
@@ -395,6 +401,8 @@ public class FcPaperService {
 					stem.setUseGrade(vo.getGrade());//试题分数
 					fcPaperStemMapper.insertSelective(stem);
 				}
+				// 试题个数赋值
+				fcPaper.setCount(resultQuestions.size());
 				fcPaperMapper.updateByPrimaryKeySelective(fcPaper);
 				return new Result(1,"试卷修改成功","");
 			}

@@ -168,8 +168,8 @@
 			a.catalog_name
 		ORDER BY
 			a.catalog_sort
-		<if test="page!=null and limit!=''">
-		LIMIT #{page} , #{limit}
+		<if test="page != null and limit != null">
+			LIMIT #{page} , #{limit}
 		</if>
   </select>
   
@@ -190,6 +190,15 @@
   		count(*)
   	from fc_question_stem
   	where catalog_id = #{id}
+  </select>
+  
+  <!-- 查询分类集合 -->
+  <select id="selectCatalogList" resultType="java.util.HashMap">
+  	SELECT
+		id,
+		catalog_name AS catalogName
+	FROM
+		fc_question_catalog
   </select>
   
 </mapper>

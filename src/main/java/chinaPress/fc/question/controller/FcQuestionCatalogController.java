@@ -10,6 +10,7 @@ import chinaPress.fc.question.service.FcQuestionCatalogService;
 
 /**
  * 试题分类
+ * 
  * @author wyj
  *
  */
@@ -17,13 +18,12 @@ import chinaPress.fc.question.service.FcQuestionCatalogService;
 @RequestMapping("/catalog")
 public class FcQuestionCatalogController {
 
-	
 	@Autowired
 	private FcQuestionCatalogService fcQuestionCatalogService;
-	
-	
+
 	/**
 	 * 添加试题分类
+	 * 
 	 * @param fcQuestionCatalog
 	 * @return
 	 */
@@ -31,10 +31,10 @@ public class FcQuestionCatalogController {
 	public Result registerCatalog(FcQuestionCatalog fcQuestionCatalog) {
 		return fcQuestionCatalogService.addQuestionCatalog(fcQuestionCatalog);
 	}
-	
-	
+
 	/**
 	 * 更新试题分类
+	 * 
 	 * @param fcQuestionCatalog
 	 * @return
 	 */
@@ -42,33 +42,44 @@ public class FcQuestionCatalogController {
 	public Result modifyCatalog(FcQuestionCatalog fcQuestionCatalog) {
 		return fcQuestionCatalogService.setQuestionCatalog(fcQuestionCatalog);
 	}
-	
+
 	/**
 	 * 显示所有试题分类
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/queryAll")
-	public Result queryAll(String name,Integer page,Integer limit) {
-		return fcQuestionCatalogService.findAll(name,(page-1)*limit,limit);
+	public Result queryAll(String name, Integer page, Integer limit) {
+		return fcQuestionCatalogService.findAll(name, page, limit);
 	}
-	
-	
+
 	/**
 	 * 显示所有试题分类
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/queryAllCount")
 	public Result queryAllCount(String name) {
 		return fcQuestionCatalogService.findAllCount(name);
 	}
-	
+
 	/**
 	 * 删除试题分类
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/removeCatalog")
 	public Result removeCatalog(Integer id) {
 		return fcQuestionCatalogService.truncateById(id);
 	}
-	
+
+	/**
+	 * 查询分类集合
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/queryList")
+	public Result selectCatalogList() {
+		return fcQuestionCatalogService.selectCatalogList();
+	}
 }

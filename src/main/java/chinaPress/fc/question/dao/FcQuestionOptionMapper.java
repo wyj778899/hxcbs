@@ -11,18 +11,27 @@ import chinaPress.fc.question.vo.FcQuestionOptionVo;
 @Mapper
 @Repository
 public interface FcQuestionOptionMapper {
-    int deleteByPrimaryKey(Integer id);
+	int deleteByPrimaryKey(Integer id);
 
-    int insertSelective(FcQuestionOption record);
+	/**
+	 * 根据题干id删除选项
+	 * 
+	 * @param stemId
+	 * @return
+	 */
+	int deleteByStemId(Integer stemId);
 
-    List<FcQuestionOptionVo> selectByStemId(Integer id);
+	int insertSelective(FcQuestionOption record);
 
-    int updateByPrimaryKeySelective(FcQuestionOption record);
-    
-    /**
-     * 试题id删除试题答案信息
-     * @param itemId
-     * @return
-     */
-    int deleteItemId(Integer itemId);
+	List<FcQuestionOptionVo> selectByStemId(Integer id);
+
+	int updateByPrimaryKeySelective(FcQuestionOption record);
+
+	/**
+	 * 试题id删除试题答案信息
+	 * 
+	 * @param itemId
+	 * @return
+	 */
+	int deleteItemId(Integer itemId);
 }

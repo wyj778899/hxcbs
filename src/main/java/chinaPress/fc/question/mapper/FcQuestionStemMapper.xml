@@ -434,4 +434,48 @@
 			LIMIT 1
 	</select>
 	
+	<resultMap id="DetailResultMap" type="chinaPress.fc.question.vo.QuestionStemDetailVo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="course_id" jdbcType="INTEGER" property="courseId" />
+		<result column="course_name" jdbcType="VARCHAR" property="courseName" />
+		<result column="hour_id" jdbcType="INTEGER" property="hourId" />
+		<result column="hour_name" jdbcType="VARCHAR" property="hourName" />
+		<result column="question_type" jdbcType="INTEGER" property="questionType" />
+		<result column="task_difficulty" jdbcType="INTEGER" property="taskDifficulty" />
+		<result column="question_stem" jdbcType="VARCHAR" property="questionStem" />
+		<result column="catalog_id" jdbcType="INTEGER" property="catalogId" />
+		<result column="catalog_name" jdbcType="VARCHAR" property="catalogName" />
+		<collection property="optionList" ofType="chinaPress.fc.question.vo.FcQuestionOptionVo">
+			<id column="option_id" jdbcType="INTEGER" property="id" />
+			<result column="option_type" jdbcType="INTEGER" property="optionType" />
+			<result column="option_name" jdbcType="VARCHAR" property="optionName" />
+			<result column="is_correct" jdbcType="INTEGER" property="isCorrect" />
+		</collection>
+	</resultMap>
+	
+	<!-- 题库档案 - 详情 -->
+	<select id="detail" resultMap="DetailResultMap">
+		SELECT
+			a.id,
+			a.question_type,
+			a.question_stem,
+			a.task_difficulty,
+			b.id AS course_id,
+			b.`name` AS course_name,
+			c.id AS catalog_id,
+			c.catalog_name,
+			d.id AS hour_id,
+			d.`name` AS hour_name,
+			e.id AS option_id,
+			e.option_type,
+			e.option_name,
+			e.is_correct 
+		FROM
+			fc_question_stem a
+			LEFT JOIN fc_course_archives b ON b.id = a.course_id
+			LEFT JOIN fc_question_catalog c ON c.id = a.catalog_id
+			LEFT JOIN fc_course_hour d ON d.id = a.hour_id
+			LEFT JOIN fc_question_option e ON e.stem_id = a.id
+		WHERE a.id = #{id}
+	</select>
 </mapper>

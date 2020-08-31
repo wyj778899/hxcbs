@@ -11,6 +11,7 @@ import chinaPress.fc.question.vo.FcQuestionAndOption;
 import chinaPress.fc.question.vo.FcQuestionInfo;
 import chinaPress.fc.question.vo.FcQuestionStemListVo;
 import chinaPress.fc.question.vo.QuestionNameVo;
+import chinaPress.fc.question.vo.QuestionStemDetailVo;
 import chinaPress.fc.question.vo.QuestionVo;
 
 @Mapper
@@ -45,62 +46,79 @@ public interface FcQuestionStemMapper {
 	 * @return
 	 */
 	List<FcQuestionStem> selectIsHaveStem(@Param("courseId") Integer courseId, @Param("sectionId") Integer sectionId);
-	
+
 	/**
 	 * 试题名称不可重复,查询试题名称
+	 * 
 	 * @param questionStem
 	 * @return
 	 */
-	int selectByQuestionStem(@Param("questionStem") String questionStem,@Param("id")Integer id);
-	
+	int selectByQuestionStem(@Param("questionStem") String questionStem, @Param("id") Integer id);
+
 	/**
 	 * 通过id查询试题信息和试题关联的答案信息
+	 * 
 	 * @param id
 	 * @return
 	 */
-	FcQuestionAndOption selectById(@Param("id")Integer id);
-	
+	FcQuestionAndOption selectById(@Param("id") Integer id);
+
 	/**
 	 * 查询所有试题的名称
+	 * 
 	 * @return
 	 */
 	List<String> selectQuestionStemNameAll();
-	
-	
-	/**
-	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息
-	 * @param questionStem
-	 * @param taskDifficulty
-	 * @param catalogId
-	 * @param type
-	 * @return
-	 */
-	List<FcQuestionInfo> selectByCatalogIdAll(@Param("questionStem") String questionStem, @Param("taskDifficulty") Integer taskDifficulty,@Param("catalogId")Integer catalogId,@Param("type")Integer type,@Param("page")Integer page,@Param("limit")Integer limit);
-	
-	
-	/**
-	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息个数
-	 * @param questionStem
-	 * @param taskDifficulty
-	 * @param catalogId
-	 * @param type
-	 * @return
-	 */
-	int selectByCatalogIdCount(@Param("questionStem") String questionStem, @Param("taskDifficulty") Integer taskDifficulty,@Param("catalogId")Integer catalogId,@Param("type")Integer type);
 
 	/**
-	 * 查询所有试题信息        关联试题分类,试题答案 
+	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息
+	 * 
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @param type
+	 * @return
+	 */
+	List<FcQuestionInfo> selectByCatalogIdAll(@Param("questionStem") String questionStem,
+			@Param("taskDifficulty") Integer taskDifficulty, @Param("catalogId") Integer catalogId,
+			@Param("type") Integer type, @Param("page") Integer page, @Param("limit") Integer limit);
+
+	/**
+	 * 通过试题名称,试题难度,试题分类查询试题信息,用于展示管理端试题查询信息个数
+	 * 
+	 * @param questionStem
+	 * @param taskDifficulty
+	 * @param catalogId
+	 * @param type
+	 * @return
+	 */
+	int selectByCatalogIdCount(@Param("questionStem") String questionStem,
+			@Param("taskDifficulty") Integer taskDifficulty, @Param("catalogId") Integer catalogId,
+			@Param("type") Integer type);
+
+	/**
+	 * 查询所有试题信息 关联试题分类,试题答案
+	 * 
 	 * @return
 	 */
 	List<QuestionVo> selectQuestionAll();
-	
-	
+
 	/**
 	 * 查询试题的名称信息
-	 * @param catalogId            试题分类id
-	 * @param questionType         试题类型 
-	 * @param taskDifficulty       试题难度     
+	 * 
+	 * @param catalogId      试题分类id
+	 * @param questionType   试题类型
+	 * @param taskDifficulty 试题难度
 	 * @return
 	 */
-	QuestionNameVo selectQuestionNameInfo(@Param("catalogId") Integer catalogId,@Param("questionType")Integer questionType,@Param("taskDifficulty") Integer taskDifficulty);
+	QuestionNameVo selectQuestionNameInfo(@Param("catalogId") Integer catalogId,
+			@Param("questionType") Integer questionType, @Param("taskDifficulty") Integer taskDifficulty);
+
+	/**
+	 * 题库档案 - 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	QuestionStemDetailVo detail(Integer id);
 }

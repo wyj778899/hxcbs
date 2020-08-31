@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.JacksonUtil;
 import chinaPress.common.util.ResultUtil;
-import chinaPress.exam.paper.vo.PaperVo;
 import chinaPress.fc.question.model.FcQuestionOption;
 import chinaPress.fc.question.model.FcQuestionStem;
 import chinaPress.fc.question.service.FcQuestionStemService;
@@ -53,43 +52,46 @@ public class FcQuestionStemController {
 		}
 		return ResultUtil.custom(0, "无小节题", list);
 	}
-	
+
 	/**
 	 * 添加试题
+	 * 
 	 * @param fcQuestionStem
 	 * @return
 	 */
 	@RequestMapping("registerQuestionStem")
-	public Result registerQuestionStem(FcQuestionStem fcQuestionStem,String jsonData) {
+	public Result registerQuestionStem(FcQuestionStem fcQuestionStem, String jsonData) {
 		try {
-			List<FcQuestionOption> optionList = JacksonUtil.fromJSONList(jsonData, PaperVo.class);
+			List<FcQuestionOption> optionList = JacksonUtil.fromJSONList(jsonData, FcQuestionOption.class);
 			fcQuestionStem.setOptionList(optionList);
 			return fcQuestionStemService.addQuestionStem(fcQuestionStem);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(0,"系统异常","");
+			return new Result(0, "系统异常", "");
 		}
 	}
-	
+
 	/**
 	 * 修改试题
+	 * 
 	 * @param fcQuestionStem
 	 * @return
 	 */
 	@RequestMapping("modifyQuestionStem")
-	public Result modifyQuestionStem(FcQuestionStem fcQuestionStem,String jsonData) {
+	public Result modifyQuestionStem(FcQuestionStem fcQuestionStem, String jsonData) {
 		try {
-			List<FcQuestionOption> optionList = JacksonUtil.fromJSONList(jsonData, PaperVo.class);
+			List<FcQuestionOption> optionList = JacksonUtil.fromJSONList(jsonData, FcQuestionOption.class);
 			fcQuestionStem.setOptionList(optionList);
 			return fcQuestionStemService.setQuestionStem(fcQuestionStem);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(0,"系统异常","");
+			return new Result(0, "系统异常", "");
 		}
 	}
-	
+
 	/**
 	 * 查询试题和答案信息
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -97,9 +99,10 @@ public class FcQuestionStemController {
 	public Result queryPageQuestionStem(Integer id) {
 		return fcQuestionStemService.findQuestionOne(id);
 	}
-	
+
 	/**
 	 * 删除试题信息
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -107,29 +110,43 @@ public class FcQuestionStemController {
 	public Result removeByQuestionStem(Integer id) {
 		return fcQuestionStemService.deleteQuestionOne(id);
 	}
-	
+
 	/**
-	 * 通过试题名称,试题难度,试题分类  查询试题信息
+	 * 通过试题名称,试题难度,试题分类 查询试题信息
+	 * 
 	 * @param questionStem
 	 * @param taskDifficulty
 	 * @param catalogId
 	 * @return
 	 */
 	@RequestMapping("queryByCatalogIdAll")
-	public Result queryByCatalogIdAll(String questionStem,Integer taskDifficulty,Integer catalogId,Integer type,Integer page,Integer limit){
-		return fcQuestionStemService.findByCatalogIdAll(questionStem, taskDifficulty,type,catalogId,(page-1)*limit,limit);
+	public Result queryByCatalogIdAll(String questionStem, Integer taskDifficulty, Integer catalogId, Integer type,
+			Integer page, Integer limit) {
+		return fcQuestionStemService.findByCatalogIdAll(questionStem, taskDifficulty, type, catalogId,
+				(page - 1) * limit, limit);
 	}
-	
-	
+
 	/**
-	 * 通过试题名称,试题难度,试题分类  查询试题个数
+	 * 通过试题名称,试题难度,试题分类 查询试题个数
+	 * 
 	 * @param questionStem
 	 * @param taskDifficulty
 	 * @param catalogId
 	 * @return
 	 */
 	@RequestMapping("queryByCatalogIdCount")
-	public Result queryByCatalogIdCount(String questionStem,Integer taskDifficulty,Integer catalogId,Integer type){
-		return fcQuestionStemService.findByCatalogIdCount(questionStem, taskDifficulty, catalogId,type);
+	public Result queryByCatalogIdCount(String questionStem, Integer taskDifficulty, Integer catalogId, Integer type) {
+		return fcQuestionStemService.findByCatalogIdCount(questionStem, taskDifficulty, catalogId, type);
+	}
+
+	/**
+	 * 题库档案 - 详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("questionStemDetail")
+	public Result detail(Integer id) {
+		return fcQuestionStemService.detail(id);
 	}
 }
