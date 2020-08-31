@@ -400,7 +400,7 @@
 			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
 			a.user_head photo, a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber,
 <!-- 			是否补考, 补考次数, -->
-			case a.examine_type when 0 then '未审核' when 1 then '已审核' when 2 '已驳回' else '-'
+			case a.examine_type when 0 then '未审核' when 1 then '已审核' when 2 then '已驳回' else '-'
 			end auditStatusTxt, a.examine_type auditStatus, a.role_id roleId, a.role_type roleType,
 			b.course_id courseId
 		from
@@ -428,7 +428,7 @@
 			<if test="examineType != null">
 				and a.examine_type =  #{examineType}
 			</if>
-			limit #{offset}, #{rows}
+		limit #{offset}, #{rows}
 	</select>
 	
 	<!-- 根据考试报名id和区域id查询有多少人 -->

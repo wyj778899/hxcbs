@@ -318,7 +318,14 @@
 			end isSignup
 		from
 			fc_exam_signup a
-			inner join fc_exam_signup_area b on a.id = b.signup_id
+			left join (
+				select
+					*
+				from
+					fc_exam_signup_area
+				where
+					now() <![CDATA[<]]> start_time
+			) b on a.id = b.signup_id
 			left join fc_province_city_district c on c.code = b.province
 			left join fc_province_city_district d on d.code = b.city
 			left join fc_province_city_district e on e.code = b.area

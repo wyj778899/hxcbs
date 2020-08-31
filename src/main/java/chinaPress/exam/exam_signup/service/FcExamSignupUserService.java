@@ -128,7 +128,7 @@ public class FcExamSignupUserService {
 						if (fcExamSignupArea.getSignupId().intValue() != fcExamSignupUser.getSignupId().intValue()) {
 							return -3;
 						} else {
-//							// 检查是否在报名时间范围
+							// 检查是否在报名时间范围
 							if (DateUtil.compareDate(fcExamSignupArea.getSignupStartTime(), new Date())
 									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getSignupEndTime())) {
 								return -6;
@@ -149,12 +149,12 @@ public class FcExamSignupUserService {
 							if (currFcExamSignupUser == maxCount) {
 								return -5;
 							}
-//							// 检查是否已经报名了
-//							List<FcExamSignupUser> list = fcExamSignupUserMapper
-//									.selectIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
-//							if (list.size() > 0) {
-//
-//							}
+							// 检查是否已经报名了
+							List<FcExamSignupUser> list = fcExamSignupUserMapper
+									.selectIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+							if (list.size() > 0) {
+								return -8;
+							}
 						}
 					}
 				}
