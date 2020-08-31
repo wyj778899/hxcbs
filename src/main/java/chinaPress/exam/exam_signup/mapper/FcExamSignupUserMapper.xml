@@ -376,7 +376,7 @@
 			left join fc_province_city_district f on f.code = c.area
 		where
 		 	1 = 1
-		 	and signup_id = #{signupId}
+		 	and a.signup_id = #{signupId}
 		 	<if test="signupAreaId != null">
 		 		and a.area_id = #{signupAreaId}
 		 	</if>
@@ -412,7 +412,7 @@
 			left join fc_province_city_district f on f.code = c.area
 		where
 		 	1 = 1
-		 	and signup_id = #{signupId}
+		 	and a.signup_id = #{signupId}
 		 	<if test="signupAreaId != null">
 		 		and a.area_id = #{signupAreaId}
 		 	</if>

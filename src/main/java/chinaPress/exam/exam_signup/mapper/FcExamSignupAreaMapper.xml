@@ -12,16 +12,16 @@
 		<result column="city" jdbcType="VARCHAR" property="city" />
 		<result column="area" jdbcType="VARCHAR" property="area" />
 		<result column="address" jdbcType="VARCHAR" property="address" />
-		<result column="start_time" jdbcType="TIMESTAMP"
-			property="startTime" />
-		<result column="end_time" jdbcType="TIMESTAMP"
-			property="endTime" />
+		<result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+		<result column="signup_start_time" jdbcType="TIMESTAMP" property="startTime" />
+		<result column="signup_end_time" jdbcType="TIMESTAMP" property="endTime" />
 		<result column="max_count" jdbcType="INTEGER" property="maxCount" />
 		<result column="is_putaway" jdbcType="INTEGER" property="isPutaway" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, signup_id, province, city, area, address, start_time, end_time,
-		max_count, is_putaway
+		max_count, is_putaway, signup_start_time, signup_end_time
 	</sql>
 	<select id="selectByPrimaryKey"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -38,11 +38,12 @@
 	<insert id="insert"
 		parameterType="chinaPress.exam.exam_signup.model.FcExamSignupArea">
 		insert into fc_exam_signup_area (id, signup_id, province,
-		city, area, address,
+		city, area, address, signup_start_time, signup_end_time,
 		start_time, end_time, max_count, is_putaway)
 		values (#{id,jdbcType=INTEGER}, #{signupId,jdbcType=INTEGER},
 		#{province,jdbcType=VARCHAR},
 		#{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{signupStartTime,jdbcType=TIMESTAMP}, #{signupEndTime,jdbcType=TIMESTAMP},
 		#{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
 		#{maxCount,jdbcType=INTEGER}, #{isPutaway,jdbcType=INTEGER})
 	</insert>
@@ -73,6 +74,12 @@
 			</if>
 			<if test="endTime != null">
 				end_time,
+			</if>
+			<if test="signupStartTime != null">
+				signup_start_time,
+			</if>
+			<if test="signupEndTime != null">
+				signup_end_time,
 			</if>
 			<if test="maxCount != null">
 				max_count,
@@ -105,6 +112,12 @@
 			</if>
 			<if test="endTime != null">
 				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="signupStartTime != null">
+				#{signupStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="signupEndTime != null">
+				#{signupEndTime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="maxCount != null">
 				#{maxCount,jdbcType=INTEGER},
@@ -139,6 +152,12 @@
 			<if test="endTime != null">
 				end_time = #{endTime,jdbcType=TIMESTAMP},
 			</if>
+			<if test="signupStartTime != null">
+				signup_start_time = #{signupStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="signupEndTime != null">
+				signup_end_time = #{signupEndTime,jdbcType=TIMESTAMP},
+			</if>
 			<if test="maxCount != null">
 				max_count = #{maxCount,jdbcType=INTEGER},
 			</if>
@@ -157,6 +176,8 @@
 		area = #{area,jdbcType=VARCHAR},
 		address = #{address,jdbcType=VARCHAR},
 		start_time = #{startTime,jdbcType=TIMESTAMP},
+		signup_start_time = #{signupStartTime,jdbcType=TIMESTAMP},
+		signup_end_time = #{signupEndTime,jdbcType=TIMESTAMP},
 		end_time = #{endTime,jdbcType=TIMESTAMP},
 		max_count = #{maxCount,jdbcType=INTEGER},
 		is_putaway = #{isPutaway,jdbcType=INTEGER}
@@ -190,7 +211,10 @@
 			a.max_count count, a.is_putaway isPutaway, count(b.area_id) haveCount
 		from
 			fc_exam_signup_area a
-			left join fc_exam_signup_user b on a.id = b.area_id 
+			left join fc_exam_signup_user b on a.id = b.area_id
+			left join fc_province_city_district c on c.code = a.province
+			left join fc_province_city_district d on d.code = a.city
+			left join fc_province_city_district e on e.code = a.area
 		where
 			a.signup_id = #{signupId}
 		group by

@@ -24,17 +24,18 @@ public class FcExamSignupUserController {
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @return
 	 */
 	@RequestMapping("manage/count")
-	public Result selectExamSignupUserCount(Integer signupAreaId, String userName, String tellPhone,
+	public Result selectExamSignupUserCount(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
 			String certificateNumber, Integer examineType) {
-		int index = examSignupUserService.selectExamSignupUserCount(signupAreaId, userName, tellPhone,
+		int index = examSignupUserService.selectExamSignupUserCount(signupId, signupAreaId, userName, tellPhone,
 				certificateNumber, examineType);
 		if (index > 0) {
 			return ResultUtil.ok(index);
@@ -47,20 +48,21 @@ public class FcExamSignupUserController {
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @param pageNumber        第几页
 	 * @param pageSize          每页查询多少条
 	 * @return
 	 */
 	@RequestMapping("manage/list")
-	public Result selectExamSignupUserList(Integer signupAreaId, String userName, String tellPhone,
+	public Result selectExamSignupUserList(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
 			String certificateNumber, Integer examineType, Integer pageNumber, Integer pageSize) {
-		List<FcExamSignupUserListVo> list = examSignupUserService.selectExamSignupUserList(signupAreaId, userName,
-				tellPhone, certificateNumber, examineType, pageNumber, pageSize);
+		List<FcExamSignupUserListVo> list = examSignupUserService.selectExamSignupUserList(signupId, signupAreaId,
+				userName, tellPhone, certificateNumber, examineType, pageNumber, pageSize);
 		if (list.size() > 0) {
 			return ResultUtil.ok(list);
 		} else {

@@ -42,36 +42,39 @@ public class FcExamSignupUserService {
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @return
 	 */
-	public int selectExamSignupUserCount(Integer signupAreaId, String userName, String tellPhone,
+	public int selectExamSignupUserCount(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
 			String certificateNumber, Integer examineType) {
-		return fcExamSignupUserMapper.selectExamSignupUserCount(signupAreaId, userName, tellPhone, certificateNumber,
-				examineType);
+		return fcExamSignupUserMapper.selectExamSignupUserCount(signupId, signupAreaId, userName, tellPhone,
+				certificateNumber, examineType);
 	}
 
 	/**
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @param pageNumber        第几页
 	 * @param pageSize          每页查询多少条
 	 * @return
 	 */
-	public List<FcExamSignupUserListVo> selectExamSignupUserList(Integer signupAreaId, String userName,
-			String tellPhone, String certificateNumber, Integer examineType, Integer pageNumber, Integer pageSize) {
-		List<FcExamSignupUserListVo> list = fcExamSignupUserMapper.selectExamSignupUserList(signupAreaId, userName,
-				tellPhone, certificateNumber, examineType, pageNumber * pageSize - pageSize, pageSize);
+	public List<FcExamSignupUserListVo> selectExamSignupUserList(Integer signupId, Integer signupAreaId,
+			String userName, String tellPhone, String certificateNumber, Integer examineType, Integer pageNumber,
+			Integer pageSize) {
+		List<FcExamSignupUserListVo> list = fcExamSignupUserMapper.selectExamSignupUserList(signupId, signupAreaId,
+				userName, tellPhone, certificateNumber, examineType, pageNumber * pageSize - pageSize, pageSize);
 		for (FcExamSignupUserListVo fcExamSignupUserListVo : list) {
 			// 1.查询这个人针对当前考试报名关联的课程的学习进度
 			FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(fcExamSignupUserListVo.getRoleId(),
@@ -126,10 +129,10 @@ public class FcExamSignupUserService {
 							return -3;
 						} else {
 //							// 检查是否在报名时间范围
-//							if (DateUtil.compareDate(fcExamSignupArea.getStartTime(), new Date())
-//									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
-//								return -6;
-//							}
+							if (DateUtil.compareDate(fcExamSignupArea.getSignupStartTime(), new Date())
+									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getSignupEndTime())) {
+								return -6;
+							}
 							// 检查考试报名是否下架了
 							if (fcExamSignup.getIsPutaway().intValue() == 0) {
 								return -4;

@@ -30,34 +30,36 @@ public interface FcExamSignupUserMapper {
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @return
 	 */
-	int selectExamSignupUserCount(@Param("signupAreaId") Integer signupAreaId, @Param("userName") String userName,
-			@Param("tellPhone") String tellPhone, @Param("certificateNumber") String certificateNumber,
-			@Param("examineType") Integer examineType);
+	int selectExamSignupUserCount(@Param("signupId") Integer signupId, @Param("signupAreaId") Integer signupAreaId,
+			@Param("userName") String userName, @Param("tellPhone") String tellPhone,
+			@Param("certificateNumber") String certificateNumber, @Param("examineType") Integer examineType);
 
 	/**
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
+	 * @param signupId          考试报名id
 	 * @param signupAreaId      考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
-	 * @param examineType       是否允许补考(1允许,0不允许)
+	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
 	 * @param offset            从第几条数据开始查询
 	 * @param rows              查询多少条
 	 * @return
 	 */
-	List<FcExamSignupUserListVo> selectExamSignupUserList(@Param("signupAreaId") Integer signupAreaId,
-			@Param("userName") String userName, @Param("tellPhone") String tellPhone,
-			@Param("certificateNumber") String certificateNumber, @Param("examineType") Integer examineType,
-			@Param("offset") Integer offset, @Param("rows") Integer rows);
+	List<FcExamSignupUserListVo> selectExamSignupUserList(@Param("signupId") Integer signupId,
+			@Param("signupAreaId") Integer signupAreaId, @Param("userName") String userName,
+			@Param("tellPhone") String tellPhone, @Param("certificateNumber") String certificateNumber,
+			@Param("examineType") Integer examineType, @Param("offset") Integer offset, @Param("rows") Integer rows);
 
 	/**
 	 * 根据考试报名id和区域id查询有多少人
