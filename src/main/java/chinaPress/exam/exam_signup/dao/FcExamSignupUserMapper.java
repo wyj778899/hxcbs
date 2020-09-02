@@ -185,5 +185,4 @@ public interface FcExamSignupUserMapper {
 	 * @return
 	 */
 	FcExamSignupUserPrepareVo selectSignupUserInfoById(Integer id);
-	List<FcExamToUserVo> selectUserExams(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
 }
