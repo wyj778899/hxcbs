@@ -309,21 +309,4 @@ public class FcExamSignupUserController {
 		}
 	}
 	
-	/**
-	 * 用户的头像，手机号，用户名信息
-	 * @param certificateNumber 身份证号
-	 * @param tellPhone         手机号
-	 * @param signupId          考试报名id
-	 * @param signupAreaId      考试报名区域id
-	 * @return
-	 */
-	@RequestMapping("query/user/info")
-	public Result queryUserInfo(String certificateNumber,String tellPhone,Integer signupId,Integer signupAreaId) {
-		ExamUserVo vo = examSignupUserService.findUserInfo(certificateNumber, tellPhone,signupId,signupAreaId);
-		if(vo!=null) {
-			return ResultUtil.ok(vo);
-		}else {
-			return ResultUtil.error(vo);
-		}
-	}
 }

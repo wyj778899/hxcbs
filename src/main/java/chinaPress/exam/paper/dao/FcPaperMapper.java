@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.exam.paper.model.FcPaper;
-import chinaPress.exam.paper.vo.ExamVo;
 import chinaPress.exam.paper.vo.PaperQuestionStem;
 import chinaPress.exam.paper.vo.PaperStemVo;
 
@@ -64,13 +63,4 @@ public interface FcPaperMapper {
      */
     PaperQuestionStem selectExamById(@Param("examId")Integer examId,@Param("flag")Integer flag);
     
-    
-    /**
-     * 通过试题id试题正确答案信息
-     * @param examId     考试id
-     * @param paperIds   试卷id(多个)
-     * @param stemIds    试题id(多个)
-     * @return
-     */
-    ExamVo selectStemOptions(@Param("examId")Integer examId,@Param("paperIds")List<Integer> paperIds,@Param("stemIds")List<Integer> stemIds);
 }

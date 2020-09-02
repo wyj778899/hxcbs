@@ -600,6 +600,7 @@
 	<!-- 手机号和身份证号查询用户信息  -->
 	<select id="selectCertificateNumberAndTellPhone" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserVo">
 		select 
+			id,
 			user_head as userHead,
 		    user_name as userName,
 	        education,
@@ -639,17 +640,4 @@
 			  and b.id in(select area_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone})
 	</select>
 	
-	<!-- 手机号和身份证号查询用户考试信息  -->
-	<select id="selectUserInfo" resultType="chinaPress.exam.exam_signup.vo.ExamUserVo">
-		select id,
-			   user_name as userName, 
-			   tell_phone as tellPhone,
-			   user_head as userHead
-		from fc_exam_signup_user 
-		where examine_type = 1 
-			  and certificate_number = #{certificateNumber} 
-			  and tell_phone = #{tellPhone}
-			  and signup_id = #{signupId}
-			  and area_id = #{signupAreaId}
-	</select>
 </mapper>

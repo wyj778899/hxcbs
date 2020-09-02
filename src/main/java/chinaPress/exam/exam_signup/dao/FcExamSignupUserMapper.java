@@ -162,11 +162,4 @@ public interface FcExamSignupUserMapper {
 	 */
 	List<FcExamToUserVo> selectUserExams(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
 	
-	/**
-	 * 用于展示用户信息    
-	 * @param certificateNumber
-	 * @param tellPhone
-	 * @return
-	 */
-	ExamUserVo selectUserInfo(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone,@Param("signupId")Integer signupId,@Param("signupAreaId")Integer signupAreaId);
 }

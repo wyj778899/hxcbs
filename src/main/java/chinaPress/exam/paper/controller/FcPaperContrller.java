@@ -147,12 +147,14 @@ public class FcPaperContrller {
 	/**
 	 * 查询考试的试题信息
 	 * @param examId
+	 * @param paperId
+	 * @param userId
 	 * @param flag
 	 * @return
 	 */
 	@RequestMapping("/queryByExamId")
-	public Result queryByExamId(Integer examId,Integer flag) {
-		return fcPaperService.findByExamId(examId, flag);
+	public Result queryByExamId(Integer examId,Integer userId,Integer flag) {
+		return fcPaperService.findByExamId(examId,userId,flag);
 	}
 	
 	/**
@@ -165,8 +167,8 @@ public class FcPaperContrller {
 	 * @return
 	 */
 	@RequestMapping("/computeExamGrade")
-	public Result computeExamGrade(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId,String jsonData) {
-		return fcPaperService.findStemOptions(examId,signupId,signupAreaId,signupUserId,jsonData);
+	public Result computeExamGrade(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId) {
+		return fcPaperService.findStemOptions(examId,signupId,signupAreaId,signupUserId);
 	}
 	
 }

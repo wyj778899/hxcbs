@@ -8,6 +8,11 @@ package chinaPress.exam.exam_signup.vo;
 public class FcExamSignupUserVo {
 
 	/**
+	 * 用户id
+	 */
+	private Integer id;
+	
+	/**
 	 * 用户头像
 	 */
 	private String userHead;
@@ -161,6 +166,14 @@ public class FcExamSignupUserVo {
 
 	public void setInstitutionName(String institutionName) {
 		this.institutionName = institutionName;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 }

@@ -343,13 +343,4 @@ public class FcExamSignupUserService {
 		return fcExamSignupUserMapper.selectUserExams(certificateNumber, tellPhone);
 	}
 	
-	/**
-	 * 
-	 * @param certificateNumber
-	 * @param tellPhone
-	 * @return
-	 */
-	public ExamUserVo findUserInfo(String certificateNumber,String tellPhone,Integer signupId,Integer signupAreaId){
-		return fcExamSignupUserMapper.selectUserInfo(certificateNumber, tellPhone,signupId,signupAreaId);
-	}
 }
