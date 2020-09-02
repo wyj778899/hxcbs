@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chinaPress.exam.exam_certificate.dao.FcCertificateAttestationMapper">
+  <resultMap id="BaseResultMap" type="chinaPress.exam.exam_certificate.model.FcCertificateAttestation">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="INTEGER" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, photo, create_id, create_time, update_id, update_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_certificate_attestation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fc_certificate_attestation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="chinaPress.exam.exam_certificate.model.FcCertificateAttestation">
+    insert into fc_certificate_attestation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="chinaPress.exam.exam_certificate.model.FcCertificateAttestation">
+    update fc_certificate_attestation
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 所有证书信息 -->
+  <select id="selectCertAll"  resultType="chinaPress.exam.exam_certificate.vo.ExamCertificate">
+	    select 
+	    	id,name
+	    from fc_certificate_attestation
+	    <if test="page!=null and limit!=null">
+		   limit #{page},#{limit}
+	    </if>
+  </select>
+  
+  <!-- 所有证书信息个数 -->
+  <select id="selectCertAllCount"  resultType="java.lang.Integer">
+	    select 
+	    	count(*)
+	    from fc_certificate_attestation
+  </select>
+  
+  
+  <!-- 校验证书名称唯一 -->
+  <select id="selectCertName"  resultType="java.lang.Integer">
+	    select 
+	    	count(*)
+	    from fc_certificate_attestation
+	    where 1=1
+	    <if test="name!=null and name!=''">
+	    	and name = #{name}
+	    </if>
+	    <if test="id!=null">
+	    	and id != #{id}
+	    </if>
+  </select>
+  
+</mapper>
