@@ -1,7 +1,10 @@
 package chinaPress.exam.paper.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -13,15 +16,22 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
+import chinaPress.common.util.DateUtil;
+import chinaPress.common.util.JacksonUtil;
 import chinaPress.common.util.ResultUtil;
+import chinaPress.exam.exam_record.dao.FcExamRecordMapper;
+import chinaPress.exam.exam_record.model.FcExamRecord;
 import chinaPress.exam.paper.dao.FcPaperMapper;
 import chinaPress.exam.paper.dao.FcPaperStemMapper;
 import chinaPress.exam.paper.model.FcPaper;
 import chinaPress.exam.paper.model.FcPaperStem;
+import chinaPress.exam.paper.vo.ExamCommentVo;
+import chinaPress.exam.paper.vo.ExamVo;
 import chinaPress.exam.paper.vo.PaperQuestionStem;
 import chinaPress.exam.paper.vo.PaperStemVo;
 import chinaPress.exam.paper.vo.PaperVo;
 import chinaPress.exam.paper.vo.PreviewPaperVo;
+import chinaPress.exam.paper.vo.StemOption;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
 import chinaPress.fc.question.vo.QuestionNameVo;
 import chinaPress.fc.question.vo.QuestionVo;
@@ -43,10 +53,17 @@ public class FcPaperService {
 	@Autowired
 	private FcPaperMapper fcPaperMapper;
 	
-	
+	/**
+	 * 试题dao
+	 */
 	@Autowired
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	
+	/**
+	 * 考试考生报名信息
+	 */
+	@Autowired
+	private FcExamRecordMapper fcExamRecordMapper;
 	
 	/**
 	 * 预览试卷                   试卷信息封装试卷抽取配置信息和试卷的试题信息
@@ -99,11 +116,11 @@ public class FcPaperService {
 					//相同取原有数据
 					preview.setGrade(paper.getPaperGrade());
 					preview.setRadioQuestions(paper.getQuestions().stream().filter(stem->stem.getQuestionType()==1).collect(Collectors.toList()));
-					preview.setRadioGrade(preview.getRadioQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setRadioGrade(preview.getRadioQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					preview.setCheckboxQuestions(paper.getQuestions().stream().filter(stem->stem.getQuestionType()==2).collect(Collectors.toList()));
-					preview.setCheckboxGrade(preview.getCheckboxQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setCheckboxGrade(preview.getCheckboxQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					preview.setJudgeQuestions(paper.getQuestions().stream().filter(stem->stem.getQuestionType()==3).collect(Collectors.toList()));
-					preview.setJudgeGrade(preview.getJudgeQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setJudgeGrade(preview.getJudgeQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					
 					return new Result(1,"ok",preview);
 				}
@@ -146,13 +163,13 @@ public class FcPaperService {
 				}
 				if(resultQuestions.size()>0) {
 					//分数赋值
-					preview.setGrade(resultQuestions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
+					preview.setGrade(resultQuestions.stream().mapToInt((s) -> Integer.parseInt(s.getGrade())).summaryStatistics().getSum()+"");
 					preview.setRadioQuestions(resultQuestions.stream().filter(stem->stem.getQuestionType()==1).collect(Collectors.toList()));
-					preview.setRadioGrade(preview.getRadioQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setRadioGrade(preview.getRadioQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					preview.setCheckboxQuestions(resultQuestions.stream().filter(stem->stem.getQuestionType()==2).collect(Collectors.toList()));
-					preview.setCheckboxGrade(preview.getCheckboxQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setCheckboxGrade(preview.getCheckboxQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					preview.setJudgeQuestions(resultQuestions.stream().filter(stem->stem.getQuestionType()==3).collect(Collectors.toList()));
-					preview.setJudgeGrade(preview.getJudgeQuestions().stream().mapToDouble(stem->Double.parseDouble(stem.getGrade())).summaryStatistics().getSum()+"");
+					preview.setJudgeGrade(preview.getJudgeQuestions().stream().mapToInt(stem->Integer.parseInt(stem.getGrade())).summaryStatistics().getSum()+"");
 					return ResultUtil.ok(preview);
 				}else{
 					return ResultUtil.error("试卷预览失败");
@@ -238,7 +255,7 @@ public class FcPaperService {
 				// 试题个数赋值
 				fcPaper.setCount(questions.size());
 				//分数赋值
-				fcPaper.setPaperGrade(questions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
+				fcPaper.setPaperGrade(questions.stream().mapToInt((s) -> Integer.parseInt(s.getGrade())).summaryStatistics().getSum()+"");
 				fcPaperMapper.insertSelective(fcPaper);
 				for(QuestionVo vo:questions) {
 					FcPaperStem stem  = new FcPaperStem();
@@ -286,7 +303,7 @@ public class FcPaperService {
 					// 试题个数赋值
 					fcPaper.setCount(fcQuestionStems.size());
 					//分数赋值
-					fcPaper.setPaperGrade(resultQuestions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
+					fcPaper.setPaperGrade(resultQuestions.stream().mapToInt((s) -> Integer.parseInt(s.getGrade())).summaryStatistics().getSum()+"");
 					fcPaperMapper.insertSelective(fcPaper);
 					for(QuestionVo v :resultQuestions) {
 						FcPaperStem paperStem  = new FcPaperStem();
@@ -362,7 +379,7 @@ public class FcPaperService {
 				// 试题个数赋值
 				fcPaper.setCount(questions.size());
 				//试卷分数赋值
-				fcPaper.setPaperGrade(questions.stream().mapToDouble((s) -> Double.parseDouble(s.getGrade())).summaryStatistics().getSum()+"");
+				fcPaper.setPaperGrade(questions.stream().mapToInt((s) -> Integer.parseInt(s.getGrade())).summaryStatistics().getSum()+"");
 				//试卷更新
 				//删除试卷试题关联
 				fcPaperStemMapper.deleteByPaperId(id);
@@ -512,30 +529,110 @@ public class FcPaperService {
 	 * @param examId
 	 * @param flag    是否显示答案
 	 * @return
+	 * -2:考试已结束
+	 * -1:系统错误
+	 * 0:无数据
+	 * 1:返回考试试卷信息
+	 * 2:考试未开始返回考试开始秒数
+	 * 
 	 */
 	public Result findByExamId(Integer examId,Integer flag) {
 		try {
-			List<PaperQuestionStem> questions = fcPaperMapper.selectExamById(examId, flag);
-			if(questions!=null && questions.size()>0) {
-				for(PaperQuestionStem stem:questions) {
+			PaperQuestionStem stem = fcPaperMapper.selectExamById(examId, flag);
+			if(stem!=null) {
 					if(stem.getType()!=null && stem.getType().intValue()==2) {
 						Collections.shuffle(stem.getQuestions());
 					}
 					stem.setRadioQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==1).collect(Collectors.toList()));
 					stem.setCheckboxQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==2).collect(Collectors.toList()));
 					stem.setJudgeQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==3).collect(Collectors.toList()));
-					stem.setRadioGrade(stem.getRadioQuestions().stream().mapToDouble(q->Double.parseDouble(q.getGrade())).summaryStatistics().getSum()+"");
-					stem.setCheckboxGrade(stem.getCheckboxQuestions().stream().mapToDouble(q->Double.parseDouble(q.getGrade())).summaryStatistics().getSum()+"");
-					stem.setJudgeGrade(stem.getJudgeQuestions().stream().mapToDouble(q->Double.parseDouble(q.getGrade())).summaryStatistics().getSum()+"");
-				}
-				return new Result(1,"ok",questions);
+					stem.setRadioGrade(stem.getRadioQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					stem.setCheckboxGrade(stem.getCheckboxQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					stem.setJudgeGrade(stem.getJudgeQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					//计算考试开始到当前时间还有多少秒
+					long time = DateUtil.getDatePoorMinute(stem.getStartTime(),new Date(),Calendar.SECOND);
+					if(time<0) {
+						return new Result(2,"ok",time);
+					}
+					//计算考试一共需要多少秒
+					long stamp = DateUtil.getDatePoorMinute(stem.getStartTime(),stem.getEndTime(),Calendar.SECOND);
+					//如果当前时间减去考试开始时间还是大于考试时间代表考试已结束
+					if(time>stamp) {
+						return new Result(-2,"考试已结束","");
+					}
+					//计算当前时间距离考试结束还有多长时间
+					long countDown = DateUtil.getDatePoorMinute(new Date(),stem.getEndTime(),Calendar.SECOND);
+					stem.setCountDown(countDown);
+					return new Result(1,"ok",stem);
 			}else {
 				return new Result(0,"无数据","");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(-1,"系统错误","");
+		}
+	}
+	
+	/**
+	 * @param examId考试id
+	 * @param jsonData
+	 * @return
+	 */
+	public Result findStemOptions(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId,String jsonData) {
+		List<StemOption> list = null;//前台传来的数据
+		List<Integer> paperIds = null;//试卷信息
+		List<Integer> stemIds = null;//试题信息
+		ExamVo exam = null;//考试信息
+		List<StemOption> stems = null;//数据库的试题信息
+		ExamCommentVo comment = null;//评语信息
+		int grade = 0;
+		FcExamRecord rdcord = new FcExamRecord(); 
+		try {
+			list = JacksonUtil.fromJSONList(jsonData, StemOption.class);
+			if(list!=null && list.size()>0) {
+				//试卷信息
+				paperIds = list.stream().map(stem->stem.getPaperId()).distinct().collect(Collectors.toList());
+				//试题信息
+				stemIds = list.stream().map(stem->stem.getStemId()).distinct().collect(Collectors.toList());
+				exam = fcPaperMapper.selectStemOptions(examId, paperIds, stemIds);
+				if(exam == null) {
+					return new Result(0,"考试信息出错","");
+				}
+				stems = exam.getStems();
+				//计算分数
+				for(StemOption dbso:stems) {
+					for(StemOption so:list) {
+						//试题id相同
+						if(dbso.getStemId().intValue()==so.getStemId().intValue()) {
+							//选择的答案并且也相同
+							if(!dbso.getOptions().retainAll(so.getOptions())) {
+								grade+=Integer.parseInt(dbso.getGrade());
+							}
+						}
+					}
+				}
+				comment = new ExamCommentVo();
+				if(grade>=Integer.parseInt(exam.getSumGrade())) {
+					comment.setComment(exam.getPassComment());
+				}else {
+					comment.setComment(exam.getFailComment());
+				}
+				comment.setGrade(grade+"");
+				rdcord.setExamId(examId);
+				rdcord.setExamSignupId(signupId);
+				rdcord.setExamSignupAreaId(signupAreaId);
+				rdcord.setGrade(new BigDecimal(grade));
+				rdcord.setSignupUserId(signupUserId);
+				rdcord.setCompleteTime(new Date());
+				//添加考生考试记录表
+				fcExamRecordMapper.insertSelective(rdcord);
+				return new Result(1,"ok",comment);
+			}else {
+				return new Result(0,"试题信息出错","");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new Result(0,"系统错误","");
 		}
 	}
-	
 }

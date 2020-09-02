@@ -102,11 +102,13 @@ public class FcQuestionStemService {
 			}
 			// 试题更新
 			fcQuestionStemMapper.updateByPrimaryKeySelective(stem);
-
-			// XXX 选项：先删除，后新增
+			// 删除答案
+			fcQuestionOptionMapper.deleteItemId(id);
+			// XXX 选项：先删除，后新增   避免答案个数不一致
 			for (FcQuestionOption option : stem.getOptionList()) {
+				option.setStemId(id);
 				// 试题答案更新
-				fcQuestionOptionMapper.updateByPrimaryKeySelective(option);
+				fcQuestionOptionMapper.insertSelective(option);
 			}
 			return new Result(1, "试题更新成功", "");
 		} catch (Exception e) {

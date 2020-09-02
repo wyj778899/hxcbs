@@ -7,10 +7,13 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
+import chinaPress.exam.exam_signup.vo.ExamUserVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserVo;
+import chinaPress.exam.exam_signup.vo.FcExamToUserVo;
 
 @Mapper
 @Repository
@@ -142,4 +145,28 @@ public interface FcExamSignupUserMapper {
 	List<FcExamSignupDetailAreaListVo> selectBySignupIdAndSignupIdList(@Param("signupId") Integer signupId,
 			@Param("signupAreaIdList") List<String> signupAreaIdList, @Param("offset") Integer offset,
 			@Param("rows") Integer rows);
+	
+	/**
+	 * 通过手机号和身份证号查询用户的考试信息                  用于登录考试
+	 * @param certificateNumber
+	 * @param tellPhone
+	 * @return
+	 */
+	FcExamSignupUserVo selectCertificateNumberAndTellPhone(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
+	
+	/**
+	 * 查询用户的考试信息
+	 * @param certificateNumber
+	 * @param tellPhone
+	 * @return
+	 */
+	List<FcExamToUserVo> selectUserExams(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
+	
+	/**
+	 * 用于展示用户信息    
+	 * @param certificateNumber
+	 * @param tellPhone
+	 * @return
+	 */
+	ExamUserVo selectUserInfo(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone,@Param("signupId")Integer signupId,@Param("signupAreaId")Integer signupAreaId);
 }

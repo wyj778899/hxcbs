@@ -1,6 +1,9 @@
 package chinaPress.exam.paper.vo;
 
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import chinaPress.fc.question.vo.QuestionVo;
 
@@ -27,18 +30,55 @@ public class PaperQuestionStem {
 	 */
 	private Integer type;
 	
+	/**
+	 * 考试报名id
+	 */
+	private Integer signupId;
+	
+	/**
+	 * 考试报名区域id
+	 */
+	private Integer signupAreaId;
 	
 	
-	public Integer getType() {
-		return type;
+	public Integer getSignupId() {
+		return signupId;
 	}
 
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setSignupId(Integer signupId) {
+		this.signupId = signupId;
 	}
 
 
+	public Integer getSignupAreaId() {
+		return signupAreaId;
+	}
+
+
+	public void setSignupAreaId(Integer signupAreaId) {
+		this.signupAreaId = signupAreaId;
+	}
+
+
+	/**
+	 * 考试开始时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	private Date startTime;
+	
+	/**
+	 * 考试结束时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	private Date endTime;
+	
+	/**
+	 * 考试名称
+	 */
+	private String examName;
+	
+	
 	/**
 	 * 单选题总分数
 	 */
@@ -78,6 +118,61 @@ public class PaperQuestionStem {
 	 */
 	private List<QuestionVo> questions;
 	
+	/**
+	 * 倒计时秒
+	 */
+	private long countDown;
+	
+	
+	public Date getEndTime() {
+		return endTime;
+	}
+
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+
+	public long getCountDown() {
+		return countDown;
+	}
+
+
+	public void setCountDown(long countDown) {
+		this.countDown = countDown;
+	}
+
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+
+	public String getExamName() {
+		return examName;
+	}
+
+
+	public void setExamName(String examName) {
+		this.examName = examName;
+	}
+
+
+	public Integer getType() {
+		return type;
+	}
+
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 
 	public List<QuestionVo> getQuestions() {
 		return questions;

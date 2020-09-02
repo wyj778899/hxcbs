@@ -262,9 +262,9 @@
 		when b.certificate_type=2 then '学历证书'
 		when b.certificate_type=3 then '认证行为分析治疗室' else '' end as certificateType,
 		b.create_time as createTime,
-		case when b.state=1 then '待审核'
-		when b.state=2 then '已审核'
-		when b.state=3 then '已驳回' else '' end as state
+		case when b.audit_status=1 then '待审核'
+		when b.audit_status=2 then '已审核'
+		when b.audit_status=3 then '已驳回' else '' end as state
 		from 
 		<!-- 2.机构3.家长4.从业者 -->
 		<if test="roleType ==2">
@@ -275,7 +275,8 @@
 		</if>
 		fc_certificate_archives b
 		where a.id = b.role_id
-		and a.id = #{roleId,jdbcType=INTEGER}
+			  and b.cert_id is null   <!-- 个人上传的证书信息此字段为null -->
+			  and a.id = #{roleId,jdbcType=INTEGER}
 		order by b.create_time desc
 		limit #{page} , #{limit}
 	</select>
@@ -292,7 +293,8 @@
 		</if>
 		fc_certificate_archives b
 		where a.id = b.role_id
-		and a.id = #{roleId,jdbcType=INTEGER}
+			and b.cert_id is null     <!-- 个人上传的证书信息此字段为null -->
+			and a.id = #{roleId,jdbcType=INTEGER}
 	</select>
 
 

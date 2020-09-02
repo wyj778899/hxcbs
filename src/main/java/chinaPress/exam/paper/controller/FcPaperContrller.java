@@ -144,10 +144,29 @@ public class FcPaperContrller {
 		return fcPaperService.findPaperLikeNameCount(paperName,paperCatalog);
 	}
 	
-	
+	/**
+	 * 查询考试的试题信息
+	 * @param examId
+	 * @param flag
+	 * @return
+	 */
 	@RequestMapping("/queryByExamId")
 	public Result queryByExamId(Integer examId,Integer flag) {
 		return fcPaperService.findByExamId(examId, flag);
+	}
+	
+	/**
+	 * 计算考试成绩
+	 * @param examId
+	 * @param signupId
+	 * @param signupAreaId
+	 * @param signupUserId
+	 * @param jsonData
+	 * @return
+	 */
+	@RequestMapping("/computeExamGrade")
+	public Result computeExamGrade(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId,String jsonData) {
+		return fcPaperService.findStemOptions(examId,signupId,signupAreaId,signupUserId,jsonData);
 	}
 	
 }

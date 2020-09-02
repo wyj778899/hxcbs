@@ -10,6 +10,7 @@ import chinaPress.common.result.model.Result;
 import chinaPress.exam.exam_certificate.dao.FcCertificateAttestationMapper;
 import chinaPress.exam.exam_certificate.model.FcCertificateAttestation;
 import chinaPress.exam.exam_certificate.vo.ExamCertificate;
+import chinaPress.exam.exam_certificate.vo.UserCertificate;
 
 @Service
 public class FcCertificateAttestationService {
@@ -126,6 +127,22 @@ public class FcCertificateAttestationService {
 		try {
 			int count = fcCertificateAttestationMapper.selectCertAllCount();
 			return new Result(1,"查询成功",count);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	/**
+	 * 查询用户考试发放的证书信息
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
+	public Result findUserCertificate(Integer roleId,Integer roleType) {
+		try {
+			List<UserCertificate> userCertificates = fcCertificateAttestationMapper.selectCertificates(roleId, roleType);
+			return new Result(1,"查询成功",userCertificates);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new Result(0,"系统错误","");

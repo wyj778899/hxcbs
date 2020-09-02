@@ -78,4 +78,15 @@ public class FcCertificateAttestationController {
 	public Result queryAttestationCount() {
 		return fcCertificateAttestationService.findAttestationAllCount();
 	}
+	
+	/**
+	 * 角色id和角色类型查询证书信息
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
+	@RequestMapping("/queryUserCertificate")
+	public Result queryUserCertificate(Integer roleId,Integer roleType) {
+		return fcCertificateAttestationService.findUserCertificate(roleId, roleType);
+	}
 }

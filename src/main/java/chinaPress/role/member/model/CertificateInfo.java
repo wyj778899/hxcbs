@@ -88,6 +88,20 @@ public class CertificateInfo {
 	private Integer courseType;
 	
 	/**
+	 * 证书档案的id   考试关联证书档案表,此字段判断用户的证书是否是通过考试发放的
+	 */
+	private Integer certId;
+	
+	
+	public Integer getCertId() {
+		return certId;
+	}
+
+	public void setCertId(Integer certId) {
+		this.certId = certId;
+	}
+
+	/**
 	 * 发证时间
 	 */
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

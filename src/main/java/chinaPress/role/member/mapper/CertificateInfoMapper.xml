@@ -18,10 +18,11 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="course_type" jdbcType="INTEGER" property="courseType" />
     <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
+     <result column="cert_id" jdbcType="INTEGER" property="certId" />
   </resultMap>
   <sql id="Base_Column_List">
     id, role_id, certificate_type, photo, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, role_type, test_address, grade, `code`,course_type,certificate_time
+    update_id, update_time, role_type, test_address, grade, `code`,course_type,certificate_time,cert_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -63,6 +64,9 @@
       </if>
       <if test="roleId != null">
         role_id,
+      </if>
+      <if test="certId != null">
+        cert_id,
       </if>
       <if test="certificateType != null">
         certificate_type,
@@ -114,6 +118,9 @@
       <if test="roleId != null">
         #{roleId,jdbcType=INTEGER},
       </if>
+      <if test="certId != null">
+        #{certId,jdbcType=INTEGER},
+      </if>
       <if test="certificateType != null">
         #{certificateType,jdbcType=INTEGER},
       </if>
@@ -163,6 +170,9 @@
     <set>
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+       <if test="certId != null">
+        cert_id = #{certId,jdbcType=INTEGER},
       </if>
       <if test="certificateType != null">
         certificate_type = #{certificateType,jdbcType=INTEGER},
