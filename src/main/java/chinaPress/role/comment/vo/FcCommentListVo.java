@@ -24,7 +24,11 @@ public class FcCommentListVo {
 	/**
 	 * 审核状态
 	 */
-	private Integer statusName;
+	private Integer status;
+	/**
+	 * 审核状态
+	 */
+	private String statusName;
 
 	/**
 	 * @return the id
@@ -97,16 +101,30 @@ public class FcCommentListVo {
 	}
 
 	/**
+	 * @return the status
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	/**
 	 * @return the statusName
 	 */
-	public Integer getStatusName() {
+	public String getStatusName() {
 		return statusName;
 	}
 
 	/**
 	 * @param statusName the statusName to set
 	 */
-	public void setStatusName(Integer statusName) {
+	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
 }

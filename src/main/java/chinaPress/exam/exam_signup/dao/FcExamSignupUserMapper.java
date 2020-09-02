@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
+import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
@@ -36,11 +37,14 @@ public interface FcExamSignupUserMapper {
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @return
 	 */
-	int selectExamSignupUserCount(@Param("signupId") Integer signupId, @Param("signupAreaId") Integer signupAreaId,
+	int selectExamSignupUserCount(@Param("signupId") Integer signupId, @Param("signupAreaId") List<String> signupAreaId,
 			@Param("userName") String userName, @Param("tellPhone") String tellPhone,
-			@Param("certificateNumber") String certificateNumber, @Param("examineType") Integer examineType);
+			@Param("certificateNumber") String certificateNumber, @Param("examineType") Integer examineType,
+			@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 	/**
 	 * 查询考试报名的人员信息
@@ -52,14 +56,17 @@ public interface FcExamSignupUserMapper {
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @param offset            从第几条数据开始查询
 	 * @param rows              查询多少条
 	 * @return
 	 */
 	List<FcExamSignupUserListVo> selectExamSignupUserList(@Param("signupId") Integer signupId,
-			@Param("signupAreaId") Integer signupAreaId, @Param("userName") String userName,
+			@Param("signupAreaId") List<String> signupAreaId, @Param("userName") String userName,
 			@Param("tellPhone") String tellPhone, @Param("certificateNumber") String certificateNumber,
-			@Param("examineType") Integer examineType, @Param("offset") Integer offset, @Param("rows") Integer rows);
+			@Param("examineType") Integer examineType, @Param("startTime") String startTime,
+			@Param("endTime") String endTime, @Param("offset") Integer offset, @Param("rows") Integer rows);
 
 	/**
 	 * 根据考试报名id和区域id查询有多少人
@@ -105,8 +112,34 @@ public interface FcExamSignupUserMapper {
 	 * 
 	 * @param signupId     考试报名id
 	 * @param signupAreaId 考试报名区域id
+	 * @param roleId       角色id
+	 * @param roleType     角色类型1.家长2.从业者
 	 * @return
 	 */
 	List<FcExamSignupUser> selectIsSignup(@Param("signupId") Integer signupId,
-			@Param("signupAreaId") Integer signupAreaId);
+			@Param("signupAreaId") Integer signupAreaId, @Param("roleId") Integer roleId,
+			@Param("roleType") Integer roleType);
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId         考试报名id
+	 * @param signupAreaIdList 考试报名区域id集合
+	 * @return
+	 */
+	int selectBySignupIdAndSignupIdCount(@Param("signupId") Integer signupId,
+			@Param("signupAreaIdList") List<String> signupAreaIdList);
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId         考试报名id
+	 * @param signupAreaIdList 考试报名区域id集合
+	 * @param offset           从第几条数据开始查询
+	 * @param rows             查询多少条
+	 * @return
+	 */
+	List<FcExamSignupDetailAreaListVo> selectBySignupIdAndSignupIdList(@Param("signupId") Integer signupId,
+			@Param("signupAreaIdList") List<String> signupAreaIdList, @Param("offset") Integer offset,
+			@Param("rows") Integer rows);
 }

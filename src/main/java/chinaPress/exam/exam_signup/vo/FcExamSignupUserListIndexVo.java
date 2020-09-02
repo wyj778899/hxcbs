@@ -14,6 +14,10 @@ public class FcExamSignupUserListIndexVo {
 	 */
 	private Integer signupUserId;
 	/**
+	 * 报名名称
+	 */
+	private String name;
+	/**
 	 * 课程名称
 	 */
 	private String courseName;
@@ -240,5 +244,19 @@ public class FcExamSignupUserListIndexVo {
 	 */
 	public void setIsAgain(Integer isAgain) {
 		this.isAgain = isAgain;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 }

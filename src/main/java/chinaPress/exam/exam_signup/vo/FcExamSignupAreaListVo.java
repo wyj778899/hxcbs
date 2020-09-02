@@ -20,7 +20,7 @@ public class FcExamSignupAreaListVo {
 	/**
 	 * 考试已报名人数
 	 */
-	private String haveCount;
+	private Integer haveCount;
 	/**
 	 * 上下架状态1.上架0.下架
 	 */
@@ -85,14 +85,14 @@ public class FcExamSignupAreaListVo {
 	/**
 	 * @return the haveCount
 	 */
-	public String getHaveCount() {
+	public Integer getHaveCount() {
 		return haveCount;
 	}
 
 	/**
 	 * @param haveCount the haveCount to set
 	 */
-	public void setHaveCount(String haveCount) {
+	public void setHaveCount(Integer haveCount) {
 		this.haveCount = haveCount;
 	}
 

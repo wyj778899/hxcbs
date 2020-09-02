@@ -1,5 +1,9 @@
 package chinaPress.exam.exam_signup.vo;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FcExamSignupUserDetailVo {
 	/**
 	 * 考试报名id
@@ -61,6 +65,20 @@ public class FcExamSignupUserDetailVo {
 	 * 驳回原因
 	 */
 	private String rejectReason;
+	/**
+	 * 报名区域
+	 */
+	private String signupArea;
+	/**
+	 * 区域开始时间
+	 */
+	@JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+	private Date areaStartTime;
+	/**
+	 * 区域结束时间
+	 */
+	@JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+	private Date areaEndTime;
 
 	/**
 	 * @return the id
@@ -270,5 +288,47 @@ public class FcExamSignupUserDetailVo {
 	 */
 	public void setRejectReason(String rejectReason) {
 		this.rejectReason = rejectReason;
+	}
+
+	/**
+	 * @return the signupArea
+	 */
+	public String getSignupArea() {
+		return signupArea;
+	}
+
+	/**
+	 * @param signupArea the signupArea to set
+	 */
+	public void setSignupArea(String signupArea) {
+		this.signupArea = signupArea;
+	}
+
+	/**
+	 * @return the areaStartTime
+	 */
+	public Date getAreaStartTime() {
+		return areaStartTime;
+	}
+
+	/**
+	 * @param areaStartTime the areaStartTime to set
+	 */
+	public void setAreaStartTime(Date areaStartTime) {
+		this.areaStartTime = areaStartTime;
+	}
+
+	/**
+	 * @return the areaEndTime
+	 */
+	public Date getAreaEndTime() {
+		return areaEndTime;
+	}
+
+	/**
+	 * @param areaEndTime the areaEndTime to set
+	 */
+	public void setAreaEndTime(Date areaEndTime) {
+		this.areaEndTime = areaEndTime;
 	}
 }

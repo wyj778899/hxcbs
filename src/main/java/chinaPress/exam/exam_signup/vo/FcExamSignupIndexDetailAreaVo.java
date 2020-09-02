@@ -14,6 +14,10 @@ public class FcExamSignupIndexDetailAreaVo {
 	 */
 	private String time;
 	/**
+	 * 报名时间
+	 */
+	private String signupTime;
+	/**
 	 * 人数
 	 */
 	private Integer count;
@@ -22,7 +26,7 @@ public class FcExamSignupIndexDetailAreaVo {
 	 */
 	private Integer isPutaway;
 	/**
-	 * 是否可报名
+	 * 是否可报名1.可以报名-1.不在报名时间范围内-2.该区域还未上架
 	 */
 	private Integer isSignup;
 
@@ -66,6 +70,20 @@ public class FcExamSignupIndexDetailAreaVo {
 	 */
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	/**
+	 * @return the signupTime
+	 */
+	public String getSignupTime() {
+		return signupTime;
+	}
+
+	/**
+	 * @param signupTime the signupTime to set
+	 */
+	public void setSignupTime(String signupTime) {
+		this.signupTime = signupTime;
 	}
 
 	/**

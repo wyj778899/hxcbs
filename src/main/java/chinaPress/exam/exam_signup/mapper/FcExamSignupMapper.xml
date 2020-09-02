@@ -276,6 +276,16 @@
 	</select>
 	
 	<!-- 查询已上架的考试报名 -->
+	<select id="selectPutawayExamSignupCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup
+		where
+			is_putaway = 1
+	</select>
+	
+	<!-- 查询已上架的考试报名 -->
 	<select id="selectPutawayExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupIndexVo">
 		select
 			id, banner_photo cover, signup_name name, 
@@ -284,6 +294,8 @@
 			fc_exam_signup
 		where
 			is_putaway = 1
+		limit
+			#{offset}, #{rows}
 	</select>
 	
 	<resultMap type="chinaPress.exam.exam_signup.vo.FcExamSignupIndexDetailVo" id="putawayExamSignupDetailResultMap">
@@ -298,6 +310,7 @@
 			<result column="area_count" property="count" />
 			<result column="area_address" property="address" />
 			<result column="area_time" property="time" />
+			<result column="area_signup_time" property="signupTime" />
 			<result column="area_is_putaway" property="isPutaway" />
 			<result column="isSignup" property="isSignup" />
 		</collection>
@@ -308,13 +321,14 @@
 		select
 			a.id, a.banner_photo, a.signup_name, a.remarks,
 			case a.exam_form when 1 then '现场' when 0 then '非现场' end form, b.max_count signup_count,
-			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ', b.address) area_address,
+			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ') area_address,
 			concat(b.start_time, ' 至 ', b.end_time) area_time, b.is_putaway area_is_putaway,
+			concat(b.signup_start_time, ' 至 ', b.signup_end_time) area_signup_time,
 			case
 				b.is_putaway
 				when 1 then
-					if(now() <![CDATA[<]]> b.start_time || now() <![CDATA[>]]> b.end_time,0,1)
-				when 0 then 0
+					if(now() <![CDATA[<]]> b.signup_start_time || now() <![CDATA[>]]> b.signup_end_time,-1,1)
+				when 0 then -2
 			end isSignup
 		from
 			fc_exam_signup a
@@ -336,7 +350,7 @@
 	<resultMap type="chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailVo" id="examSignupDetailResultMap">
 		<id column="id" property="id" />
 		<result column="signup_name" property="signupName" />
-		<result column="courseId" property="courseId" />
+		<result column="course_id" property="courseId" />
 		<result column="courseName" property="courseName" />
 		<result column="certId" property="certId" />
 		<result column="certName" property="certName" />
@@ -344,7 +358,7 @@
 		<result column="again_type" property="againType" />
 		<result column="again_price" property="againPrice" />
 		<result column="bannerPhoto" property="bannerPhoto" />
-		<result column="isPutaway" property="isPutaway" />
+		<result column="is_putaway" property="isPutaway" />
 		<result column="remarks" property="remarks" />
 		<collection property="areaList" ofType="chinaPress.exam.exam_signup.vo.FcExamSignupManageDetailAreaVo">
 			<id column="area_id" property="id" />	
@@ -352,27 +366,29 @@
 			<result column="city" property="city" />
 			<result column="district" property="district" />
 			<result column="address" property="address" />
-			<result column="startTime" property="startTime" />
-			<result column="endTime" property="endTime" />
+			<result column="start_time" property="startTime" />
+			<result column="end_time" property="endTime" />
 			<result column="area_count" property="maxCount" />
+			<result column="signup_start_time" property="signupStartTime" />
+			<result column="signup_end_time" property="signupEndTime" />
 		</collection>
 	</resultMap>
 	
 	<!-- 后台管理端查询考试报名详情 -->
 	<select id="selectExamSignupDetail" resultMap="examSignupDetailResultMap">
 		select
-			a.id, a.signup_name, a.course_id, c.name courseName, a.exam_form,
+			a.id, a.signup_name, a.course_id, c.name courseName, a.exam_form, a.is_putaway,
 <!-- 			证书, -->
 			
 			b.id area_id, b.province, b.city, b.area district,
 			b.start_time, b.end_time, b.max_count area_count,
+			b.signup_start_time, b.signup_end_time,
 			
-			a.again_type, a.again_price, a.banner_photo,  a.remarks
+			a.again_type, a.again_price, a.banner_photo bannerPhoto, a.remarks
 		from
 			fc_exam_signup a
 			inner join fc_exam_signup_area b on a.id = b.signup_id
 			inner join fc_course_archives c on a.course_id = c.id
-			inner join fc_certificate_archives d on a.cert_id = d.id
 		where
 			a.id = #{signupId}
 	</select>

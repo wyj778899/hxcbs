@@ -1,20 +1,24 @@
 package chinaPress.exam.exam_signup.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.util.DateUtil;
-import chinaPress.exam.exam.dao.FcExamMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
 import chinaPress.exam.exam_signup.model.FcExamSignup;
 import chinaPress.exam.exam_signup.model.FcExamSignupArea;
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
+import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
@@ -35,25 +39,29 @@ public class FcExamSignupUserService {
 	private FcExamSignupMapper fcExamSignupMapper;
 	@Autowired
 	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
-	@Autowired
-	private FcExamMapper fcExamMapper;
 
 	/**
 	 * 查询考试报名的人员信息
 	 * 
 	 * @author maguoliang
 	 * @param signupId          考试报名id
-	 * @param signupAreaId      考试报名区域时间id
+	 * @param signupAreaIds     考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @return
 	 */
-	public int selectExamSignupUserCount(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
-			String certificateNumber, Integer examineType) {
-		return fcExamSignupUserMapper.selectExamSignupUserCount(signupId, signupAreaId, userName, tellPhone,
-				certificateNumber, examineType);
+	public int selectExamSignupUserCount(Integer signupId, String signupAreaIds, String userName, String tellPhone,
+			String certificateNumber, Integer examineType, String startTime, String endTime) {
+		List<String> areaList = new ArrayList<String>();
+		if (StringUtils.isNotBlank(signupAreaIds)) {
+			areaList = Arrays.asList(signupAreaIds.split(","));
+		}
+		return fcExamSignupUserMapper.selectExamSignupUserCount(signupId, areaList, userName, tellPhone,
+				certificateNumber, examineType, startTime, endTime);
 	}
 
 	/**
@@ -61,20 +69,27 @@ public class FcExamSignupUserService {
 	 * 
 	 * @author maguoliang
 	 * @param signupId          考试报名id
-	 * @param signupAreaId      考试报名区域时间id
+	 * @param signupAreaIds     考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @param pageNumber        第几页
 	 * @param pageSize          每页查询多少条
 	 * @return
 	 */
-	public List<FcExamSignupUserListVo> selectExamSignupUserList(Integer signupId, Integer signupAreaId,
-			String userName, String tellPhone, String certificateNumber, Integer examineType, Integer pageNumber,
-			Integer pageSize) {
-		List<FcExamSignupUserListVo> list = fcExamSignupUserMapper.selectExamSignupUserList(signupId, signupAreaId,
-				userName, tellPhone, certificateNumber, examineType, pageNumber * pageSize - pageSize, pageSize);
+	public List<FcExamSignupUserListVo> selectExamSignupUserList(Integer signupId, String signupAreaIds,
+			String userName, String tellPhone, String certificateNumber, Integer examineType, String startTime,
+			String endTime, Integer pageNumber, Integer pageSize) {
+		List<String> areaList = new ArrayList<String>();
+		if (StringUtils.isNotBlank(signupAreaIds)) {
+			areaList = Arrays.asList(signupAreaIds.split(","));
+		}
+		List<FcExamSignupUserListVo> list = fcExamSignupUserMapper.selectExamSignupUserList(signupId, areaList,
+				userName, tellPhone, certificateNumber, examineType, startTime, endTime,
+				pageNumber * pageSize - pageSize, pageSize);
 		for (FcExamSignupUserListVo fcExamSignupUserListVo : list) {
 			// 1.查询这个人针对当前考试报名关联的课程的学习进度
 			FcOrder exceptionFcOrder = fcOrderMapper.selectIsExceptionOrder(fcExamSignupUserListVo.getRoleId(),
@@ -96,36 +111,35 @@ public class FcExamSignupUserService {
 	}
 
 	/**
-	 * 用户考试报名
+	 * 检查是否满足报名条件
 	 * 
-	 * @author maguoliang
-	 * @param fcExamSignupUser
-	 * @return -1 用户所报名的考试不存在，-2用户所报名的考试区域不存在，-3用户所报名的考试区域和考试不一致，-4该考试报名已下架
-	 *         -5该报名下的该区域报名人数已满
+	 * @param signupId     考试报名id
+	 * @param signupAreaId 考试报名区域id
+	 * @param roleId       角色id
+	 * @param roleType     角色类型1.家长2.从业者
+	 * @return
 	 */
-	@Transactional
-	public int userSignup(FcExamSignupUser fcExamSignupUser) {
+	public int checkIsSignup(Integer signupId, Integer signupAreaId, Integer roleId, Integer roleType) {
 		// 检查考试报名id
-		if (fcExamSignupUser.getSignupId() == null) {
+		if (signupId == null) {
 			return -1;
 		} else {
 			// 检查考试报名是否存在
-			FcExamSignup fcExamSignup = fcExamSignupMapper.selectByPrimaryKey(fcExamSignupUser.getSignupId());
+			FcExamSignup fcExamSignup = fcExamSignupMapper.selectByPrimaryKey(signupId);
 			if (fcExamSignup == null) {
 				return -1;
 			} else {
 				// 检查考试报名区域时间id
-				if (fcExamSignupUser.getAreaId() == null) {
+				if (signupAreaId == null) {
 					return -2;
 				} else {
 					// 检查考试报名区域时间是否存在
-					FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper
-							.selectByPrimaryKey(fcExamSignupUser.getAreaId());
+					FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(signupAreaId);
 					if (fcExamSignupArea == null) {
 						return -2;
 					} else {
 						// 检查考试报名区域时间和考试报名是否一致
-						if (fcExamSignupArea.getSignupId().intValue() != fcExamSignupUser.getSignupId().intValue()) {
+						if (fcExamSignupArea.getSignupId().intValue() != signupId.intValue()) {
 							return -3;
 						} else {
 							// 检查是否在报名时间范围
@@ -144,14 +158,14 @@ public class FcExamSignupUserService {
 							// 检查报名人员是否已经满了
 							// 1.最大报名人数
 							int maxCount = fcExamSignupArea.getMaxCount();
-							int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(
-									fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+							int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(signupId,
+									signupAreaId);
 							if (currFcExamSignupUser == maxCount) {
 								return -5;
 							}
 							// 检查是否已经报名了
-							List<FcExamSignupUser> list = fcExamSignupUserMapper
-									.selectIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+							List<FcExamSignupUser> list = fcExamSignupUserMapper.selectIsSignup(signupId, signupAreaId,
+									roleId, roleType);
 							if (list.size() > 0) {
 								return -8;
 							}
@@ -160,39 +174,72 @@ public class FcExamSignupUserService {
 				}
 			}
 		}
-		// 再检查上次报名是否已经考试完成
-//		fcExamMapper.selectByPrimaryKey(id);
-
-		// 报名成功后判断是否满足最大人数限制，满足则自动下架
-		fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
-		int currFcExamSignupUser = fcExamSignupUserMapper.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(),
-				fcExamSignupUser.getAreaId());
-		FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExamSignupUser.getAreaId());
-		if (currFcExamSignupUser == fcExamSignupArea.getMaxCount().intValue()) {
-			FcExamSignupArea record = new FcExamSignupArea();
-			record.setId(fcExamSignupArea.getId());
-			record.setIsPutaway(0);
-			fcExamSignupAreaMapper.updateByPrimaryKeySelective(record);
-		}
 		return 1;
+	}
+
+	/**
+	 * 用户考试报名
+	 * 
+	 * @author maguoliang
+	 * @param fcExamSignupUser
+	 * @return
+	 */
+	@Transactional
+	public int userSignup(FcExamSignupUser fcExamSignupUser) {
+		int index = checkIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId(),
+				fcExamSignupUser.getRoleId(), fcExamSignupUser.getRoleType());
+		if (index == 1) {
+			// 再检查上次报名是否已经考试完成
+//			fcExamMapper.selectByPrimaryKey(id);
+
+			// 报名成功后判断是否满足最大人数限制，满足则自动下架
+			fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
+			int currFcExamSignupUser = fcExamSignupUserMapper
+					.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+			FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExamSignupUser.getAreaId());
+			if (currFcExamSignupUser == fcExamSignupArea.getMaxCount().intValue()) {
+				FcExamSignupArea record = new FcExamSignupArea();
+				record.setId(fcExamSignupArea.getId());
+				record.setIsPutaway(0);
+				fcExamSignupAreaMapper.updateByPrimaryKeySelective(record);
+			}
+			// 下架完成之后，查询该考试报名下是否所有都 已下架，如果已下架，那么考试报名下架
+			List<FcExamSignupArea> areaList = fcExamSignupAreaMapper.selectBySignupId(fcExamSignupUser.getSignupId());
+			List<FcExamSignupArea> filterAreaList = areaList.stream().filter(area -> area.getIsPutaway() == 0)
+					.collect(Collectors.toList());
+			if (areaList.size() == filterAreaList.size()) {
+				FcExamSignup record = new FcExamSignup();
+				record.setId(fcExamSignupUser.getSignupId());
+				record.setIsPutaway(0);
+				fcExamSignupMapper.updateByPrimaryKey(record);
+			}
+			return 1;
+		} else {
+			return index;
+		}
 	}
 
 	/**
 	 * 审核用户考试报名
 	 * 
 	 * @author maguoliang
-	 * @param signupUserId 考试报名用户id
-	 * @param status       审核状态1.通过2.拒绝
-	 * @param remarks      驳回原因
+	 * @param signupUserIds 考试报名用户id
+	 * @param status        审核状态1.通过2.拒绝
+	 * @param remarks       驳回原因
 	 * @return
 	 */
-	public int auditFcExamSignupUser(Integer signupUserId, Integer status, String remarks) {
-		FcExamSignupUser record = new FcExamSignupUser();
-		record.setExamineType(status);
-		if (status.intValue() == 2) {
-			record.setRemarks(remarks);
+	@Transactional(rollbackFor = Exception.class)
+	public void auditFcExamSignupUser(String signupUserIds, Integer status, String remarks) {
+		List<String> signupUserIdList = Arrays.asList(signupUserIds.split(","));
+		for (String signupUserId : signupUserIdList) {
+			FcExamSignupUser record = new FcExamSignupUser();
+			record.setId(Integer.parseInt(signupUserId));
+			record.setExamineType(status);
+			if (status.intValue() == 2) {
+				record.setRemarks(remarks);
+			}
+			fcExamSignupUserMapper.updateByPrimaryKeySelective(record);
 		}
-		return fcExamSignupUserMapper.updateByPrimaryKeySelective(record);
 	}
 
 	/**
@@ -230,5 +277,43 @@ public class FcExamSignupUserService {
 	 */
 	public FcExamSignupUserDetailVo selectFcExamSignupUserDetail(Integer signupUserId) {
 		return fcExamSignupUserMapper.selectFcExamSignupUserDetail(signupUserId);
+	}
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId         考试报名id
+	 * @param signupAreaIdList 考试报名区域id集合
+	 * @return
+	 */
+	public int selectBySignupIdAndSignupIdCount(Integer signupId, String signupAreaIds) {
+		List<String> signupAreaIdList = new ArrayList<String>();
+		if (StringUtils.isNotBlank(signupAreaIds)) {
+			signupAreaIdList = Arrays.asList(signupAreaIds.split(","));
+		}
+		return fcExamSignupUserMapper.selectBySignupIdAndSignupIdCount(signupId, signupAreaIdList);
+	}
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId         考试报名id
+	 * @param signupAreaIdList 考试报名区域id集合
+	 * @param pageNumber       第几页
+	 * @param pageSize         每页查询多少条
+	 * @return
+	 */
+	public List<FcExamSignupDetailAreaListVo> selectBySignupIdAndSignupIdList(Integer signupId, String signupAreaIds,
+			Integer pageNumber, Integer pageSize) {
+		List<String> signupAreaIdList = new ArrayList<String>();
+		if (StringUtils.isNotBlank(signupAreaIds)) {
+			signupAreaIdList = Arrays.asList(signupAreaIds.split(","));
+		}
+		if (pageNumber != null && pageSize != null) {
+			return fcExamSignupUserMapper.selectBySignupIdAndSignupIdList(signupId, signupAreaIdList,
+					pageNumber * pageSize - pageSize, pageSize);
+		} else {
+			return fcExamSignupUserMapper.selectBySignupIdAndSignupIdList(signupId, signupAreaIdList, null, null);
+		}
 	}
 }

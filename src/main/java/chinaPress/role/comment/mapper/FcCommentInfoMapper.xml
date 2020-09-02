@@ -243,7 +243,8 @@
 		select
 			a.id, b.user_name userName, case a.role_type when 1 then '员工' when 2 then '机构'
 			when 3 then '家长' when 4 then '从业者' when 5 then '注册用户' end roleTypeName,
-			b.tell_phone tellPhone, a.content, case a.status when 1 then '已审核' when 0 then '未审核' end statusName
+			b.tell_phone tellPhone, a.content, case a.status when 1 then '已审核' when 0 then '未审核' end statusName,
+			a.status
 		from
 			fc_comment a
 			inner join role_staff_archives b on a.role_id = b.role_id and a.role_type = b.role_type

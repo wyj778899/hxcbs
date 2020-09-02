@@ -114,13 +114,50 @@ public class FcExamSignupService {
 	}
 
 	/**
+	 * 下架考试报名
+	 * 
+	 * @author maguoliang
+	 * @param id        考试报名id
+	 * @param isPutaway 上下架状态1.上架0.下架
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void onShelf(Integer id, Integer isPutaway) {
+		FcExamSignup fcExamSignup = new FcExamSignup();
+		fcExamSignup.setId(id);
+		fcExamSignup.setIsPutaway(isPutaway);
+		fcExamSignupMapper.updateByPrimaryKeySelective(fcExamSignup);
+		// 如果下架了，同时下架报名下的区域
+		if (isPutaway.intValue() == 0) {
+			List<FcExamSignupArea> signupAreaList = examSignupAreaMapper.selectBySignupId(id);
+			for (FcExamSignupArea fcExamSignupArea : signupAreaList) {
+				FcExamSignupArea record = new FcExamSignupArea();
+				record.setId(fcExamSignupArea.getId());
+				record.setIsPutaway(0);
+				examSignupAreaMapper.updateByPrimaryKeySelective(record);
+			}
+		}
+	}
+
+	/**
+	 * 查询已上架的考试报个数
+	 * 
+	 * @return
+	 */
+	public int selectPutawayExamSignupCount() {
+		return fcExamSignupMapper.selectPutawayExamSignupCount();
+	}
+
+	/**
 	 * 查询已上架的考试报名
 	 * 
 	 * @author maguoliang
+	 * @param pageNumber 第几页
+	 * @param pageSize   查询多少条数据
 	 * @return
 	 */
-	public List<FcExamSignupIndexVo> selectPutawayExamSignupList() {
-		return fcExamSignupMapper.selectPutawayExamSignupList();
+	public List<FcExamSignupIndexVo> selectPutawayExamSignupList(Integer pageNumber, Integer pageSize) {
+		return fcExamSignupMapper.selectPutawayExamSignupList(pageNumber * pageSize - pageSize, pageSize);
 	}
 
 	/**

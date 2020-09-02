@@ -1,5 +1,7 @@
 package chinaPress.exam.exam.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +11,7 @@ import chinaPress.common.util.ResultUtil;
 import chinaPress.exam.exam.model.FcExam;
 import chinaPress.exam.exam.service.FcExamService;
 import chinaPress.exam.exam.vo.FcExamManageDetailVo;
+import chinaPress.exam.exam.vo.FcExamManageListVo;
 
 @RestController
 @RequestMapping("exam")
@@ -84,6 +87,42 @@ public class FcExamController {
 			return ResultUtil.ok(data);
 		} else {
 			return ResultUtil.error(data);
+		}
+	}
+
+	/**
+	 * 查询考试设置列表个数
+	 * 
+	 * @param name 考试名称
+	 * @param type 考试类型
+	 * @return
+	 */
+	@RequestMapping("manage/count")
+	public Result selectFcExamCount(String name, Integer type) {
+		int index = fcExamService.selectFcExamCount(name, type);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error(index);
+		}
+	}
+
+	/**
+	 * 查询考试设置列表个数
+	 * 
+	 * @param name       考试名称
+	 * @param type       考试类型
+	 * @param pageNumber 查询第几页
+	 * @param pageSize   查询多少条
+	 * @return
+	 */
+	@RequestMapping("manage/list")
+	public Result selectFcExamList(String name, Integer type, Integer pageNumber, Integer pageSize) {
+		List<FcExamManageListVo> list = fcExamService.selectFcExamList(name, type, pageNumber, pageSize);
+		if (list.size() > 0) {
+			return ResultUtil.ok(list);
+		} else {
+			return ResultUtil.error(list);
 		}
 	}
 }

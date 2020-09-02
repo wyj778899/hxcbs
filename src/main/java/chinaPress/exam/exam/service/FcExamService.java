@@ -13,11 +13,14 @@ import com.google.gson.reflect.TypeToken;
 import chinaPress.common.util.DateUtil;
 import chinaPress.exam.exam.dao.FcExamAreaMapper;
 import chinaPress.exam.exam.dao.FcExamMapper;
+import chinaPress.exam.exam.dao.FcExamPaperMapper;
 import chinaPress.exam.exam.dao.FcExamUserMapper;
 import chinaPress.exam.exam.model.FcExam;
 import chinaPress.exam.exam.model.FcExamArea;
+import chinaPress.exam.exam.model.FcExamPaper;
 import chinaPress.exam.exam.model.FcExamUser;
 import chinaPress.exam.exam.vo.FcExamManageDetailVo;
+import chinaPress.exam.exam.vo.FcExamManageListVo;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
@@ -39,10 +42,12 @@ public class FcExamService {
 	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
 	@Autowired
 	private FcExamAreaMapper fcExamAreaMapper;
-	
+	@Autowired
+	private FcExamPaperMapper fcExamPaperMapper;
 
 	/**
 	 * 添加考试设置
+	 * 
 	 * @param fcExam
 	 * @param signupUsers
 	 * @param signupAreas
@@ -70,10 +75,16 @@ public class FcExamService {
 			fcExamArea.setExamId(fcExam.getId());
 			fcExamAreaMapper.insertSelective(fcExamArea);
 		}
+		// 添加考试关联试卷
+		FcExamPaper fcExamPaper = new FcExamPaper();
+		fcExamPaper.setExamId(fcExam.getId());
+		fcExamPaper.setPaperId(fcExam.getPaperId());
+		fcExamPaperMapper.insertSelective(fcExamPaper);
 	}
-	
+
 	/**
 	 * 修改考试设置
+	 * 
 	 * @param fcExam
 	 * @param signupUsers
 	 * @param signupAreas
@@ -86,19 +97,19 @@ public class FcExamService {
 		if (selFcExam != null) {
 			FcExamSignup fcExamSignup = fcExamSignupMapper.selectByPrimaryKey(fcExam.getSignupId());
 			if (fcExamSignup != null) {
-				FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExam.getSignupAreaId());	
+				FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExam.getSignupAreaId());
 				if (fcExamSignupArea != null) {
-					// 如果正在考试
-					if (DateUtil.compareDate(new Date(), fcExamSignupArea.getStartTime())
-							&& DateUtil.compareDate(fcExamSignupArea.getEndTime(), new Date())) {
-						// 正在考试中，无法操作
-						return -4;
-					}
-					// 如果考试已经完毕
-					if (DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
-						// 该场考试已结束，无法操作
-						return -5;
-					}
+//					// 如果正在考试
+//					if (DateUtil.compareDate(new Date(), fcExamSignupArea.getStartTime())
+//							&& DateUtil.compareDate(fcExamSignupArea.getEndTime(), new Date())) {
+//						// 正在考试中，无法操作
+//						return -4;
+//					}
+//					// 如果考试已经完毕
+//					if (DateUtil.compareDate(new Date(), fcExamSignupArea.getEndTime())) {
+//						// 该场考试已结束，无法操作
+//						return -5;
+//					}
 					// 编辑考试设置
 					fcExamMapper.updateByPrimaryKey(fcExam);
 					// 恢复原来关联的考试报名用户的审核状态：已报考->已审核，且修改新的关联的考试报名用户的审核状态为：已报考
@@ -133,7 +144,14 @@ public class FcExamService {
 						fcExamArea.setExamId(fcExam.getId());
 						fcExamAreaMapper.insertSelective(fcExamArea);
 					}
-					return 1; 
+					// 删除原来的考试关联试卷
+					fcExamPaperMapper.deleteByExamId(fcExam.getId());
+					// 添加考试关联试卷
+					FcExamPaper fcExamPaper = new FcExamPaper();
+					fcExamPaper.setExamId(fcExam.getId());
+					fcExamPaper.setPaperId(fcExam.getPaperId());
+					fcExamPaperMapper.insertSelective(fcExamPaper);
+					return 1;
 				} else {
 					// 考试关联的考试报名区域时间不存在
 					return -3;
@@ -147,12 +165,37 @@ public class FcExamService {
 			return -1;
 		}
 	}
-	
+
 	/**
-     * 查询考试详情
-     * @param id 考试id
-     */
-    public FcExamManageDetailVo selectFcExamDetail(Integer id) {
-    	return fcExamMapper.selectFcExamDetail(id);
-    }
+	 * 查询考试详情
+	 * 
+	 * @param id 考试id
+	 */
+	public FcExamManageDetailVo selectFcExamDetail(Integer id) {
+		return fcExamMapper.selectFcExamDetail(id);
+	}
+
+	/**
+	 * 查询考试设置列表个数
+	 * 
+	 * @param name 考试名称
+	 * @param type 考试类型
+	 * @return
+	 */
+	public int selectFcExamCount(String name, Integer type) {
+		return fcExamMapper.selectFcExamCount(name, type);
+	}
+
+	/**
+	 * 查询考试设置列表个数
+	 * 
+	 * @param name       考试名称
+	 * @param type       考试类型
+	 * @param pageNumber 查询第几页
+	 * @param pageSize   查询多少条
+	 * @return
+	 */
+	public List<FcExamManageListVo> selectFcExamList(String name, Integer type, Integer pageNumber, Integer pageSize) {
+		return fcExamMapper.selectFcExamList(name, type, pageNumber * pageSize - pageSize, pageSize);
+	}
 }

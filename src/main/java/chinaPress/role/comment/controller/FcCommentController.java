@@ -95,8 +95,8 @@ public class FcCommentController {
 	 * @return
 	 */
 	@RequestMapping("manage/audit")
-	public Result auditComment(Integer id, Integer status, String rejectReason) {
-		int index = fcCommentService.auditComment(id, status, rejectReason);
+	public Result auditComment(Integer id, Integer status) {
+		int index = fcCommentService.auditComment(id, status);
 		if (index > 0) {
 			return ResultUtil.custom(1, "操作成功", index);
 		} else if (index == -1) {

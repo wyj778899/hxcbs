@@ -348,7 +348,7 @@
 	
 	<resultMap type="chinaPress.exam.exam.vo.FcExamManageDetailVo" id="fcExamManageDetailResultMap">
 		<id column="id" property="id" />
-		<result column="name" property="name" />
+		<result column="exam_name" property="name" />
 		<result column="province" property="province" />
 		<result column="city" property="city" />
 		<result column="area" property="district" />
@@ -447,5 +447,67 @@
 			a.signup_id = #{signupId}
 			and b.exam_signup_area_id = #{signupAreaId}
 			and d.signup_user_id = #{signupUserId}
+	</select>
+	
+	<!-- 查询考试设置列表 -->
+	<select id="selectFcExamCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam
+		where
+			1 = 1
+			<if test="name != null and name != ''">
+				and exam_name like concat('%', #{name}, '%')
+			</if>
+			<if test="type != null">
+				and exam_type = #{type}
+			</if>
+	</select>
+	
+	<resultMap type="chinaPress.exam.exam.vo.FcExamManageListVo" id="selectFcExamListResultMap">
+		<id column="id" property="id" />
+		<result column="exam_name" property="name" />
+		<result column="typeName" property="typeName" />
+		<result column="formName" property="formName" />
+		<collection property="areaList" ofType="chinaPress.exam.exam.vo.FcExamManageListAreaVo">
+			<id column="exam_area_id" property="id" />
+			<result column="province" property="province" />
+			<result column="city" property="city" />
+			<result column="district" property="district" />
+			<result column="start_time" property="startTime" />
+		</collection>
+	</resultMap>
+	
+	<!-- 查询考试设置列表 -->
+	<select id="selectFcExamList" resultMap="selectFcExamListResultMap">
+		select
+			t.id, t.exam_name, case t.exam_type when 1 then '自测' when 2 then '认证考试' end typeName,
+			case t.exam_form when 1 then '关联课程' when 2 then '关联分组' else '-' end formName,
+			i.id exam_area_id, c.name province, d.name city, e.name district, 
+			l.start_time
+		from (
+			select
+				*
+			from
+				fc_exam
+			where
+				1 = 1
+			limit
+				#{offset}, #{rows}
+		) t
+		left join fc_exam_area i on t.id = i.exam_id
+		left join fc_exam_signup_area l on i.exam_signup_area_id = l.id
+		left join fc_province_city_district c on c.code = l.province
+		left join fc_province_city_district d on d.code = l.city
+		left join fc_province_city_district e on e.code = l.area
+		where
+			1 = 1
+			<if test="name != null and name != ''">
+				and t.exam_name like concat('%', #{name}, '%')
+			</if>
+			<if test="type != null">
+				and t.exam_type = #{type}
+			</if>
 	</select>
 </mapper>

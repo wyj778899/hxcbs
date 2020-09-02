@@ -14,8 +14,8 @@
 		<result column="address" jdbcType="VARCHAR" property="address" />
 		<result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-		<result column="signup_start_time" jdbcType="TIMESTAMP" property="startTime" />
-		<result column="signup_end_time" jdbcType="TIMESTAMP" property="endTime" />
+		<result column="signup_start_time" jdbcType="TIMESTAMP" property="signupStartTime" />
+		<result column="signup_end_time" jdbcType="TIMESTAMP" property="signupEndTime" />
 		<result column="max_count" jdbcType="INTEGER" property="maxCount" />
 		<result column="is_putaway" jdbcType="INTEGER" property="isPutaway" />
 	</resultMap>
@@ -197,16 +197,51 @@
 	<select id="selectBySignupIdCount" resultType="int">
 		select
 			count(*)
-		from
-			fc_exam_signup_area 
-		where
-			signup_id = #{signupId}
+		from (
+			select
+				a.*
+			from
+				fc_exam_signup_area a
+				left join fc_exam_signup_user b on a.id = b.area_id
+				left join fc_province_city_district c on c.code = a.province
+				left join fc_province_city_district d on d.code = a.city
+				left join fc_province_city_district e on e.code = a.area
+			where
+				a.signup_id = #{signupId}
+				<if test="province != null and province != ''">
+					and a.province = #{province}
+				</if>
+				<if test="city != null and city != ''">
+					and a.city = #{city}
+				</if>
+				<if test="district != null and district != ''">
+					and a.area = #{district}
+				</if>
+				<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+					and (
+						(
+							#{startTime} <![CDATA[>]]> a.start_time
+							and #{startTime} <![CDATA[<]]> a.end_time
+						)
+						or
+						(
+							#{endTime} <![CDATA[>]]> a.start_time
+							and #{endTime} <![CDATA[<]]> a.end_time
+						)				
+					)
+				</if>
+				<if test="isPutaway != null">
+					and a.is_putaway = #{isPutaway}
+				</if>
+			group by
+				a.id
+		) t
 	</select>
 	
 	<!-- 根据考试报名id查询该考试报名下的区域时间 -->	
 	<select id="selectBySignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupAreaListVo">
 		select
-			a.id, concat(c.name, ' ', d.name, ' ', e.name, ' ', a.address) address, 
+			a.id, concat(c.name, ' ', d.name, ' ', IF(ISNULL(e.name) = 1, '', concat(' ', e.name))) address, 
 			concat(a.start_time, ' 至 ', a.end_time) time,
 			a.max_count count, a.is_putaway isPutaway, count(b.area_id) haveCount
 		from
@@ -217,9 +252,44 @@
 			left join fc_province_city_district e on e.code = a.area
 		where
 			a.signup_id = #{signupId}
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+			<if test="district != null and district != ''">
+				and a.area = #{district}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (
+					(
+						#{startTime} <![CDATA[>]]> a.start_time
+						and #{startTime} <![CDATA[<]]> a.end_time
+					)
+					or
+					(
+						#{endTime} <![CDATA[>]]> a.start_time
+						and #{endTime} <![CDATA[<]]> a.end_time
+					)				
+				)
+			</if>
+			<if test="isPutaway != null">
+				and a.is_putaway = #{isPutaway}
+			</if>
 		group by
 			a.id
 		limit
 			#{offset}, #{rows}
+	</select>
+	
+	<!-- 根据考试报名id查询 -->
+	<select id="selectBySignupId" resultMap="BaseResultMap">
+		select
+			*
+		from
+			fc_exam_signup_area
+		where
+			signup_id = #{signupId}
 	</select>
 </mapper>

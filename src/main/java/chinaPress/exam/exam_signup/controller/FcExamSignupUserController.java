@@ -10,6 +10,7 @@ import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
 import chinaPress.exam.exam_signup.service.FcExamSignupUserService;
+import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
@@ -25,18 +26,20 @@ public class FcExamSignupUserController {
 	 * 
 	 * @author maguoliang
 	 * @param signupId          考试报名id
-	 * @param signupAreaId      考试报名区域时间id
+	 * @param signupAreaIds     考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @return
 	 */
 	@RequestMapping("manage/count")
-	public Result selectExamSignupUserCount(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
-			String certificateNumber, Integer examineType) {
-		int index = examSignupUserService.selectExamSignupUserCount(signupId, signupAreaId, userName, tellPhone,
-				certificateNumber, examineType);
+	public Result selectExamSignupUserCount(Integer signupId, String signupAreaIds, String userName, String tellPhone,
+			String certificateNumber, Integer examineType, String startTime, String endTime) {
+		int index = examSignupUserService.selectExamSignupUserCount(signupId, signupAreaIds, userName, tellPhone,
+				certificateNumber, examineType, startTime, endTime);
 		if (index > 0) {
 			return ResultUtil.ok(index);
 		} else {
@@ -49,25 +52,79 @@ public class FcExamSignupUserController {
 	 * 
 	 * @author maguoliang
 	 * @param signupId          考试报名id
-	 * @param signupAreaId      考试报名区域时间id
+	 * @param signupAreaIds     考试报名区域时间id
 	 * @param userName          姓名
 	 * @param tellPhone         手机号
 	 * @param certificateNumber 身份证号
 	 * @param examineType       审核状态(0未审核,1已审核,2已驳回3.已关联考试)
+	 * @param startTime         开始时间
+	 * @param endTime           结束时间
 	 * @param pageNumber        第几页
 	 * @param pageSize          每页查询多少条
 	 * @return
 	 */
 	@RequestMapping("manage/list")
-	public Result selectExamSignupUserList(Integer signupId, Integer signupAreaId, String userName, String tellPhone,
-			String certificateNumber, Integer examineType, Integer pageNumber, Integer pageSize) {
-		List<FcExamSignupUserListVo> list = examSignupUserService.selectExamSignupUserList(signupId, signupAreaId,
-				userName, tellPhone, certificateNumber, examineType, pageNumber, pageSize);
+	public Result selectExamSignupUserList(Integer signupId, String signupAreaIds, String userName, String tellPhone,
+			String certificateNumber, Integer examineType, String startTime, String endTime, Integer pageNumber,
+			Integer pageSize) {
+		List<FcExamSignupUserListVo> list = examSignupUserService.selectExamSignupUserList(signupId, signupAreaIds,
+				userName, tellPhone, certificateNumber, examineType, startTime, endTime, pageNumber, pageSize);
 		if (list.size() > 0) {
 			return ResultUtil.ok(list);
 		} else {
 			return ResultUtil.error(list);
 		}
+	}
+
+	/**
+	 * 查询考试报名用户信息
+	 * 
+	 * @param signupUserId 考试报名用户id
+	 * @return
+	 */
+	@RequestMapping("manage/detail")
+	public Result selectManageFcExamSignupUserDetail(Integer signupUserId) {
+		FcExamSignupUserDetailVo data = examSignupUserService.selectFcExamSignupUserDetail(signupUserId);
+		if (data != null) {
+			return ResultUtil.ok(data);
+		} else {
+			return ResultUtil.error(data);
+		}
+	}
+
+	/**
+	 * 报名之前检查是否满足报名条件
+	 * 
+	 * @param signupId     考试报名id
+	 * @param signupAreaId 考试报名区域id
+	 * @param roleId       角色id
+	 * @param roleType     角色类型1.家长2.从业者
+	 * @return
+	 */
+	@RequestMapping("index/checkIsSignup")
+	public Result checkIsSignup(Integer signupId, Integer signupAreaId, Integer roleId, Integer roleType) {
+		Result result = new Result();
+		int index = examSignupUserService.checkIsSignup(signupId, signupAreaId, roleId, roleType);
+		if (index > 0) {
+			result = ResultUtil.custom(index, "可以报名", index);
+		} else if (index == -1) {
+			result = ResultUtil.custom(index, "该场考试报名不存在", index);
+		} else if (index == -2) {
+			result = ResultUtil.custom(index, "该场考试报名区域不存在", index);
+		} else if (index == -3) {
+			result = ResultUtil.custom(index, "该场考试报名和区域不一致", index);
+		} else if (index == -4) {
+			result = ResultUtil.custom(index, "该场考试报名已下架", index);
+		} else if (index == -5) {
+			result = ResultUtil.custom(index, "该场考试报名区域报名人数已满", index);
+		} else if (index == -6) {
+			result = ResultUtil.custom(index, "请在报名时间范围内报名", index);
+		} else if (index == -7) {
+			result = ResultUtil.custom(index, "该场考试报名区域已下架", index);
+		} else if (index == -8) {
+			result = ResultUtil.custom(index, "已报名该场考试报名区域", index);
+		}
+		return result;
 	}
 
 	/**
@@ -109,18 +166,19 @@ public class FcExamSignupUserController {
 	 * 审核用户考试报名
 	 * 
 	 * @author maguoliang
-	 * @param signupUserId 考试报名用户id
-	 * @param status       审核状态1.通过2.拒绝
-	 * @param remarks      驳回原因
+	 * @param signupUserIds 考试报名用户id
+	 * @param status        审核状态1.通过2.拒绝
+	 * @param remarks       驳回原因
 	 * @return
 	 */
 	@RequestMapping("manage/audit")
-	public Result auditFcExamSignupUser(Integer signupUserId, Integer status, String remarks) {
-		int index = examSignupUserService.auditFcExamSignupUser(signupUserId, status, remarks);
-		if (index > 0) {
-			return ResultUtil.ok(index);
-		} else {
-			return ResultUtil.error(index);
+	public Result auditFcExamSignupUser(String signupUserIds, Integer status, String remarks) {
+		try {
+			examSignupUserService.auditFcExamSignupUser(signupUserIds, status, remarks);
+			return ResultUtil.ok(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultUtil.error(0);
 		}
 	}
 
@@ -168,12 +226,50 @@ public class FcExamSignupUserController {
 	 * @return
 	 */
 	@RequestMapping("index/audit/detail")
-	public Result selectFcExamSignupUserDetail(Integer signupUserId) {
+	public Result selectIndexFcExamSignupUserDetail(Integer signupUserId) {
 		FcExamSignupUserDetailVo data = examSignupUserService.selectFcExamSignupUserDetail(signupUserId);
 		if (data != null) {
 			return ResultUtil.ok(data);
 		} else {
 			return ResultUtil.error(data);
+		}
+	}
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId      考试报名id
+	 * @param signupAreaIds 考试报名区域id集合
+	 * @return
+	 */
+	@RequestMapping("area/manage/count")
+	public Result selectBySignupIdAndSignupIdCount(Integer signupId, String signupAreaIds) {
+		int index = examSignupUserService.selectBySignupIdAndSignupIdCount(signupId, signupAreaIds);
+		if (index > 0) {
+			return ResultUtil.ok(index);
+		} else {
+			return ResultUtil.error(index);
+		}
+	}
+
+	/**
+	 * 根据多个考试报名区域id和考试报名id查询
+	 * 
+	 * @param signupId      考试报名id
+	 * @param signupAreaIds 考试报名区域id集合
+	 * @param pageNumber    第几页
+	 * @param pageSize      每页查询多少条
+	 * @return
+	 */
+	@RequestMapping("area/manage/list")
+	public Result selectBySignupIdAndSignupIdList(Integer signupId, String signupAreaIds, Integer pageNumber,
+			Integer pageSize) {
+		List<FcExamSignupDetailAreaListVo> list = examSignupUserService.selectBySignupIdAndSignupIdList(signupId,
+				signupAreaIds, pageNumber, pageSize);
+		if (list.size() > 0) {
+			return ResultUtil.ok(list);
+		} else {
+			return ResultUtil.error(list);
 		}
 	}
 }

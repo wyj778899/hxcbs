@@ -377,11 +377,8 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-		 	<if test="signupAreaId != null">
-		 		and a.area_id = #{signupAreaId}
-		 	</if>
 			<if test="userName != null and userName != ''">
-				and b.user_name like concat('%', #{userName} , '%')
+				and a.user_name like concat('%', #{userName} , '%')
 			</if>
 			<if test="tellPhone != null and tellPhone != ''">
 				and a.tell_phone like concat('%', #{tellPhone}, '%')
@@ -391,6 +388,25 @@
 			</if>
 			<if test="examineType != null">
 				and a.examine_type =  #{examineType}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (
+					(
+						#{startTime} <![CDATA[>]]> c.start_time
+						and #{startTime} <![CDATA[<]]> c.end_time
+					)
+					or
+					(
+						#{endTime} <![CDATA[>]]> c.start_time
+						and #{endTime} <![CDATA[<]]> c.end_time
+					)				
+				)
+			</if>
+			<if test="signupAreaId.size() > 0">
+				and a.area_id in 
+				<foreach collection="signupAreaId" open="(" close=")" item="item" separator=",">
+					#{item}
+				</foreach>
 			</if>
 	</select>
 	
@@ -413,11 +429,8 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-		 	<if test="signupAreaId != null">
-		 		and a.area_id = #{signupAreaId}
-		 	</if>
 			<if test="userName != null and userName != ''">
-				and b.user_name like concat('%', #{userName} , '%')
+				and a.user_name like concat('%', #{userName} , '%')
 			</if>
 			<if test="tellPhone != null and tellPhone != ''">
 				and a.tell_phone like concat('%', #{tellPhone}, '%')
@@ -427,6 +440,25 @@
 			</if>
 			<if test="examineType != null">
 				and a.examine_type =  #{examineType}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (
+					(
+						#{startTime} <![CDATA[>]]> c.start_time
+						#{startTime} <![CDATA[<]]> c.end_time
+					)
+					or
+					(
+						#{endTime} <![CDATA[>]]> c.start_time
+						#{endTime} <![CDATA[<]]> c.end_time
+					)				
+				)
+			</if>
+			<if test="signupAreaId.size() > 0">
+				and a.area_id in 
+				<foreach collection="signupAreaId" open="(" close=")" item="item" separator=",">
+					#{item}
+				</foreach>
 			</if>
 		limit #{offset}, #{rows}
 	</select>
@@ -462,7 +494,7 @@
 	<!-- 前台查询报名审核 -->
 	<select id="selectUserFcExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo">
 		select
-			a.signup_id signupId, a.id signupUserId,
+			a.signup_id signupId, a.id signupUserId, b.signup_name name,
 			c.name courseName, a.examine_type auditStatus,
 			case a.examine_type when 0 then '未审核' when 1 then '已审核'
 			when 2 then '已驳回' end auditStatusTxt,
@@ -488,18 +520,23 @@
 	<select id="selectFcExamSignupUserDetail" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo">
 		select
 			a.id, a.user_head photo, a.user_name name, a.education,
-			concat(c.name, '/ ', d.name, '/', e.name) address, a.address detailAddress,
+			concat(c.name, '/', d.name, IF(ISNULL(e.name) = 1, '', concat('/', e.name))) address, a.address detailAddress,
 			a.tell_phone phone, a.certificate_number certificateNumber, 
 			a.institution_name institution, a.post,
 			a.certificate_front certificateFront, a.certificate_behind certificateBehind, 
 			a.hand_certificate certificateHand, a.examine_type auditStatus,
-			a.remarks rejectReason
+			a.remarks rejectReason,
+			concat(f.name, '/', g.name, IF(ISNULL(h.name) = 1, '', concat('/', h.name))) signupArea,
+			b.start_time areaStartTime, b.end_time areaEndTime
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup_area b on a.area_id = b.id
 			left join fc_province_city_district c on c.code = a.province
 			left join fc_province_city_district d on d.code = a.city
 			left join fc_province_city_district e on e.code = a.area
+			left join fc_province_city_district f on f.code = b.province
+			left join fc_province_city_district g on g.code = b.city
+			left join fc_province_city_district h on h.code = b.area
 		where
 			a.id = #{signupUserId}
 	</select>
@@ -513,5 +550,50 @@
 		where
 			signup_id = #{signupId}
 			and area_id = #{signupAreaId}
+			and role_id = #{roleId}
+			and role_type = #{roleType}
+	</select>
+	
+	<select id="selectBySignupIdAndSignupIdCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup b on a.signup_id = b.id
+			inner join fc_exam_signup_area c on a.area_id = c.id
+			left join fc_province_city_district d on d.code = c.province
+			left join fc_province_city_district e on e.code = c.city
+			left join fc_province_city_district f on f.code = c.area
+		where
+		 	1 = 1
+		 	and a.signup_id = #{signupId}
+	 		and a.area_id in
+	 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
+	 			#{item}
+	 		</foreach>
+	</select>
+	
+	<select id="selectBySignupIdAndSignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo">
+		select
+			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
+			a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup b on a.signup_id = b.id
+			inner join fc_exam_signup_area c on a.area_id = c.id
+			left join fc_province_city_district d on d.code = c.province
+			left join fc_province_city_district e on e.code = c.city
+			left join fc_province_city_district f on f.code = c.area
+		where
+		 	1 = 1
+		 	and a.signup_id = #{signupId}
+	 		and a.area_id in
+	 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
+	 			#{item}
+	 		</foreach>
+	 	<if test="offset != null and rows != null">
+		 	limit
+		 		#{offset}, #{rows}
+	 	</if>
 	</select>
 </mapper>

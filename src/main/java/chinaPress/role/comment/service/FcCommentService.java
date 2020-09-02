@@ -81,7 +81,7 @@ public class FcCommentService {
 	 * @return
 	 */
 	@Transactional
-	public int auditComment(Integer id, Integer status, String rejectReason) {
+	public int auditComment(Integer id, Integer status) {
 		FcCommentInfo fcCommentInfo = fcCommentInfoMapper.selectByPrimaryKey(id);
 		if (fcCommentInfo.getStatus().intValue() != 0) {
 			return -1;
@@ -89,9 +89,6 @@ public class FcCommentService {
 		FcCommentInfo record = new FcCommentInfo();
 		record.setId(id);
 		record.setStatus(status);
-		if (status.intValue() == 2) {
-			record.setRejectReason(rejectReason);
-		}
 		return fcCommentInfoMapper.updateByPrimaryKeySelective(record);
 	}
 

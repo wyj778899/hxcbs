@@ -28,13 +28,29 @@ public class FcExamSignupManageDetailAreaVo {
 	/**
 	 * 考试时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date startTime;
 	/**
 	 * 考试结束时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date endTime;
+
+	/**
+	 * 人数
+	 */
+	private Integer maxCount;
+
+	/**
+	 * 报名开始时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date signupStartTime;
+	/**
+	 * 报名结束束时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date signupEndTime;
 
 	/**
 	 * @return the id
@@ -132,5 +148,47 @@ public class FcExamSignupManageDetailAreaVo {
 	 */
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	/**
+	 * @return the maxCount
+	 */
+	public Integer getMaxCount() {
+		return maxCount;
+	}
+
+	/**
+	 * @param maxCount the maxCount to set
+	 */
+	public void setMaxCount(Integer maxCount) {
+		this.maxCount = maxCount;
+	}
+
+	/**
+	 * @return the signupStartTime
+	 */
+	public Date getSignupStartTime() {
+		return signupStartTime;
+	}
+
+	/**
+	 * @param signupStartTime the signupStartTime to set
+	 */
+	public void setSignupStartTime(Date signupStartTime) {
+		this.signupStartTime = signupStartTime;
+	}
+
+	/**
+	 * @return the signupEndTime
+	 */
+	public Date getSignupEndTime() {
+		return signupEndTime;
+	}
+
+	/**
+	 * @param signupEndTime the signupEndTime to set
+	 */
+	public void setSignupEndTime(Date signupEndTime) {
+		this.signupEndTime = signupEndTime;
 	}
 }

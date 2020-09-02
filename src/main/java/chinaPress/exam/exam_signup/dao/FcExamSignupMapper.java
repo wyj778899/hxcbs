@@ -55,12 +55,20 @@ public interface FcExamSignupMapper {
 			@Param("rows") Integer rows);
 
 	/**
-	 * 查询已上架的考试报名
+	 * 查询已上架的考试报个数
 	 * 
-	 * @author maguoliang
 	 * @return
 	 */
-	List<FcExamSignupIndexVo> selectPutawayExamSignupList();
+	int selectPutawayExamSignupCount();
+
+	/**
+	 * 查询已上架的考试报名列表
+	 * 
+	 * @param offset 从哪一条数据开始查询
+	 * @param rows   查询多少条数据
+	 * @return
+	 */
+	List<FcExamSignupIndexVo> selectPutawayExamSignupList(@Param("offset") Integer offset, @Param("rows") Integer rows);
 
 	/**
 	 * 查询已上架的考试报名详情

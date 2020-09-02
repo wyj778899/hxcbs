@@ -117,14 +117,50 @@ public class FcExamSignupController {
 	}
 
 	/**
+	 * 上下架考试报名
+	 * 
+	 * @author maguoliang
+	 * @param id        考试报名id
+	 * @param isPutaway 上下架状态1.上架0.下架
+	 * @return
+	 */
+	@RequestMapping("manage/onOffShelf")
+	public Result onShelf(Integer id, Integer isPutaway) {
+		try {
+			fcExamSignupService.onShelf(id, isPutaway);
+			return ResultUtil.ok(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultUtil.error(0);
+		}
+	}
+
+	/**
+	 * 查询已上架的考试报个数
+	 * 
+	 * @return
+	 */
+	@RequestMapping("index/count")
+	public Result selectPutawayExamSignupCount() {
+		int index = fcExamSignupService.selectPutawayExamSignupCount();
+		if (index > 0) {
+			return ResultUtil.custom(1, "有数据", index);
+		} else {
+			return ResultUtil.custom(0, "无数据", index);
+		}
+	}
+
+	/**
 	 * 查询已上架的考试报名列表
 	 * 
 	 * @author maguoliang
+	 * @param pageNumber 第几页
+	 * @param pageSize   查询多少条数据
 	 * @return
 	 */
 	@RequestMapping("index/list")
-	public Result selectPutawayExamSignupList() {
-		List<FcExamSignupIndexVo> list = fcExamSignupService.selectPutawayExamSignupList();
+	public Result selectPutawayExamSignupList(Integer pageNumber, Integer pageSize) {
+		List<FcExamSignupIndexVo> list = fcExamSignupService.selectPutawayExamSignupList(pageNumber, pageSize);
 		if (list.size() > 0) {
 			return ResultUtil.custom(1, "有数据", list);
 		} else {
