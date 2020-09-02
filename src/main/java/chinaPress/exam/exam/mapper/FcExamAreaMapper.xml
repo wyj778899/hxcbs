@@ -96,4 +96,130 @@
 		where
 			exam_id = #{examId}
 	</delete>
+	
+	<!-- 根据考试id查询考试区域 -->
+	<select id="selectFcExamAreaCount" resultType="int">
+		select
+			count(*)
+		from (
+			select
+				a.id, c.name province, d.name city, e.name district, b.start_time startTime, 
+				b.end_time endTime, count(f.id) count,
+				case 
+					when b.start_time <![CDATA[>]]> now() then '未开始'
+					when b.start_time <![CDATA[<]]> now() and b.end_time <![CDATA[>]]> now() then '进行中'
+					when b.end_time <![CDATA[<]]> now() then '已结束'
+				end statusName
+			from
+				fc_exam_area a
+				inner join fc_exam_signup_area b on a.exam_signup_area_id = b.id
+				left join fc_province_city_district c on c.code = b.province
+				left join fc_province_city_district d on d.code = b.city
+				left join fc_province_city_district e on e.code = b.area
+				left join fc_exam_signup_user f on a.exam_signup_area_id = f.area_id
+			where
+				a.exam_id = #{examId}
+			<if test="province != null and province != ''">
+				and c.code = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and d.code = #{city}
+			</if>
+			<if test="district != null and district != ''">
+				and e.code = #{district}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (
+					(
+						#{startTime} <![CDATA[>]]> b.start_time
+						and #{startTime} <![CDATA[<]]> b.end_time
+					)
+					or
+					(
+						#{endTime} <![CDATA[>]]> b.start_time
+						and #{endTime} <![CDATA[<]]> b.end_time
+					)				
+				)
+			</if>
+			<if test="status != null">
+				<!-- 未开始 -->
+				<if test="status == 1">
+					and now() <![CDATA[<]]> b.start_time
+				</if>
+				<!-- 进行中 -->
+				<if test="status == 2">
+					and now() <![CDATA[>]]> b.start_time
+					and now() <![CDATA[<]]> b.end_time
+				</if>
+				<!-- 已结束 -->
+				<if test="status == 3">
+					and now() <![CDATA[>]]> b.end_time
+				</if>
+			</if>
+			group by
+				a.id
+		) t
+	</select>
+	
+	<!-- 根据考试id查询考试区域 -->
+	<select id="selectFcExamAreaList" resultType="chinaPress.exam.exam.vo.FcExamManageAreaListVo">
+		select
+			a.id, a.exam_signup_area_id signupAreaId, c.name province, d.name city, e.name district, 
+			b.start_time startTime, b.end_time endTime, count(f.id) count,
+			case 
+				when b.start_time <![CDATA[>]]> now() then '未开始'
+				when b.start_time <![CDATA[<]]> now() and b.end_time <![CDATA[>]]> now() then '进行中'
+				when b.end_time <![CDATA[<]]> now() then '已结束'
+			end statusName
+		from
+			fc_exam_area a
+			inner join fc_exam_signup_area b on a.exam_signup_area_id = b.id
+			left join fc_province_city_district c on c.code = b.province
+			left join fc_province_city_district d on d.code = b.city
+			left join fc_province_city_district e on e.code = b.area
+			left join fc_exam_signup_user f on a.exam_signup_area_id = f.area_id
+		where
+			a.exam_id = #{examId}
+			<if test="province != null and province != ''">
+				and c.code = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and d.code = #{city}
+			</if>
+			<if test="district != null and district != ''">
+				and e.code = #{district}
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (
+					(
+						#{startTime} <![CDATA[>]]> b.start_time
+						and #{startTime} <![CDATA[<]]> b.end_time
+					)
+					or
+					(
+						#{endTime} <![CDATA[>]]> b.start_time
+						and #{endTime} <![CDATA[<]]> b.end_time
+					)				
+				)
+			</if>
+			<if test="status != null">
+				<!-- 未开始 -->
+				<if test="status == 1">
+					and now() <![CDATA[<]]> b.start_time
+				</if>
+				<!-- 进行中 -->
+				<if test="status == 2">
+					and now() <![CDATA[>]]> b.start_time
+					and now() <![CDATA[<]]> b.end_time
+				</if>
+				<!-- 已结束 -->
+				<if test="status == 3">
+					and now() <![CDATA[>]]> b.end_time
+				</if>
+			</if>
+		group by
+			a.id
+		limit
+			#{offset}, #{rows}
+	</select>
 </mapper>

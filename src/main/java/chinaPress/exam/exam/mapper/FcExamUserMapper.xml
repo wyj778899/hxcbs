@@ -99,4 +99,66 @@
 		where
 			exam_id = #{examId}
 	</delete>
+	
+	<!-- 根据考试id查询该场考试下的用户 -->
+	<select id="selectFcExamAreaUserCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_user a
+			inner join fc_exam_signup_user b on a.signup_user_id = b.id
+			inner join fc_exam_signup_area c on b.area_id = c.id
+		where
+			b.area_id = #{signupAreaId}
+			<if test="name != null and name != ''">
+				and b.user_name like concat('%', #{name}, '%')
+			</if>
+			<if test="phone != null and phone != ''">
+				and b.tell_phone like concat('%', #{phone}, '%')
+			</if>
+			<if test="certificateNumber != null and certificateNumber != ''">
+				and b.certificate_number like concat('%', #{certificateNumber}, '%')
+			</if>
+			<if test="status != null">
+				<if test="status == 1">
+				
+				</if>
+				<if test="status == 2">
+				
+				</if>
+			</if>
+	</select>
+	
+	<!-- 根据考试id查询该场考试下的用户 -->
+	<select id="selectFcExamAreaUserList" resultType="chinaPress.exam.exam.vo.FcExamManageAreaUserListVo">
+		select
+			a.id, b.user_name name, b.education, b.tell_phone phone, b.certificate_number certificateNumber, 
+			b.institution_name institutionName, b.post
+<!-- 			,考试状态, 成绩, 发证时间, 证书编号, 考试地点, 补考次数 -->
+		from
+			fc_exam_user a
+			inner join fc_exam_signup_user b on a.signup_user_id = b.id
+			inner join fc_exam_signup_area c on b.area_id = c.id
+		where
+			b.area_id = #{signupAreaId}
+			<if test="name != null and name != ''">
+				and b.user_name like concat('%', #{name}, '%')
+			</if>
+			<if test="phone != null and phone != ''">
+				and b.tell_phone like concat('%', #{phone}, '%')
+			</if>
+			<if test="certificateNumber != null and certificateNumber != ''">
+				and b.certificate_number like concat('%', #{certificateNumber}, '%')
+			</if>
+			<if test="status != null">
+				<if test="status == 1">
+				
+				</if>
+				<if test="status == 2">
+				
+				</if>
+			</if>
+		limit
+			#{offset}, #{rows}
+	</select>
 </mapper>

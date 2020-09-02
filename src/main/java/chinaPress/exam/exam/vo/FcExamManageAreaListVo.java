@@ -4,15 +4,15 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class FcExamManageDetailAreaVo {
+public class FcExamManageAreaListVo {
 	/**
-	 * 考试设置报名区域id
+	 * 考试关联区域id
 	 */
 	private Integer id;
 	/**
 	 * 考试报名区域id
 	 */
-	private Integer examSignupAreaId;
+	private Integer signupAreaId;
 	/**
 	 * 省
 	 */
@@ -22,13 +22,9 @@ public class FcExamManageDetailAreaVo {
 	 */
 	private String city;
 	/**
-	 * 区
+	 * 区域
 	 */
 	private String district;
-	/**
-	 * 详细地址
-	 */
-	private String address;
 	/**
 	 * 开始时间
 	 */
@@ -40,13 +36,13 @@ public class FcExamManageDetailAreaVo {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date endTime;
 	/**
-	 * 关联课程
+	 * 考试人数
 	 */
-	private String courseName;
+	private Integer count;
 	/**
-	 * 考试形式
+	 * 考试状态
 	 */
-	private String examForm;
+	private String statusName;
 
 	/**
 	 * @return the id
@@ -63,17 +59,17 @@ public class FcExamManageDetailAreaVo {
 	}
 
 	/**
-	 * @return the examSignupAreaId
+	 * @return the signupAreaId
 	 */
-	public Integer getExamSignupAreaId() {
-		return examSignupAreaId;
+	public Integer getSignupAreaId() {
+		return signupAreaId;
 	}
 
 	/**
-	 * @param examSignupAreaId the examSignupAreaId to set
+	 * @param signupAreaId the signupAreaId to set
 	 */
-	public void setExamSignupAreaId(Integer examSignupAreaId) {
-		this.examSignupAreaId = examSignupAreaId;
+	public void setSignupAreaId(Integer signupAreaId) {
+		this.signupAreaId = signupAreaId;
 	}
 
 	/**
@@ -119,20 +115,6 @@ public class FcExamManageDetailAreaVo {
 	}
 
 	/**
-	 * @return the address
-	 */
-	public String getAddress() {
-		return address;
-	}
-
-	/**
-	 * @param address the address to set
-	 */
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	/**
 	 * @return the startTime
 	 */
 	public Date getStartTime() {
@@ -161,30 +143,30 @@ public class FcExamManageDetailAreaVo {
 	}
 
 	/**
-	 * @return the courseName
+	 * @return the count
 	 */
-	public String getCourseName() {
-		return courseName;
+	public Integer getCount() {
+		return count;
 	}
 
 	/**
-	 * @param courseName the courseName to set
+	 * @param count the count to set
 	 */
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	/**
-	 * @return the examForm
+	 * @return the statusName
 	 */
-	public String getExamForm() {
-		return examForm;
+	public String getStatusName() {
+		return statusName;
 	}
 
 	/**
-	 * @param examForm the examForm to set
+	 * @param statusName the statusName to set
 	 */
-	public void setExamForm(String examForm) {
-		this.examForm = examForm;
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 }

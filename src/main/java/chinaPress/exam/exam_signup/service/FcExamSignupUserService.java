@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.util.DateUtil;
-import chinaPress.exam.exam.dao.FcExamMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
@@ -24,6 +23,7 @@ import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserPrepareVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserVo;
 import chinaPress.exam.exam_signup.vo.FcExamToUserVo;
 import chinaPress.fc.order.dao.FcOrderMapper;
@@ -43,8 +43,6 @@ public class FcExamSignupUserService {
 	private FcExamSignupMapper fcExamSignupMapper;
 	@Autowired
 	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
-	@Autowired
-	private FcExamMapper fcExamMapper;
 
 	/**
 	 * 查询考试报名的人员信息
@@ -322,34 +320,46 @@ public class FcExamSignupUserService {
 			return fcExamSignupUserMapper.selectBySignupIdAndSignupIdList(signupId, signupAreaIdList, null, null);
 		}
 	}
-	
+
 	/**
 	 * 身份证号和手机号查询用户的信息用于考试登录
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber,String tellPhone) {
+	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
 		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone);
 	}
-	
+
 	/**
 	 * 查询用户的考试信息关联多个
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	public List<FcExamToUserVo> findUserExams(String certificateNumber,String tellPhone){
+	public List<FcExamToUserVo> findUserExams(String certificateNumber, String tellPhone) {
 		return fcExamSignupUserMapper.selectUserExams(certificateNumber, tellPhone);
 	}
-	
+
 	/**
 	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	public ExamUserVo findUserInfo(String certificateNumber,String tellPhone,Integer signupId,Integer signupAreaId){
-		return fcExamSignupUserMapper.selectUserInfo(certificateNumber, tellPhone,signupId,signupAreaId);
+	public ExamUserVo findUserInfo(String certificateNumber, String tellPhone, Integer signupId, Integer signupAreaId) {
+		return fcExamSignupUserMapper.selectUserInfo(certificateNumber, tellPhone, signupId, signupAreaId);
+	}
+
+	/**
+	 * 根据家长/从业者id查询信息
+	 * 
+	 * @param id 家长/从业者id
+	 * @return
+	 */
+	public FcExamSignupUserPrepareVo selectSignupUserInfoById(Integer id) {
+		return fcExamSignupUserMapper.selectSignupUserInfoById(id);
 	}
 }

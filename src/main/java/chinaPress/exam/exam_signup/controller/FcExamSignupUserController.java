@@ -15,6 +15,7 @@ import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserPrepareVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserVo;
 import chinaPress.exam.exam_signup.vo.FcExamToUserVo;
 
@@ -276,41 +277,43 @@ public class FcExamSignupUserController {
 		}
 	}
 
-
 	/**
-	 * 身份证号和手机号查询用户考试信息   用户登录
+	 * 身份证号和手机号查询用户考试信息 用户登录
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
 	@RequestMapping("query/user/detail")
-	public Result queryCertificateNumberAndTellPhone(String certificateNumber,String tellPhone) {
+	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
 		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone);
 		if (vo != null) {
 			return ResultUtil.ok(vo);
-		}else {
+		} else {
 			return ResultUtil.error(vo);
 		}
 	}
-	
+
 	/**
 	 * 查询用户的所有考试信息
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
 	@RequestMapping("query/user/exams")
-	public Result queryUserExams(String certificateNumber,String tellPhone) {
+	public Result queryUserExams(String certificateNumber, String tellPhone) {
 		List<FcExamToUserVo> list = examSignupUserService.findUserExams(certificateNumber, tellPhone);
-		if(list!=null && list.size()>0) {
+		if (list != null && list.size() > 0) {
 			return ResultUtil.ok(list);
-		}else {
+		} else {
 			return ResultUtil.error(list);
 		}
 	}
-	
+
 	/**
 	 * 用户的头像，手机号，用户名信息
+	 * 
 	 * @param certificateNumber 身份证号
 	 * @param tellPhone         手机号
 	 * @param signupId          考试报名id
@@ -318,12 +321,28 @@ public class FcExamSignupUserController {
 	 * @return
 	 */
 	@RequestMapping("query/user/info")
-	public Result queryUserInfo(String certificateNumber,String tellPhone,Integer signupId,Integer signupAreaId) {
-		ExamUserVo vo = examSignupUserService.findUserInfo(certificateNumber, tellPhone,signupId,signupAreaId);
-		if(vo!=null) {
+	public Result queryUserInfo(String certificateNumber, String tellPhone, Integer signupId, Integer signupAreaId) {
+		ExamUserVo vo = examSignupUserService.findUserInfo(certificateNumber, tellPhone, signupId, signupAreaId);
+		if (vo != null) {
 			return ResultUtil.ok(vo);
-		}else {
+		} else {
 			return ResultUtil.error(vo);
+		}
+	}
+
+	/**
+	 * 根据家长/从业者id查询信息
+	 * 
+	 * @param id 家长/从业者id
+	 * @return
+	 */
+	@RequestMapping("index/prepare/info")
+	public Result selectSignupUserInfoById(Integer id) {
+		FcExamSignupUserPrepareVo data = examSignupUserService.selectSignupUserInfoById(id);
+		if (data != null) {
+			return ResultUtil.ok(data);
+		} else {
+			return ResultUtil.error(data);
 		}
 	}
 }

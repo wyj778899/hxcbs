@@ -12,6 +12,7 @@ import chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserDetailVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListIndexVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo;
+import chinaPress.exam.exam_signup.vo.FcExamSignupUserPrepareVo;
 import chinaPress.exam.exam_signup.vo.FcExamSignupUserVo;
 import chinaPress.exam.exam_signup.vo.FcExamToUserVo;
 
@@ -145,28 +146,43 @@ public interface FcExamSignupUserMapper {
 	List<FcExamSignupDetailAreaListVo> selectBySignupIdAndSignupIdList(@Param("signupId") Integer signupId,
 			@Param("signupAreaIdList") List<String> signupAreaIdList, @Param("offset") Integer offset,
 			@Param("rows") Integer rows);
-	
+
 	/**
-	 * 通过手机号和身份证号查询用户的考试信息                  用于登录考试
+	 * 通过手机号和身份证号查询用户的考试信息 用于登录考试
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	FcExamSignupUserVo selectCertificateNumberAndTellPhone(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
-	
+	FcExamSignupUserVo selectCertificateNumberAndTellPhone(@Param("certificateNumber") String certificateNumber,
+			@Param("tellPhone") String tellPhone);
+
 	/**
 	 * 查询用户的考试信息
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	List<FcExamToUserVo> selectUserExams(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone);
-	
+	List<FcExamToUserVo> selectUserExams(@Param("certificateNumber") String certificateNumber,
+			@Param("tellPhone") String tellPhone);
+
 	/**
-	 * 用于展示用户信息    
+	 * 用于展示用户信息
+	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
 	 * @return
 	 */
-	ExamUserVo selectUserInfo(@Param("certificateNumber")String certificateNumber,@Param("tellPhone")String tellPhone,@Param("signupId")Integer signupId,@Param("signupAreaId")Integer signupAreaId);
+	ExamUserVo selectUserInfo(@Param("certificateNumber") String certificateNumber,
+			@Param("tellPhone") String tellPhone, @Param("signupId") Integer signupId,
+			@Param("signupAreaId") Integer signupAreaId);
+
+	/**
+	 * 根据家长/从业者id查询信息
+	 * 
+	 * @param id 家长/从业者id
+	 * @return
+	 */
+	FcExamSignupUserPrepareVo selectSignupUserInfoById(Integer id);
 }

@@ -361,7 +361,8 @@
 		<result column="pass_comment" property="passComment" />
 		<result column="fail_comment" property="failComment" />
 		<collection property="areaList" ofType="chinaPress.exam.exam.vo.FcExamManageDetailAreaVo">
-			<id column="examSignupAreaId" property="examSignupAreaId" />
+			<id column="examAreaId" property="id" />
+			<result column="examSignupAreaId" property="examSignupAreaId" />			
 			<result column="examSignupAreaProvince" property="province" />
 			<result column="examSignupAreaCity" property="city" />
 			<result column="examSignupAreaDistrict" property="district" />
@@ -396,7 +397,7 @@
 			a.province, a.city, a.area, a.address,
 			d.id signupId, d.signup_name signupName,
 			
-			e.id examSignupAreaId, k.name examSignupAreaProvince, l.name examSignupAreaCity, m.name examSignupAreaDistrict, 
+			e.id examAreaId, q.id examSignupAreaId, k.name examSignupAreaProvince, l.name examSignupAreaCity, m.name examSignupAreaDistrict, 
 			q.address examSignupAreaAddress, q.start_time examSignupAreaStartTime, q.end_time examSignupAreaEndTime, 
 			a.exam_form examSignupAreaExamform, j.name examSignupAreaCourseName, 
 			

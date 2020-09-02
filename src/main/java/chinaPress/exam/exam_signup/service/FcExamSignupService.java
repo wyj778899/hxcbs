@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
@@ -69,8 +69,9 @@ public class FcExamSignupService {
 		fcExamSignupMapper.insertSelective(fcExamSignup);
 		// 添加考试报名区域
 		if (StringUtils.isNotBlank(areas)) {
-			List<FcExamSignupArea> areaList = new Gson().fromJson(areas, new TypeToken<List<FcExamSignupArea>>() {
-			}.getType());
+			List<FcExamSignupArea> areaList = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
+					.fromJson(areas, new TypeToken<List<FcExamSignupArea>>() {
+					}.getType());
 			for (FcExamSignupArea fcExamSignupArea : areaList) {
 				fcExamSignupArea.setSignupId(fcExamSignup.getId());
 				examSignupAreaMapper.insertSelective(fcExamSignupArea);
@@ -94,8 +95,9 @@ public class FcExamSignupService {
 			// 删除考试报名区域
 			examSignupAreaMapper.deleteExamSignupAreaBySignupId(fcExamSignup.getId());
 			// 重新添加考试报名区域
-			List<FcExamSignupArea> areaList = new Gson().fromJson(areas, new TypeToken<List<FcExamSignupArea>>() {
-			}.getType());
+			List<FcExamSignupArea> areaList = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
+					.fromJson(areas, new TypeToken<List<FcExamSignupArea>>() {
+					}.getType());
 			for (FcExamSignupArea fcExamSignupArea : areaList) {
 				fcExamSignupArea.setSignupId(fcExamSignup.getId());
 				examSignupAreaMapper.insertSelective(fcExamSignupArea);

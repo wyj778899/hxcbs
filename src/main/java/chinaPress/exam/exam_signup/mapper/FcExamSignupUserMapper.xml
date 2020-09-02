@@ -652,4 +652,14 @@
 			  and signup_id = #{signupId}
 			  and area_id = #{signupAreaId}
 	</select>
+	
+	<!-- 根据家长/从业者id查询信息 -->
+	<select id="selectSignupUserInfoById" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserPrepareVo">
+		select
+			tell_phone phone, certificate_number certificateNumber
+		from
+			role_practitioner_archives
+		where
+			id = #{id}
+	</select>
 </mapper>
