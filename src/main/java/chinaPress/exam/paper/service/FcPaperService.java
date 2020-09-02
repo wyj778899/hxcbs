@@ -17,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
-import chinaPress.common.util.JacksonUtil;
 import chinaPress.common.util.ResultUtil;
+import chinaPress.exam.exam.dao.FcExamMapper;
+import chinaPress.exam.exam.model.FcExam;
+import chinaPress.exam.exam_option.dao.FcExamOptionMapper;
+import chinaPress.exam.exam_option.vo.ExamStemOption;
 import chinaPress.exam.exam_record.dao.FcExamRecordMapper;
 import chinaPress.exam.exam_record.model.FcExamRecord;
 import chinaPress.exam.paper.dao.FcPaperMapper;
@@ -26,13 +29,12 @@ import chinaPress.exam.paper.dao.FcPaperStemMapper;
 import chinaPress.exam.paper.model.FcPaper;
 import chinaPress.exam.paper.model.FcPaperStem;
 import chinaPress.exam.paper.vo.ExamCommentVo;
-import chinaPress.exam.paper.vo.ExamVo;
 import chinaPress.exam.paper.vo.PaperQuestionStem;
 import chinaPress.exam.paper.vo.PaperStemVo;
 import chinaPress.exam.paper.vo.PaperVo;
 import chinaPress.exam.paper.vo.PreviewPaperVo;
-import chinaPress.exam.paper.vo.StemOption;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
+import chinaPress.fc.question.model.FcQuestionOption;
 import chinaPress.fc.question.vo.QuestionNameVo;
 import chinaPress.fc.question.vo.QuestionVo;
 
@@ -64,6 +66,19 @@ public class FcPaperService {
 	 */
 	@Autowired
 	private FcExamRecordMapper fcExamRecordMapper;
+	
+	/**
+	 * 考生考试信息记录表
+	 */
+	@Autowired
+	private FcExamOptionMapper fcExamOptionMapper;
+	
+	/**
+	 * 考试的dao
+	 */
+	@Autowired 
+	private FcExamMapper fcExamMapper;
+	
 	
 	/**
 	 * 预览试卷                   试卷信息封装试卷抽取配置信息和试卷的试题信息
@@ -527,6 +542,7 @@ public class FcPaperService {
 	/**
 	 * 查询考试信息 
 	 * @param examId
+	 * @param userId
 	 * @param flag    是否显示答案
 	 * @return
 	 * -2:考试已结束
@@ -535,20 +551,17 @@ public class FcPaperService {
 	 * 1:返回考试试卷信息
 	 * 2:考试未开始返回考试开始秒数
 	 * 
+	 * 获取考试信息流程
+	 * 1:考试id判断考试是否已结束
+	 * 2:用户id判断用户已经答过的试题再次登录进行回显
 	 */
-	public Result findByExamId(Integer examId,Integer flag) {
+	public Result findByExamId(Integer examId,Integer userId,Integer flag) {
+		if(examId == null) {
+			return new Result(0,"考试信息出错","");
+		}
 		try {
 			PaperQuestionStem stem = fcPaperMapper.selectExamById(examId, flag);
 			if(stem!=null) {
-					if(stem.getType()!=null && stem.getType().intValue()==2) {
-						Collections.shuffle(stem.getQuestions());
-					}
-					stem.setRadioQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==1).collect(Collectors.toList()));
-					stem.setCheckboxQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==2).collect(Collectors.toList()));
-					stem.setJudgeQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==3).collect(Collectors.toList()));
-					stem.setRadioGrade(stem.getRadioQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
-					stem.setCheckboxGrade(stem.getCheckboxQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
-					stem.setJudgeGrade(stem.getJudgeQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
 					//计算考试开始到当前时间还有多少秒
 					long time = DateUtil.getDatePoorMinute(stem.getStartTime(),new Date(),Calendar.SECOND);
 					if(time<0) {
@@ -559,6 +572,65 @@ public class FcPaperService {
 					//如果当前时间减去考试开始时间还是大于考试时间代表考试已结束
 					if(time>stamp) {
 						return new Result(-2,"考试已结束","");
+					}
+					if(stem.getType()!=null && stem.getType().intValue()==2) {
+						Collections.shuffle(stem.getQuestions());
+					}
+					stem.setRadioQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==1).collect(Collectors.toList()));
+					stem.setCheckboxQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==2).collect(Collectors.toList()));
+					stem.setJudgeQuestions(stem.getQuestions().stream().filter(q->q.getQuestionType()==3).collect(Collectors.toList()));
+					stem.setRadioGrade(stem.getRadioQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					stem.setCheckboxGrade(stem.getCheckboxQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					stem.setJudgeGrade(stem.getJudgeQuestions().stream().mapToInt(q->Integer.parseInt(q.getGrade())).summaryStatistics().getSum()+"");
+					//判断用户是否中断考试，回显已保存的考试信息
+					if(userId!=null) {
+						List<ExamStemOption> stemOption = fcExamOptionMapper.selectExamStemOption(examId, userId);
+						if(stemOption!=null && stemOption.size()>0) {
+							for(ExamStemOption item:stemOption) {//考试已经答过的试题信息
+								//单选
+								for(QuestionVo vo:stem.getRadioQuestions()) {//考试展示的试题信息
+									if(item.getStemId().intValue()==vo.getId().intValue()) {//匹配id
+										for(FcQuestionOption option:vo.getOptions()) {//答案信息
+											for(String s:item.getOptionId().split(",")) {//已选的答案信息
+												if(s!=null && s!="") {//已选择的答案信息不为null
+													if(s.equals(option.getId()+"")) {//并且等于答案的id
+														option.setState(1);//给state赋值代表此试题已选择
+													}
+												}
+											}
+										}
+									}
+								}
+								//多选
+								for(QuestionVo vo:stem.getCheckboxQuestions()) {//考试展示的试题信息
+									if(item.getStemId().intValue()==vo.getId().intValue()) {//匹配id
+										for(FcQuestionOption option:vo.getOptions()) {//答案信息
+											for(String s:item.getOptionId().split(",")) {//已选的答案信息
+												if(s!=null && s!="") {//已选择的答案信息不为null
+													if(s.equals(option.getId()+"")) {//并且等于答案的id
+														option.setState(1);//给state赋值代表此试题已选择
+													}
+												}
+											}
+										}
+									}
+								}
+								//判断
+								for(QuestionVo vo:stem.getJudgeQuestions()) {//考试展示的试题信息
+									if(item.getStemId().intValue()==vo.getId().intValue()) {//匹配id
+										for(FcQuestionOption option:vo.getOptions()) {//答案信息
+											for(String s:item.getOptionId().split(",")) {//已选的答案信息
+												if(s!=null && s!="") {//已选择的答案信息不为null
+													if(s.equals(option.getId()+"")) {//并且等于答案的id
+														option.setState(1);//给state赋值代表此试题已选择
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 					//计算当前时间距离考试结束还有多长时间
 					long countDown = DateUtil.getDatePoorMinute(new Date(),stem.getEndTime(),Calendar.SECOND);
@@ -575,61 +647,37 @@ public class FcPaperService {
 	
 	/**
 	 * @param examId考试id
-	 * @param jsonData
 	 * @return
+	 * 流程:
+	 * 1:考试id获取考试及格分数
+	 * 2:考试id和考生id获取考生的考试答题记录
+	 * 3:通过考生的答案记录表计算考生分数信息
 	 */
-	public Result findStemOptions(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId,String jsonData) {
-		List<StemOption> list = null;//前台传来的数据
-		List<Integer> paperIds = null;//试卷信息
-		List<Integer> stemIds = null;//试题信息
-		ExamVo exam = null;//考试信息
-		List<StemOption> stems = null;//数据库的试题信息
+	public Result findStemOptions(Integer examId,Integer signupId,Integer signupAreaId,Integer signupUserId) {
+		FcExam exam = null;//考试信息
 		ExamCommentVo comment = null;//评语信息
-		int grade = 0;
-		FcExamRecord rdcord = new FcExamRecord(); 
+		int grade = 0;//考生得分
+		FcExamRecord rdcord = new FcExamRecord(); //返回信息
 		try {
-			list = JacksonUtil.fromJSONList(jsonData, StemOption.class);
-			if(list!=null && list.size()>0) {
-				//试卷信息
-				paperIds = list.stream().map(stem->stem.getPaperId()).distinct().collect(Collectors.toList());
-				//试题信息
-				stemIds = list.stream().map(stem->stem.getStemId()).distinct().collect(Collectors.toList());
-				exam = fcPaperMapper.selectStemOptions(examId, paperIds, stemIds);
-				if(exam == null) {
-					return new Result(0,"考试信息出错","");
-				}
-				stems = exam.getStems();
-				//计算分数
-				for(StemOption dbso:stems) {
-					for(StemOption so:list) {
-						//试题id相同
-						if(dbso.getStemId().intValue()==so.getStemId().intValue()) {
-							//选择的答案并且也相同
-							if(!dbso.getOptions().retainAll(so.getOptions())) {
-								grade+=Integer.parseInt(dbso.getGrade());
-							}
-						}
-					}
-				}
-				comment = new ExamCommentVo();
-				if(grade>=Integer.parseInt(exam.getSumGrade())) {
-					comment.setComment(exam.getPassComment());
-				}else {
-					comment.setComment(exam.getFailComment());
-				}
-				comment.setGrade(grade+"");
-				rdcord.setExamId(examId);
-				rdcord.setExamSignupId(signupId);
-				rdcord.setExamSignupAreaId(signupAreaId);
-				rdcord.setGrade(new BigDecimal(grade));
-				rdcord.setSignupUserId(signupUserId);
-				rdcord.setCompleteTime(new Date());
-				//添加考生考试记录表
-				fcExamRecordMapper.insertSelective(rdcord);
-				return new Result(1,"ok",comment);
+			//查询考试信息
+			exam = fcExamMapper.selectByPrimaryKey(examId);
+			grade = fcExamOptionMapper.selectExamGrade(examId, signupUserId);
+			comment = new ExamCommentVo();
+			if(grade>=Integer.parseInt(exam.getGrade())) {
+				comment.setComment(exam.getPassComment());
 			}else {
-				return new Result(0,"试题信息出错","");
+				comment.setComment(exam.getFailComment());
 			}
+			comment.setGrade(grade+"");
+			rdcord.setExamId(examId);
+			rdcord.setExamSignupId(signupId);
+			rdcord.setExamSignupAreaId(signupAreaId);
+			rdcord.setGrade(new BigDecimal(grade));
+			rdcord.setSignupUserId(signupUserId);
+			rdcord.setCompleteTime(new Date());
+			//添加考生考试记录表
+			fcExamRecordMapper.insertSelective(rdcord);
+			return new Result(1,"ok",comment);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new Result(0,"系统错误","");

@@ -600,6 +600,7 @@
 	<!-- 手机号和身份证号查询用户信息  -->
 	<select id="selectCertificateNumberAndTellPhone" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserVo">
 		select 
+			id,
 			user_head as userHead,
 		    user_name as userName,
 	        education,
