@@ -3,10 +3,10 @@ package chinaPress.exam.exam_signup.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import chinaPress.common.result.model.Result;
@@ -293,8 +293,9 @@ public class FcExamSignupUserController {
 	 * @return
 	 */
 	@RequestMapping("query/user/detail")
-	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
-		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
+	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone, Integer examId) {
+		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone,
+				examId);
 		if (vo != null) {
 			return ResultUtil.ok(vo);
 		} else {
@@ -363,8 +364,16 @@ public class FcExamSignupUserController {
 	 * @return
 	 */
 	@RequestMapping("compareFace")
-	public Result compareFace(HttpServletRequest request, HttpServletResponse response, Integer id, String imageUrl) {
-//		response.setHeader("Access-Control-Allow-Origin", "*");
-		return examSignupUserService.compareFace(request, id, imageUrl);
+	public Result compareFace(HttpServletRequest request, Integer id,
+			@RequestParam(value = "imageBase64", required = false) String imageBase64) {
+		String url = request.getScheme() + request.getServerName() + request.getServerPort();
+		if (id == null) {
+			return ResultUtil.custom(-2, "参数错误，请检查参数");
+		}
+
+		if (imageBase64 == null || imageBase64.equals("")) {
+			return ResultUtil.custom(-2, "参数错误，请检查参数");
+		}
+		return examSignupUserService.compareFaces(url, id, imageBase64);
 	}
 }
