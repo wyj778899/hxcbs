@@ -47,6 +47,18 @@ public class FcExamToUserVo {
 	 */
 	private Integer signupAreaId;
 	
+	/**
+	 * 是否为现场考试 1 是   0 否
+	 */
+	private Integer examForm;
+	
+	public Integer getExamForm() {
+		return examForm;
+	}
+
+	public void setExamForm(Integer examForm) {
+		this.examForm = examForm;
+	}
 
 	public Integer getSignupId() {
 		return signupId;
