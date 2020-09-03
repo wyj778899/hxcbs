@@ -413,7 +413,7 @@
 	<!-- 查询考试报名下的报名人员信息列表 -->
 	<select id="selectExamSignupUserList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserListVo">
 		select
-			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
+			a.id, concat(c.province, c.city, c.area, c.address) area, c.start_time startTime, c.end_time endTime,
 			a.user_head photo, a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber,
 <!-- 			是否补考, 补考次数, -->
 			case a.examine_type when 0 then '未审核' when 1 then '已审核' when 2 then '已驳回' else '-'

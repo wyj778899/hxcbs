@@ -257,7 +257,8 @@
 	<!-- 查询考试报名列表-->
 	<select id="selectExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupListVo">
 		select
-			id, signup_name signupName, signup_count signupCount, exam_form examForm, is_putaway isPutaway
+			id, signup_name signupName, signup_count signupCount, exam_form examForm, is_putaway isPutaway,
+			create_time createTime
 		from
 			fc_exam_signup
 		where

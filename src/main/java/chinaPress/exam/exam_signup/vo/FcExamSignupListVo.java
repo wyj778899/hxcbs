@@ -1,5 +1,9 @@
 package chinaPress.exam.exam_signup.vo;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FcExamSignupListVo {
 	/**
 	 * 考试报名id
@@ -21,6 +25,11 @@ public class FcExamSignupListVo {
 	 * 是否上架1.上架0.下架
 	 */
 	private Integer isPutaway;
+	/**
+	 * 创建时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date createTime;
 
 	/**
 	 * 获取：id
@@ -90,5 +99,19 @@ public class FcExamSignupListVo {
 	 */
 	public void setIsPutaway(Integer isPutaway) {
 		this.isPutaway = isPutaway;
+	}
+
+	/**
+	 * @return the createTime
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * @param createTime the createTime to set
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
