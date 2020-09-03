@@ -130,6 +130,10 @@ public class FcExamSignupUserController {
 			result = ResultUtil.custom(index, "该场考试报名区域已下架", index);
 		} else if (index == -8) {
 			result = ResultUtil.custom(index, "已报名该场考试报名区域", index);
+		} else if (index == -9) {
+			result = ResultUtil.custom(index, "不能报考相同的考试时间", index);
+		} else if (index == -10) {
+			result = ResultUtil.custom(index, "当前已有报考考试，无法进行报名", index);
 		}
 		return result;
 	}

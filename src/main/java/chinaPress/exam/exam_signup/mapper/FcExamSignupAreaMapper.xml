@@ -292,4 +292,18 @@
 		where
 			signup_id = #{signupId}
 	</select>
+	
+	<!-- 查询是否有别的区域的报名了 -->
+	<select id="selectIsOtherSignup" resultMap="BaseResultMap">
+		select
+			b.*
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup_area b on a.area_id = b.id
+		where
+			a.signup_id = #{signupId}
+			and a.area_id != #{signupAreaId}
+			and a.role_id = #{roleId}
+			and a.role_type = #{roleType}
+	</select>
 </mapper>

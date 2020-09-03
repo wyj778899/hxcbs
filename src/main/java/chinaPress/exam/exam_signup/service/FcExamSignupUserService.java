@@ -173,10 +173,28 @@ public class FcExamSignupUserService {
 								return -5;
 							}
 							// 检查是否已经报名了
-							List<FcExamSignupUser> list = fcExamSignupUserMapper.selectIsSignup(signupId, signupAreaId,
-									roleId, roleType);
-							if (list.size() > 0) {
+							List<FcExamSignupUser> signupList = fcExamSignupUserMapper.selectIsSignup(signupId,
+									signupAreaId, roleId, roleType);
+							if (signupList.size() > 0) {
 								return -8;
+							}
+							// 检查是否存在相同的考试报名区域时间（不能报考相同的考试时间）
+							List<FcExamSignupUser> sameTimeList = fcExamSignupUserMapper.selectExistsSameAreaTime(
+									fcExamSignupArea.getStartTime(), fcExamSignupArea.getEndTime(), roleId, roleType,
+									signupId);
+							if (sameTimeList.size() > 0) {
+								return -9;
+							}
+							// 检查同一个报名下有没有报名，且考试时间过了没（当前已有报考考试，无法进行报名）
+							List<FcExamSignupArea> sameAreaList = fcExamSignupAreaMapper.selectIsOtherSignup(signupId,
+									signupAreaId, roleId, roleType);
+							if (sameAreaList.size() > 0) {
+								List<FcExamSignupArea> newSameAreaList = sameAreaList.stream()
+										.filter(model -> DateUtil.compareDate(new Date(), model.getEndTime()))
+										.collect(Collectors.toList());
+								if (sameAreaList.size() != newSameAreaList.size()) {
+									return -10;
+								}
 							}
 						}
 					}
