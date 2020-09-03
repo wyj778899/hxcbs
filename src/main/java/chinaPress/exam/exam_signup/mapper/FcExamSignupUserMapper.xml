@@ -584,7 +584,6 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-	 		and a.area_id in
 	 		<if test="signupAreaIdList.size() > 0">
 			 	and a.area_id in
 		 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
@@ -595,7 +594,8 @@
 	
 	<select id="selectBySignupIdAndSignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo">
 		select
-			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
+			a.id, concat(d.name, ' ', e.name, IF(ISNULL(f.name) = 1, '', concat(' ', f.name))) area,
+			concat(c.start_time, ' 至 ', c.end_time) examTime,
 			a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber
 		from
 			fc_exam_signup_user a

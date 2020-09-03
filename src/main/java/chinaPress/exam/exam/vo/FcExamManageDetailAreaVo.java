@@ -47,6 +47,10 @@ public class FcExamManageDetailAreaVo {
 	 * 考试形式
 	 */
 	private String examForm;
+	/**
+	 * 关联证书
+	 */
+	private String certName;
 
 	/**
 	 * @return the id
@@ -186,5 +190,19 @@ public class FcExamManageDetailAreaVo {
 	 */
 	public void setExamForm(String examForm) {
 		this.examForm = examForm;
+	}
+
+	/**
+	 * @return the certName
+	 */
+	public String getCertName() {
+		return certName;
+	}
+
+	/**
+	 * @param certName the certName to set
+	 */
+	public void setCertName(String certName) {
+		this.certName = certName;
 	}
 }

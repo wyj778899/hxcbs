@@ -37,6 +37,8 @@
 			property="passComment" />
 		<result column="fail_comment" jdbcType="VARCHAR"
 			property="failComment" />
+		<result column="advance_time" jdbcType="INTEGER"
+			property="advanceTime" />
 		<result column="create_id" jdbcType="INTEGER"
 			property="createId" />
 		<result column="create_time" jdbcType="TIMESTAMP"
@@ -50,7 +52,7 @@
 		id, exam_name, province, city, area, address, signup_id, signup_area_id,
 		exam_type, exam_form_id,
 		exam_form, start_time, end_time, course_id, group_id, again_type, again_price,
-		grade,
+		grade, advance_time,
 		pass_comment, fail_comment, create_id, create_time, update_id, update_time
 	</sql>
 	<select id="selectByPrimaryKey"
@@ -73,7 +75,7 @@
 		exam_form, start_time, end_time,
 		course_id, group_id, again_type,
 		again_price, grade, pass_comment,
-		fail_comment, create_id, create_time,
+		fail_comment, advance_time, create_id, create_time,
 		update_id, update_time)
 		values (#{id,jdbcType=INTEGER}, #{examName,jdbcType=VARCHAR},
 		#{province,jdbcType=VARCHAR},
@@ -85,7 +87,8 @@
 		#{courseId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER},
 		#{againType,jdbcType=INTEGER},
 		#{againPrice,jdbcType=DECIMAL}, #{grade,jdbcType=VARCHAR}, #{passComment,jdbcType=VARCHAR},
-		#{failComment,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER},
+		#{failComment,jdbcType=VARCHAR}, #{advanceTime}, 
+		#{createId,jdbcType=INTEGER},
 		#{createTime,jdbcType=TIMESTAMP},
 		#{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
 	</insert>
@@ -153,6 +156,9 @@
 			</if>
 			<if test="failComment != null">
 				fail_comment,
+			</if>
+			<if test="advanceTime != null">
+				advance_time,
 			</if>
 			<if test="createId != null">
 				create_id,
@@ -227,6 +233,9 @@
 			</if>
 			<if test="failComment != null">
 				#{failComment,jdbcType=VARCHAR},
+			</if>
+			<if test="advanceTime != null">
+				#{advanceTime},
 			</if>
 			<if test="createId != null">
 				#{createId,jdbcType=INTEGER},
@@ -303,6 +312,9 @@
 			<if test="failComment != null">
 				fail_comment = #{failComment,jdbcType=VARCHAR},
 			</if>
+			<if test="advanceTime != null">
+				advance_time = #{advanceTime},
+			</if>
 			<if test="createId != null">
 				create_id = #{createId,jdbcType=INTEGER},
 			</if>
@@ -339,6 +351,7 @@
 		grade = #{grade,jdbcType=VARCHAR},
 		pass_comment = #{passComment,jdbcType=VARCHAR},
 		fail_comment = #{failComment,jdbcType=VARCHAR},
+		advance_time = #{advanceTime},
 		create_id = #{createId,jdbcType=INTEGER},
 		create_time = #{createTime,jdbcType=TIMESTAMP},
 		update_id = #{updateId,jdbcType=INTEGER},
@@ -358,8 +371,10 @@
 		<result column="paperId" property="paperId" />
 		<result column="paper_name" property="paperName" />
 		<result column="grade" property="grade" />
+		<result column="totalGrade" property="totalGrade" />
 		<result column="pass_comment" property="passComment" />
 		<result column="fail_comment" property="failComment" />
+		<result column="advance_time" property="advanceTime" />
 		<collection property="areaList" ofType="chinaPress.exam.exam.vo.FcExamManageDetailAreaVo">
 			<id column="examAreaId" property="id" />
 			<result column="examSignupAreaId" property="examSignupAreaId" />			
@@ -371,6 +386,7 @@
 			<result column="examSignupAreaEndTime" property="endTime" />
 			<result column="examSignupAreaCourseName" property="courseName" />
 			<result column="examSignupAreaExamform" property="examForm" />
+			<result column="examSignupAreaCertName" property="certName" />
 		</collection>
 		<collection property="userList" ofType="chinaPress.exam.exam.vo.FcExamManageDetailUserVo">
 			<id column="examUserId" property="examUserId" />
@@ -394,12 +410,14 @@
 	<select id="selectFcExamDetail" resultMap="fcExamManageDetailResultMap">
 		select
 			a.id, a.exam_name, 
-			a.province, a.city, a.area, a.address,
-			d.id signupId, d.signup_name signupName,
+			a.province, a.city, a.area, a.address, a.advance_time,
+			d.id signupId, d.signup_name signupName, c.paper_grade totalGrade,
 			
-			e.id examAreaId, q.id examSignupAreaId, k.name examSignupAreaProvince, l.name examSignupAreaCity, m.name examSignupAreaDistrict, 
-			q.address examSignupAreaAddress, q.start_time examSignupAreaStartTime, q.end_time examSignupAreaEndTime, 
-			a.exam_form examSignupAreaExamform, j.name examSignupAreaCourseName, 
+			e.id examAreaId, q.id examSignupAreaId, k.name examSignupAreaProvince, l.name examSignupAreaCity, 
+			m.name examSignupAreaDistrict, q.address examSignupAreaAddress, q.start_time examSignupAreaStartTime, 
+			q.end_time examSignupAreaEndTime, 
+			case h.exam_form when 1 then '现场' when 0 then '非现场' end examSignupAreaExamform, 
+			j.name examSignupAreaCourseName, r.name examSignupAreaCertName,
 			
 			f.id examUserId, g.id examSignupUserId, n.name examSignupUserProvince, o.name examSignupUserCity, 
 			p.name examSignupUserDistrict, i.address examSignupUserAddress, 
@@ -422,6 +440,7 @@
 			inner join fc_exam_user f on a.id = f.exam_id
 			inner join fc_exam_signup_user g on f.signup_user_id = g.id
 			inner join fc_exam_signup h on g.signup_id = h.id
+			inner join fc_certificate_attestation r on h.cert_id = r.id
 			inner join fc_exam_signup_area i on h.id = i. signup_id
 			inner join fc_course_archives j on d.course_id = j.id
 			

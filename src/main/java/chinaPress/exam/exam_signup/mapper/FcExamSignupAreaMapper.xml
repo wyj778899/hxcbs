@@ -243,13 +243,18 @@
 		select
 			a.id, concat(c.name, ' ', d.name, ' ', IF(ISNULL(e.name) = 1, '', concat(' ', e.name))) address, 
 			a.start_time startTime, a.end_time endTime,
-			a.max_count count, a.is_putaway isPutaway, count(b.area_id) haveCount
+			a.max_count count, a.is_putaway isPutaway, count(b.area_id) haveCount,
+			f.name certName, g.name courseName, case h.exam_form when 1 then '现场' when 0 then '非现场'
+			end typeName
 		from
 			fc_exam_signup_area a
 			left join fc_exam_signup_user b on a.id = b.area_id
 			left join fc_province_city_district c on c.code = a.province
 			left join fc_province_city_district d on d.code = a.city
 			left join fc_province_city_district e on e.code = a.area
+			inner join fc_exam_signup h on a.signup_id = h.id
+			inner join fc_certificate_attestation f on h.cert_id = f.id
+			inner join fc_course_archives g on h.course_id = g.id
 		where
 			a.signup_id = #{signupId}
 			<if test="province != null and province != ''">
