@@ -378,8 +378,7 @@
 	<select id="selectExamSignupDetail" resultMap="examSignupDetailResultMap">
 		select
 			a.id, a.signup_name, a.course_id, c.name courseName, a.exam_form, a.is_putaway,
-<!-- 			证书, -->
-			
+			d.id certId, d.name certName,
 			b.id area_id, b.province, b.city, b.area district,
 			b.start_time, b.end_time, b.max_count area_count,
 			b.signup_start_time, b.signup_end_time,
@@ -389,6 +388,7 @@
 			fc_exam_signup a
 			inner join fc_exam_signup_area b on a.id = b.signup_id
 			inner join fc_course_archives c on a.course_id = c.id
+			inner join fc_certificate_attestation d on a.cert_id = d.id
 		where
 			a.id = #{signupId}
 	</select>
