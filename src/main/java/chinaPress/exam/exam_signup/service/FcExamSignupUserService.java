@@ -12,8 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import chinaPress.common.face.CompareFace;
+import chinaPress.common.face.CompareFaces;
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
 import chinaPress.common.util.ResultUtil;
@@ -398,25 +399,17 @@ public class FcExamSignupUserService {
 	 * @param id
 	 * @param imageUrl
 	 */
-	public Result compareFace(HttpServletRequest request, Integer id, String imageUrl) {
-		if (id == null) {
-			return ResultUtil.custom(-2, "参数错误，请检查参数");
-		}
-
-		if (imageUrl == null || imageUrl.equals("")) {
-			return ResultUtil.custom(-2, "参数错误，请检查参数");
-		}
-
-		String url = request.getScheme() + request.getServerName() + request.getServerPort();
+	public Result compareFaces(String url, Integer id, String imageURLB) {
 		FcExamSignupUser signupUser = fcExamSignupUserMapper.selectByPrimaryKey(id);
 
 		String imageURLA = signupUser.getCertificateFront();
 		if (imageURLA == null || imageURLA.equals("")) {
-			return ResultUtil.custom(-1, "报名信息错误");
+			return ResultUtil.custom(-2, "报名信息错误");
 		}
 
-		imageURLA = url + imageURLA;
-		Result compareFace = CompareFace.compareFace(imageURLA, imageUrl);
+//		imageURLA = url + imageURLA;
+		imageURLA = "http://zryuxiang.com/uploaded/id_card.jpg";
+		Result compareFace = CompareFaces.compareFaces(imageURLA, imageURLB);
 		return compareFace;
 
 	}

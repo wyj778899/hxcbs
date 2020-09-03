@@ -66,8 +66,8 @@ public class FcCertificateAttestationController {
 	 * @return
 	 */
 	@RequestMapping("/queryAttestationAll")
-	public Result queryAttestationAll(Integer page,Integer limit) {
-		return fcCertificateAttestationService.findAttestationAll((page-1)*limit, limit);
+	public Result queryAttestationAll(String name,Integer page,Integer limit) {
+		return fcCertificateAttestationService.findAttestationAll(name,(page-1)*limit, limit);
 	}
 	
 	/**
@@ -75,8 +75,8 @@ public class FcCertificateAttestationController {
 	 * @return
 	 */
 	@RequestMapping("/queryAttestationCount")
-	public Result queryAttestationCount() {
-		return fcCertificateAttestationService.findAttestationAllCount();
+	public Result queryAttestationCount(String name) {
+		return fcCertificateAttestationService.findAttestationAllCount(name);
 	}
 	
 	/**
@@ -86,7 +86,18 @@ public class FcCertificateAttestationController {
 	 * @return
 	 */
 	@RequestMapping("/queryUserCertificate")
-	public Result queryUserCertificate(Integer roleId,Integer roleType) {
-		return fcCertificateAttestationService.findUserCertificate(roleId, roleType);
+	public Result queryUserCertificate(Integer roleId,Integer roleType,Integer page,Integer limit) {
+		return fcCertificateAttestationService.findUserCertificate(roleId, roleType,(page-1)*limit,limit);
+	}
+	
+	/**
+	 * 角色id和角色类型查询证书信息个数
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
+	@RequestMapping("/queryUserCertificateCount")
+	public Result queryUserCertificateCount(Integer roleId,Integer roleType) {
+		return fcCertificateAttestationService.findUserCertificateCount(roleId, roleType);
 	}
 }
