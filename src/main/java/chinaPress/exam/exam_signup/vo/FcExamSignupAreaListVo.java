@@ -1,5 +1,9 @@
 package chinaPress.exam.exam_signup.vo;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FcExamSignupAreaListVo {
 	/**
 	 * 考试报名区域时间id
@@ -12,7 +16,13 @@ public class FcExamSignupAreaListVo {
 	/**
 	 * 考试时间
 	 */
-	private String time;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date startTime;
+	/**
+	 * 考试时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date endTime;
 	/**
 	 * 考试报名人数
 	 */
@@ -55,17 +65,31 @@ public class FcExamSignupAreaListVo {
 	}
 
 	/**
-	 * @return the time
+	 * @return the startTime
 	 */
-	public String getTime() {
-		return time;
+	public Date getStartTime() {
+		return startTime;
 	}
 
 	/**
-	 * @param time the time to set
+	 * @param startTime the startTime to set
 	 */
-	public void setTime(String time) {
-		this.time = time;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	/**

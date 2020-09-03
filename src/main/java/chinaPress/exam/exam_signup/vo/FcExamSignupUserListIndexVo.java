@@ -1,5 +1,6 @@
 package chinaPress.exam.exam_signup.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -60,9 +61,17 @@ public class FcExamSignupUserListIndexVo {
 	@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "GMT+8")
 	private Date endTime;
 	/**
-	 * 是否为补考1.是0.不是
+	 * 是否开启补考1.是0.不是
 	 */
 	private Integer isAgain;
+	/**
+	 * 第几次补考
+	 */
+	private Integer againCount;
+	/**
+	 * 补考价格
+	 */
+	private BigDecimal againPrice;
 
 	/**
 	 * @return the signupId
@@ -258,5 +267,33 @@ public class FcExamSignupUserListIndexVo {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the againCount
+	 */
+	public Integer getAgainCount() {
+		return againCount;
+	}
+
+	/**
+	 * @param againCount the againCount to set
+	 */
+	public void setAgainCount(Integer againCount) {
+		this.againCount = againCount;
+	}
+
+	/**
+	 * @return the againPrice
+	 */
+	public BigDecimal getAgainPrice() {
+		return againPrice;
+	}
+
+	/**
+	 * @param againPrice the againPrice to set
+	 */
+	public void setAgainPrice(BigDecimal againPrice) {
+		this.againPrice = againPrice;
 	}
 }

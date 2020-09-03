@@ -102,16 +102,16 @@ public class FcExamSignupUserController {
 	/**
 	 * 报名之前检查是否满足报名条件
 	 * 
-	 * @param signupId     考试报名id
-	 * @param signupAreaId 考试报名区域id
-	 * @param roleId       角色id
-	 * @param roleType     角色类型1.家长2.从业者
+	 * @param signupId          考试报名id
+	 * @param signupAreaId      考试报名区域id
+	 * @param phone             手机号
+	 * @param certificateNumber 身份证号
 	 * @return
 	 */
 	@RequestMapping("index/checkIsSignup")
-	public Result checkIsSignup(Integer signupId, Integer signupAreaId, Integer roleId, Integer roleType) {
+	public Result checkIsSignup(Integer signupId, Integer signupAreaId, String phone, String certificateNumber) {
 		Result result = new Result();
-		int index = examSignupUserService.checkIsSignup(signupId, signupAreaId, roleId, roleType);
+		int index = examSignupUserService.checkIsSignup(signupId, signupAreaId, phone, certificateNumber);
 		if (index > 0) {
 			result = ResultUtil.custom(index, "可以报名", index);
 		} else if (index == -1) {

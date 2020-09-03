@@ -242,7 +242,7 @@
 	<select id="selectBySignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupAreaListVo">
 		select
 			a.id, concat(c.name, ' ', d.name, ' ', IF(ISNULL(e.name) = 1, '', concat(' ', e.name))) address, 
-			concat(a.start_time, ' 至 ', a.end_time) time,
+			a.start_time startTime, a.end_time endTime,
 			a.max_count count, a.is_putaway isPutaway, count(b.area_id) haveCount
 		from
 			fc_exam_signup_area a
@@ -303,7 +303,7 @@
 		where
 			a.signup_id = #{signupId}
 			and a.area_id != #{signupAreaId}
-			and a.role_id = #{roleId}
-			and a.role_type = #{roleType}
+			and a.tell_phone = #{tellPhone}
+			and a.certificate_number = #{certificateNumber}
 	</select>
 </mapper>

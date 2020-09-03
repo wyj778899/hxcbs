@@ -257,7 +257,8 @@
 	<!-- 查询考试报名列表-->
 	<select id="selectExamSignupList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupListVo">
 		select
-			id, signup_name signupName, signup_count signupCount, exam_form examForm, is_putaway isPutaway
+			id, signup_name signupName, signup_count signupCount, exam_form examForm, is_putaway isPutaway,
+			create_time createTime
 		from
 			fc_exam_signup
 		where
@@ -321,7 +322,7 @@
 		select
 			a.id, a.banner_photo, a.signup_name, a.remarks,
 			case a.exam_form when 1 then '现场' when 0 then '非现场' end form, b.max_count signup_count,
-			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', e.name, ' ') area_address,
+			b.id area_id, b.max_count area_count, concat(c.name, ' ', d.name, ' ', IF(ISNULL(e.name) = 1, '', concat(' ', e.name))) area_address,
 			concat(b.start_time, ' 至 ', b.end_time) area_time, b.is_putaway area_is_putaway,
 			concat(b.signup_start_time, ' 至 ', b.signup_end_time) area_signup_time,
 			case

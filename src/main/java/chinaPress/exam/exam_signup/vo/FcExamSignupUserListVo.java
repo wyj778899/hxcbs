@@ -1,5 +1,9 @@
 package chinaPress.exam.exam_signup.vo;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class FcExamSignupUserListVo {
 	/**
 	 * 报名用户主键id
@@ -10,9 +14,15 @@ public class FcExamSignupUserListVo {
 	 */
 	private String area;
 	/**
-	 * 考试时间
+	 * 开始时间
 	 */
-	private String examTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date startTime;
+	/**
+	 * 结束时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date endTime;
 	/**
 	 * 个人照片
 	 */
@@ -91,17 +101,31 @@ public class FcExamSignupUserListVo {
 	}
 
 	/**
-	 * 获取：examTime
+	 * @return the startTime
 	 */
-	public String getExamTime() {
-		return examTime;
+	public Date getStartTime() {
+		return startTime;
 	}
 
 	/**
-	 * 设置：examTime
+	 * @param startTime the startTime to set
 	 */
-	public void setExamTime(String examTime) {
-		this.examTime = examTime;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	/**
