@@ -349,10 +349,11 @@ public class FcExamSignupUserService {
 	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
+	 * @param examId
 	 * @return
 	 */
-	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
-		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone);
+	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
+		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
 	}
 
 	/**

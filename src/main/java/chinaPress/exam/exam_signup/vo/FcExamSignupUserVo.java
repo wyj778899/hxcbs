@@ -11,6 +11,11 @@ public class FcExamSignupUserVo {
 	 * 用户id
 	 */
 	private Integer id;
+
+	/**
+	 * 考试id
+	 */
+	private Integer examId;
 	
 	/**
 	 * 用户头像
@@ -174,6 +179,14 @@ public class FcExamSignupUserVo {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getExamId() {
+		return examId;
+	}
+
+	public void setExamId(Integer examId) {
+		this.examId = examId;
 	}
 	
 }

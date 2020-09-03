@@ -156,7 +156,7 @@ public interface FcExamSignupUserMapper {
 	 * @return
 	 */
 	FcExamSignupUserVo selectCertificateNumberAndTellPhone(@Param("certificateNumber") String certificateNumber,
-			@Param("tellPhone") String tellPhone);
+			@Param("tellPhone") String tellPhone,@Param("examId")Integer examId);
 
 	/**
 	 * 查询用户的考试信息

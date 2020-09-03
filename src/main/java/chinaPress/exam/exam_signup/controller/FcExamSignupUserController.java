@@ -289,11 +289,12 @@ public class FcExamSignupUserController {
 	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
+	 * @param examId
 	 * @return
 	 */
 	@RequestMapping("query/user/detail")
-	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
-		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone);
+	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
+		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
 		if (vo != null) {
 			return ResultUtil.ok(vo);
 		} else {

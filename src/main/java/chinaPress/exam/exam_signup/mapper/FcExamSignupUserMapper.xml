@@ -600,23 +600,26 @@
 	<!-- 手机号和身份证号查询用户信息  -->
 	<select id="selectCertificateNumberAndTellPhone" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserVo">
 		select 
-			id,
-			user_head as userHead,
-		    user_name as userName,
-	        education,
-		    tell_phone as tellPhone,
-	        certificate_number as certificateNumber,
-			certificate_front as certificateFront,
-			certificate_behind as certificateBehind,
-			hand_certificate as handCertificate,
-			concat(province,'-',city,'-',area) as provinceCityArea,
-			address,
-			post,
-	        institution_name as institutionName
-		from fc_exam_signup_user 
-		where examine_type = 1
-			  and tell_phone = #{tellPhone}
-			  and certificate_number = #{certificateNumber}
+			a.id as id,
+      	    b.id as examId,
+			a.user_head as userHead,
+		    a.user_name as userName,
+	        a.education as education,
+		    a.tell_phone as tellPhone,
+	        a.certificate_number as certificateNumber,
+			a.certificate_front as certificateFront,
+			a.certificate_behind as certificateBehind,
+			a.hand_certificate as handCertificate,
+			concat(a.province,'-',a.city,'-',a.area) as provinceCityArea,
+			a.address as address,
+			a.post as post,
+	        a.institution_name as institutionName
+		from fc_exam_signup_user a
+		left join fc_exam b on a.area_id = b.signup_area_id and a.signup_id = b.signup_id
+		where a.examine_type = 1
+			  and a.tell_phone = #{tellPhone}
+			  and a.certificate_number = #{certificateNumber}
+			  and b.id = #{examId}
 		limit 1	  
 	</select>
 	
@@ -627,6 +630,7 @@
 			 a.id as signupId,
 			 b.id as signupAreaId,
 			 e.exam_name as examName,
+			 e.exam_form as examForm,
 			 timestampdiff(SECOND,e.start_time,e.end_time) as time,
 			 e.grade as grade,
 		     d.name as courseName,
