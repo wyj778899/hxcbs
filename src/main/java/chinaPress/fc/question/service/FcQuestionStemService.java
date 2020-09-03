@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chinaPress.common.result.model.Result;
 import chinaPress.common.util.ResultUtil;
+import chinaPress.exam.paper.dao.FcPaperStemMapper;
 import chinaPress.fc.question.dao.FcQuestionOptionMapper;
 import chinaPress.fc.question.dao.FcQuestionStemMapper;
 import chinaPress.fc.question.model.FcQuestionOption;
@@ -27,6 +28,8 @@ public class FcQuestionStemService {
 	private FcQuestionStemMapper fcQuestionStemMapper;
 	@Autowired
 	private FcQuestionOptionMapper fcQuestionOptionMapper;
+	@Autowired
+	private FcPaperStemMapper fcPaperStemMapper;
 
 	public List<FcQuestionStemListVo> selectQuestionStemList(Integer courseId, Integer hourId, Integer type) {
 		List<FcQuestionStemListVo> data = fcQuestionStemMapper.selectQuestionStemList(courseId, hourId, type);
@@ -151,7 +154,10 @@ public class FcQuestionStemService {
 	public Result deleteQuestionOne(Integer id) {
 		try {
 			if (id == null) {
-				return new Result(0, "查询试题信息出错", "");
+				return new Result(0, "试题信息出错", "");
+			}
+			if(fcPaperStemMapper.selectByQuestionId(id)>0) {
+				return new Result(0, "此试题已关联试卷，不可删除", "");
 			}
 			// 删除答案
 			fcQuestionOptionMapper.deleteItemId(id);

@@ -17,8 +17,24 @@ public interface FcPaperStemMapper {
 
     int updateByPrimaryKeySelective(FcPaperStem record);
 
-    int updateByPrimaryKey(FcPaperStem record);
-    
-    
+    /**
+     * 通过试卷id删除试题信息
+     * @param paperId
+     * @return
+     */
     int deleteByPaperId(@Param("paperId")Integer paperId);
+    
+    /**
+     * 试题id 查询是否关联试卷
+     * @param stemId
+     * @return
+     */
+    int selectByQuestionId(@Param("stemId")Integer stemId);
+    
+    /**
+     * 通过考试id查询考试的总分数
+     * @param examId
+     * @return
+     */
+    Integer selectExamGrade(@Param("examId")Integer examId);
 }

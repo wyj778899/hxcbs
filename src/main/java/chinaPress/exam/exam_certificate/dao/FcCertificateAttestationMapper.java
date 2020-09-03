@@ -25,13 +25,13 @@ public interface FcCertificateAttestationMapper {
      * 所有证书信息
      * @return
      */
-    List<ExamCertificate> selectCertAll(@Param("page")Integer page,@Param("limit")Integer limit);
+    List<ExamCertificate> selectCertAll(@Param("name")String name,@Param("page")Integer page,@Param("limit")Integer limit);
     
     /**
      * 所有证书个数
      * @return
      */
-    int selectCertAllCount();
+    int selectCertAllCount(@Param("name")String name);
     
     /**
      * 查询证书名称个数
@@ -47,5 +47,13 @@ public interface FcCertificateAttestationMapper {
      * @param roleType
      * @return
      */
-    List<UserCertificate> selectCertificates(@Param("roleId")Integer roleId,@Param("roleType")Integer roleType);
+    List<UserCertificate> selectCertificates(@Param("roleId")Integer roleId,@Param("roleType")Integer roleType,@Param("page")Integer page,@Param("limit")Integer limit);
+    
+    /**
+     * 通过角色类型和角色id查询用户考试发放的证书信息个数
+     * @param roleId
+     * @param roleType
+     * @return
+     */
+    int selectCertificatesCount(@Param("roleId")Integer roleId,@Param("roleType")Integer roleType);
 }

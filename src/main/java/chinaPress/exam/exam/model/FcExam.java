@@ -116,6 +116,11 @@ public class FcExam {
 	private String failComment;
 
 	/**
+	 * 提前入场时间分钟数
+	 */
+	private Integer advanceTime;
+
+	/**
 	 * 创建人
 	 */
 	private Integer createId;
@@ -489,6 +494,20 @@ public class FcExam {
 	 */
 	public void setFailComment(String failComment) {
 		this.failComment = failComment;
+	}
+
+	/**
+	 * @return the advanceTime
+	 */
+	public Integer getAdvanceTime() {
+		return advanceTime;
+	}
+
+	/**
+	 * @param advanceTime the advanceTime to set
+	 */
+	public void setAdvanceTime(Integer advanceTime) {
+		this.advanceTime = advanceTime;
 	}
 
 	/**

@@ -113,4 +113,15 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
+  
+  <select id="selectByUserExam"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fc_exam_record
+    where exam_signup_id = #{signupId,jdbcType=INTEGER}
+    	  and exam_signup_area_id = #{areaId,jdbcType=INTEGER}
+    	  and exam_id = #{examId,jdbcType=INTEGER}
+    	  and signup_user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
 </mapper>

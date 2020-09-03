@@ -184,14 +184,14 @@ public class FcExamSignupUserService {
 							}
 							// 检查是否存在相同的考试报名区域时间（不能报考相同的考试时间）
 							List<FcExamSignupUser> sameTimeList = fcExamSignupUserMapper.selectExistsSameAreaTime(
-									fcExamSignupArea.getStartTime(), fcExamSignupArea.getEndTime(), phone, certificateNumber,
+									fcExamSignupArea.getStartTime(), fcExamSignupArea.getEndTime(), certificateNumber, phone,
 									signupId);
 							if (sameTimeList.size() > 0) {
 								return -9;
 							}
 							// 检查同一个报名下有没有报名，且考试时间过了没（当前已有报考考试，无法进行报名）
 							List<FcExamSignupArea> sameAreaList = fcExamSignupAreaMapper.selectIsOtherSignup(signupId,
-									signupAreaId,  phone, certificateNumber);
+									signupAreaId,  certificateNumber, phone);
 							if (sameAreaList.size() > 0) {
 								List<FcExamSignupArea> newSameAreaList = sameAreaList.stream()
 										.filter(model -> DateUtil.compareDate(new Date(), model.getEndTime()))

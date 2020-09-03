@@ -584,7 +584,6 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-	 		and a.area_id in
 	 		<if test="signupAreaIdList.size() > 0">
 			 	and a.area_id in
 		 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
@@ -595,7 +594,8 @@
 	
 	<select id="selectBySignupIdAndSignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo">
 		select
-			a.id, concat(c.province, c.city, c.area, c.address) area, concat(c.start_time, ' 至 ', c.end_time) examTime,
+			a.id, concat(d.name, ' ', e.name, IF(ISNULL(f.name) = 1, '', concat(' ', f.name))) area,
+			concat(c.start_time, ' 至 ', c.end_time) examTime,
 			a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber
 		from
 			fc_exam_signup_user a
@@ -607,7 +607,7 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-		 	<if test="signupAreaIdList.size() > 0">
+	 		<if test="signupAreaIdList.size() > 0">
 			 	and a.area_id in
 		 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
 		 			#{item}
@@ -623,6 +623,7 @@
 	<select id="selectCertificateNumberAndTellPhone" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupUserVo">
 		select 
 			a.id as id,
+			c.exam_form as examForm,
       	    b.id as examId,
 			a.user_head as userHead,
 		    a.user_name as userName,
@@ -638,6 +639,7 @@
 	        a.institution_name as institutionName
 		from fc_exam_signup_user a
 		left join fc_exam b on a.area_id = b.signup_area_id and a.signup_id = b.signup_id
+		left join fc_exam_signup c on b.signup_id = c.id 
 		where a.examine_type = 1
 			  and a.tell_phone = #{tellPhone}
 			  and a.certificate_number = #{certificateNumber}
@@ -651,6 +653,7 @@
 			 e.id as id,
 			 a.id as signupId,
 			 b.id as signupAreaId,
+			 e.exam_form as examForm,
 			 e.exam_name as examName,
 			 timestampdiff(SECOND,e.start_time,e.end_time) as time,
 			 e.grade as grade,
@@ -661,8 +664,10 @@
 		left join fc_certificate_attestation c on a.cert_id = c.id
 		left join fc_course_archives d on a.course_id = d.id
 		left join fc_exam e on a.id = e.signup_id and b.id = e.signup_area_id
+		left join fc_exam_record f on a.id = f.exam_signup_id and b.id = f.exam_signup_area_id and e.id = f.exam_id
 		where a.id in(select signup_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone})
 			  and b.id in(select area_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone})
+			  and f.grade is null <!-- 分数为null代表没有考试 -->
 	</select>
 	
 	<!-- 手机号和身份证号查询用户考试信息  -->

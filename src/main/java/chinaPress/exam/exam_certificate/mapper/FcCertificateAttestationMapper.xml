@@ -106,6 +106,10 @@
 	    select 
 	    	id,name,photo
 	    from fc_certificate_attestation
+	    where 1=1
+	    	<if test="name!=null and name!=''">
+	    		and name like concat('%',#{name},'%')
+	    	</if>
 	    <if test="page!=null and limit!=null">
 		   limit #{page},#{limit}
 	    </if>
@@ -116,6 +120,10 @@
 	    select 
 	    	count(*)
 	    from fc_certificate_attestation
+	    where 1=1
+	    	<if test="name!=null and name!=''">
+	    		and name like concat('%',#{name},'%')
+	    	</if>
   </select>
   
   
@@ -141,6 +149,38 @@
 			  e.name as courseName,
 			  g.grade as grade,
 			  b.create_time as createTime
+		from 
+			<!-- 报名用户 -->
+			fc_exam_signup_user a
+		inner join 
+			<!-- 证书信息 -->
+			fc_certificate_archives b on a.role_id = b.role_id and (a.role_type+1) = b.role_type
+		inner join
+			<!-- 证书档案 -->
+			fc_certificate_attestation c on b.cert_id = c.id
+		inner join 
+			<!-- 考试报名 -->
+			fc_exam_signup d on c.id = d.cert_id
+		inner join 
+			<!-- 课程信息 -->
+			fc_course_archives e on d.course_id = e.id
+		inner join 
+			<!-- 报名区域 -->
+			fc_exam_signup_area f on f.id = a.area_id
+		inner join 
+			<!-- 考生记录表 -->
+			fc_exam_record g on a.id = g.signup_user_id and f.id = g.exam_signup_area_id and d.id = g.exam_signup_id
+		where 	b.cert_id is not null
+				and a.role_id = #{roleId}
+				and a.role_type = #{roleType}
+		<if test="page!=null and limit!=null">
+		limit #{page} , #{limit}
+		</if> 
+  </select>
+  
+  
+  <select id="selectCertificatesCount"  resultType="java.lang.Integer">
+	   select count(*)
 		from 
 			<!-- 报名用户 -->
 			fc_exam_signup_user a

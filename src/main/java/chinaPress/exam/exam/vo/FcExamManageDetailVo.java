@@ -48,6 +48,10 @@ public class FcExamManageDetailVo {
 	 */
 	private Double grade;
 	/**
+	 * 试卷总分
+	 */
+	private Double totalGrade;
+	/**
 	 * 考试及格评语
 	 */
 	private String passComment;
@@ -55,6 +59,11 @@ public class FcExamManageDetailVo {
 	 * 考试不及格评语
 	 */
 	private String failComment;
+
+	/**
+	 * 提前入场时间分钟数
+	 */
+	private Integer advanceTime;
 
 	/**
 	 * 考试报名区域时间
@@ -220,6 +229,20 @@ public class FcExamManageDetailVo {
 	}
 
 	/**
+	 * @return the totalGrade
+	 */
+	public Double getTotalGrade() {
+		return totalGrade;
+	}
+
+	/**
+	 * @param totalGrade the totalGrade to set
+	 */
+	public void setTotalGrade(Double totalGrade) {
+		this.totalGrade = totalGrade;
+	}
+
+	/**
 	 * @return the passComment
 	 */
 	public String getPassComment() {
@@ -245,6 +268,20 @@ public class FcExamManageDetailVo {
 	 */
 	public void setFailComment(String failComment) {
 		this.failComment = failComment;
+	}
+
+	/**
+	 * @return the advanceTime
+	 */
+	public Integer getAdvanceTime() {
+		return advanceTime;
+	}
+
+	/**
+	 * @param advanceTime the advanceTime to set
+	 */
+	public void setAdvanceTime(Integer advanceTime) {
+		this.advanceTime = advanceTime;
 	}
 
 	/**

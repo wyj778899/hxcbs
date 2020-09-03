@@ -108,9 +108,9 @@ public class FcCertificateAttestationService {
 	 * @param limit
 	 * @return
 	 */
-	public Result findAttestationAll(Integer page,Integer limit) {
+	public Result findAttestationAll(String name,Integer page,Integer limit) {
 		try {
-			List<ExamCertificate> examCertificates = fcCertificateAttestationMapper.selectCertAll(page, limit);
+			List<ExamCertificate> examCertificates = fcCertificateAttestationMapper.selectCertAll(name,page, limit);
 			return new Result(1,"查询成功",examCertificates);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -123,9 +123,9 @@ public class FcCertificateAttestationService {
 	 * 查询所有证书信息个数
 	 * @return
 	 */
-	public Result findAttestationAllCount() {
+	public Result findAttestationAllCount(String name) {
 		try {
-			int count = fcCertificateAttestationMapper.selectCertAllCount();
+			int count = fcCertificateAttestationMapper.selectCertAllCount(name);
 			return new Result(1,"查询成功",count);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -139,10 +139,27 @@ public class FcCertificateAttestationService {
 	 * @param roleType
 	 * @return
 	 */
-	public Result findUserCertificate(Integer roleId,Integer roleType) {
+	public Result findUserCertificate(Integer roleId,Integer roleType,Integer page,Integer limit) {
 		try {
-			List<UserCertificate> userCertificates = fcCertificateAttestationMapper.selectCertificates(roleId, roleType);
+			List<UserCertificate> userCertificates = fcCertificateAttestationMapper.selectCertificates(roleId, roleType,page,limit);
 			return new Result(1,"查询成功",userCertificates);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Result(0,"系统错误","");
+		}
+	}
+	
+	
+	/**
+	 * 查询用户考试发放的证书信息个数
+	 * @param roleId
+	 * @param roleType
+	 * @return
+	 */
+	public Result findUserCertificateCount(Integer roleId,Integer roleType) {
+		try {
+			int count = fcCertificateAttestationMapper.selectCertificatesCount(roleId, roleType);
+			return new Result(1,"查询成功",count);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new Result(0,"系统错误","");

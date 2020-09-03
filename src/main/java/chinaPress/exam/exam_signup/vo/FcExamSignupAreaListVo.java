@@ -35,6 +35,18 @@ public class FcExamSignupAreaListVo {
 	 * 上下架状态1.上架0.下架
 	 */
 	private Integer isPutaway;
+	/**
+	 * 关联课程
+	 */
+	private String courseName;
+	/**
+	 * 关联证书
+	 */
+	private String certName;
+	/**
+	 * 考试形式
+	 */
+	private String typeName;
 
 	/**
 	 * @return the id
@@ -132,5 +144,47 @@ public class FcExamSignupAreaListVo {
 	 */
 	public void setIsPutaway(Integer isPutaway) {
 		this.isPutaway = isPutaway;
+	}
+
+	/**
+	 * @return the courseName
+	 */
+	public String getCourseName() {
+		return courseName;
+	}
+
+	/**
+	 * @param courseName the courseName to set
+	 */
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	/**
+	 * @return the certName
+	 */
+	public String getCertName() {
+		return certName;
+	}
+
+	/**
+	 * @param certName the certName to set
+	 */
+	public void setCertName(String certName) {
+		this.certName = certName;
+	}
+
+	/**
+	 * @return the typeName
+	 */
+	public String getTypeName() {
+		return typeName;
+	}
+
+	/**
+	 * @param typeName the typeName to set
+	 */
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 }
