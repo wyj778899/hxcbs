@@ -77,4 +77,24 @@
     delete from fc_paper_stem
     where paper_id = #{paperId,jdbcType=INTEGER}
   </delete>
+  
+  <!-- 试题id查询是否关联试卷 -->
+   <select id="selectByQuestionId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*)
+    from fc_paper_stem
+    where stem_id = #{stemId,jdbcType=INTEGER}
+  </select>
+  
+  
+   <!-- 考试id查询考的总分数 -->
+   <select id="selectExamGrade" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select sum(b.use_grade)
+	from 
+		fc_exam_paper a
+	left join 
+	  fc_paper_stem b 
+	on a.paper_id = b.paper_id 
+	where a.exam_id = #{examId}
+  </select>
+  
 </mapper>

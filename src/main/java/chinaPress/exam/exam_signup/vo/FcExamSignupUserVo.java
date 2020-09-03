@@ -76,6 +76,20 @@ public class FcExamSignupUserVo {
 	 * 机构名称
 	 */
 	private String institutionName;
+	
+	/**
+	 * 现场和非现场考试   1现场  0非现场
+	 */
+	private Integer examForm;
+	
+
+	public Integer getExamForm() {
+		return examForm;
+	}
+
+	public void setExamForm(Integer examForm) {
+		this.examForm = examForm;
+	}
 
 	public String getUserHead() {
 		return userHead;

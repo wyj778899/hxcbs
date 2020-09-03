@@ -554,6 +554,8 @@ public class FcPaperService {
 	 * 获取考试信息流程
 	 * 1:考试id判断考试是否已结束
 	 * 2:用户id判断用户已经答过的试题再次登录进行回显
+	 * 3:考试记录表判断用户是否已完成交卷
+	 * 4:向考生记录表添加信息记录考生的开始时间
 	 */
 	public Result findByExamId(Integer examId,Integer userId,Integer flag) {
 		if(examId == null) {
@@ -562,6 +564,14 @@ public class FcPaperService {
 		try {
 			PaperQuestionStem stem = fcPaperMapper.selectExamById(examId, flag);
 			if(stem!=null) {
+				FcExamRecord record = null;
+					if(userId!=null) {
+						//判断用户是否已考试
+						record = fcExamRecordMapper.selectByUserExam(stem.getSignupId(), stem.getSignupAreaId(), examId, userId);
+						if(record!=null && record.getGrade()!=null) {
+							return new Result(-2,"考试已完成","");
+						}
+					}
 					//计算考试开始到当前时间还有多少秒
 					long time = DateUtil.getDatePoorMinute(stem.getStartTime(),new Date(),Calendar.SECOND);
 					if(time<0) {
@@ -635,6 +645,16 @@ public class FcPaperService {
 					//计算当前时间距离考试结束还有多长时间
 					long countDown = DateUtil.getDatePoorMinute(new Date(),stem.getEndTime(),Calendar.SECOND);
 					stem.setCountDown(countDown);
+					FcExamRecord rdcord = new FcExamRecord();//考生考试记录表
+					rdcord.setExamId(examId);//考试id
+					rdcord.setExamSignupId(stem.getSignupId());//报名id
+					rdcord.setExamSignupAreaId(stem.getSignupAreaId());//区域id
+					rdcord.setSignupUserId(userId);//用户id
+					rdcord.setReportTime(new Date());
+					if(record == null) {//考试记录表有信息不做任何操作   用户可能中断考试重新进入
+						//添加考生考试记录表
+						fcExamRecordMapper.insertSelective(rdcord);
+					}
 					return new Result(1,"ok",stem);
 			}else {
 				return new Result(0,"无数据","");
@@ -657,10 +677,20 @@ public class FcPaperService {
 		FcExam exam = null;//考试信息
 		ExamCommentVo comment = null;//评语信息
 		int grade = 0;//考生得分
-		FcExamRecord rdcord = new FcExamRecord(); //返回信息
+		FcExamRecord rdcord = new FcExamRecord();//修改考生考试对象
+		FcExamRecord record = null;//查询考生考试对象
+		Date date = new Date();
+		Integer examGrade = null;
 		try {
+			//获取考生考试记录
+			record = fcExamRecordMapper.selectByUserExam(signupId,signupAreaId, examId, signupUserId);
+			if(record==null) {
+				return new Result(0,"考生信息异常","");
+			}
 			//查询考试信息
 			exam = fcExamMapper.selectByPrimaryKey(examId);
+			//考试总分数
+			examGrade = fcPaperStemMapper.selectExamGrade(examId);
 			grade = fcExamOptionMapper.selectExamGrade(examId, signupUserId);
 			comment = new ExamCommentVo();
 			if(grade>=Integer.parseInt(exam.getGrade())) {
@@ -668,15 +698,21 @@ public class FcPaperService {
 			}else {
 				comment.setComment(exam.getFailComment());
 			}
-			comment.setGrade(grade+"");
+			comment.setExamName(exam.getExamName());//考试名称
+			comment.setGrade(grade+"");//考生得分
+			comment.setExamGrade(examGrade+"");//考试分数
+			comment.setPassGrade(exam.getGrade());//及格分数
+			comment.setStartTime(record.getReportTime());//开始时间
+			comment.setEndTime(date);
+			rdcord.setId(record.getId());
 			rdcord.setExamId(examId);
 			rdcord.setExamSignupId(signupId);
 			rdcord.setExamSignupAreaId(signupAreaId);
 			rdcord.setGrade(new BigDecimal(grade));
 			rdcord.setSignupUserId(signupUserId);
-			rdcord.setCompleteTime(new Date());
-			//添加考生考试记录表
-			fcExamRecordMapper.insertSelective(rdcord);
+			rdcord.setCompleteTime(date);
+			//更新考生考试记录表
+			fcExamRecordMapper.updateByPrimaryKeySelective(rdcord);
 			return new Result(1,"ok",comment);
 		}catch(Exception e) {
 			e.printStackTrace();
