@@ -1,5 +1,6 @@
 package chinaPress.exam.exam_signup.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -185,4 +186,17 @@ public interface FcExamSignupUserMapper {
 	 * @return
 	 */
 	FcExamSignupUserPrepareVo selectSignupUserInfoById(Integer id);
+
+	/**
+	 * 是否存在相同时间但是不同报名的情况
+	 * 
+	 * @param startTime 区域开始时间
+	 * @param endTime   区域结束时间
+	 * @param roleId    角色id
+	 * @param roleType  角色类型1.家长2.从业者
+	 * @param signupId  报名id
+	 * @return
+	 */
+	List<FcExamSignupUser> selectExistsSameAreaTime(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
+			@Param("roleId") Integer roleId, @Param("roleType") Integer roleType, @Param("signupId") Integer signupId);
 }

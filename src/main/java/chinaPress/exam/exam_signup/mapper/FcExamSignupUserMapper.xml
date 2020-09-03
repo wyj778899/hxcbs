@@ -663,4 +663,19 @@
 		where
 			id = #{id}
 	</select>
+	
+	<!-- 是否存在相同时间但是不同报名的情况 -->
+	<select id="selectExistsSameAreaTime" resultMap="BaseResultMap">
+		select
+			a.*
+		from
+			fc_exam_signup_user a
+			inner join fc_exam_signup_area b on a.area_id = b.id
+		where
+			b.start_time = #{startTime}			
+			and b.end_time = #{endTime}
+			and a.role_id = #{roleId}
+			and a.role_type = #{roleType}
+			and a.signup_id != #{signupId}
+	</select>
 </mapper>

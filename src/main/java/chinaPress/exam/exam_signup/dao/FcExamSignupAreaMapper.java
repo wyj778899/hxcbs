@@ -75,4 +75,17 @@ public interface FcExamSignupAreaMapper {
 	 * @return
 	 */
 	List<FcExamSignupArea> selectBySignupId(Integer signupId);
+
+	/**
+	 * 查询是否有别的区域的报名了
+	 * 
+	 * @param signupId     考试报名id
+	 * @param signupAreaId 考试报名区域id
+	 * @param roleId       角色id
+	 * @param roleType     角色类型1.家长2.从业者
+	 * @return
+	 */
+	List<FcExamSignupArea> selectIsOtherSignup(@Param("signupId") Integer signupId,
+			@Param("signupAreaId") Integer signupAreaId, @Param("roleId") Integer roleId,
+			@Param("roleType") Integer roleType);
 }
