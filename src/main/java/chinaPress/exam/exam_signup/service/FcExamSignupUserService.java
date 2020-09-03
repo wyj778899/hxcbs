@@ -394,23 +394,23 @@ public class FcExamSignupUserService {
 	 * @param imageUrl
 	 */
 	public Result compareFace(HttpServletRequest request, Integer id, String imageUrl) {
-		if (id == null) {
-			return ResultUtil.custom(-2, "参数错误，请检查参数");
-		}
-
-		if (imageUrl == null || imageUrl.equals("")) {
-			return ResultUtil.custom(-2, "参数错误，请检查参数");
-		}
-
-		String url = request.getScheme() + request.getServerName() + request.getServerPort();
-		FcExamSignupUser signupUser = fcExamSignupUserMapper.selectByPrimaryKey(id);
-
-		String imageURLA = signupUser.getCertificateFront();
-		if (imageURLA == null || imageURLA.equals("")) {
-			return ResultUtil.custom(-1, "报名信息错误");
-		}
-
-		imageURLA = url + imageURLA;
+//		if (id == null) {
+//			return ResultUtil.custom(-2, "参数错误，请检查参数");
+//		}
+//
+//		if (imageUrl == null || imageUrl.equals("")) {
+//			return ResultUtil.custom(-2, "参数错误，请检查参数");
+//		}
+//
+//		String url = request.getScheme() + request.getServerName() + request.getServerPort();
+//		FcExamSignupUser signupUser = fcExamSignupUserMapper.selectByPrimaryKey(id);
+//
+//		String imageURLA = signupUser.getCertificateFront();
+//		if (imageURLA == null || imageURLA.equals("")) {
+//			return ResultUtil.custom(-1, "报名信息错误");
+//		}
+//		imageURLA = url + imageURLA;
+		String imageURLA = "http://explorer-image.oss-cn-shanghai.aliyuncs.com/1455274160764180/id_card.jpg?OSSAccessKeyId=LTAI4Fk9FstqSEYnqKJ5Dpeo&Expires=1599114269&Signature=Ook94YgZiyX2xS%2FxoSrAFRNF7Ng%3D";
 		Result compareFace = CompareFace.compareFace(imageURLA, imageUrl);
 		return compareFace;
 
