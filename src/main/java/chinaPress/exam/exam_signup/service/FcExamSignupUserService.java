@@ -6,12 +6,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import chinaPress.common.face.CompareFace;
+import chinaPress.common.result.model.Result;
 import chinaPress.common.util.DateUtil;
+import chinaPress.common.util.ResultUtil;
 import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
@@ -344,10 +349,11 @@ public class FcExamSignupUserService {
 	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
+	 * @param examId
 	 * @return
 	 */
-	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
-		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone);
+	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
+		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
 	}
 
 	/**
@@ -379,5 +385,35 @@ public class FcExamSignupUserService {
 	 */
 	public FcExamSignupUserPrepareVo selectSignupUserInfoById(Integer id) {
 		return fcExamSignupUserMapper.selectSignupUserInfoById(id);
+	}
+
+	/**
+	 * 人脸对比
+	 * 
+	 * @param request
+	 * @param id
+	 * @param imageUrl
+	 */
+	public Result compareFace(HttpServletRequest request, Integer id, String imageUrl) {
+		if (id == null) {
+			return ResultUtil.custom(-2, "参数错误，请检查参数");
+		}
+
+		if (imageUrl == null || imageUrl.equals("")) {
+			return ResultUtil.custom(-2, "参数错误，请检查参数");
+		}
+
+		String url = request.getScheme() + request.getServerName() + request.getServerPort();
+		FcExamSignupUser signupUser = fcExamSignupUserMapper.selectByPrimaryKey(id);
+
+		String imageURLA = signupUser.getCertificateFront();
+		if (imageURLA == null || imageURLA.equals("")) {
+			return ResultUtil.custom(-1, "报名信息错误");
+		}
+
+		imageURLA = url + imageURLA;
+		Result compareFace = CompareFace.compareFace(imageURLA, imageUrl);
+		return compareFace;
+
 	}
 }

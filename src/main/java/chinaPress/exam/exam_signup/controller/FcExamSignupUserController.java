@@ -2,6 +2,9 @@ package chinaPress.exam.exam_signup.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -286,11 +289,12 @@ public class FcExamSignupUserController {
 	 * 
 	 * @param certificateNumber
 	 * @param tellPhone
+	 * @param examId
 	 * @return
 	 */
 	@RequestMapping("query/user/detail")
-	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone) {
-		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone);
+	public Result queryCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
+		FcExamSignupUserVo vo = examSignupUserService.findCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
 		if (vo != null) {
 			return ResultUtil.ok(vo);
 		} else {
@@ -348,5 +352,19 @@ public class FcExamSignupUserController {
 		} else {
 			return ResultUtil.error(data);
 		}
+	}
+
+	/**
+	 * 人脸对比
+	 * 
+	 * @param request
+	 * @param id
+	 * @param imageUrl
+	 * @return
+	 */
+	@RequestMapping("compareFace")
+	public Result compareFace(HttpServletRequest request, HttpServletResponse response, Integer id, String imageUrl) {
+//		response.setHeader("Access-Control-Allow-Origin", "*");
+		return examSignupUserService.compareFace(request, id, imageUrl);
 	}
 }
