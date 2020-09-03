@@ -115,15 +115,15 @@ public interface FcExamSignupUserMapper {
 	/**
 	 * 查询是否已经报名了
 	 * 
-	 * @param signupId     考试报名id
-	 * @param signupAreaId 考试报名区域id
-	 * @param roleId       角色id
-	 * @param roleType     角色类型1.家长2.从业者
+	 * @param signupId          考试报名id
+	 * @param signupAreaId      考试报名区域id
+	 * @param phone             手机号
+	 * @param certificateNumber 身份证号
 	 * @return
 	 */
 	List<FcExamSignupUser> selectIsSignup(@Param("signupId") Integer signupId,
-			@Param("signupAreaId") Integer signupAreaId, @Param("roleId") Integer roleId,
-			@Param("roleType") Integer roleType);
+			@Param("signupAreaId") Integer signupAreaId, @Param("phone") String phone,
+			@Param("certificateNumber") String certificateNumber);
 
 	/**
 	 * 根据多个考试报名区域id和考试报名id查询
@@ -156,7 +156,7 @@ public interface FcExamSignupUserMapper {
 	 * @return
 	 */
 	FcExamSignupUserVo selectCertificateNumberAndTellPhone(@Param("certificateNumber") String certificateNumber,
-			@Param("tellPhone") String tellPhone,@Param("examId")Integer examId);
+			@Param("tellPhone") String tellPhone, @Param("examId") Integer examId);
 
 	/**
 	 * 查询用户的考试信息
@@ -190,13 +190,25 @@ public interface FcExamSignupUserMapper {
 	/**
 	 * 是否存在相同时间但是不同报名的情况
 	 * 
-	 * @param startTime 区域开始时间
-	 * @param endTime   区域结束时间
-	 * @param roleId    角色id
-	 * @param roleType  角色类型1.家长2.从业者
-	 * @param signupId  报名id
+	 * @param startTime         区域开始时间
+	 * @param endTime           区域结束时间
+	 * @param phone             手机号
+	 * @param certificateNumber 身份证号
+	 * @param signupId          报名id
 	 * @return
 	 */
 	List<FcExamSignupUser> selectExistsSameAreaTime(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
-			@Param("roleId") Integer roleId, @Param("roleType") Integer roleType, @Param("signupId") Integer signupId);
+			@Param("certificateNumber") String certificateNumber, @Param("tellPhone") String tellPhone,
+			@Param("signupId") Integer signupId);
+
+	/**
+	 * 根据考试报名id查询
+	 * 
+	 * @param signupId          考试报名id
+	 * @param certificateNumber 身份证号
+	 * @param phone             手机号
+	 * @return
+	 */
+	int selectBySignupIdCount(@Param("signupId") Integer signupId, @Param("certificateNumber") String certificateNumber,
+			@Param("phone") String phone);
 }

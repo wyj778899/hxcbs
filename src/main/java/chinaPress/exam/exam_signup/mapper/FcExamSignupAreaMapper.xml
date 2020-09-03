@@ -303,7 +303,7 @@
 		where
 			a.signup_id = #{signupId}
 			and a.area_id != #{signupAreaId}
-			and a.role_id = #{roleId}
-			and a.role_type = #{roleType}
+			and a.tell_phone = #{tellPhone}
+			and a.certificate_number = #{certificateNumber}
 	</select>
 </mapper>

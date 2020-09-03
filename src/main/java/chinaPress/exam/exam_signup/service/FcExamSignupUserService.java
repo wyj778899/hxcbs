@@ -115,6 +115,9 @@ public class FcExamSignupUserService {
 				}
 			}
 			// 2.补考信息
+			int count = fcExamSignupUserMapper.selectBySignupIdCount(signupId,
+					fcExamSignupUserListVo.getCertificateNumber(), fcExamSignupUserListVo.getPhone());
+			fcExamSignupUserListVo.setIsMakeUp(count > 0 ? 1 : 0);
 		}
 		return list;
 	}
@@ -122,13 +125,13 @@ public class FcExamSignupUserService {
 	/**
 	 * 检查是否满足报名条件
 	 * 
-	 * @param signupId     考试报名id
-	 * @param signupAreaId 考试报名区域id
-	 * @param roleId       角色id
-	 * @param roleType     角色类型1.家长2.从业者
+	 * @param signupId          考试报名id
+	 * @param signupAreaId      考试报名区域id
+	 * @param phone             手机号
+	 * @param certificateNumber 身份证号
 	 * @return
 	 */
-	public int checkIsSignup(Integer signupId, Integer signupAreaId, Integer roleId, Integer roleType) {
+	public int checkIsSignup(Integer signupId, Integer signupAreaId, String phone, String certificateNumber) {
 		// 检查考试报名id
 		if (signupId == null) {
 			return -1;
@@ -174,20 +177,20 @@ public class FcExamSignupUserService {
 							}
 							// 检查是否已经报名了
 							List<FcExamSignupUser> signupList = fcExamSignupUserMapper.selectIsSignup(signupId,
-									signupAreaId, roleId, roleType);
+									signupAreaId, phone, certificateNumber);
 							if (signupList.size() > 0) {
 								return -8;
 							}
 							// 检查是否存在相同的考试报名区域时间（不能报考相同的考试时间）
 							List<FcExamSignupUser> sameTimeList = fcExamSignupUserMapper.selectExistsSameAreaTime(
-									fcExamSignupArea.getStartTime(), fcExamSignupArea.getEndTime(), roleId, roleType,
+									fcExamSignupArea.getStartTime(), fcExamSignupArea.getEndTime(), phone, certificateNumber,
 									signupId);
 							if (sameTimeList.size() > 0) {
 								return -9;
 							}
 							// 检查同一个报名下有没有报名，且考试时间过了没（当前已有报考考试，无法进行报名）
 							List<FcExamSignupArea> sameAreaList = fcExamSignupAreaMapper.selectIsOtherSignup(signupId,
-									signupAreaId, roleId, roleType);
+									signupAreaId,  phone, certificateNumber);
 							if (sameAreaList.size() > 0) {
 								List<FcExamSignupArea> newSameAreaList = sameAreaList.stream()
 										.filter(model -> DateUtil.compareDate(new Date(), model.getEndTime()))
@@ -214,7 +217,7 @@ public class FcExamSignupUserService {
 	@Transactional
 	public int userSignup(FcExamSignupUser fcExamSignupUser) {
 		int index = checkIsSignup(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId(),
-				fcExamSignupUser.getRoleId(), fcExamSignupUser.getRoleType());
+				fcExamSignupUser.getTellPhone(), fcExamSignupUser.getCertificateNumber());
 		if (index == 1) {
 			// 再检查上次报名是否已经考试完成
 //			fcExamMapper.selectByPrimaryKey(id);
@@ -352,8 +355,9 @@ public class FcExamSignupUserService {
 	 * @param examId
 	 * @return
 	 */
-	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,Integer examId) {
-		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone,examId);
+	public FcExamSignupUserVo findCertificateNumberAndTellPhone(String certificateNumber, String tellPhone,
+			Integer examId) {
+		return fcExamSignupUserMapper.selectCertificateNumberAndTellPhone(certificateNumber, tellPhone, examId);
 	}
 
 	/**

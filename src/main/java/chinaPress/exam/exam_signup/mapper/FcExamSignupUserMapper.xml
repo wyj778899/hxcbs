@@ -38,6 +38,8 @@
 		<result column="role_id" jdbcType="INTEGER" property="roleId" />
 		<result column="role_type" jdbcType="INTEGER"
 			property="roleType" />
+		<result column="again_count" jdbcType="INTEGER"
+			property="againCount" />
 		<result column="create_id" jdbcType="INTEGER"
 			property="createId" />
 		<result column="create_time" jdbcType="TIMESTAMP"
@@ -53,7 +55,7 @@
 		certificate_behind, hand_certificate, province, city, area, address, post,
 		institution_name,
 		examine_type, area_id, remarks, role_id, role_type, create_id, create_time,
-		update_id,
+		update_id, again_count,
 		update_time
 	</sql>
 	<select id="selectByPrimaryKey"
@@ -76,7 +78,7 @@
 		hand_certificate, province, city,
 		area, address, post,
 		institution_name, examine_type, area_id,
-		remarks, role_id, role_type,
+		remarks, role_id, role_type, again_count,
 		create_id, create_time, update_id,
 		update_time)
 		values (#{id,jdbcType=INTEGER}, #{signupId,jdbcType=INTEGER},
@@ -91,6 +93,7 @@
 		#{institutionName,jdbcType=VARCHAR}, #{examineType,jdbcType=INTEGER},
 		#{areaId,jdbcType=INTEGER},
 		#{remarks,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{roleType,jdbcType=INTEGER},
+		#{againCount},
 		#{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
 		#{updateId,jdbcType=INTEGER},
 		#{updateTime,jdbcType=TIMESTAMP})
@@ -162,6 +165,9 @@
 			</if>
 			<if test="roleType != null">
 				role_type,
+			</if>
+			<if test="againCount != null">
+				again_count,
 			</if>
 			<if test="createId != null">
 				create_id,
@@ -239,6 +245,9 @@
 			</if>
 			<if test="roleType != null">
 				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="againCount != null">
+				#{againCount},
 			</if>
 			<if test="createId != null">
 				#{createId,jdbcType=INTEGER},
@@ -318,6 +327,9 @@
 			<if test="roleType != null">
 				role_type = #{roleType,jdbcType=INTEGER},
 			</if>
+			<if test="againCount != null">
+				again_count = #{againCount},
+			</if>
 			<if test="createId != null">
 				create_id = #{createId,jdbcType=INTEGER},
 			</if>
@@ -356,6 +368,7 @@
 		remarks = #{remarks,jdbcType=VARCHAR},
 		role_id = #{roleId,jdbcType=INTEGER},
 		role_type = #{roleType,jdbcType=INTEGER},
+		again_count = #{againCount},
 		create_id = #{createId,jdbcType=INTEGER},
 		create_time = #{createTime,jdbcType=TIMESTAMP},
 		update_id = #{updateId,jdbcType=INTEGER},
@@ -415,7 +428,7 @@
 		select
 			a.id, concat(c.province, c.city, c.area, c.address) area, c.start_time startTime, c.end_time endTime,
 			a.user_head photo, a.user_name name, a.education, a.tell_phone phone, a.certificate_number certificateNumber,
-<!-- 			是否补考, 补考次数, -->
+			<!-- 是否补考, --> a.again_count makeUp,
 			case a.examine_type when 0 then '未审核' when 1 then '已审核' when 2 then '已驳回' else '-'
 			end auditStatusTxt, a.examine_type auditStatus, a.role_id roleId, a.role_type roleType,
 			b.course_id courseId
@@ -502,7 +515,8 @@
 			when 2 then '已驳回' end auditStatusTxt,
 			case b.exam_form when 1 then '现场' when 0 then '非现场' end examForm,
 			e.name province, f.name city, g.name district, d.address,
-			d.start_time startTime, d.end_time endTime
+			d.start_time startTime, d.end_time endTime,
+			a.again_count againCount, b.again_type isAgain, b.again_price againPrice
 		from
 			fc_exam_signup_user a
 			inner join fc_exam_signup b on a.signup_id = b.id
@@ -552,8 +566,9 @@
 		where
 			signup_id = #{signupId}
 			and area_id = #{signupAreaId}
-			and role_id = #{roleId}
-			and role_type = #{roleType}
+			and certificate_number = #{certificateNumber}
+			and tell_phone = #{phone}
+			and examine_type in (0, 1)
 	</select>
 	
 	<select id="selectBySignupIdAndSignupIdCount" resultType="int">
@@ -570,9 +585,12 @@
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
 	 		and a.area_id in
-	 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
-	 			#{item}
-	 		</foreach>
+	 		<if test="signupAreaIdList.size() > 0">
+			 	and a.area_id in
+		 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
+		 			#{item}
+		 		</foreach>
+		 	</if>
 	</select>
 	
 	<select id="selectBySignupIdAndSignupIdList" resultType="chinaPress.exam.exam_signup.vo.FcExamSignupDetailAreaListVo">
@@ -589,10 +607,12 @@
 		where
 		 	1 = 1
 		 	and a.signup_id = #{signupId}
-	 		and a.area_id in
-	 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
-	 			#{item}
-	 		</foreach>
+		 	<if test="signupAreaIdList.size() > 0">
+			 	and a.area_id in
+		 		<foreach collection="signupAreaIdList" open="(" close=")" item="item" separator=",">
+		 			#{item}
+		 		</foreach>
+		 	</if>
 	 	<if test="offset != null and rows != null">
 		 	limit
 		 		#{offset}, #{rows}
@@ -676,8 +696,21 @@
 		where
 			b.start_time = #{startTime}			
 			and b.end_time = #{endTime}
-			and a.role_id = #{roleId}
-			and a.role_type = #{roleType}
+			and a.tell_phone = #{tellPhone}
+			and a.certificate_number = #{certificateNumber}
 			and a.signup_id != #{signupId}
+	</select>
+	
+	<!-- 根据考试报名id查询 -->
+	<select id="selectBySignupIdCount" resultType="int">
+		select
+			count(*)
+		from
+			fc_exam_signup_user
+		where
+			signup_id = #{signupId}
+			and certificate_number = #{certificateNumber}
+			and tell_phone = #{phone}
+			and examine_type = 1
 	</select>
 </mapper>
