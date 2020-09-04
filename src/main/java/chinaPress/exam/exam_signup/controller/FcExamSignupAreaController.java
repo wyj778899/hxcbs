@@ -27,13 +27,21 @@ public class FcExamSignupAreaController {
 	 */
 	@RequestMapping("manage/onOffShelf")
 	public Result onShelf(Integer areaId, Integer isPutaway) {
+		Result result = new Result();
 		try {
-			fcExamSignupAreaService.onOffShelf(areaId, isPutaway);
-			return ResultUtil.ok(1);
+			int index = fcExamSignupAreaService.onOffShelf(areaId, isPutaway);
+			if (index == 1) {
+				result = ResultUtil.ok(1);
+			} else if (index == -1) {
+				result = ResultUtil.custom(index, "请重新设置人数", index);
+			} else if (index == -2) {
+				result = ResultUtil.custom(index, "该区域时间已用进考试，无法上架", index);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResultUtil.error(0);
+			result = ResultUtil.error(0);
 		}
+		return result;
 	}
 
 	/**

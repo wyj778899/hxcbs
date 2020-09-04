@@ -211,4 +211,6 @@ public interface FcExamSignupUserMapper {
 	 */
 	int selectBySignupIdCount(@Param("signupId") Integer signupId, @Param("certificateNumber") String certificateNumber,
 			@Param("phone") String phone);
+	
+//	selectByPhoneCertificate();
 }

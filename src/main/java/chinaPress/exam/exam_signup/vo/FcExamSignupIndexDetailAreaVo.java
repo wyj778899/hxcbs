@@ -26,7 +26,7 @@ public class FcExamSignupIndexDetailAreaVo {
 	 */
 	private Integer isPutaway;
 	/**
-	 * 是否可报名1.可以报名-1.不在报名时间范围内-2.该区域还未上架
+	 * 是否可报名1.可以报名-1.未到报名时间-2.该区域还未上架-3.已过报名时间
 	 */
 	private Integer isSignup;
 

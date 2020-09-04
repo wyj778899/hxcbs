@@ -71,7 +71,7 @@ public class FcExamSignupArea {
 	private Integer maxCount;
 
 	/**
-	 * 上下架1.上架0.下架
+	 * 上下架1.上架；0.手动下架；-1.人满下架；-2.被考试设置进去下架；-3.报名下架导致被动下架
 	 */
 	private Integer isPutaway;
 
@@ -269,7 +269,7 @@ public class FcExamSignupArea {
 	}
 
 	/**
-	 * 上下架1.上架0.下架
+	 * 上下架1.上架；0.手动下架；-1.人满下架；-2.被考试设置进去下架；-3.报名下架导致被动下架
 	 */
 	public void setIsPutaway(Integer isPutaway) {
 		this.isPutaway = isPutaway;

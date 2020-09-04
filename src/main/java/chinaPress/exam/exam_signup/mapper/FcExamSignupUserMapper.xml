@@ -487,6 +487,7 @@
 		where
 			signup_id = #{signupId}
 			and area_id = #{areaId}
+			and examine_type = 1
 	</select>
 	
 	<!-- 前台查询报名审核个数 -->
@@ -707,6 +708,7 @@
 			and a.tell_phone = #{tellPhone}
 			and a.certificate_number = #{certificateNumber}
 			and a.signup_id != #{signupId}
+			and a.examine_type in (0, 1)
 	</select>
 	
 	<!-- 根据考试报名id查询 -->
@@ -719,6 +721,18 @@
 			signup_id = #{signupId}
 			and certificate_number = #{certificateNumber}
 			and tell_phone = #{phone}
-			and examine_type = 1
+			and examine_type in (1)
 	</select>
+	
+	<!-- 根据手机号和身份证号查询 -->
+<!-- 	<select id="selectByPhoneCertificate" resultMap="BaseResultMap"> -->
+<!-- 		select -->
+<!-- 			* -->
+<!-- 		from -->
+<!-- 			fc_exam_signup_user -->
+<!-- 		where -->
+<!-- 			tell_phone = #{tellPhone} -->
+<!-- 			and certificate_number = #{certificateNumber} -->
+<!-- 			and examine_type in (0) -->
+<!-- 	</select> -->
 </mapper>

@@ -155,6 +155,8 @@ public class FcExamSignupUserService {
 						if (fcExamSignupArea.getSignupId().intValue() != signupId.intValue()) {
 							return -3;
 						} else {
+							// 检查身份证和手机号是否重复
+							
 							// 检查是否在报名时间范围
 							if (DateUtil.compareDate(fcExamSignupArea.getSignupStartTime(), new Date())
 									|| DateUtil.compareDate(new Date(), fcExamSignupArea.getSignupEndTime())) {
@@ -225,25 +227,6 @@ public class FcExamSignupUserService {
 
 			// 报名成功后判断是否满足最大人数限制，满足则自动下架
 			fcExamSignupUserMapper.insertSelective(fcExamSignupUser);
-			int currFcExamSignupUser = fcExamSignupUserMapper
-					.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
-			FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExamSignupUser.getAreaId());
-			if (currFcExamSignupUser == fcExamSignupArea.getMaxCount().intValue()) {
-				FcExamSignupArea record = new FcExamSignupArea();
-				record.setId(fcExamSignupArea.getId());
-				record.setIsPutaway(0);
-				fcExamSignupAreaMapper.updateByPrimaryKeySelective(record);
-			}
-			// 下架完成之后，查询该考试报名下是否所有都 已下架，如果已下架，那么考试报名下架
-			List<FcExamSignupArea> areaList = fcExamSignupAreaMapper.selectBySignupId(fcExamSignupUser.getSignupId());
-			List<FcExamSignupArea> filterAreaList = areaList.stream().filter(area -> area.getIsPutaway() == 0)
-					.collect(Collectors.toList());
-			if (areaList.size() == filterAreaList.size()) {
-				FcExamSignup record = new FcExamSignup();
-				record.setId(fcExamSignupUser.getSignupId());
-				record.setIsPutaway(0);
-				fcExamSignupMapper.updateByPrimaryKey(record);
-			}
 			return 1;
 		} else {
 			return index;
@@ -261,8 +244,12 @@ public class FcExamSignupUserService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	public void auditFcExamSignupUser(String signupUserIds, Integer status, String remarks) {
+		List<FcExamSignupUser> doUserList = new ArrayList<FcExamSignupUser>();
 		List<String> signupUserIdList = Arrays.asList(signupUserIds.split(","));
 		for (String signupUserId : signupUserIdList) {
+			FcExamSignupUser oldFcExamSignupUser = fcExamSignupUserMapper.selectByPrimaryKey(Integer.parseInt(signupUserId));
+			doUserList.add(oldFcExamSignupUser);
+			
 			FcExamSignupUser record = new FcExamSignupUser();
 			record.setId(Integer.parseInt(signupUserId));
 			record.setExamineType(status);
@@ -270,6 +257,27 @@ public class FcExamSignupUserService {
 				record.setRemarks(remarks);
 			}
 			fcExamSignupUserMapper.updateByPrimaryKeySelective(record);
+		}
+		for (FcExamSignupUser fcExamSignupUser : doUserList) {
+			int currFcExamSignupUser = fcExamSignupUserMapper
+					.selectCountBySignupIdAndAreaId(fcExamSignupUser.getSignupId(), fcExamSignupUser.getAreaId());
+			FcExamSignupArea fcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(fcExamSignupUser.getAreaId());
+			if (currFcExamSignupUser == fcExamSignupArea.getMaxCount().intValue()) {
+				FcExamSignupArea record = new FcExamSignupArea();
+				record.setId(fcExamSignupArea.getId());
+				record.setIsPutaway(-1);
+				fcExamSignupAreaMapper.updateByPrimaryKeySelective(record);
+			}
+			// 下架完成之后，查询该考试报名下是否所有都 已下架，如果已下架，那么考试报名下架
+			List<FcExamSignupArea> areaList = fcExamSignupAreaMapper.selectBySignupId(fcExamSignupUser.getSignupId());
+			List<FcExamSignupArea> filterAreaList = areaList.stream().filter(area -> area.getIsPutaway() == 0)
+					.collect(Collectors.toList());
+			if (areaList.size() == filterAreaList.size()) {
+				FcExamSignup record = new FcExamSignup();
+				record.setId(fcExamSignupUser.getSignupId());
+				record.setIsPutaway(0);
+				fcExamSignupMapper.updateByPrimaryKeySelective(record);
+			}
 		}
 	}
 

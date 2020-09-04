@@ -23,11 +23,11 @@ public class FcExamSignupAreaService {
 	 * 下架考试报名区域
 	 * 
 	 * @author maguoliang
-	 * @param areaId 考试报名区域id
-	 * @param isPutaway 上下架状态 1.上架0.下架
+	 * @param areaId    考试报名区域id
+	 * @param isPutaway 上下架状态1.上架；0.手动下架
 	 * @return
 	 */
-	public void onOffShelf(Integer areaId, Integer isPutaway) {
+	public int onOffShelf(Integer areaId, Integer isPutaway) {
 		FcExamSignupArea fcExamSignupArea = new FcExamSignupArea();
 		fcExamSignupArea.setId(areaId);
 		fcExamSignupArea.setIsPutaway(isPutaway);
@@ -35,16 +35,30 @@ public class FcExamSignupAreaService {
 		// 下架完成之后，查询该考试报名下是否所有都 已下架，如果已下架，那么考试报名下架
 		if (isPutaway.intValue() == 0) {
 			FcExamSignupArea oldFcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(areaId);
-			List<FcExamSignupArea> areaList = fcExamSignupAreaMapper.selectBySignupId(oldFcExamSignupArea.getSignupId());
+			List<FcExamSignupArea> areaList = fcExamSignupAreaMapper
+					.selectBySignupId(oldFcExamSignupArea.getSignupId());
 			List<FcExamSignupArea> filterAreaList = areaList.stream().filter(area -> area.getIsPutaway() == 0)
 					.collect(Collectors.toList());
 			if (areaList.size() == filterAreaList.size()) {
 				FcExamSignup record = new FcExamSignup();
 				record.setId(oldFcExamSignupArea.getSignupId());
 				record.setIsPutaway(0);
-				fcExamSignupMapper.updateByPrimaryKey(record);
+				fcExamSignupMapper.updateByPrimaryKeySelective(record);
 			}
 		}
+		if (isPutaway.intValue() == 1) {
+			FcExamSignupArea oldFcExamSignupArea = fcExamSignupAreaMapper.selectByPrimaryKey(areaId);	
+			// 1.上架；0.手动下架；-1.人满下架；-2.被考试设置进去下架；-3.报名下架导致被动下架
+			if (oldFcExamSignupArea.getIsPutaway().intValue() == -1) {
+				// 请重新设置人数
+				return -1;
+			}
+			if (oldFcExamSignupArea.getIsPutaway().intValue() == -2) {
+				// 该区域时间已用进考试，无法上架
+				return -2;
+			}
+		}
+		return 1;
 	}
 
 	/**

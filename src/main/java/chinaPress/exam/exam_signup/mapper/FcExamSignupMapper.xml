@@ -328,8 +328,9 @@
 			case
 				b.is_putaway
 				when 1 then
-					if(now() <![CDATA[<]]> b.signup_start_time || now() <![CDATA[>]]> b.signup_end_time,-1,1)
-				when 0 then -2
+					if(now() <![CDATA[<]]> b.signup_start_time, -1, if(now() <![CDATA[>]]> b.signup_end_time, -3, 1))
+<!-- 				b.is_putaway：0.手动下架；-1.人满下架；-2.被考试设置进去下架；-3.报名下架导致被动下架 -->
+				else -2
 			end isSignup
 		from
 			fc_exam_signup a

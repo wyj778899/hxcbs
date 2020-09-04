@@ -19,9 +19,11 @@ import chinaPress.exam.exam.model.FcExamPaper;
 import chinaPress.exam.exam.model.FcExamUser;
 import chinaPress.exam.exam.vo.FcExamManageDetailVo;
 import chinaPress.exam.exam.vo.FcExamManageListVo;
+import chinaPress.exam.exam_signup.dao.FcExamSignupAreaMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupMapper;
 import chinaPress.exam.exam_signup.dao.FcExamSignupUserMapper;
 import chinaPress.exam.exam_signup.model.FcExamSignup;
+import chinaPress.exam.exam_signup.model.FcExamSignupArea;
 import chinaPress.exam.exam_signup.model.FcExamSignupUser;
 
 @Service
@@ -34,6 +36,8 @@ public class FcExamService {
 	private FcExamSignupMapper fcExamSignupMapper;
 	@Autowired
 	private FcExamSignupUserMapper fcExamSignupUserMapper;
+	@Autowired
+	private FcExamSignupAreaMapper fcExamSignupAreaMapper;
 	@Autowired
 	private FcExamAreaMapper fcExamAreaMapper;
 	@Autowired
@@ -68,6 +72,11 @@ public class FcExamService {
 		for (FcExamArea fcExamArea : areaList) {
 			fcExamArea.setExamId(fcExam.getId());
 			fcExamAreaMapper.insertSelective(fcExamArea);
+
+			FcExamSignupArea fcExamSignupArea = new FcExamSignupArea();
+			fcExamSignupArea.setId(fcExamArea.getExamSignupAreaId());
+			fcExamSignupArea.setIsPutaway(-2);
+			fcExamSignupAreaMapper.updateByPrimaryKeySelective(fcExamSignupArea);
 		}
 		// 添加考试关联试卷
 		FcExamPaper fcExamPaper = new FcExamPaper();

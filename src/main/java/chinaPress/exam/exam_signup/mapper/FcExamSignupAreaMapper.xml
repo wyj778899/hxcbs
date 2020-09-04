@@ -310,5 +310,6 @@
 			and a.area_id != #{signupAreaId}
 			and a.tell_phone = #{tellPhone}
 			and a.certificate_number = #{certificateNumber}
+			and a.examine_type in (0, 1)
 	</select>
 </mapper>

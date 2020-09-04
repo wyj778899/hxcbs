@@ -1,6 +1,7 @@
 package chinaPress.exam.exam_signup.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,15 +93,28 @@ public class FcExamSignupService {
 		fcExamSignupMapper.updateByPrimaryKeySelective(fcExamSignup);
 		// 添加考试报名区域
 		if (StringUtils.isNotBlank(areas)) {
-			// 删除考试报名区域
-			examSignupAreaMapper.deleteExamSignupAreaBySignupId(fcExamSignup.getId());
+			List<FcExamSignupArea> list = examSignupAreaMapper.selectBySignupId(fcExamSignup.getId());
+			List<Integer> oldAreaList = list.stream().map(a -> a.getId()).collect(Collectors.toList());
 			// 重新添加考试报名区域
 			List<FcExamSignupArea> areaList = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
 					.fromJson(areas, new TypeToken<List<FcExamSignupArea>>() {
 					}.getType());
+			List<Integer> newAreaList = areaList.stream().map(a -> a.getId()).collect(Collectors.toList());
+			for (Integer oldAreaId : oldAreaList) {
+				if (newAreaList.contains(oldAreaId)) {
+					
+				} else {
+					// 删除考试报名区域
+					examSignupAreaMapper.deleteByPrimaryKey(oldAreaId);
+				}
+			}
 			for (FcExamSignupArea fcExamSignupArea : areaList) {
-				fcExamSignupArea.setSignupId(fcExamSignup.getId());
-				examSignupAreaMapper.insertSelective(fcExamSignupArea);
+				if (fcExamSignupArea.getId() != null) {
+					examSignupAreaMapper.updateByPrimaryKeySelective(fcExamSignupArea);
+				} else {
+					fcExamSignupArea.setSignupId(fcExamSignup.getId());
+					examSignupAreaMapper.insertSelective(fcExamSignupArea);
+				}
 			}
 		}
 	}
@@ -120,7 +134,7 @@ public class FcExamSignupService {
 	 * 
 	 * @author maguoliang
 	 * @param id        考试报名id
-	 * @param isPutaway 上下架状态1.上架0.下架
+	 * @param isPutaway 上下架状态1.上架；0.手动下架；-1.人满下架；-2.被考试设置进去下架；-3.报名下架导致被动下架
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
@@ -135,7 +149,7 @@ public class FcExamSignupService {
 			for (FcExamSignupArea fcExamSignupArea : signupAreaList) {
 				FcExamSignupArea record = new FcExamSignupArea();
 				record.setId(fcExamSignupArea.getId());
-				record.setIsPutaway(0);
+				record.setIsPutaway(-3);
 				examSignupAreaMapper.updateByPrimaryKeySelective(record);
 			}
 		}
