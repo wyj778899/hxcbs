@@ -676,6 +676,7 @@
 		<!-- 考生的考试记录匹配，查询没有分数的考试记录,代表考生未考试  考试报名id，考试报名区域id，考试id，考试报名用户id都要匹配-->
 		left join fc_exam_record f on a.id = f.exam_signup_id and b.id = f.exam_signup_area_id and e.id = f.exam_id and x.id = f.signup_user_id
 		where f.grade is null <!-- 分数为null代表没有考试 -->
+		order by e.start_time
 	</select>
 	
 	<!-- 手机号和身份证号查询用户考试信息  -->

@@ -572,10 +572,11 @@ public class FcPaperService {
 							return new Result(-2,"考试已完成","");
 						}
 					}
-					//计算考试开始到当前时间还有多少秒
+					//计算考试开始到现在有多少秒      
 					long time = DateUtil.getDatePoorMinute(stem.getStartTime(),new Date(),Calendar.SECOND);
+					//如果小于当前时间代表考试未开始,大于当前时间考试已开始
 					if(time<0) {
-						return new Result(2,"ok",time);
+						return new Result(2,"ok",Math.abs(time));
 					}
 					//计算考试一共需要多少秒
 					long stamp = DateUtil.getDatePoorMinute(stem.getStartTime(),stem.getEndTime(),Calendar.SECOND);
