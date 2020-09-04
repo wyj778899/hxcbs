@@ -154,24 +154,23 @@
 			fc_exam_signup_user a
 		inner join 
 			<!-- 证书信息 -->
-			fc_certificate_archives b on a.role_id = b.role_id and (a.role_type+1) = b.role_type
+			fc_certificate_archives b on a.role_id = b.role_id and (a.role_type-1) = b.role_type
 		inner join
 			<!-- 证书档案 -->
 			fc_certificate_attestation c on b.cert_id = c.id
 		inner join 
 			<!-- 考试报名 -->
-			fc_exam_signup d on c.id = d.cert_id
+			fc_exam_signup d on c.id = d.cert_id and b.exam_signup_id = d.id
 		inner join 
 			<!-- 课程信息 -->
 			fc_course_archives e on d.course_id = e.id
 		inner join 
 			<!-- 报名区域 -->
-			fc_exam_signup_area f on f.id = a.area_id
+			fc_exam_signup_area f on f.id = a.area_id and b.exam_signup_area_id = f.id
 		inner join 
 			<!-- 考生记录表 -->
 			fc_exam_record g on a.id = g.signup_user_id and f.id = g.exam_signup_area_id and d.id = g.exam_signup_id
-		where 	b.cert_id is not null
-				and a.role_id = #{roleId}
+		where 	a.role_id = #{roleId}
 				and a.role_type = #{roleType}
 		<if test="page!=null and limit!=null">
 		limit #{page} , #{limit}
@@ -186,24 +185,23 @@
 			fc_exam_signup_user a
 		inner join 
 			<!-- 证书信息 -->
-			fc_certificate_archives b on a.role_id = b.role_id and (b.role_type = 2 or b.role_type = 3)
+			fc_certificate_archives b on a.role_id = b.role_id and (a.role_type-1) = b.role_type
 		inner join
 			<!-- 证书档案 -->
 			fc_certificate_attestation c on b.cert_id = c.id
 		inner join 
 			<!-- 考试报名 -->
-			fc_exam_signup d on c.id = d.cert_id
+			fc_exam_signup d on c.id = d.cert_id and b.exam_signup_id = d.id
 		inner join 
 			<!-- 课程信息 -->
 			fc_course_archives e on d.course_id = e.id
 		inner join 
 			<!-- 报名区域 -->
-			fc_exam_signup_area f on f.id = a.area_id
+			fc_exam_signup_area f on f.id = a.area_id and b.exam_signup_area_id = f.id
 		inner join 
 			<!-- 考生记录表 -->
 			fc_exam_record g on a.id = g.signup_user_id and f.id = g.exam_signup_area_id and d.id = g.exam_signup_id
-		where 	b.cert_id is not null
-				and a.role_id = #{roleId}
+		where 	a.role_id = #{roleId}
 				and a.role_type = #{roleType}
   </select>
   

@@ -18,11 +18,13 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="course_type" jdbcType="INTEGER" property="courseType" />
     <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
-     <result column="cert_id" jdbcType="INTEGER" property="certId" />
+    <result column="cert_id" jdbcType="INTEGER" property="certId" />
+    <result column="exam_signup_id" jdbcType="INTEGER" property="examSignupId" />
+    <result column="exam_signup_area_id" jdbcType="INTEGER" property="examSignupAreaId" />
   </resultMap>
   <sql id="Base_Column_List">
     id, role_id, certificate_type, photo, audit_status, `state`, create_id, create_time, 
-    update_id, update_time, role_type, test_address, grade, `code`,course_type,certificate_time,cert_id
+    update_id, update_time, role_type, test_address, grade, `code`,course_type,certificate_time,cert_id,exam_signup_id,exam_signup_area_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -67,6 +69,12 @@
       </if>
       <if test="certId != null">
         cert_id,
+      </if>
+      <if test="examSignupId != null">
+        exam_signup_id,
+      </if>
+      <if test="examSignupAreaId != null">
+        exam_signup_area_id,
       </if>
       <if test="certificateType != null">
         certificate_type,
@@ -121,6 +129,12 @@
       <if test="certId != null">
         #{certId,jdbcType=INTEGER},
       </if>
+       <if test="examSignupId != null">
+        #{examSignupId,jdbcType=INTEGER},
+      </if>
+      <if test="examSignupAreaId != null">
+        #{examSignupAreaId,jdbcType=INTEGER},
+      </if>
       <if test="certificateType != null">
         #{certificateType,jdbcType=INTEGER},
       </if>
@@ -171,8 +185,14 @@
       <if test="roleId != null">
         role_id = #{roleId,jdbcType=INTEGER},
       </if>
-       <if test="certId != null">
+      <if test="certId != null">
         cert_id = #{certId,jdbcType=INTEGER},
+      </if>
+      <if test="examSignupId != null">
+        exam_signup_id = #{examSignupId,jdbcType=INTEGER},
+      </if>
+      <if test="examSignupAreaId != null">
+        exam_signup_area_id = #{examSignupAreaId,jdbcType=INTEGER},
       </if>
       <if test="certificateType != null">
         certificate_type = #{certificateType,jdbcType=INTEGER},

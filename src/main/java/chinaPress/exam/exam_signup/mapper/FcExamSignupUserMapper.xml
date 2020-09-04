@@ -659,15 +659,22 @@
 			 e.grade as grade,
 		     d.name as courseName,
 			 c.name as certName
-		from fc_exam_signup a
-		left join fc_exam_signup_area b on a.id = b.signup_id
+		from 
+		<!-- 身份证号，手机号查询用户的考试报名信息 -->
+			(select id,signup_id,area_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone}) x
+		<!-- 报名id匹配 -->
+		left join fc_exam_signup a on x.signup_id = a.id
+		<!-- 区域id匹配 -->
+		left join fc_exam_signup_area b on a.id = b.signup_id and x.area_id = b.id
+		<!-- 关联证书匹配 -->
 		left join fc_certificate_attestation c on a.cert_id = c.id
+		<!-- 关联书籍匹配 -->
 		left join fc_course_archives d on a.course_id = d.id
+		<!-- 关联考试piper -->
 		left join fc_exam e on a.id = e.signup_id and b.id = e.signup_area_id
-		left join fc_exam_record f on a.id = f.exam_signup_id and b.id = f.exam_signup_area_id and e.id = f.exam_id
-		where a.id in(select signup_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone})
-			  and b.id in(select area_id from fc_exam_signup_user where examine_type = 1 and certificate_number = #{certificateNumber} and tell_phone = #{tellPhone})
-			  and f.grade is null <!-- 分数为null代表没有考试 -->
+		<!-- 考生的考试记录匹配，查询没有分数的考试记录,代表考生未考试  考试报名id，考试报名区域id，考试id，考试报名用户id都要匹配-->
+		left join fc_exam_record f on a.id = f.exam_signup_id and b.id = f.exam_signup_area_id and e.id = f.exam_id and x.id = f.signup_user_id
+		where f.grade is null <!-- 分数为null代表没有考试 -->
 	</select>
 	
 	<!-- 手机号和身份证号查询用户考试信息  -->

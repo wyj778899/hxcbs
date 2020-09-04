@@ -92,7 +92,33 @@ public class CertificateInfo {
 	 */
 	private Integer certId;
 	
+	/**
+	 * 考试报名id
+	 */
+	private Integer examSignupId;
 	
+	/**
+	 * 考试报名区域id
+	 */
+	private Integer examSignupAreaId;
+	
+	
+	public Integer getExamSignupId() {
+		return examSignupId;
+	}
+
+	public void setExamSignupId(Integer examSignupId) {
+		this.examSignupId = examSignupId;
+	}
+
+	public Integer getExamSignupAreaId() {
+		return examSignupAreaId;
+	}
+
+	public void setExamSignupAreaId(Integer examSignupAreaId) {
+		this.examSignupAreaId = examSignupAreaId;
+	}
+
 	public Integer getCertId() {
 		return certId;
 	}
