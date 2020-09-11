@@ -1,0 +1,40 @@
+server:
+  port: 8501
+spring:
+  application:
+    name: gateway
+  cloud: #注册中心的配置
+    consul:
+      port: 8500
+      host: localhost
+      discovery:
+        service-name: ${spring.application.name}
+    gateway:  #配置网关
+      routes: #多个网关服务
+        - id: user_route #网关id 唯一标识代表配置用户的服务
+          uri: http://localhost:9999/ #请求路径
+          predicates: #过滤的路径
+          - Path=/user/** #多个过滤路径'
+          #这个时间之后这个服务可以访问   用户执行活动信息，假设双十一活动凌晨1点开始   上线新的服务   断言
+          #- After=2020-09-10T21:19:19.506+08:00[Asia/Shanghai]
+          #这个时间之前这个服务可以访问
+          #- Before=2020-09-10T21:27:19.506+08:00[Asia/Shanghai]
+          #在两个时间之内有效
+          #- Between=2020-09-10T21:30:19.506+08:00[Asia/Shanghai],2020-09-10T21:31:19.506+08:00[Asia/Shanghai]
+          #- Cookie=username,wyj  #cookie的用户名为wyj的用户可以访问这个服务
+          #- Cookie=username,[A-Za-z0-9]  正则表达式用户名为任意字符A-Za-z0-9
+          #- Method=GET,POST
+          #filters:
+           #- AddRequestParameter=id,18 #所有请求参数自动添加id为18
+        - id: product_route
+          uri: lb://products   #代表请求订单服务，自动实现负载均衡转发
+          predicates:
+          - Path=/product/**
+      discovery:
+        locator:
+          enabled: true      #开启根据服务名动态获取路由地址
+management:
+  endpoints:
+    web:
+     exposure:
+        include: "*" #暴露路由规则web站点     /actuator/gateway/routes
